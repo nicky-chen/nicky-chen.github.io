@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>南乡清水BLOG - design-pattern</title><link>/</link><description></description><lastBuildDate>Mon, 09 Oct 2017 22:20:00 +0800</lastBuildDate><item><title>实际项目运用之Decorator模式（装饰器模式）</title><link>/design-pattern/decorator.html</link><description>&lt;h2&gt;1 概述&lt;/h2&gt;
+<rss version="2.0"><channel><title>南乡清水 - design-pattern</title><link>/</link><description></description><lastBuildDate>Mon, 09 Oct 2017 22:20:00 +0800</lastBuildDate><item><title>实际项目运用之Decorator模式（装饰器模式）</title><link>/design-pattern/decorator.html</link><description>&lt;h2&gt;1 概述&lt;/h2&gt;
 &lt;p&gt;在项目中，经常因一些新增需求，导致同一业务的变更，如果所在类继承关系如下：Parent、Child、Grandparent，那么要在Child类上增强些功能怎么办？给Child类增加方法？那会对Grandparent产生什么影响？该如何去处理？看完本文，你会找到你的答案。&lt;/p&gt;
 &lt;p&gt;JavaIO中，像下面的嵌套语句很常见，为什么要怎样定义呢？理解装饰模式后，你会找到答案。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;FilterInputStream filterInputStreasm = new BufferedInputStream(new FileInputStream(new File(&amp;quot;/user/a&amp;quot;)));
