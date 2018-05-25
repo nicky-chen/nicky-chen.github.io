@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"><channel><title>南乡清水BLOG - design-pattern</title><link>/</link><description></description><lastBuildDate>Mon, 09 Oct 2017 22:20:00 +0800</lastBuildDate><item><title>实际项目运用之Decorator模式（装饰器模式）</title><link>/design-pattern/decorator.html</link><description>&lt;h2&gt;1 概述&lt;/h2&gt;
+&lt;p&gt;在项目中，经常因一些新增需求，导致同一业务的变更，如果所在类继承关系如下：Parent、Child、Grandparent，那么要在Child类上增强些功能怎么办？给Child类增加方法？那会对Grandparent产生什么影响？该如何去处理？看完本文，你会找到你的答案。&lt;/p&gt;
+&lt;p&gt;JavaIO中，像下面的嵌套语句很常见，为什么要怎样定义呢？理解装饰模式后，你会找到答案。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;FilterInputStream filterInputStreasm = new BufferedInputStream(new FileInputStream(new File(&amp;quot;/user/a&amp;quot;)));
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;1.1案例&lt;/h3&gt;
+&lt;p&gt;例如下面一个功能需求，4s店的汽车销售向客户推销自家品牌的产品，我们用代码实现，关系如下：&lt;/p&gt;
+&lt;p&gt;&lt;img alt="类图" src="https://upload-images.jianshu.io/upload_images/10175660-789e0242028d08b0.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"&gt;&lt;/p&gt;
+&lt;p&gt;具体代码：
+汽车销售类&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;public abstract class CarSale {
+
+    /**
+     * 推销车的详情
+     */
+    public abstract void displayCarInfo();
+
+    /**
+     * 客户签订购买合同
+     */
+    public abstract …&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Mon, 09 Oct 2017 22:20:00 +0800</pubDate><guid isPermaLink="false">tag:None,2017-10-09:/design-pattern/decorator.html</guid><category>创建型</category></item><item><title>设计模式之factory模式</title><link>/design-pattern/builder-factory.html</link><description>&lt;p&gt;&lt;strong&gt;定义&lt;/strong&gt;：工厂模式通俗意义上讲就是一个多产品的流程化工厂，每个工厂生产同一系列相关性的组件&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;分类&lt;/strong&gt;：&lt;/p&gt;
+&lt;p&gt;按工厂职能划分可以分为三类： 
+ 简单工厂模式（Simple Factory） 
+ 工厂方法模式（Factory Method） 
+ 抽象工厂方法（Abstract Factory）&lt;/p&gt;
+&lt;p&gt;接下来我们直接通过&lt;strong&gt;uml&lt;/strong&gt;图和具体的代码实现以上三类&lt;/p&gt;
+&lt;p&gt;我们以汽车工厂生产汽车为例，本田工厂假设要生产CIVIC和CRV两种车型，那么我们该怎么去设计实现&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1 简单工厂模式&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="简单工厂模式" src="http://upload-images.jianshu.io/upload_images/10175660-4012e2250133cb61?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"&gt;&lt;/p&gt;
+&lt;p&gt;工厂产品线流程如上图所示：工厂生产汽车通过指定汽车的编号，我们就可以走指定的产品线；调用者只需要选择具体车型而不需要内部车是怎么制造出来的&lt;/p&gt;
+&lt;p&gt;简单工厂模式主要包括三部分： 
+工厂角色：上图中的HONDAFactroy 生产车型用 
+抽象产品角色：上图中的HONDA和HONDACar 包含通用的属性和方法 
+具体产品角色：上图中的CIVIC和CRV，具体的车型包含各种参数&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;代码如下&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cm"&gt;/** &lt;/span&gt;
+&lt;span class="cm"&gt;* @author nicky_chin [shuilianpiying@163.com] &lt;/span&gt;
+&lt;span class="cm"&gt;* @since –created on 2017/12/27 at 11 …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Sat, 07 Oct 2017 22:20:00 +0800</pubDate><guid isPermaLink="false">tag:None,2017-10-07:/design-pattern/builder-factory.html</guid><category>创建型</category></item><item><title>设计模式之Template模式（模版模式）</title><link>/design-pattern/template.html</link><description>&lt;h1&gt;1 模式简介&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;1.1 模版方法模式的定义：&lt;/strong&gt;
+模版方法模式在一个方法中定义一个算法的骨架，而将一些步骤延迟到子类中。模版方法使得子类可以在不改变算法结构的情况下，重新定义算法中的某些步骤。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1.2 结构&lt;/strong&gt;
+&lt;img alt="模版方法" src="https://upload-images.jianshu.io/upload_images/10175660-4b852101cc35ec28.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1.3 模式的组成&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;抽象类（AbstractClass）:&lt;/em&gt;&lt;/strong&gt; 定义抽象的原语操作（primitive operation） ，具体的子类将重定义它们以实现一个算法， 实现一个模板方法,定义一个算法的骨架。该模板方法不仅调用原语操作，也调用定义。
+&lt;strong&gt;&lt;em&gt;具体子类 （ConcreteClass）:&lt;/em&gt;&lt;/strong&gt; 实现原语操作以完成算法中与特定子类相关的步骤。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1.4 优缺点&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;模版方法模式的优点：
+   封装不变部分，扩展可变部分；
+   提取公共代码，便于维护；
+   行为由父类控制，子类实现。&lt;/p&gt;
+&lt;p&gt;模版方法模式的缺点：
+   每一个不同的实现都需要一个子类来实现，导致类个数增加，使系统更加庞大&lt;/p&gt;
+&lt;p&gt;模版方法模式的适用场景：
+   当类中有多个子类共有的方法
+   当有重要的、复杂的方法时，可以考虑作为模板方法&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1&gt;2 案例&lt;/h1&gt;
+&lt;p&gt;抽象类 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Fri, 06 Oct 2017 22:20:00 +0800</pubDate><guid isPermaLink="false">tag:None,2017-10-06:/design-pattern/template.html</guid><category>创建型</category></item></channel></rss>
