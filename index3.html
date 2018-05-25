@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>南乡清水</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+
+                <li><a href="http://github.com">常用工具</a></li>
+                <li><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                <li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                <li><a href="/guan-yu-wo.html">关于我</a></li>
+
+              </ul>
+            </div>
+
+<section id="content">
+
+
+
+   <div class="row">
+
+
+        <div class="eleven columns">
+                 <ol id="post-list">
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/mysql/high-event.html" rel="bookmark" title="Permalink to MYSQL高级特性之【Event事件】">MYSQL高级特性之【Event事件】</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-04-28T20:18:00+08:00"> 周六 28 四月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p><strong>一、基本概念</strong> mysql5.1版本开始引进event概念。event既“时间触发器”，与triggers的事件触发不同，event类似与linux crontab计划任务，用于时间触发。通过单独或调用存储过程使用，在某一特定的时间点，触发相关的SQL语句或存储过程。</p>
+<p><strong>二、适用范围</strong> 对于每隔一段时间就有固定需求的操作，如创建表，删除数据等操作，可以使用event来处理。</p>
+<p>例如：使用event在每月的1日凌晨1点自动创建下个月需要使用的三张表。</p>
+<p>每天清除数据表中的过期的记录。</p>
+<p><strong>三、使用权限</strong> 单独使用event调用SQL语句时，查看和创建需要用户具有event权限，调用该SQL语句时，需要用户具有执行该SQL的权限。Event权限的设置保存在mysql.user表和mysql.db表的Event_priv字段中。</p>
+<p>当event和procedure（存储过程）配合使用的时候，查看和创建存储过程需要用户具有create routine权限，调用存储过程执行时需要使用excute权限，存储过程调用具体的SQL语句时，需要用户具有执行该SQL的权限。
+查看EVENT命令有如下几种：</p>
+<blockquote>
+<p>（1）查询mysql.event表；
+（2）通过SHOW EVENTS命令；
+（3）通过SHOW FULL EVENTS命令 …</p></blockquote> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/mysql/high-event.html" rel="bookmark" title="Permalink to MYSQL高级特性之【Event事件】">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/mysql/process-fun.html" rel="bookmark" title="Permalink to MYSQL高级特性之【存储过程与函数】">MYSQL高级特性之【存储过程与函数】</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-04-27T22:30:00+08:00"> 周五 27 四月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>一、定义</h1>
+<p>存储程序可以分为存储过程和函数。</p>
+<h2>1.1 存储过程的定义</h2>
+<p><strong>存储过程（Stored Procedure）</strong>是一组为了完成特定功能的SQL语句集。存储过程在数据库中经过第一次编译后再次调用不需要再次编译，用户通过指定存储过程的名字并给出参数（如果该存储过程带有参数）来执行它。</p>
+<h2>1.2 函数的定义</h2>
+<p>存储函数（简称<strong>函数</strong>）在本质上与存储过程没有区别。</p>
+<p>只是函数有如：只能返回一个变量的限制，而存储过程可以返回多个。函数是可以嵌入在SQL中使用，可以在select中调用，而存储过程不行。</p>
+<h1>二、创建存储过程和函数</h1>
+<p>存储过程和函数的创建过程很相似。</p>
+<h2>2.1 创建存储过程</h2>
+<p>语法</p>
+<blockquote>
+<p>CREATE PROCEDURE sp_name ([ proc_parameter ]) [ characteristics..] routine_body </p>
+</blockquote>
+<p>proc_parameter指定存储过程的参数列表，列表形式如下：</p>
+<blockquote>
+<p>[IN|OUT|INOUT] param_name type</p>
+</blockquote>
+<p>其中in表示输入参数，out表示输出参数，inout表示既可以输入也可以输出 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/mysql/process-fun.html" rel="bookmark" title="Permalink to MYSQL高级特性之【存储过程与函数】">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/distrubuted/cap-base-flp.html" rel="bookmark" title="Permalink to 分布式之【CAP理论、BASE理论 、FLP不可能定理】">分布式之【CAP理论、BASE理论 、FLP不可能定理】</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-04-25T18:43:00+08:00"> 周三 25 四月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1.分布式系统的CAP理论</h1>
+<h2>1.1 CAP理论概述</h2>
+<p>2000年7月，加州大学伯克利分校的Eric Brewer教授在ACM PODC会议上提出CAP猜想。2年后，麻省理工学院的Seth Gilbert和Nancy Lynch从理论上证明了CAP。之后，CAP理论正式成为分布式计算领域的公认定理。</p>
+<p>一个分布式系统最多只能同时满足一致性（Consistency）、可用性（Availability）和分区容错性（Partition tolerance）这三项中的两项。</p>
+<p><img alt="cap" src="https://upload-images.jianshu.io/upload_images/10175660-8db37e21ea4984f9.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h2>1.2 CAP的定义</h2>
+<h3>1.2.1 Consistency 一致性</h3>
+<p>一致性指“<code>all nodes see the same data at the same time</code>”，即更新操作成功并返回客户端完成后，所有节点在同一时间的数据完全一致。分布式的一致性</p>
+<p>对于一致性，可以分为从客户端和服务端两个不同的视角。从客户端来看，一致性主要指的是多并发访问时更新过的数据如何获取的问题。从服务端来看 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/distrubuted/cap-base-flp.html" rel="bookmark" title="Permalink to 分布式之【CAP理论、BASE理论 、FLP不可能定理】">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/li-lun.html">理论</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/string-builder-question.html" rel="bookmark" title="Permalink to 字符串拼接的疑惑">字符串拼接的疑惑</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-04-21T15:34:00+08:00"> 周六 21 四月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>最近没事在玩ASM框架，于是乎想将业务代码中的PO对象中的toString方法 在编译期间，自动转换了基于StringBuilder 拼接的代码。发现了一个奇怪的问题：
+实体类如下</p>
+<div class="highlight"><pre><span></span>@Getter
+@Setter
+@EqualsAndHashCode(of = &quot;id&quot;)
+@ApiModel(&quot;活动&quot;)
+public class Banner implements Serializable{
+
+    private static final long serialVersionUID = 191609922585601269L;
+
+    @ApiModelProperty(value = &quot;ID&quot;, position = 1)
+    private Integer id;
+
+    @ApiModelProperty(value = &quot;显示次序&quot;, position = 2)
+    private Integer orderNo;
+
+    @ApiModelProperty(value = &quot;关联文件&quot;, position = 3)
+    private Integer fileId;
+
+    @ApiModelProperty …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/string-builder-question.html" rel="bookmark" title="Permalink to 字符串拼接的疑惑">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/exception-introduce.html" rel="bookmark" title="Permalink to Java异常处理-原理及优化建议">Java异常处理-原理及优化建议</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-04-17T19:00:00+08:00"> 周二 17 四月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 异常层次结构</h1>
+<p>异常指不期而至的各种状况，如：文件找不到、网络连接失败、非法参数等。异常是一个事件，它发生在程序运行期间，干扰了正常的指令流程。Java通 过API中Throwable类的众多子类描述各种不同的异常。因而，Java异常都是对象，是Throwable子类的实例，描述了出现在一段编码中的 错误条件。当条件生成时，错误将引发异常。
+      Java异常类层次结构图：
+<img alt="Java异常类层次结构图" src="https://upload-images.jianshu.io/upload_images/10175660-248cd3eb6352bfb8.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>在 Java 中，所有的异常都有一个共同的祖先 Throwable（可抛出）。Throwable 指定代码中可用异常传播机制通过 Java 应用程序传输的任何问题的共性。
+       <strong>Throwable</strong>： 有两个重要的子类：<em>Exception（异常）和 Error（错误）</em>，二者都是 Java 异常处理的重要子类，各自都包含大量子类。
+       <strong>Error</strong>（错误）:是程序无法处理的错误，表示运行应用程序中较严重问题。大多数错误与代码编写者执行的操作无关，而表示代码运行时 JVM（Java 虚拟机 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/exception-introduce.html" rel="bookmark" title="Permalink to Java异常处理-原理及优化建议">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                </ol><!-- /#posts-list -->
+
+        </div><!-- /.eleven.columns -->
+        
+<div class="three columns">
+
+<h4>归档分类</h4>
+
+ <ul>
+     <!---->
+     <!--<li><a href="http://github.com">常用工具</a></li>-->
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+     <li >
+         <a href="/algorithm-datastructure/index.html">
+             Algorithm-DataStructure
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             classloader
+         </a>
+     </li>
+     <li >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm-datastructure/index.html">Algorithm-DataStructure</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+    <nav class="widget">
+        <h4>Links</h4>
+        <ul class="blank">
+    <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">stackoverflow</a></li>
+    <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+    <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+<p class="paginator">
+            <a href="/index2.html"><i class="icon-arrow-left"></i></a>
+    Page 3 / 6
+        <a href="/index4.html"><i class="icon-arrow-right"></i></a>
+</p>
+</section><!-- /#content -->
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+</body>
+</html>

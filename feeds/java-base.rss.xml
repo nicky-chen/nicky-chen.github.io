@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"><channel><title>南乡清水 - java-base</title><link>/</link><description></description><lastBuildDate>Wed, 23 May 2018 22:36:00 +0800</lastBuildDate><item><title>自定义序列化之Externalizable接口</title><link>/java-base/externalizable-interface.html</link><description>&lt;p&gt;&lt;strong&gt;Externalizable简介&lt;/strong&gt;
+Externalizable是一种优先级要高于 Serializable 的序列化机制接口，
+这个接口提供了writeExternal()和readExternal()方法用于指定序列化哪些属性。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Externalizable接口与Serializable接口区别&lt;/strong&gt;
+&lt;em&gt; 1 Serializable序列化时不会调用默认的构造器，而Externalizable序列化时会调用默认构造器
+&lt;/em&gt; 2 transient关键字对Externalizable无效&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;代码事例&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;公共抽象实体类AbstractDO&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;public abstract class AbstractDO implements Externalizable {
+
+    private static final long serialVersionUID = -1679770357930200297L;
+
+    private Long id;
+
+    private Date createTime;
+
+    private Date updateTime;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public …&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Wed, 23 May 2018 22:36:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-05-23:/java-base/externalizable-interface.html</guid><category>基础</category></item><item><title>字符串拼接的疑惑</title><link>/java-base/string-builder-question.html</link><description>&lt;p&gt;最近没事在玩ASM框架，于是乎想将业务代码中的PO对象中的toString方法 在编译期间，自动转换了基于StringBuilder 拼接的代码。发现了一个奇怪的问题：
+实体类如下&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;@Getter
+@Setter
+@EqualsAndHashCode(of = &amp;quot;id&amp;quot;)
+@ApiModel(&amp;quot;活动&amp;quot;)
+public class Banner implements Serializable{
+
+    private static final long serialVersionUID = 191609922585601269L;
+
+    @ApiModelProperty(value = &amp;quot;ID&amp;quot;, position = 1)
+    private Integer id;
+
+    @ApiModelProperty(value = &amp;quot;显示次序&amp;quot;, position = 2)
+    private Integer orderNo;
+
+    @ApiModelProperty(value = &amp;quot;关联文件&amp;quot;, position = 3)
+    private Integer fileId;
+
+    @ApiModelProperty …&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Sat, 21 Apr 2018 15:34:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-04-21:/java-base/string-builder-question.html</guid><category>基础</category></item><item><title>Java异常处理-原理及优化建议</title><link>/java-base/exception-introduce.html</link><description>&lt;h1&gt;1 异常层次结构&lt;/h1&gt;
+&lt;p&gt;异常指不期而至的各种状况，如：文件找不到、网络连接失败、非法参数等。异常是一个事件，它发生在程序运行期间，干扰了正常的指令流程。Java通 过API中Throwable类的众多子类描述各种不同的异常。因而，Java异常都是对象，是Throwable子类的实例，描述了出现在一段编码中的 错误条件。当条件生成时，错误将引发异常。
+      Java异常类层次结构图：
+&lt;img alt="Java异常类层次结构图" src="https://upload-images.jianshu.io/upload_images/10175660-248cd3eb6352bfb8.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"&gt;&lt;/p&gt;
+&lt;p&gt;在 Java 中，所有的异常都有一个共同的祖先 Throwable（可抛出）。Throwable 指定代码中可用异常传播机制通过 Java 应用程序传输的任何问题的共性。
+       &lt;strong&gt;Throwable&lt;/strong&gt;： 有两个重要的子类：&lt;em&gt;Exception（异常）和 Error（错误）&lt;/em&gt;，二者都是 Java 异常处理的重要子类，各自都包含大量子类。
+       &lt;strong&gt;Error&lt;/strong&gt;（错误）:是程序无法处理的错误，表示运行应用程序中较严重问题。大多数错误与代码编写者执行的操作无关，而表示代码运行时 JVM（Java 虚拟机 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Tue, 17 Apr 2018 19:00:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-04-17:/java-base/exception-introduce.html</guid><category>基础</category></item><item><title>java中位运算技巧</title><link>/java-base/binary-operation.html</link><description>&lt;p&gt;位运算符主要针对二进制，它包括了：“与”、“非”、“或”、“异或”。&lt;/p&gt;
+&lt;h2&gt;运算符 含义 描述&lt;/h2&gt;
+&lt;p&gt;【&amp;amp;】 按位与 如果两个相应的二进制位都为1，则该位的结果值为1，否则为0
+【|】按位或 两个相应的二进制位中只要有一个为1，该位的结果值为1
+【^】 按位异或 若参加运算的两个二进制位值相同则为0，否则为1
+【~】 取反 ~是一元运算符，用来对一个二进制数按位取反，即将0变1，将1变0
+【&amp;lt;&amp;lt;】 左移 用来将一个数的各二进制位全部左移N位，右补0
+【&amp;gt;&amp;gt;】右移 将一个数的各二进制位右移N位，移到右端的低位被舍弃，对于无符号数，高位补0&lt;/p&gt;
+&lt;h4&gt;1、“按位与”运算符（&amp;amp;）&lt;/h4&gt;
+&lt;p&gt;按位与是指：参加运算的两个数据，按二进制位进行“与”运算。如果两个相应的二进制位都为１，则该位的结果值为1；否则为0。内存储存数据的基本单位是字节（Byte），一个字节由8个位（bit)所组成。位是用以描述电脑数据量的最小单位。二进制系统中 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Wed, 21 Mar 2018 22:17:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-03-21:/java-base/binary-operation.html</guid><category>基础</category></item><item><title>Java 内省(Introspector)</title><link>/java-base/introspector.html</link><description>&lt;p&gt;&lt;strong&gt;内省(Introspector) 是Java 语言对 JavaBean 类属性、事件的一种缺省处理方法。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;JavaBean是一种特殊的类，主要用于传递数据信息，这种类中的方法主要用于访问私有的字段，且方法名符合某种命名规则。如果在两个模块之间传递信息，可以将信息封装进JavaBean中，这种对象称为“值对象”(Value Object)，或“VO”。方法比较少。这些信息储存在类的私有变量中，通过set()、get()获得。&lt;/p&gt;
+&lt;p&gt;例如类Use :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;public class User {
+
+    private String name;
+
+    private String address;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress …&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Tue, 13 Mar 2018 15:15:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-03-13:/java-base/introspector.html</guid><category>基础</category></item></channel></rss>

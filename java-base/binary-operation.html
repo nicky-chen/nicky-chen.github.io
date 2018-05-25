@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>java中位运算技巧</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+        <link href="/feeds/java-base.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+
+                <li><a href="http://github.com">常用工具</a></li>
+                <li><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                <li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                <li><a href="/guan-yu-wo.html">关于我</a></li>
+
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/java-base/binary-operation.html" rel="bookmark"
+                   title="Permalink to java中位运算技巧">java中位运算技巧</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2018-03-21T22:17:00+08:00">
+                周三 21 三月 2018
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>位运算符主要针对二进制，它包括了：“与”、“非”、“或”、“异或”。</p>
+<h2>运算符 含义 描述</h2>
+<p>【&amp;】 按位与 如果两个相应的二进制位都为1，则该位的结果值为1，否则为0
+【|】按位或 两个相应的二进制位中只要有一个为1，该位的结果值为1
+【^】 按位异或 若参加运算的两个二进制位值相同则为0，否则为1
+【~】 取反 ~是一元运算符，用来对一个二进制数按位取反，即将0变1，将1变0
+【&lt;&lt;】 左移 用来将一个数的各二进制位全部左移N位，右补0
+【&gt;&gt;】右移 将一个数的各二进制位右移N位，移到右端的低位被舍弃，对于无符号数，高位补0</p>
+<h4>1、“按位与”运算符（&amp;）</h4>
+<p>按位与是指：参加运算的两个数据，按二进制位进行“与”运算。如果两个相应的二进制位都为１，则该位的结果值为1；否则为0。内存储存数据的基本单位是字节（Byte），一个字节由8个位（bit)所组成。位是用以描述电脑数据量的最小单位。二进制系统中，每个0或1就是一个位。将11（2）补足成一个字节，则是00000011（2），5的二进制编码是101（2），将其补足成一个字节，则是00000101（2）
+按位与运算：
+00000011(2)
+&amp;00000101(2)
+00000001(2)
+由此可知3&amp;5=1
+按位与的用途：
+（1）清零
+若想对一个存储单元清零，即使其全部二进制位为0，只要找一个二进制数，其中各个位符合一下条件：
+原来的数中为1的位，新数中相应位为0。然后使二者进行&amp;运算，即可达到清零目的。
+例：原数为43，即00101011（2），另找一个数，设它为148，即10010100（2），将两者按位与运算：
+00101011（2）
+&amp;10010100（2）
+00000000（2）</p>
+<p>（2）取一个数中某些指定位
+若有一个整数a(2byte),想要取其中的低字节，只需要将a与8个1按位与即可。
+a 00101100 10101100
+b 00000000 11111111
+c 00000000 10101100
+（3）保留指定位：
+与一个数进行“按位与”运算，此数在该位取1.
+例如：有一数84，即01010100（2），想把其中从左边算起的第3，4，5，7，8位保留下来，运算如下：
+01010100(2)
+&amp;00111011(2)
+00010000(2)
+即：a=84,b=59
+    c=a&amp;b=16</p>
+<h4>2、“按位或”运算符（|）</h4>
+<p>两个相应的二进制位中只要有一个为1，该位的结果值为1。借用逻辑学中或运算的话来说就是，一真为真
+。
+例如：60（8）|17（8）,将八进制60与八进制17进行按位或运算。
+00110000
+|00001111
+00111111 </p>
+<p>应用：按位或运算常用来对一个数据的某些位定值为1。例如：如果想使一个数a的低4位改为1，则只需要将a与17（8）进行按位或运算即可。</p>
+<h4>３、异或</h4>
+<p>例如：ａ＝３，即11（2）；ｂ＝４，即100（2）。
+想将ａ和ｂ的值互换，可以用以下赋值语句实现：
+    ａ＝a∧b;
+    ｂ＝b∧a;
+    ａ＝a∧b;
+ａ＝011(2)
+    （∧）ｂ＝100(2)
+ａ＝111(2)（a∧b的结果，a已变成７）
+    （∧）ｂ＝100(2)
+ｂ＝011(2)（b∧a的结果，b已变成３）
+    （∧）ａ＝111(2)</p>
+<p>ａ＝100（2）（a∧b的结果，a已变成４）
+等效于以下两步：
+    ① 执行前两个赋值语句：“ａ＝ａ∧ｂ；”和“ｂ＝ｂ∧ａ；”相当于b=b∧(a∧b)。
+    ② 再执行第三个赋值语句： ａ＝ａ∧ｂ。由于a的值等于（ａ∧ｂ），b的值等于（ｂ∧ａ∧ｂ），
+因此，相当于a=ａ∧ｂ∧ｂ∧ａ∧ｂ，即a的值等于ａ∧ａ∧ｂ∧ｂ∧ｂ，等于ｂ。
+很神奇吧！</p>
+<h4>4、“取反”运算符（~）</h4>
+<p>他是一元运算符，用于求整数的二进制反码，即分别将操作数各二进制位上的1变为0，0变为1。
+例如：~77(8)</p>
+<h4>5、左移运算符（&lt;&lt;）</h4>
+<p>左移运算符是用来将一个数的各二进制位左移若干位，移动的位数由右操作数指定（右操作数必须是非负
+值），其右边空出的位用0填补，高位左移溢出则舍弃该高位。
+例如：将a的二进制数左移2位，右边空出的位补0，左边溢出的位舍弃。若a=15,即00001111（2），左移2
+位得00111100（2）。</p>
+<p>左移1位相当于该数乘以2，左移2位相当于该数乘以2*2＝4,15＜＜2=60，即乘了４。但此结论只适用于该
+数左移时被溢出舍弃的高位中不包含1的情况。
+    假设以一个字节（８位）存一个整数，若ａ为无符号整型变量，则ａ＝64时，左移一位时溢出的是0
+，而左移2位时，溢出的高位中包含1。</p>
+<h4>6、右移运算符（&gt;&gt;）</h4>
+<p>右移运算符是用来将一个数的各二进制位右移若干位，移动的位数由右操作数指定（右操作数必须是非负
+值），移到右端的低位被舍弃，对于无符号数，高位补0。对于有符号数，某些机器将对左边空出的部分
+用符号位填补（即“算术移位”），而另一些机器则对左边空出的部分用0填补（即“逻辑移位”）。注
+意：对无符号数,右移时左边高位移入0；对于有符号的值,如果原来符号位为0(该数为正),则左边也是移
+入0。如果符号位原来为1(即负数),则左边移入0还是1,要取决于所用的计算机系统。有的系统移入0,有的
+系统移入1。移入0的称为“逻辑移位”,即简单移位；移入1的称为“算术移位”。 
+例： a的值是八进制数113755： 
+   a:1001011111101101 （用二进制形式表示）
+   a&gt;&gt;1: 0100101111110110 (逻辑右移时)
+   a&gt;&gt;1: 1100101111110110 (算术右移时)</p>
+<h4>7、位运算综合</h4>
+<p>1）判断一个数的奇偶性</p>
+<div class="highlight"><pre><span></span>boolean isOddNumber(int n){  
+    return (n &amp; 1) == 1;  
+}                                                  
+</pre></div>
+
+
+<p>2)不用临时变量交换两个数</p>
+<div class="highlight"><pre><span></span>a ^= b;  
+b ^= a;  
+a ^= b;  
+</pre></div>
+
+
+<p>3)取绝对值</p>
+<div class="highlight"><pre><span></span>int abs(int n){  
+return (n ^ (n &gt;&gt; 31)) - (n &gt;&gt; 31);  
+/* n&gt;&gt;31 取得n的符号，若n为正数，n&gt;&gt;31等于0，若n为负数，n&gt;&gt;31等于-1 
+若n为正数 n^0=0,数不变，若n为负数有n^-1 需要计算n和-1的补码，然后进行异或运算， 
+结果n变号并且为n的绝对值减1，再减去-1就是绝对值 */  
+}  
+</pre></div>
+
+
+<p>4)取两个数的最大值</p>
+<div class="highlight"><pre><span></span>int max(int a,int b){  
+    return b &amp; ((a-b) &gt;&gt; 31) | a &amp; (~(a-b) &gt;&gt; 31);  
+    /*如果a&gt;=b,(a-b)&gt;&gt;31为0，否则为-1*/  
+}  
+</pre></div>
+
+
+<p>5)取两个数的最小值</p>
+<div class="highlight"><pre><span></span>int min(int a,int b){  
+    return a &amp; ((a-b) &gt;&gt; 31) | b &amp; (~(a-b) &gt;&gt; 31);  
+    /*如果a&gt;=b,(a-b)&gt;&gt;31为0，否则为-1*/  
+}  
+</pre></div>
+
+
+<p>6)判断符号是否相同</p>
+<div class="highlight"><pre><span></span>boolean isSameSign(int x, int y){ //有0的情况例外  
+    return (x ^ y) &gt;= 0; // true 表示 x和y有相同的符号， false表示x，y有相反的符号。  
+}  
+</pre></div>
+
+
+<p>7)求两个整数的平均值</p>
+<div class="highlight"><pre><span></span>int getAverage(int x, int y){  
+        return (x + y) &gt;&gt; 1;   
+｝ 
+</pre></div>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "java-base/binary-operation.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+
+<h4>归档分类</h4>
+
+ <ul>
+     <!---->
+     <!--<li><a href="http://github.com">常用工具</a></li>-->
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+     <li >
+         <a href="/algorithm-datastructure/index.html">
+             Algorithm-DataStructure
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             classloader
+         </a>
+     </li>
+     <li >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li class="active" >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm-datastructure/index.html">Algorithm-DataStructure</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+    <nav class="widget">
+        <h4>Links</h4>
+        <ul class="blank">
+    <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">stackoverflow</a></li>
+    <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+    <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+</body>
+</html>

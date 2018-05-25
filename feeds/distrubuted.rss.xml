@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"><channel><title>南乡清水 - distrubuted</title><link>/</link><description></description><lastBuildDate>Wed, 25 Apr 2018 18:43:00 +0800</lastBuildDate><item><title>分布式之【CAP理论、BASE理论 、FLP不可能定理】</title><link>/distrubuted/cap-base-flp.html</link><description>&lt;h1&gt;1.分布式系统的CAP理论&lt;/h1&gt;
+&lt;h2&gt;1.1 CAP理论概述&lt;/h2&gt;
+&lt;p&gt;2000年7月，加州大学伯克利分校的Eric Brewer教授在ACM PODC会议上提出CAP猜想。2年后，麻省理工学院的Seth Gilbert和Nancy Lynch从理论上证明了CAP。之后，CAP理论正式成为分布式计算领域的公认定理。&lt;/p&gt;
+&lt;p&gt;一个分布式系统最多只能同时满足一致性（Consistency）、可用性（Availability）和分区容错性（Partition tolerance）这三项中的两项。&lt;/p&gt;
+&lt;p&gt;&lt;img alt="cap" src="https://upload-images.jianshu.io/upload_images/10175660-8db37e21ea4984f9.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"&gt;&lt;/p&gt;
+&lt;h2&gt;1.2 CAP的定义&lt;/h2&gt;
+&lt;h3&gt;1.2.1 Consistency 一致性&lt;/h3&gt;
+&lt;p&gt;一致性指“&lt;code&gt;all nodes see the same data at the same time&lt;/code&gt;”，即更新操作成功并返回客户端完成后，所有节点在同一时间的数据完全一致。分布式的一致性&lt;/p&gt;
+&lt;p&gt;对于一致性，可以分为从客户端和服务端两个不同的视角。从客户端来看，一致性主要指的是多并发访问时更新过的数据如何获取的问题。从服务端来看 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Wed, 25 Apr 2018 18:43:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-04-25:/distrubuted/cap-base-flp.html</guid><category>理论</category></item><item><title>接口设计的幂等性考虑</title><link>/distrubuted/interface-idempotency.html</link><description>&lt;h2&gt;分布式系统接口幂等性&lt;/h2&gt;
+&lt;h3&gt;1.幂等性定义&lt;/h3&gt;
+&lt;h4&gt;1.1 数学定义&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在数学里，幂等有两种主要的定义：- 在某二元运算下，幂等元素是指被自己重复运算(或对于函数是为复合)的结果等于它自己的元素。例如，乘法下唯一两个幂等实数为0和1。即 s *s = s- 某一元运算为幂等的时，其作用在任一元素两次后会和其作用一次的结果相同。例如，高斯符号便是幂等的，即f(f(x)) = f(x)。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4&gt;1.2 HTTP规范的定义&lt;/h4&gt;
+&lt;p&gt;在HTTP/1.1规范中幂等性的定义是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A request method is considered "idempotent" if the intended effect on the server of multiple identical requests …&lt;/p&gt;&lt;/blockquote&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Mon, 26 Mar 2018 18:49:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-03-26:/distrubuted/interface-idempotency.html</guid><category>理论</category></item></channel></rss>

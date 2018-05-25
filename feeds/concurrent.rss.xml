@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"><channel><title>南乡清水 - concurrent</title><link>/</link><description></description><lastBuildDate>Mon, 14 May 2018 19:16:00 +0800</lastBuildDate><item><title>synchronized实现原理及锁优化</title><link>/concurrent/synchronized-principle.html</link><description>&lt;h1&gt;1.引言&lt;/h1&gt;
+&lt;p&gt;并发编程中synchronized是重量级锁，但随着JVM1.6对synchronized进行优化后，有些情况下它并不那么重，本文介绍了Java SE1.6中为了减少获得锁和释放锁带来的性能消耗而引入的偏向锁和轻量级锁，以及锁的存储结构和升级过程。&lt;/p&gt;
+&lt;h1&gt;2.术语定义&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;CAS(Compare and Swap):&lt;/strong&gt;  比较并交换。用于在硬件层面上提供原子性操作。在 Intel 处理器中，比较并交换通过指令cmpxchg实现。比较是否和给定的数值一致，如果一致则修改，不一致则不修改。&lt;/p&gt;
+&lt;h1&gt;3.同步的基础&lt;/h1&gt;
+&lt;p&gt;Java中的每一个对象都可以作为锁。
+对于同步方法，锁是当前实例对象。
+对于静态同步方法，锁是当前对象的Class对象。
+对于同步方法块，锁是synchonized括号里配置的对象。&lt;/p&gt;
+&lt;p&gt;我们通过java代码和字节码分析下
+java代码如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;public class SyncTest {
+
+    private static double a = 1;
+
+    public synchronized void plusNumber() {
+        a++;
+    }
+
+    public …&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Mon, 14 May 2018 19:16:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-05-14:/concurrent/synchronized-principle.html</guid><category>锁优化</category></item><item><title>JUC知识点总结</title><link>/concurrent/juc-tree-info.html</link><description>&lt;p&gt;作为并发的基础，我们需要熟悉掌握JUC相关的知识，才能更好的在实际项目中运用，
+下面是整理出来的juc思维导图：&lt;/p&gt;
+&lt;p&gt;&lt;img alt="JUC知识点总结.png" src="https://upload-images.jianshu.io/upload_images/10175660-4bceb180f4aacafe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"&gt;&lt;/p&gt;
+&lt;h1&gt;系列文章&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://www.jianshu.com/p/6ac7207d81d3"&gt;java内存模型之[JMM][重排序][happens-before]&lt;/a&gt;
+&lt;a href="https://www.jianshu.com/p/53da4e746657"&gt;volatile关键字原理实现及应用&lt;/a&gt;
+&lt;a href="https://www.jianshu.com/p/1ea87c152413"&gt;synchronized实现原理及锁优化&lt;/a&gt;
+=============不定期更新============================&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Sun, 13 May 2018 20:16:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-05-13:/concurrent/juc-tree-info.html</guid><category>并发编程思维导图</category></item><item><title>volatile关键字原理实现及应用</title><link>/concurrent/volatile-feature.html</link><description>&lt;h1&gt;1.并发编程中的三个概念&lt;/h1&gt;
+&lt;p&gt;在并发编程中, 需要了解线程的三个概念：原子性，可见性，有序性：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1.1.原子性&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;原子性：即一个操作或者多个操作 要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;一个很经典的例子就是银行账户转账问题：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;比如从账户A向账户B转1000元，那么必然包括2个操作：从账户A减去1000元，往账户B加上1000元。
+
+试想一下，如果这2个操作不具备原子性，会造成什么样的后果。假如从账户A减去1000元之后，操作突然中止。然后又从B取出了500元，取出500元之后，
+再执行 往账户B加上1000元 的操作。这样就会导致账户A虽然减去了1000元，但是账户B没有收到这个转过来的1000元。
+
+所以这2个操作必须要具备原子性才能保证不出现一些意外的问题。
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;同样地反映到并发编程中会出现什么结果呢？&lt;/p&gt;
+&lt;p&gt;举个最简单的例子，大家想一下假如为一个32位的变量赋值过程不具备原子性的话，会发生什么后果？&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;i = 9;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;假若一个线程执行到这个语句时，我暂且假设为一个32位的变量赋值包括两个过程：为低16位赋值，为高16位赋值。
+那么就可能发生一种情况：当将低16位数值写入之后，突然被中断，而此时又有一个线程去读取i的值，那么读取到的就是错误的数据。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1.2.可见性 …&lt;/strong&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Fri, 04 May 2018 22:46:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-05-04:/concurrent/volatile-feature.html</guid><category>基础</category></item><item><title>java内存模型之[JMM][重排序][happens-before]</title><link>/concurrent/thread-jmm-happens-before.html</link><description>&lt;h1&gt;1.并发编程模型的分类&lt;/h1&gt;
+&lt;p&gt;在并发编程中，我们需要处理两个关键问题：线程之间如何通信及线程之间如何同
+步（这里的线程是指并发执行的活动实体）。通信是指线程之间以何种机制来交换
+信息。在命令式编程中，线程之间的通信机制有两种：&lt;em&gt;共享内存和消息传递&lt;/em&gt;。
+在共享内存的并发模型里，线程之间共享程序的公共状态，线程之间通过写-读内
+存中的公共状态来隐式进行通信。在消息传递的并发模型里，线程之间没有公共状
+态，线程之间必须通过明确的发送消息来显式进行通信。
+同步是指程序用于控制不同线程之间操作发生相对顺序的机制。在共享内存并发模
+型里，同步是显式进行的。程序员必须显式指定某个方法或某段代码需要在线程之
+间互斥执行。在消息传递的并发模型里，由于消息的发送必须在消息的接收之前，
+因此同步是隐式进行的。
+Java 的并发采用的是共享内存模型，Java 线程之间的通信总是隐式进行，整个通
+信过程对程序员完全透明。如果编写多线程程序的 Java 程序员不理解隐式进行的
+线程之间通信的工作机制，很可能会遇到各种奇怪的内存可见性问题。&lt;/p&gt;
+&lt;h1&gt;2.Java 内存模型的抽象&lt;/h1&gt;
+&lt;p&gt;在java中，所有实例域、静态域和数组元素存储在堆内存中，堆内存在线程之间共
+享（本文使用“共享变量 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Tue, 03 Apr 2018 22:11:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-04-03:/concurrent/thread-jmm-happens-before.html</guid><category>基础</category></item><item><title>多线程之线程通信摘要</title><link>/concurrent/thread-communication.html</link><description>&lt;p&gt;首先我们要知道进程之间的通讯方式有哪些？&lt;/p&gt;
+&lt;h1&gt;管道( pipe )  #消息队列( message queue ) #共享内存( shared memory ) ：#套接字( socket ) 等等--&lt;/h1&gt;
+&lt;p&gt;线程的通讯方式：&lt;/p&gt;
+&lt;p&gt;1 wait/notify 机制&lt;/p&gt;
+&lt;p&gt;wait()方法和notify()方法是Object类提供的方法，而在使用的条件就是当前线程必须有自己的监听器&lt;/p&gt;
+&lt;p&gt;否则就是抛出异常，我们可以使用jvm提供的内置锁 synchronized 关键字来配合使用；注意如果有多个&lt;/p&gt;
+&lt;p&gt;线程等待，当某一线程发起唤醒操作，会随机唤醒一个线程，而非所有线程，如果想唤醒所有线程，可以使用&lt;/p&gt;
+&lt;p&gt;notifyAll()方法&lt;/p&gt;
+&lt;p&gt;下面是 启动一个等待线程和一个通知线程的例子&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;public class MyThread1 extends Thread {  
+
+    private Object lock;  
+
+    public MyThread1(Object lock) {  
+        this.lock …&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Sat, 18 Nov 2017 21:52:00 +0800</pubDate><guid isPermaLink="false">tag:None,2017-11-18:/concurrent/thread-communication.html</guid><category>基础</category></item><item><title>可重入锁</title><link>/concurrent/recursive-Lock.html</link><description>&lt;p&gt;可重入锁，也叫做递归锁，指的是同一线程 外层函数获得锁之后 ，内层递归函数仍然有获取该锁的代码，但不受影响。比如ReentrantLock 和synchronized 都是 可重入锁&lt;/p&gt;
+&lt;p&gt;直接放代码 &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;public class SubService {
+
+ReentrantLock lock = new ReentrantLock();
+
+public void subService1() {
+
+    lock.lock();
+
+    System.out.println(&amp;quot;thread = &amp;quot; + Thread.currentThread().getId() + &amp;quot; --subService1&amp;quot;);
+
+    subService2();
+
+    lock.unlock();
+
+}
+
+public synchronized void subService2() {
+
+    System.out.println(&amp;quot;thread = &amp;quot; + Thread.currentThread().getId() + &amp;quot; --subService2&amp;quot;);
+
+}
+
+}
+
+public class Service extends …&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Fri, 03 Nov 2017 21:22:00 +0800</pubDate><guid isPermaLink="false">tag:None,2017-11-03:/concurrent/recursive-Lock.html</guid><category>基础</category></item></channel></rss>

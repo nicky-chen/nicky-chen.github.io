@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>南乡清水</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+
+                <li><a href="http://github.com">常用工具</a></li>
+                <li><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                <li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                <li><a href="/guan-yu-wo.html">关于我</a></li>
+
+              </ul>
+            </div>
+
+<section id="content">
+
+
+
+   <div class="row">
+
+
+        <div class="eleven columns">
+                 <ol id="post-list">
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/concurrent/thread-jmm-happens-before.html" rel="bookmark" title="Permalink to java内存模型之[JMM][重排序][happens-before]">java内存模型之[JMM][重排序][happens-before]</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-04-03T22:11:00+08:00"> 周二 03 四月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1.并发编程模型的分类</h1>
+<p>在并发编程中，我们需要处理两个关键问题：线程之间如何通信及线程之间如何同
+步（这里的线程是指并发执行的活动实体）。通信是指线程之间以何种机制来交换
+信息。在命令式编程中，线程之间的通信机制有两种：<em>共享内存和消息传递</em>。
+在共享内存的并发模型里，线程之间共享程序的公共状态，线程之间通过写-读内
+存中的公共状态来隐式进行通信。在消息传递的并发模型里，线程之间没有公共状
+态，线程之间必须通过明确的发送消息来显式进行通信。
+同步是指程序用于控制不同线程之间操作发生相对顺序的机制。在共享内存并发模
+型里，同步是显式进行的。程序员必须显式指定某个方法或某段代码需要在线程之
+间互斥执行。在消息传递的并发模型里，由于消息的发送必须在消息的接收之前，
+因此同步是隐式进行的。
+Java 的并发采用的是共享内存模型，Java 线程之间的通信总是隐式进行，整个通
+信过程对程序员完全透明。如果编写多线程程序的 Java 程序员不理解隐式进行的
+线程之间通信的工作机制，很可能会遇到各种奇怪的内存可见性问题。</p>
+<h1>2.Java 内存模型的抽象</h1>
+<p>在java中，所有实例域、静态域和数组元素存储在堆内存中，堆内存在线程之间共
+享（本文使用“共享变量 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/concurrent/thread-jmm-happens-before.html" rel="bookmark" title="Permalink to java内存模型之[JMM][重排序][happens-before]">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/design-pattern/decorator.html" rel="bookmark" title="Permalink to 实际项目运用之Decorator模式（装饰器模式）">实际项目运用之Decorator模式（装饰器模式）</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-03-28T11:22:00+08:00"> 周三 28 三月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h2>1 概述</h2>
+<p>在项目中，经常因一些新增需求，导致同一业务的变更，如果所在类继承关系如下：Parent、Child、Grandparent，那么要在Child类上增强些功能怎么办？给Child类增加方法？那会对Grandparent产生什么影响？该如何去处理？看完本文，你会找到你的答案。</p>
+<p>JavaIO中，像下面的嵌套语句很常见，为什么要怎样定义呢？理解装饰模式后，你会找到答案。</p>
+<div class="highlight"><pre><span></span>FilterInputStream filterInputStreasm = new BufferedInputStream(new FileInputStream(new File(&quot;/user/a&quot;)));
+</pre></div>
+
+
+<h3>1.1案例</h3>
+<p>例如下面一个功能需求，4s店的汽车销售向客户推销自家品牌的产品，我们用代码实现，关系如下：</p>
+<p><img alt="类图" src="https://upload-images.jianshu.io/upload_images/10175660-789e0242028d08b0.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>具体代码：
+汽车销售类</p>
+<div class="highlight"><pre><span></span>public abstract class CarSale {
+
+    /**
+     * 推销车的详情
+     */
+    public abstract void displayCarInfo();
+
+    /**
+     * 客户签订购买合同
+     */
+    public abstract …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/design-pattern/decorator.html" rel="bookmark" title="Permalink to 实际项目运用之Decorator模式（装饰器模式）">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/jie-gou-xing.html">结构型</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/distrubuted/interface-idempotency.html" rel="bookmark" title="Permalink to 接口设计的幂等性考虑">接口设计的幂等性考虑</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-03-26T18:49:00+08:00"> 周一 26 三月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h2>分布式系统接口幂等性</h2>
+<h3>1.幂等性定义</h3>
+<h4>1.1 数学定义</h4>
+<blockquote>
+<p>在数学里，幂等有两种主要的定义：- 在某二元运算下，幂等元素是指被自己重复运算(或对于函数是为复合)的结果等于它自己的元素。例如，乘法下唯一两个幂等实数为0和1。即 s *s = s- 某一元运算为幂等的时，其作用在任一元素两次后会和其作用一次的结果相同。例如，高斯符号便是幂等的，即f(f(x)) = f(x)。</p>
+</blockquote>
+<h4>1.2 HTTP规范的定义</h4>
+<p>在HTTP/1.1规范中幂等性的定义是：</p>
+<blockquote>
+<p>A request method is considered "idempotent" if the intended effect on the server of multiple identical requests …</p></blockquote> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/distrubuted/interface-idempotency.html" rel="bookmark" title="Permalink to 接口设计的幂等性考虑">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/li-lun.html">理论</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/binary-operation.html" rel="bookmark" title="Permalink to java中位运算技巧">java中位运算技巧</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-03-21T22:17:00+08:00"> 周三 21 三月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>位运算符主要针对二进制，它包括了：“与”、“非”、“或”、“异或”。</p>
+<h2>运算符 含义 描述</h2>
+<p>【&amp;】 按位与 如果两个相应的二进制位都为1，则该位的结果值为1，否则为0
+【|】按位或 两个相应的二进制位中只要有一个为1，该位的结果值为1
+【^】 按位异或 若参加运算的两个二进制位值相同则为0，否则为1
+【~】 取反 ~是一元运算符，用来对一个二进制数按位取反，即将0变1，将1变0
+【&lt;&lt;】 左移 用来将一个数的各二进制位全部左移N位，右补0
+【&gt;&gt;】右移 将一个数的各二进制位右移N位，移到右端的低位被舍弃，对于无符号数，高位补0</p>
+<h4>1、“按位与”运算符（&amp;）</h4>
+<p>按位与是指：参加运算的两个数据，按二进制位进行“与”运算。如果两个相应的二进制位都为１，则该位的结果值为1；否则为0。内存储存数据的基本单位是字节（Byte），一个字节由8个位（bit)所组成。位是用以描述电脑数据量的最小单位。二进制系统中 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/binary-operation.html" rel="bookmark" title="Permalink to java中位运算技巧">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/classloader/classloader-chapter02.html" rel="bookmark" title="Permalink to ClassLoader类加载分析（二）">ClassLoader类加载分析（二）</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-03-20T22:48:00+08:00"> 周二 20 三月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>一、JVM 提供的 Classloader</h1>
+<h2>1.1 BootstrapClassloader</h2>
+<p>引导类加载器，又称启动类加载器，是最顶层的类加载器，主要用来加载Java核心类，如rt.jar、resources.jar、charsets.jar等，Sun的JVM中，执行java的命令中使用<strong>-Xbootclasspath选项或使用- D选项</strong>指定sun.boot.class.path系统属性值可以指定附加的类，它不是 java.lang.ClassLoader的子类，而是由JVM自身实现的该类c 语言实现，Java程序访问不到该加载器。通过下面代码可以查看该加载器加载了哪些jar包</p>
+<div class="highlight"><pre><span></span><span class="nt">public</span> <span class="nt">class</span> <span class="nt">MainClass</span> <span class="p">{</span>
+
+    <span class="err">public</span> <span class="err">static</span> <span class="err">void</span> <span class="err">main(String</span><span class="cp">[]</span> <span class="err">args)</span> <span class="err">throws</span> <span class="err">ClassNotFoundException</span> <span class="err">{</span>
+        <span class="err">URL</span><span class="cp">[]</span> <span class="err">urls</span> <span class="err">=</span> <span class="err">sun.misc.Launcher.getBootstrapClassPath …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/classloader/classloader-chapter02.html" rel="bookmark" title="Permalink to ClassLoader类加载分析（二）">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/yuan-ma.html">源码</a>
+                                </div>
+
+
+
+                        </article></li>
+                </ol><!-- /#posts-list -->
+
+        </div><!-- /.eleven.columns -->
+        
+<div class="three columns">
+
+<h4>归档分类</h4>
+
+ <ul>
+     <!---->
+     <!--<li><a href="http://github.com">常用工具</a></li>-->
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+     <li >
+         <a href="/algorithm-datastructure/index.html">
+             Algorithm-DataStructure
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             classloader
+         </a>
+     </li>
+     <li >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm-datastructure/index.html">Algorithm-DataStructure</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+    <nav class="widget">
+        <h4>Links</h4>
+        <ul class="blank">
+    <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">stackoverflow</a></li>
+    <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+    <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+<p class="paginator">
+            <a href="/index3.html"><i class="icon-arrow-left"></i></a>
+    Page 4 / 6
+        <a href="/index5.html"><i class="icon-arrow-right"></i></a>
+</p>
+</section><!-- /#content -->
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+</body>
+</html>

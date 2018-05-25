@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>南乡清水 - Articles by nicky_chin</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+
+                <li><a href="http://github.com">常用工具</a></li>
+                <li><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                <li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                <li><a href="/guan-yu-wo.html">关于我</a></li>
+
+              </ul>
+            </div>
+
+<section id="content">
+<h2>Articles by nicky_chin</h2>
+
+
+   <div class="row">
+
+
+        <div class="eleven columns">
+                 <ol id="post-list">
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/introspector.html" rel="bookmark" title="Permalink to Java 内省(Introspector)">Java 内省(Introspector)</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-03-13T15:15:00+08:00"> 周二 13 三月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p><strong>内省(Introspector) 是Java 语言对 JavaBean 类属性、事件的一种缺省处理方法。</strong></p>
+<p>JavaBean是一种特殊的类，主要用于传递数据信息，这种类中的方法主要用于访问私有的字段，且方法名符合某种命名规则。如果在两个模块之间传递信息，可以将信息封装进JavaBean中，这种对象称为“值对象”(Value Object)，或“VO”。方法比较少。这些信息储存在类的私有变量中，通过set()、get()获得。</p>
+<p>例如类Use :</p>
+<div class="highlight"><pre><span></span>public class User {
+
+    private String name;
+
+    private String address;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/introspector.html" rel="bookmark" title="Permalink to Java 内省(Introspector)">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/classloader/classloader-chapter01.html" rel="bookmark" title="Permalink to ClassLoader类加载分析（一）">ClassLoader类加载分析（一）</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-03-08T21:15:00+08:00"> 周四 08 三月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>一、什么是Classloader</h1>
+<p>一个Java程序要想运行起来，首先需要经过编译生成 .class文件，然后创建一个运行环境（jvm）来加载字节码文件到内存运行，而.class 文件是怎样被加载中jvm 中的就是Java Classloader所做的事情。
+<img alt="class文件执行过程" src="http://upload-images.jianshu.io/upload_images/10175660-fc4f3b0b39421a8b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>那么.class文件什么时候会被类加载器加载到jvm中运行那？比如执行new操作时候，当我们使用Class.forName(“包路径+类名”)，Class.forName(“包路径+类名”,classloader),classloader.loadclass(“包路径+类名”);时候就触发了类加载器去类加载对应的路径去查找*.class,并创建Class对象。</p>
+<h1>类的加载过程</h1>
+<p>类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：</p>
+<p>1、装载</p>
+<p>2-4、链接 -包括 【验证、准备、解析】</p>
+<p>5、初始化</p>
+<p>6、使用</p>
+<p>7、卸载 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/classloader/classloader-chapter01.html" rel="bookmark" title="Permalink to ClassLoader类加载分析（一）">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/yuan-ma.html">源码</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/design-pattern/builder.html" rel="bookmark" title="Permalink to 设计模式之builder模式">设计模式之builder模式</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2017-12-19T22:15:00+08:00"> 周二 19 十二月 2017 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>建造者模式也叫生成器模式，和抽象工厂模式相似，也是一种构建复杂对象的模式。</p>
+<p><strong>建造者模式中的角色分类</strong>： 
+ 抽象建造者Builder：接口类型，用于规范各个产品的组成部分； 
+ 具体建造者ConcreteBuilder：实现Builder中的所有方法，返回一个产品实例； 
+ 指导者Director：指挥建造者制造相应的产品 
+ 产品Product：用户最终看到的复杂对象。</p>
+<p>假设我们有一个向客户发送新年祝福邮件的需求，而邮件内容可以是纯文档的，也可以是有动画的，也可以是有音频的，可以动态的添加个组件</p>
+<p>uml下图所示： 
+<img alt="建造者模式" src="http://upload-images.jianshu.io/upload_images/10175660-73b74bcbd9ee9ba9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>如上图所示，邮箱有多个组件，包含收件人，发送人，内容，音乐等 
+通过具体的建造者添加不同的组件模版，最后通过指挥者去调用抽象建造者 
+来返回具体的email对象</p>
+<p>代码如下
+==================product======================</p>
+<div class="highlight"><pre><span></span><span class="nt">public</span> <span class="nt">interface</span> <span class="nt">Module</span> <span class="p">{</span>
+
+<span class="err">String</span> <span class="err">showInfo(String</span> <span class="err">info)</span><span class="p">;</span>
+
+<span class="p">}</span><span class="err">`</span>
+
+<span class="nt">public</span> <span class="nt">abstract</span> <span class="nt">class</span> <span class="nt">CommonModule</span> <span class="nt">implements</span> <span class="nt">Module</span> <span class="p">{</span>
+
+<span class="err">protected</span> <span class="err">String</span> <span class="err">moduleName</span><span class="p">;</span>
+
+<span class="err">protected</span> <span class="err">String</span> <span class="err">productionTime …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/design-pattern/builder.html" rel="bookmark" title="Permalink to 设计模式之builder模式">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/chuang-jian-xing.html">创建型</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/design-pattern/builder-factory.html" rel="bookmark" title="Permalink to 设计模式之factory模式">设计模式之factory模式</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2017-12-07T22:30:00+08:00"> 周四 07 十二月 2017 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p><strong>定义</strong>：工厂模式通俗意义上讲就是一个多产品的流程化工厂，每个工厂生产同一系列相关性的组件</p>
+<p><strong>分类</strong>：</p>
+<p>按工厂职能划分可以分为三类： 
+ 简单工厂模式（Simple Factory） 
+ 工厂方法模式（Factory Method） 
+ 抽象工厂方法（Abstract Factory）</p>
+<p>接下来我们直接通过<strong>uml</strong>图和具体的代码实现以上三类</p>
+<p>我们以汽车工厂生产汽车为例，本田工厂假设要生产CIVIC和CRV两种车型，那么我们该怎么去设计实现</p>
+<p><strong>1 简单工厂模式</strong></p>
+<p><img alt="简单工厂模式" src="http://upload-images.jianshu.io/upload_images/10175660-4012e2250133cb61?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>工厂产品线流程如上图所示：工厂生产汽车通过指定汽车的编号，我们就可以走指定的产品线；调用者只需要选择具体车型而不需要内部车是怎么制造出来的</p>
+<p>简单工厂模式主要包括三部分： 
+工厂角色：上图中的HONDAFactroy 生产车型用 
+抽象产品角色：上图中的HONDA和HONDACar 包含通用的属性和方法 
+具体产品角色：上图中的CIVIC和CRV，具体的车型包含各种参数</p>
+<p><strong>代码如下</strong></p>
+<div class="highlight"><pre><span></span><span class="cm">/** </span>
+<span class="cm">* @author nicky_chin [shuilianpiying@163.com] </span>
+<span class="cm">* @since –created on 2017/12/27 at 11 …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/design-pattern/builder-factory.html" rel="bookmark" title="Permalink to 设计模式之factory模式">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/chuang-jian-xing.html">创建型</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/concurrent/thread-communication.html" rel="bookmark" title="Permalink to 多线程之线程通信摘要">多线程之线程通信摘要</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2017-11-18T21:52:00+08:00"> 周六 18 十一月 2017 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>首先我们要知道进程之间的通讯方式有哪些？</p>
+<h1>管道( pipe )  #消息队列( message queue ) #共享内存( shared memory ) ：#套接字( socket ) 等等--</h1>
+<p>线程的通讯方式：</p>
+<p>1 wait/notify 机制</p>
+<p>wait()方法和notify()方法是Object类提供的方法，而在使用的条件就是当前线程必须有自己的监听器</p>
+<p>否则就是抛出异常，我们可以使用jvm提供的内置锁 synchronized 关键字来配合使用；注意如果有多个</p>
+<p>线程等待，当某一线程发起唤醒操作，会随机唤醒一个线程，而非所有线程，如果想唤醒所有线程，可以使用</p>
+<p>notifyAll()方法</p>
+<p>下面是 启动一个等待线程和一个通知线程的例子</p>
+<div class="highlight"><pre><span></span>public class MyThread1 extends Thread {  
+
+    private Object lock;  
+
+    public MyThread1(Object lock) {  
+        this.lock …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/concurrent/thread-communication.html" rel="bookmark" title="Permalink to 多线程之线程通信摘要">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                </ol><!-- /#posts-list -->
+
+        </div><!-- /.eleven.columns -->
+        
+<div class="three columns">
+
+<h4>归档分类</h4>
+
+ <ul>
+     <!---->
+     <!--<li><a href="http://github.com">常用工具</a></li>-->
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+     <li >
+         <a href="/algorithm-datastructure/index.html">
+             Algorithm-DataStructure
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             classloader
+         </a>
+     </li>
+     <li >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm-datastructure/index.html">Algorithm-DataStructure</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+    <nav class="widget">
+        <h4>Links</h4>
+        <ul class="blank">
+    <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">stackoverflow</a></li>
+    <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+    <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+<p class="paginator">
+            <a href="/author/nicky_chin4.html"><i class="icon-arrow-left"></i></a>
+    Page 5 / 6
+        <a href="/author/nicky_chin6.html"><i class="icon-arrow-right"></i></a>
+</p>
+</section><!-- /#content -->
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+</body>
+</html>

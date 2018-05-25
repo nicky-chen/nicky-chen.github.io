@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>南乡清水 - Articles by nicky_chin</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+
+                <li><a href="http://github.com">常用工具</a></li>
+                <li><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                <li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                <li><a href="/guan-yu-wo.html">关于我</a></li>
+
+              </ul>
+            </div>
+
+<section id="content">
+<h2>Articles by nicky_chin</h2>
+
+
+   <div class="row">
+
+
+        <div class="eleven columns">
+                 <ol id="post-list">
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/mysql/SHOW-GLOBAL-STATUS.html" rel="bookmark" title="Permalink to 库级优化之SHOW GLOBAL STATUS">库级优化之SHOW GLOBAL STATUS</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-10T18:11:00+08:00"> 周四 10 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p><strong>慢查询</strong></p>
+<div class="highlight"><pre><span></span>//查询慢线程情况
+show global status like &#39;%slow%&#39;
+
++---------------------+-------+     
+| Variable_name       | Value |     
++---------------------+-------+     
+| Slow_launch_threads | 1     |     
+| Slow_queries        | 100   |     
++---------------------+-------+   
+
+如果Slow_launch_threads值较大，说明有些东西正在延迟连接的新线程
+
+//查询慢查询日志是否开启
+show variables like &#39;%slow%&#39;
+
++---------------------+--------------------------------------+
+| Variable_name       | Value                                |
++---------------------+--------------------------------------+
+|log_slow_admin_statements|    ON                            |
+|log_slow_slave_statements|     OFF                          |
+| slow_launch_time    | 2                                    |
+| slow_query_log      | ON                                   |
+| slow_query_log_file |     /home/mysql/mysql/slow_query.log |
++---------------------+--------------------------------------+
+
+log_slow_admin_statements表示是否将慢管理语句例如ANALYZE TABLE和ALTER TABLE等记入慢查询日志
+ log_slow_slave_statements 表示是否管理分区慢查询记录，一般不会去选择分区，所以不考虑
+</pre></div>
+
+
+<p>配置中一定要开启慢查询，这对服务器性能损耗并不大，如上面的打印结果得知：超过2秒即为慢查询，一共有100条慢查询 。当然我们在后台也可以做sql拦截记录，定制化慢查询语句 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/mysql/SHOW-GLOBAL-STATUS.html" rel="bookmark" title="Permalink to 库级优化之SHOW GLOBAL STATUS">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ku-ji-you-hua.html">库级优化</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/mysql/optimize-picture.html" rel="bookmark" title="Permalink to 后端开发需要了解的mysql优化方向">后端开发需要了解的mysql优化方向</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-08T18:34:00+08:00"> 周二 08 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>优化思维导图</h1>
+<p><img alt="mysql优化思维导图" src="https://upload-images.jianshu.io/upload_images/10175660-dbeb71ebc3ad751b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h1>参数优化注意事项</h1>
+<p>参数优化分为 动态参数配置 和 配置文件的配置，建议在启动mysql之前配置好优化参数，这样将会全局有效，如使用动态参数配置可能会不生效或出现问题,并且如果数据库重启那么之前的优化参数都会失效</p>
+<div class="highlight"><pre><span></span>SHOW VARIABLES LIKE &#39;sort%&#39;
+修改会话级变量
+set SESSION sort_buffer_size=720000
+退出重新连接后，此参数恢复原值
+
+修改全局变量 
+set GLOBAL sort_buffer_size = 720000
+</pre></div>
+
+
+<h1>优化系列</h1>
+<p><a href="https://www.jianshu.com/p/bfc8aaa0b9f4">库级优化之SHOW GLOBAL STATUS</a></p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/mysql/optimize-picture.html" rel="bookmark" title="Permalink to 后端开发需要了解的mysql优化方向">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/mysqlsi-wei-dao-tu.html">mysql思维导图</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/mysql/design-rule.html" rel="bookmark" title="Permalink to 数据库设计三范式和反范式">数据库设计三范式和反范式</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-07T19:38:00+08:00"> 周一 07 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>数据库范式</h1>
+<p><strong>范式的级别</strong>
+      设计关系数据库时，遵从不同的规范要求，设计出合理的关系型数据库，这些不同的规范要求被称为不同的范式，各种范式呈递次规范，越高的范式数据库冗余越小。
+      目前关系数据库有六种范式：<strong><em>第一范式（1NF）、第二范式（2NF）、第三范式（3NF）、巴斯-科德范式（BCNF）、第四范式(4NF）和第五范式（5NF，又称完美范式）。</em></strong>
+      范式越高，冗余最低，一般到三范式，再往上，表越多，可能导致查询效率下降。所以有时为了提高运行效率，可以让数据冗余(反三范式，一般某个数据经常被访问时，比如数据表里存放了语文数学英语成绩，但是如果在某个时间经常要得到它的总分，每次都要进行计算会降低性能，可以加上总分这个冗余字段)。
+      后面的范式是在满足前面范式的基础上，比如满足第二范式的一定满足第一范式。
+<strong>第一范式（1NF）：确保每一列的原子性</strong>
+如果每一列都是不可再分的最小数据单元，则满足第一范式。
+<img alt="第一范式" src="https://upload-images.jianshu.io/upload_images/10175660-7f1d5f71d9be0501.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>但是具体地址到底要不要拆分 还要看具体情形，比如看看将来会不会按国家或者省市进行分类汇总或者排序，如果需要，最好就拆，如果不需要而仅仅起字符串的作用，可以不拆 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/mysql/design-rule.html" rel="bookmark" title="Permalink to 数据库设计三范式和反范式">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/design-pattern/strategy.html" rel="bookmark" title="Permalink to 实际项目运用之Strategy模式（策略模式）">实际项目运用之Strategy模式（策略模式）</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-06T17:20:00+08:00"> 周日 06 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1. 策略模式概要</h1>
+<p>策略模式是对算法的包装，是把使用算法的责任和算法本身分割开来，委派给不同的对象管理。策略模式通常把一个系列的算法包装到一系列的策略类里面，作为一个抽象策略类的子类。用一句话来说，就是：“准备一组算法，并将每一个算法封装起来，使得它们可以互换”。
+下面就以一个示意性的实现讲解策略模式实例的结构。
+<img alt="策略模式" src="https://upload-images.jianshu.io/upload_images/10175660-2d9b5e02ce921d8e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>这个模式涉及到三个角色：</p>
+<p>● <strong>环境(Context)角色：</strong>持有一个Strategy的引用。</p>
+<p>● <strong>抽象策略(Strategy)角色：</strong>这是一个抽象角色，通常由一个接口或抽象类实现。此角色给出所有的具体策略类所需的接口。</p>
+<p>● <strong>具体策略(ConcreteStrategy)角色：</strong>包装了相关的算法或行为。</p>
+<h3>1.1 案例代码</h3>
+<p>策略模式上下文</p>
+<div class="highlight"><pre><span></span>public class Context {
+    //持有一个具体策略的对象
+    private Strategy strategy;
+    /**
+     * 构造函数，传入一个具体策略对象
+     * @param strategy    具体策略对象
+     */
+    public Context(Strategy strategy){
+        this.strategy …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/design-pattern/strategy.html" rel="bookmark" title="Permalink to 实际项目运用之Strategy模式（策略模式）">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/xing-wei-xing.html">行为型</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/concurrent/volatile-feature.html" rel="bookmark" title="Permalink to volatile关键字原理实现及应用">volatile关键字原理实现及应用</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-04T22:46:00+08:00"> 周五 04 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1.并发编程中的三个概念</h1>
+<p>在并发编程中, 需要了解线程的三个概念：原子性，可见性，有序性：</p>
+<p><strong>1.1.原子性</strong></p>
+<blockquote>
+<p>原子性：即一个操作或者多个操作 要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。</p>
+</blockquote>
+<p>一个很经典的例子就是银行账户转账问题：</p>
+<div class="highlight"><pre><span></span>比如从账户A向账户B转1000元，那么必然包括2个操作：从账户A减去1000元，往账户B加上1000元。
+
+试想一下，如果这2个操作不具备原子性，会造成什么样的后果。假如从账户A减去1000元之后，操作突然中止。然后又从B取出了500元，取出500元之后，
+再执行 往账户B加上1000元 的操作。这样就会导致账户A虽然减去了1000元，但是账户B没有收到这个转过来的1000元。
+
+所以这2个操作必须要具备原子性才能保证不出现一些意外的问题。
+</pre></div>
+
+
+<p>同样地反映到并发编程中会出现什么结果呢？</p>
+<p>举个最简单的例子，大家想一下假如为一个32位的变量赋值过程不具备原子性的话，会发生什么后果？</p>
+<div class="highlight"><pre><span></span>i = 9;
+</pre></div>
+
+
+<p>假若一个线程执行到这个语句时，我暂且假设为一个32位的变量赋值包括两个过程：为低16位赋值，为高16位赋值。
+那么就可能发生一种情况：当将低16位数值写入之后，突然被中断，而此时又有一个线程去读取i的值，那么读取到的就是错误的数据。</p>
+<p><strong>1.2.可见性 …</strong></p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/concurrent/volatile-feature.html" rel="bookmark" title="Permalink to volatile关键字原理实现及应用">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                </ol><!-- /#posts-list -->
+
+        </div><!-- /.eleven.columns -->
+        
+<div class="three columns">
+
+<h4>归档分类</h4>
+
+ <ul>
+     <!---->
+     <!--<li><a href="http://github.com">常用工具</a></li>-->
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+     <li >
+         <a href="/algorithm-datastructure/index.html">
+             Algorithm-DataStructure
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             classloader
+         </a>
+     </li>
+     <li >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm-datastructure/index.html">Algorithm-DataStructure</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+    <nav class="widget">
+        <h4>Links</h4>
+        <ul class="blank">
+    <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">stackoverflow</a></li>
+    <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+    <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+<p class="paginator">
+            <a href="/author/nicky_chin.html"><i class="icon-arrow-left"></i></a>
+    Page 2 / 6
+        <a href="/author/nicky_chin3.html"><i class="icon-arrow-right"></i></a>
+</p>
+</section><!-- /#content -->
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+</body>
+</html>

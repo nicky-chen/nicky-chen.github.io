@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>MYSQL高级特性之【存储过程与函数】</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+        <link href="/feeds/mysql.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+
+                <li><a href="http://github.com">常用工具</a></li>
+                <li><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                <li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                <li><a href="/guan-yu-wo.html">关于我</a></li>
+
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/mysql/process-fun.html" rel="bookmark"
+                   title="Permalink to MYSQL高级特性之【存储过程与函数】">MYSQL高级特性之【存储过程与函数】</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2018-04-27T22:30:00+08:00">
+                周五 27 四月 2018
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <h1>一、定义</h1>
+<p>存储程序可以分为存储过程和函数。</p>
+<h2>1.1 存储过程的定义</h2>
+<p><strong>存储过程（Stored Procedure）</strong>是一组为了完成特定功能的SQL语句集。存储过程在数据库中经过第一次编译后再次调用不需要再次编译，用户通过指定存储过程的名字并给出参数（如果该存储过程带有参数）来执行它。</p>
+<h2>1.2 函数的定义</h2>
+<p>存储函数（简称<strong>函数</strong>）在本质上与存储过程没有区别。</p>
+<p>只是函数有如：只能返回一个变量的限制，而存储过程可以返回多个。函数是可以嵌入在SQL中使用，可以在select中调用，而存储过程不行。</p>
+<h1>二、创建存储过程和函数</h1>
+<p>存储过程和函数的创建过程很相似。</p>
+<h2>2.1 创建存储过程</h2>
+<p>语法</p>
+<blockquote>
+<p>CREATE PROCEDURE sp_name ([ proc_parameter ]) [ characteristics..] routine_body </p>
+</blockquote>
+<p>proc_parameter指定存储过程的参数列表，列表形式如下：</p>
+<blockquote>
+<p>[IN|OUT|INOUT] param_name type</p>
+</blockquote>
+<p>其中in表示输入参数，out表示输出参数，inout表示既可以输入也可以输出；param_name表示参数名称；type表示参数的类型</p>
+<p>该类型可以是MYSQL数据库中的任意类型</p>
+<p>有以下取值：</p>
+<div class="highlight"><pre><span></span><span class="n">characteristic</span><span class="o">:</span> 
+    <span class="n">LANGUAGE</span> <span class="n">SQL</span> 
+  <span class="o">|</span> <span class="o">[</span><span class="n">NOT</span><span class="o">]</span> <span class="n">DETERMINISTIC</span> 
+  <span class="o">|</span> <span class="o">{</span> <span class="n">CONTAINS</span> <span class="n">SQL</span> <span class="o">|</span> <span class="n">NO</span> <span class="n">SQL</span> <span class="o">|</span> <span class="n">READS</span> <span class="n">SQL</span> <span class="n">DATA</span> <span class="o">|</span> <span class="n">MODIFIES</span> <span class="n">SQL</span> <span class="n">DATA</span> <span class="o">}</span> 
+  <span class="o">|</span> <span class="n">SQL</span> <span class="n">SECURITY</span> <span class="o">{</span> <span class="n">DEFINER</span> <span class="o">|</span> <span class="n">INVOKER</span> <span class="o">}</span> 
+  <span class="o">|</span> <span class="n">COMMENT</span> <span class="s1">&#39;string&#39;</span> 
+<span class="n">routine_body</span><span class="o">:</span> 
+    <span class="n">Valid</span> <span class="n">SQL</span> <span class="n">procedure</span> <span class="n">statement</span> <span class="n">or</span> <span class="n">statements</span>
+</pre></div>
+
+
+<p><strong>LANGUAGE SQL</strong> ：说明routine_body部分是由SQL语句组成的，当前系统支持的语言为SQL，SQL是LANGUAGE特性的唯一值</p>
+<p><strong>[NOT] DETERMINISTIC</strong> ：指明存储过程执行的结果是否正确。DETERMINISTIC 表示结果是确定的。每次执行存储过程时，相同的输入会得到</p>
+<p>相同的输出。</p>
+<p>[NOT] DETERMINISTIC 表示结果是不确定的，相同的输入可能得到不同的输出。如果没有指定任意一个值，默认为[NOT] DETERMINISTIC </p>
+<p><strong>CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA</strong>：指明子程序使用SQL语句的限制。</p>
+<p>CONTAINS SQL表明子程序包含SQL语句，但是不包含读写数据的语句；</p>
+<p>NO SQL表明子程序不包含SQL语句；</p>
+<p>READS SQL DATA：说明子程序包含读数据的语句；</p>
+<p>MODIFIES SQL DATA表明子程序包含写数据的语句。</p>
+<p>默认情况下，系统会指定为CONTAINS SQL</p>
+<p><strong>SQL SECURITY { DEFINER | INVOKER }</strong> ：指明谁有权限来执行。DEFINER 表示只有定义者才能执行</p>
+<p>INVOKER 表示拥有权限的调用者可以执行。默认情况下，系统指定为DEFINER </p>
+<p>COMMENT 'string' ：注释信息，可以用来描述存储过程或函数</p>
+<p>routine_body是SQL代码的内容，可以用BEGIN...END来表示SQL代码的开始和结束</p>
+<p>下面的语句创建一个查询order表统计数据的存储过程</p>
+<div class="highlight"><pre><span></span>DROP PROCEDURE IF EXISTS countOrder; 
+
+DELIMITER //
+CREATE PROCEDURE countOrder() 
+BEGIN
+  SELECT count(*) FROM borrow_order;
+END//
+DELIMITER ;
+
+CALL countOrder(); 
+</pre></div>
+
+
+<p>这里的逻辑是
+1、先判断是否有countOrder() 这个存储过程，有就drop掉
+2、创建countOrder() 存储过程
+3、执行countOrder() 存储过程</p>
+<blockquote>
+<p>注意：“DELIMITER //”语句的作用是将MYSQL的结束符设置为//，因为MYSQL默认的语句结束符为分号;，为了避免与存储过程中SQL语句结束符相冲突，需要使用DELIMITER 改变存储过程的结束符，并以“END//”结束存储过程。
+存储过程定义完毕之后再使用DELIMITER ;恢复默认结束符。DELIMITER 也可以指定其他符号为结束符！！！！！！！！</p>
+</blockquote>
+<hr>
+<h2>2.2 创建函数</h2>
+<p>创建函数使用CREATE FUNCTION语句：</p>
+<div class="highlight"><pre><span></span>CREATE FUNCTION f_name([func_parameter])
+    RETURNS type
+    [characteristics...]
+   routine_body
+</pre></div>
+
+
+<p>参数列表可以为空，若不为空，声明形式与存储过程的声明形式一样。characteristics用于指定函数的特性，取值同上，这里不再赘述。
+func_parameter为存储函数的参数列表，参数列表如下</p>
+<blockquote>
+<p>[IN|OUT|INOUT]PARAM_NAMETYPE</p>
+</blockquote>
+<p>RETURNS type表示函数的返回类型；routine_body是函数体，函数体中必须包含一个 RETURN value 语句。</p>
+<h2>2.3函数示例</h2>
+<p>同样的，我们创建一个函数来计算平均工资</p>
+<div class="highlight"><pre><span></span>DELIMITER //
+CREATE FUNCTION getAvgAmount()
+    RETURNS DECIMAL(8,4)
+    RETURN(SELECT AVG(amount) FROM `user`);
+//
+DELIMITER
+</pre></div>
+
+
+<p>调用函数</p>
+<blockquote>
+<p>SELECT getAvgAmount()</p>
+</blockquote>
+<h1>3、复杂的存储过程和函数</h1>
+<h2>3.1变量的使用</h2>
+<p>变量可以在子程序中声明并使用，这些变量的作用范围是在BEGIN...END程序中</p>
+<p>1、定义变量</p>
+<p>在存储过程中定义变量</p>
+<blockquote>
+<p>DECLARE var_name[,varname]...date_type[DEFAULT VALUE];</p>
+</blockquote>
+<p>var_name为局部变量的名称。DEFAULT VALUE子句给变量提供一个默认值。值除了可以被声明为一个常数外，还可以被指定为一个表达式。</p>
+<p>如果没有DEFAULT子句，初始值为NULL</p>
+<p>DECLARE MYPARAM INT DEFAULT 100;</p>
+<p>2、为变量赋值</p>
+<p>定义变量之后，为变量赋值可以改变变量的默认值，MYSQL中使用SET语句为变量赋值</p>
+<blockquote>
+<p>SET var_name=expr[,var_name=expr]...</p>
+</blockquote>
+<p>在存储过程中的SET语句是一般SET语句的扩展版本。</p>
+<p>被SET的变量可能是子程序内的变量，或者是全局服务器变量，如系统变量或者用户变量</p>
+<p>他运行SET a=x,b=y,....</p>
+<p>声明3个变量，分别为var1，var2和var3</p>
+<blockquote>
+<p>DECLARE var1,var2,var3 INT;
+SET var1=10,var2=20;
+SET var3=var1+var2;</p>
+</blockquote>
+<p>MYSQL中还可以通过SELECT...INTO为一个或多个变量赋值</p>
+<blockquote>
+<p>DECLARE NAME CHAR(50);
+DECLARE id DECIMAL(8,2);
+SELECT id,NAME INTO id ,NAME FROM t3 WHERE id=2;</p>
+</blockquote>
+<h2>3.2 流程控制的使用</h2>
+<p>MySQL中的流程控制语句有：<code>IF</code>语句、<code>CASE</code>语句、<code>LOOP</code>语句、<code>WHILE</code>语句、<code>LEAVE</code>语句、<code>ITERATE</code>语句和<code>REPEAT</code>语句。</p>
+<h3>3.2.1 IF语句</h3>
+<p>语法格式如下：</p>
+<div class="highlight"><pre><span></span><span class="n">IF</span> <span class="n">expr_condition</span> <span class="n">THEN</span> <span class="n">statement_list</span>
+    <span class="p">[</span><span class="n">ELSEIF</span> <span class="n">expr_condition</span> <span class="n">THEN</span> <span class="n">statement_list</span><span class="p">]...</span>
+    <span class="p">[</span><span class="n">ELSE</span> <span class="n">statement_list</span><span class="p">]</span>
+<span class="n">END</span> <span class="n">IF</span><span class="p">;</span>
+</pre></div>
+
+
+<h3>3.2.2 CASE语句</h3>
+<p>CASE语句有两种语法格式，第一种如下：</p>
+<div class="highlight"><pre><span></span><span class="n">CASE</span> <span class="n">expr</span>
+    <span class="n">WHEN</span> <span class="n">value1</span> <span class="n">THEN</span> <span class="n">statement_list</span>
+    <span class="n">WHEN</span> <span class="n">value2</span> <span class="n">THEN</span> <span class="n">statement_list</span>
+    <span class="p">...</span>
+    <span class="p">[</span><span class="n">ELSE</span> <span class="n">statement_list</span><span class="p">]</span>
+<span class="n">END</span> <span class="n">CASE</span><span class="p">;</span>
+</pre></div>
+
+
+<p>第二种如下：</p>
+<div class="highlight"><pre><span></span><span class="n">CASE</span>
+    <span class="n">WHEN</span> <span class="n">expr_condition1</span> <span class="n">THEN</span> <span class="n">statement_list</span>
+    <span class="n">WHEN</span> <span class="n">expr_condition2</span> <span class="n">THEN</span> <span class="n">statement_list</span>
+    <span class="p">...</span>
+    <span class="p">[</span><span class="n">ELSE</span> <span class="n">statement_list</span><span class="p">]</span>
+<span class="n">END</span> <span class="n">CASE</span><span class="p">;</span>
+</pre></div>
+
+
+<p>注意：在存储程序里的 CASE 语句 与 直接在SELECT查询里使用的 CASE 函数有略微的不同。在存储程序里的 CASE 语句不能有<code>ELSE NULL</code>子句，并且用<code>END CASE</code>而不是<code>END</code>来终止。</p>
+<h3>3.2.3 LOOP语句</h3>
+<p>LOOP语句的语法如下：</p>
+<div class="highlight"><pre><span></span>[loop_label:]LOOP
+    statement_list
+END LOOP [loop_label]
+</pre></div>
+
+
+<p>loop_label是LOOP语句的标签，该参数可以省略。 LOOP 内的语句一直重复执行直到退出循环，退出循环使用<code>LEAVE</code>语句。</p>
+<h3>3.2.4 LEAVE语句</h3>
+<p>LEAVE语句用来退出任何被标注的流程控制语句，语法如下：</p>
+<div class="highlight"><pre><span></span>LEAVE label;
+</pre></div>
+
+
+<h3>3.2.5 ITERATE语句</h3>
+<p>ITERATE语句将执行顺序转到语句段开头处，ITERATE只可以出现在 LOOP、REPEAT和WHILE语句内。语法如下：</p>
+<div class="highlight"><pre><span></span>ITERATE label;
+</pre></div>
+
+
+<p>通俗点讲，就是相当于C++里的<code>continue</code>。</p>
+<h3>3.2.6 REPEAT语句</h3>
+<p>REPEAT语句创建一个带条件判断的循环过程：</p>
+<div class="highlight"><pre><span></span>[repeat_label:]REPEAT
+    statement_list
+UNTIL expr_condition
+END REPEAT [repeat_label]
+</pre></div>
+
+
+<h3>3.2.7 WHILE语句</h3>
+<p>WHILE语句也是创建一个带条件判断的循环过程，不同的是在每次执行循环体时先判断：</p>
+<div class="highlight"><pre><span></span>[while_label:]WHILE expr_condition DO
+    statement_list
+END WHILE [while_label]
+</pre></div>
+
+
+<h2>3.3 定义条件和处理程序</h2>
+<p>特定条件需要特定处理，定义条件是事先定义程序执行过程中遇到的问题，处理程序定义了在遇到这些问题时应当采取的处理方式，这样可以保证存储过程或函数在遇到警告或错误时能继续执行。</p>
+<h3>3.3.1 定义条件</h3>
+<p>定义条件也是使用<code>DECLARE</code>语句：</p>
+<div class="highlight"><pre><span></span>DECLARE condition_name CONDITION FOR SQLSTATE &#39;sqlstate_value&#39; | mysql_error_code;
+</pre></div>
+
+
+<p>sqlstate_value 和 mysql_error_code 都可以表示MySQL的错误，例如：<code>ERROR 1064(42000)</code>中，sqlstate_value的值是42000，mysql_error_code的值是1064。</p>
+<p>这个语句指定需要特殊处理的条件。它将一个名字和指定的错误条件关联起来，这个名字可以用在后面的处理程序中。例如：定义<code>'ERROR 1064(42000)'</code>错误名称为<code>syntax_error</code>。</p>
+<div class="highlight"><pre><span></span>DECLARE syntax_error CONDITION FOR SQLSTATE &#39;42000&#39;;  /*方法一*/
+DECLARE syntax_error CONDITION FOR 1064;              /*方法二*/
+</pre></div>
+
+
+<h3>3.3.2 定义处理程序</h3>
+<p>定义处理程序语法如下：</p>
+<div class="highlight"><pre><span></span>DECLARE handler_type HANDLER FOR condition_value sp_statement;
+</pre></div>
+
+
+<ul>
+<li>
+<p><strong>handler_type</strong>：表示错误处理方式，只能取以下3个值。 </p>
+<ul>
+<li><code>CONTINUE</code>：遇到错误不处理，继续执行；</li>
+<li><code>EXIT</code>：遇到错误马上退出；</li>
+<li><code>UNDO</code>：遇到错误后撤回之前的操作，MySQL暂不支持。</li>
+<li>
+<p><strong>condition_value</strong>：表示错误类型，可以有以下值： </p>
+</li>
+<li>
+<p><code>SQLSTATE 'sqlstate_value'</code></p>
+</li>
+<li><code>mysql_error_code</code></li>
+<li>condition_name：自定义的条件名称</li>
+<li><code>SQLWARNING</code>：匹配所有以01开头的SQLSTATE错误代码</li>
+<li><code>NOT FOUND</code>：匹配所有以02开头的SQLSTATE错误代码</li>
+<li><code>SQLEXCEPTION</code>：匹配所有没有被SQLWARNING或NOT FOUND捕获的SQLSTATE错误代码</li>
+<li><strong>sp_statement</strong>：程序语句段，表示在遇到定义的错误时，需要执行的存储过程或函数。</li>
+</ul>
+</li>
+</ul>
+<h2>3.4 光标的使用</h2>
+<p>查询语句可能返回多条记录，如果数据量非常大，需要使用光标（cursor）来<strong>逐条</strong>读取查询结果集中的记录。</p>
+<h3>3.4.1 声明光标</h3>
+<p>光标必须在打开之前被声明，并且其中用到的变量或条件必须在声明光标之前被声明。MySQL中使用<code>DECLARE</code>关键字来声明光标：</p>
+<div class="highlight"><pre><span></span>DECLARE cursor_name CURSOR FOR select_statement;
+</pre></div>
+
+
+<p>其中的 SELECT 语句返回一个用于创建光标的结果集。</p>
+<h3>3.4.2 打开光标</h3>
+<p>打开光标的语法如下：</p>
+<div class="highlight"><pre><span></span>OPEN cursor_name;
+</pre></div>
+
+
+<h3>3.4.3 使用光标</h3>
+<p>通过<code>FETCH</code>关键字从光标中逐条读取到变量中：</p>
+<div class="highlight"><pre><span></span>FETCH cursor_name INTO var_name[,...];
+</pre></div>
+
+
+<p>变量var_name必须在声明光标之前就定义好。</p>
+<h3>3.4.4 关闭光标</h3>
+<p>关闭光标的语法如下：</p>
+<div class="highlight"><pre><span></span>CLOSE cursor_name;
+</pre></div>
+
+
+<p><strong>注意：</strong>MySQL中光标只能在存储过程和函数中使用。</p>
+<h3>3.4.5 示例</h3>
+<p>在<code>workers</code>表的基础上，创建一个存储过程，根据输入的城市名，输出该城市所有员工的名字。</p>
+<div class="highlight"><pre><span></span>mysql&gt; DELIMITER //
+mysql&gt; CREATE PROCEDURE useCursorDemo(IN city_name VARCHAR(15))
+    -&gt; BEGIN
+    -&gt; DECLARE m_name VARCHAR(10);
+    -&gt; DECLARE m_city VARCHAR(15);
+    -&gt; DECLARE m_stop INT DEFAULT 0;
+    -&gt; DECLARE mycursor CURSOR FOR SELECT name,city FROM workers WHERE city=city_name;
+    -&gt; DECLARE CONTINUE HANDLER FOR NOT FOUND SET m_stop=1;
+    -&gt; OPEN mycursor;
+    -&gt; FETCH mycursor INTO m_name,m_city;
+    -&gt; WHILE m_stop!=1 DO
+    -&gt; SELECT m_name,m_city;
+    -&gt; FETCH mycursor INTO m_name,m_city;
+    -&gt; END WHILE;
+    -&gt; CLOSE mycursor;
+    -&gt; END//
+Query OK, 0 rows affected (0.08 sec)
+
+mysql&gt; DELIMITER ;
+</pre></div>
+
+
+<p>调用<code>useCursorDemo</code>存储过程：</p>
+<div class="highlight"><pre><span></span>mysql&gt; CALL useCursorDemo(&#39;Chicago&#39;);
++--------+---------+
+| m_name | m_city  |
++--------+---------+
+| Nina   | Chicago |
++--------+---------+
+1 row in set (0.05 sec)
+
++--------+---------+
+| m_name | m_city  |
++--------+---------+
+| Tim    | Chicago |
++--------+---------+
+1 row in set (0.05 sec)
+</pre></div>
+
+
+<p>通过这个例子，我们可以了解到如何在存储过程或函数中使用<strong>变量、光标和流程控制。</strong></p>
+<h2>3.5、修改、删除存储过程和函数</h2>
+<p>使用<code>ALTER</code>语句可以修改存储过程或函数的特性，语法如下：</p>
+<div class="highlight"><pre><span></span>ALTER {PROCEDURE|FUNCTION} sp_name [characteristic]
+</pre></div>
+
+
+<p><strong>sp_name</strong>是存储过程或函数的名称，<strong>characteristic</strong>指定存储过程或函数的特性，与创建过程的参数取值是一样的。</p>
+<p>使用<code>DROP</code>语句删除存储过程或函数，语法如下：</p>
+<div class="highlight"><pre><span></span><span class="n">DROP</span> <span class="p">{</span><span class="n">PROCEDURE</span><span class="o">|</span><span class="n">FUNCTION</span><span class="p">}</span> <span class="p">[</span><span class="n">IF</span> <span class="n">EXISTS</span><span class="p">]</span> <span class="n">sp_name</span><span class="p">;</span>
+</pre></div>
+
+
+<h1>4 存储过程与SQL语句对比</h1>
+<p><strong>优势:</strong></p>
+<p><strong>1、提高性能</strong>
+SQL语句在创建过程时进行分析和编译。 存储过程是预编译的，在首次运行一个存储过程时，查询优化器对其进行分析、优化，并给出最终被存在系统表中的存储计划，这样，在执行过程时便可节省此开销。
+<strong>2、降低网络开销</strong>
+存储过程调用时只需用提供存储过程名和必要的参数信息，从而可降低网络的流量。
+<strong>3、便于进行代码移植</strong>
+数据库专业人员可以随时对存储过程进行修改，但对应用程序源代码却毫无影响，从而极大的提高了程序的可移植性。
+<strong>4、更强的安全性</strong>
+1）系统管理员可以对执行的某一个存储过程进行权限限制，避免非授权用户对数据的访问
+2）在通过网络调用过程时，只有对执行过程的调用是可见的。 因此，恶意用户无法看到表和数据库对象名称、嵌入自己的 Transact-SQL 语句或搜索关键数据。
+3）使用过程参数有助于避免 SQL 注入攻击。 因为参数输入被视作文字值而非可执行代码，所以，攻击者将命令插入过程内的 Transact-SQL 语句并损害安全性将更为困难。
+4）可以对过程进行加密，这有助于对源代码进行模糊处理。 </p>
+<p><strong>劣势：</strong></p>
+<p>1、存储过程需要专门的数据库开发人员进行维护
+2、设计逻辑变更，修改存储过程没有SQL灵活</p>
+<p>为什么在实际应用中，存储过程用到相对较少呢？
+在通常的项目研发中，用存储过程却相对较少，这是为什么呢？
+分析原因如下：
+1）没有特定的数据库开发人员，普通程序员兼职进行数据库操作
+2）程序员往往只需操作程序，即可完成数据访问，无需再在数据库上进行开发
+3）项目需求变动比较频繁，修改SQL语句比较方便，特别是涉及逻辑变更 </p>
+<p>存储过程与SQL语句如何抉择？
+基于实际应用的经验，给予如下建议：</p>
+<p>1、在一些高效率或者规范性要求比较高的项目，建议采用存储过程
+2、对于一般项目建议采用参数化命令方式，是存储过程与SQL语句一种折中的方式
+3、对于一些算法要求比较高，涉及多条数据逻辑，建议采用存储过程</p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "mysql/process-fun.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+
+<h4>归档分类</h4>
+
+ <ul>
+     <!---->
+     <!--<li><a href="http://github.com">常用工具</a></li>-->
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+     <li >
+         <a href="/algorithm-datastructure/index.html">
+             Algorithm-DataStructure
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             classloader
+         </a>
+     </li>
+     <li >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li class="active" >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm-datastructure/index.html">Algorithm-DataStructure</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+    <nav class="widget">
+        <h4>Links</h4>
+        <ul class="blank">
+    <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">stackoverflow</a></li>
+    <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+    <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+</body>
+</html>

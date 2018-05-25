@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>MYSQL高级特性之【Event事件】</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+        <link href="/feeds/mysql.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+
+                <li><a href="http://github.com">常用工具</a></li>
+                <li><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                <li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                <li><a href="/guan-yu-wo.html">关于我</a></li>
+
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/mysql/high-event.html" rel="bookmark"
+                   title="Permalink to MYSQL高级特性之【Event事件】">MYSQL高级特性之【Event事件】</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2018-04-28T20:18:00+08:00">
+                周六 28 四月 2018
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p><strong>一、基本概念</strong> mysql5.1版本开始引进event概念。event既“时间触发器”，与triggers的事件触发不同，event类似与linux crontab计划任务，用于时间触发。通过单独或调用存储过程使用，在某一特定的时间点，触发相关的SQL语句或存储过程。</p>
+<p><strong>二、适用范围</strong> 对于每隔一段时间就有固定需求的操作，如创建表，删除数据等操作，可以使用event来处理。</p>
+<p>例如：使用event在每月的1日凌晨1点自动创建下个月需要使用的三张表。</p>
+<p>每天清除数据表中的过期的记录。</p>
+<p><strong>三、使用权限</strong> 单独使用event调用SQL语句时，查看和创建需要用户具有event权限，调用该SQL语句时，需要用户具有执行该SQL的权限。Event权限的设置保存在mysql.user表和mysql.db表的Event_priv字段中。</p>
+<p>当event和procedure（存储过程）配合使用的时候，查看和创建存储过程需要用户具有create routine权限，调用存储过程执行时需要使用excute权限，存储过程调用具体的SQL语句时，需要用户具有执行该SQL的权限。
+查看EVENT命令有如下几种：</p>
+<blockquote>
+<p>（1）查询mysql.event表；
+（2）通过SHOW EVENTS命令；
+（3）通过SHOW FULL EVENTS命令；
+（4）通过查询information_schema.events表
+（5）SHOW CREATE EVENT。<br>
+   总之，event的使用频率较低建议使用root用户进行创建和维护。</p>
+</blockquote>
+<p><strong>四、基本语法</strong></p>
+<p><strong>4.1 开启定时器</strong> 要使event起作用，MySQL的常量GLOBAL event_scheduler必须为on或者是1
+-- 查看是否开启定时器</p>
+<div class="highlight"><pre><span></span>SHOW VARIABLES LIKE &#39;event_scheduler&#39;;
+</pre></div>
+
+
+<p>-- 开启定时器 0：off 1：on </p>
+<div class="highlight"><pre><span></span>SET GLOBAL event_scheduler = 1; 
+</pre></div>
+
+
+<p>当你设定事件计划为0 或OFF，即关闭事件计划进程的时候，不会有新的事件执行，但现有的正在运行的事件会执行到完毕</p>
+<p>对于我们线上环境来说，使用event时，注意在主库上开启定时器，从库上关闭定时器，event触发所有操作均会记录binlog进行主从同步，从库上开启定时器很可能造成卡库。切换主库后之后记得将新主库上的定时器打开。</p>
+<p>请特别注意！</p>
+<p><strong>4.2 创建事件</strong> CREATE EVENT 的语法如下：</p>
+<div class="highlight"><pre><span></span>CREATE EVENT
+[IF NOT EXISTS] ---------------------------------------------*标注1
+event_name -----------------------------------------------------*标注2
+ON SCHEDULE schedule ------------------------------------*标注3 
+[ON COMPLETION [NOT] PRESERVE] -----------------*标注4
+[ENABLE | DISABLE] ----------------------------------------*标注5 
+[COMMENT &#39;comment&#39;] --------------------------------------*标注6 
+DO sql_statement -----------------------------------------------*标注7
+</pre></div>
+
+
+<p><strong>说明：</strong><br>
+<strong>标注1：[IF NOT EXISTS]</strong>
+使用IF NOT EXISTS，只有在同名event不存在时才创建，否则忽略。建议不使用以保证event创建成功。</p>
+<p><strong>标注2：event_name</strong><br>
+名称最大长度可以是64个字节。名字必须是当前Dateabase中唯一的，同一个数据库不能有同名的event。使用event常见的工作是创建表、插入数据、删除数据、清空表、删除表。</p>
+<p>为了避免命名规范带来的不便，最好让事件名称具有描述整个事件的能力。建议命名规则如下为：动作名称_（INTO/FROM_）表名_TIME，例如：</p>
+<div class="highlight"><pre><span></span>1.  每月创建（清空/删除）fans表：  
+create(truncate/drop)_table_fans_month；
+2.  每天从fans表插入（删除）数据： 
+insert(delete)_into(from)_fans_day；
+</pre></div>
+
+
+<p><strong>标注3</strong>：<strong>ON SCHEDULE</strong><br>
+<strong>ON SCHEDULE 计划任务，有两种设定计划任务的方式：</strong><br>
+1. AT 时间戳，用来完成单次的计划任务。</p>
+<p>2. EVERY 时间（单位）的数量时间单位[STARTS 时间戳] [ENDS时间戳]，用来完成重复的计划任务。</p>
+<p>在两种计划任务中，时间戳可以是任意的TIMESTAMP 和DATETIME 数据类型，时间戳需要大于当前时间。</p>
+<p>在重复的计划任务中，时间（单位）的数量可以是任意非空（Not Null）的整数式，时间单位是关键词：YEAR，MONTH，DAY，HOUR，MINUTE 或者SECOND。</p>
+<p>提示: 其他的时间单位也是合法的如：QUARTER, WEEK, YEAR_MONTH,DAY_HOUR,DAY_MINUTE,DAY_SECOND,HOUR_MINUTE,HOUR_SECOND, MINUTE_SECOND，不建议使用这些不标准的时间单位。</p>
+<p><strong>标注4</strong>： [<strong>ON COMPLETION [NOT] PRESERVE</strong>] 
+ON COMPLETION参数表示"当这个事件不会再发生的时候"，即当单次计划任务执行完毕后或当重复性的计划任务执行到了ENDS阶段。而PRESERVE的作用是使事件在执行完毕后不会被Drop掉，建议使用该参数，以便于查看EVENT具体信息。</p>
+<p><strong>标注5：[ENABLE | DISABLE]</strong>
+参数Enable和Disable表示设定事件的状态。Enable表示系统将执行这个事件。Disable表示系统不执行该事件。
+可以用如下命令关闭或开启事件：</p>
+<div class="highlight"><pre><span></span>ALTER EVENT event_name  ENABLE/DISABLE
+</pre></div>
+
+
+<p><strong>标注6</strong>：[<strong>COMMENT 'comment'</strong>]<br>
+注释会出现在元数据中，它存储在information_schema表的COMMENT列，最大长度为64个字节。'comment'表示将注释内容放在单引号之间，建议使用注释以表达更全面的信息。</p>
+<p><strong>标注 7</strong>: <strong>DO sql_statement</strong> 
+DO sql_statement字段表示该event需要执行的SQL语句或存储过程。这里的SQL语句可以是复合语句，例如：</p>
+<div class="highlight"><pre><span></span>BEGIN
+CREATE TABLE test1;//创建表（需要测试一下）
+DROP TABLE test2;//删除表
+CALL proc_test1();//调用存储过程
+END
+</pre></div>
+
+
+<p>使用BEGIN和END标识符将复合SQL语句按照执行顺序放在之间。当然SQL语句是有限制的，对它的限制跟函数Function和触发器Trigger 中对SQL语句的限制是一样的，如果你在函数Function 和触发器Trigger 中不能使用某些SQL，同样的在EVENT中也不能使用。明确的来说有下面几个：</p>
+<div class="highlight"><pre><span></span>LOCK TABLES
+UNLOCK TABLES
+CREATE EVENT
+ALTER EVENT
+LOAD DATA
+</pre></div>
+
+
+<p><strong>4.3  执行逻辑</strong> For (已建立事件each event that has been created)</p>
+<div class="highlight"><pre><span></span>If (事件的状态非DISABLE)
+And (当前时间在ENDS时间之前)
+And (当前时间在STARTS时间之后)
+And (在上次执行后经过的时间)
+And (没有被执行)
+Then:
+建立一个新的线程
+传递事件的SQL语句给新的线程
+(该线程在执行完毕后会自动关闭)
+</pre></div>
+
+
+<p><strong>4.4 修改事件</strong> 使用ALTER EVENT 来修改事件，具体的ALTER语法如下，与创建事件的语法类似：</p>
+<div class="highlight"><pre><span></span>ALTER EVENT
+event_name
+
+ON SCHEDULE schedule
+[RENAME TO new_event_name]
+[ON COMPLETION [NOT] PRESERVE]
+[ENABLE | DISABLE]
+[COMMENT &#39;comment&#39;]
+DO sql_statement
+</pre></div>
+
+
+<p><strong>4.5 删除事件</strong> EVENT使用DROP EVENT语句来删除已经创建的事件，语法如下：</p>
+<div class="highlight"><pre><span></span><span class="n">DROP</span> <span class="n">EVENT</span>
+<span class="p">[</span><span class="n">IF</span> <span class="n">EXISTS</span><span class="p">]</span>
+<span class="n">event_name</span>
+</pre></div>
+
+
+<p>但当一个事件正在运行中时，删除该事件不会导致事件停止，事件会执行到完毕为止。使用DROP USER和DROP DATABASE 语句同时会将包含其中的事件删除。</p>
+<p><strong>五、常用实例</strong> 每隔一秒自动调用e_test()存储过程</p>
+<div class="highlight"><pre><span></span>CREATE EVENT IF NOT EXISTS e_test
+ON SCHEDULE EVERY 1 SECOND
+ON COMPLETION PRESERVE
+DO CALL e_test();
+</pre></div>
+
+
+<p>每个月的一号凌晨1 点执行STAT()存储过程：</p>
+<div class="highlight"><pre><span></span>CREATE  EVENT  NOT EXISTS  STAT
+ON  SCHEDULE  EVERY  1  MONTH  STARTS DATE_ADD(DATE_ADD(DATE_SUB(CURDATE(),INTERVAL DAY(CURDATE())-1 DAY), INTERVAL 1 MONTH),INTERVAL 1 HOUR)
+ON  COMPLETION  PRESERVE  ENABLE
+DO
+BEGIN
+CALL STAT();
+END
+</pre></div>
+
+
+<p>每天0点05分从数据表中清除字段（yhendtime）小于当前时间戳的记录：</p>
+<div class="highlight"><pre><span></span>CREATE EVENT `dele_from_thinkyh` 
+ON SCHEDULE EVERY 1 DAY STARTS &#39;2016-12-30 00:05:00&#39; 
+ON COMPLETION PRESERVE ENABLE COMMENT &#39;每天清除数据表think_youhui中的过期的记录&#39; 
+DO DELETE FROM `think_youhui` WHERE `think_youhui`.`yhendtime`&lt;CURRENT_DATE
+</pre></div>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "mysql/high-event.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+
+<h4>归档分类</h4>
+
+ <ul>
+     <!---->
+     <!--<li><a href="http://github.com">常用工具</a></li>-->
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+     <li >
+         <a href="/algorithm-datastructure/index.html">
+             Algorithm-DataStructure
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             classloader
+         </a>
+     </li>
+     <li >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li class="active" >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm-datastructure/index.html">Algorithm-DataStructure</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+    <nav class="widget">
+        <h4>Links</h4>
+        <ul class="blank">
+    <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">stackoverflow</a></li>
+    <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+    <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+</body>
+</html>

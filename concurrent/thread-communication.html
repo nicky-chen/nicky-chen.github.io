@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>多线程之线程通信摘要</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+        <link href="/feeds/concurrent.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+
+                <li><a href="http://github.com">常用工具</a></li>
+                <li><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                <li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                <li><a href="/guan-yu-wo.html">关于我</a></li>
+
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/concurrent/thread-communication.html" rel="bookmark"
+                   title="Permalink to 多线程之线程通信摘要">多线程之线程通信摘要</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2017-11-18T21:52:00+08:00">
+                周六 18 十一月 2017
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>首先我们要知道进程之间的通讯方式有哪些？</p>
+<h1>管道( pipe )  #消息队列( message queue ) #共享内存( shared memory ) ：#套接字( socket ) 等等--</h1>
+<p>线程的通讯方式：</p>
+<p>1 wait/notify 机制</p>
+<p>wait()方法和notify()方法是Object类提供的方法，而在使用的条件就是当前线程必须有自己的监听器</p>
+<p>否则就是抛出异常，我们可以使用jvm提供的内置锁 synchronized 关键字来配合使用；注意如果有多个</p>
+<p>线程等待，当某一线程发起唤醒操作，会随机唤醒一个线程，而非所有线程，如果想唤醒所有线程，可以使用</p>
+<p>notifyAll()方法</p>
+<p>下面是 启动一个等待线程和一个通知线程的例子</p>
+<div class="highlight"><pre><span></span>public class MyThread1 extends Thread {  
+
+    private Object lock;  
+
+    public MyThread1(Object lock) {  
+        this.lock = lock;  
+    }  
+
+    @Override  
+    public void run() {  
+        try {  
+            synchronized (lock) {  
+                System.out.println(&quot;wait start time = &quot; + System.currentTimeMillis());  
+                lock.wait();  
+                System.out.println(&quot;wait end time = &quot; + System.currentTimeMillis());  
+            }  
+        } catch (InterruptedException e) {  
+            e.printStackTrace();  
+        }  
+    }  
+}  
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>public class MyThread2 extends Thread {  
+
+    private Object lock;  
+
+    public MyThread2(Object lock) {  
+        this.lock = lock;  
+    }  
+
+    @Override  
+    public void run() {  
+        try {  
+            synchronized (lock) {  
+                System.out.println(&quot;notify start time = &quot; + System.currentTimeMillis());  
+                lock.notify();  
+                System.out.println(&quot;notify end time = &quot; + System.currentTimeMillis());  
+            }  
+
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        }  
+    }  
+}  
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>public class Test1 {  
+
+    public static void main(String[] args) throws Exception {  
+        Object lock = new Object();  
+        MyThread1 thread1 = new MyThread1(lock);  
+        thread1.start();  
+        TimeUnit.SECONDS.sleep(3);  
+        MyThread2 thread2 = new MyThread2(lock);  
+        thread2.start();  }
+}
+</pre></div>
+
+
+<p>先启动一个等待线程，然后启动唤醒线程  </p>
+<p>测试结果如下：
+wait start time = 1515326744453
+notify start time = 1515326747453
+notify end time = 1515326747453
+wait end time = 1515326747453</p>
+<p>这样两线程之间就完成了通信，代码的关键是注册了同一把锁，在这个对象锁中我们可以理解有两种队列，即 等待队列和就绪队列，对象调用wait方法，则标记线程信息进入等待队列并释放锁，调用notify方法则 队列中的线程进入就绪队列竞争获取锁，这种方式其实可以理解为是内存共享</p>
+<p>2生产者/消费者模式</p>
+<p>比如常用的消息队列bolckingqueue都是基于生产者消费者模型实现的。其本质上是基于wait/notify机制实现的</p>
+<p>例如我们通过wait/notify的方式实现这种模式</p>
+<div class="highlight"><pre><span></span>public class C {  
+
+    private Object lock;  
+
+    C(Object lock) {  
+        this.lock = lock;  
+
+    }  
+
+    public void getValue() {  
+
+        try {  
+            synchronized (lock) {  
+                if (ValueObject.value.equals(&quot;&quot;)) {  
+                    lock.wait();  
+                }  
+                System.out.println(&quot;get value = &quot; + ValueObject.value);  
+                ValueObject.value = &quot;&quot;;  
+                lock.notify();  
+                System.out.println(&quot;c notify&quot;);  
+            }  
+        } catch (InterruptedException e) {  
+            e.printStackTrace();  
+        }  
+    }  
+
+}  
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>public class ThreadP extends Thread {  
+
+    private P p;  
+
+    public ThreadP(P p) {  
+        this.p = p;  
+    }  
+
+    @Override public void run() {  
+        while (true) {  
+            p.setValue();  
+        }  
+    }  
+}  
+
+public class ThreadC extends Thread {  
+
+    private C c;  
+
+    public ThreadC(C c) {  
+        this.c = c;  
+    }  
+
+    @Override public void run() {  
+        while (true){  
+            c.getValue();  
+        }  
+    }  
+}  
+
+public class ValueObject {  
+
+    public static String value = &quot;&quot;;  
+
+}  
+
+public class Test {  
+
+    public static void main(String[] args) {  
+        String lock = new String(&quot;&quot;);  
+        P p = new P(lock);  
+        C c = new C(lock);  
+        ThreadP threadP = new ThreadP(p);  
+        ThreadC threadC = new ThreadC(c);  
+        threadP.start();  
+        threadC.start();  
+
+    }  
+</pre></div>
+
+
+<p>结果是：会不停读取生存者线程中的数据，并把它变成空字符串  </p>
+<p>这是1对1的生产者消费者模型简单实现</p>
+<p>3 管道</p>
+<p>java中有提供管道流这种api ，重点是四个类 </p>
+<p>PipedInputStream
+PipedOutputStream
+PipedWriter
+PipedRead</p>
+<p>上述四个类可用于管道字节流和字符流的实现，
+我们通过字符流的方式 实现线程之间的通信
+如下</p>
+<div class="highlight"><pre><span></span>public class WriteData {  
+
+    public void writeMethod(PipedWriter writer) {  
+
+        try {  
+            StringBuilder data = new StringBuilder();  
+            System.out.println(&quot;write : &quot; );  
+            for (int i = 0; i &lt; 20; i++) {  
+                data.append(i);  
+                writer.write(&quot;&quot; + i);  
+            }  
+            System.out.println(&quot;write data = &quot; + data);  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        }  
+    }  
+
+}  
+
+public class ReadData {  
+
+    public void readMethod(PipedReader reader) {  
+        StringBuilder d = new StringBuilder();  
+        try {  
+            System.out.println(&quot;read : &quot;);  
+            char[] buffer = new char[5];  
+            int readLength;  
+
+            while ((readLength = reader.read(buffer)) !=-1) {  
+                String data = new String(buffer, 0 ,readLength);  
+                d.append(data);  
+            }  
+            reader.close();  
+        } catch (Exception e) {  
+
+        }finally {  
+            System.out.println(&quot;result data = &quot; + d);  
+        }  
+    }  
+
+}  
+
+public class Run {  
+
+    public static void main(String[] args) throws Exception {  
+        WriteData writeData = new WriteData();  
+        ReadData readData = new ReadData();  
+        PipedReader reader = new PipedReader();  
+        PipedWriter writer = new PipedWriter();  
+       // reader.connect(writer);  
+        writer.connect(reader);  
+        new Thread(() -&gt; writeData.writeMethod(writer)).start();  
+        TimeUnit.SECONDS.sleep(2);  
+        new Thread(() -&gt; readData.readMethod(reader)).start();  
+
+    }  
+</pre></div>
+
+
+<p>结果如下</p>
+<p>write : 
+write data = 012345678910111213141516171819
+read : 
+result data = 012345678910111213141516171819</p>
+<p>线程之间完成了通信</p>
+<p>其他线程通信方式比如 java socket方式等也可以实现，这里不再叙述</p>
+<p>知识点来源： java多线程编程核心技术 </p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "concurrent/thread-communication.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+
+<h4>归档分类</h4>
+
+ <ul>
+     <!---->
+     <!--<li><a href="http://github.com">常用工具</a></li>-->
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+     <li >
+         <a href="/algorithm-datastructure/index.html">
+             Algorithm-DataStructure
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             classloader
+         </a>
+     </li>
+     <li class="active" >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm-datastructure/index.html">Algorithm-DataStructure</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+    <nav class="widget">
+        <h4>Links</h4>
+        <ul class="blank">
+    <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">stackoverflow</a></li>
+    <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+    <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+</body>
+</html>

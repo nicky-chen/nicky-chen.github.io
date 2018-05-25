@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"><channel><title>南乡清水 - classloader</title><link>/</link><description></description><lastBuildDate>Tue, 20 Mar 2018 22:48:00 +0800</lastBuildDate><item><title>ClassLoader类加载分析（二）</title><link>/classloader/classloader-chapter02.html</link><description>&lt;h1&gt;一、JVM 提供的 Classloader&lt;/h1&gt;
+&lt;h2&gt;1.1 BootstrapClassloader&lt;/h2&gt;
+&lt;p&gt;引导类加载器，又称启动类加载器，是最顶层的类加载器，主要用来加载Java核心类，如rt.jar、resources.jar、charsets.jar等，Sun的JVM中，执行java的命令中使用&lt;strong&gt;-Xbootclasspath选项或使用- D选项&lt;/strong&gt;指定sun.boot.class.path系统属性值可以指定附加的类，它不是 java.lang.ClassLoader的子类，而是由JVM自身实现的该类c 语言实现，Java程序访问不到该加载器。通过下面代码可以查看该加载器加载了哪些jar包&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;public&lt;/span&gt; &lt;span class="nt"&gt;class&lt;/span&gt; &lt;span class="nt"&gt;MainClass&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+
+    &lt;span class="err"&gt;public&lt;/span&gt; &lt;span class="err"&gt;static&lt;/span&gt; &lt;span class="err"&gt;void&lt;/span&gt; &lt;span class="err"&gt;main(String&lt;/span&gt;&lt;span class="cp"&gt;[]&lt;/span&gt; &lt;span class="err"&gt;args)&lt;/span&gt; &lt;span class="err"&gt;throws&lt;/span&gt; &lt;span class="err"&gt;ClassNotFoundException&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;
+        &lt;span class="err"&gt;URL&lt;/span&gt;&lt;span class="cp"&gt;[]&lt;/span&gt; &lt;span class="err"&gt;urls&lt;/span&gt; &lt;span class="err"&gt;=&lt;/span&gt; &lt;span class="err"&gt;sun.misc.Launcher.getBootstrapClassPath …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Tue, 20 Mar 2018 22:48:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-03-20:/classloader/classloader-chapter02.html</guid><category>源码</category></item><item><title>ClassLoader类加载分析（一）</title><link>/classloader/classloader-chapter01.html</link><description>&lt;h1&gt;一、什么是Classloader&lt;/h1&gt;
+&lt;p&gt;一个Java程序要想运行起来，首先需要经过编译生成 .class文件，然后创建一个运行环境（jvm）来加载字节码文件到内存运行，而.class 文件是怎样被加载中jvm 中的就是Java Classloader所做的事情。
+&lt;img alt="class文件执行过程" src="http://upload-images.jianshu.io/upload_images/10175660-fc4f3b0b39421a8b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"&gt;&lt;/p&gt;
+&lt;p&gt;那么.class文件什么时候会被类加载器加载到jvm中运行那？比如执行new操作时候，当我们使用Class.forName(“包路径+类名”)，Class.forName(“包路径+类名”,classloader),classloader.loadclass(“包路径+类名”);时候就触发了类加载器去类加载对应的路径去查找*.class,并创建Class对象。&lt;/p&gt;
+&lt;h1&gt;类的加载过程&lt;/h1&gt;
+&lt;p&gt;类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：&lt;/p&gt;
+&lt;p&gt;1、装载&lt;/p&gt;
+&lt;p&gt;2-4、链接 -包括 【验证、准备、解析】&lt;/p&gt;
+&lt;p&gt;5、初始化&lt;/p&gt;
+&lt;p&gt;6、使用&lt;/p&gt;
+&lt;p&gt;7、卸载 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Thu, 08 Mar 2018 21:15:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-03-08:/classloader/classloader-chapter01.html</guid><category>源码</category></item></channel></rss>

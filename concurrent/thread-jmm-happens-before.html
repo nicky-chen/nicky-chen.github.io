@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>java内存模型之[JMM][重排序][happens-before]</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+        <link href="/feeds/concurrent.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+
+                <li><a href="http://github.com">常用工具</a></li>
+                <li><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                <li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                <li><a href="/guan-yu-wo.html">关于我</a></li>
+
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/concurrent/thread-jmm-happens-before.html" rel="bookmark"
+                   title="Permalink to java内存模型之[JMM][重排序][happens-before]">java内存模型之[JMM][重排序][happens-before]</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2018-04-03T22:11:00+08:00">
+                周二 03 四月 2018
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <h1>1.并发编程模型的分类</h1>
+<p>在并发编程中，我们需要处理两个关键问题：线程之间如何通信及线程之间如何同
+步（这里的线程是指并发执行的活动实体）。通信是指线程之间以何种机制来交换
+信息。在命令式编程中，线程之间的通信机制有两种：<em>共享内存和消息传递</em>。
+在共享内存的并发模型里，线程之间共享程序的公共状态，线程之间通过写-读内
+存中的公共状态来隐式进行通信。在消息传递的并发模型里，线程之间没有公共状
+态，线程之间必须通过明确的发送消息来显式进行通信。
+同步是指程序用于控制不同线程之间操作发生相对顺序的机制。在共享内存并发模
+型里，同步是显式进行的。程序员必须显式指定某个方法或某段代码需要在线程之
+间互斥执行。在消息传递的并发模型里，由于消息的发送必须在消息的接收之前，
+因此同步是隐式进行的。
+Java 的并发采用的是共享内存模型，Java 线程之间的通信总是隐式进行，整个通
+信过程对程序员完全透明。如果编写多线程程序的 Java 程序员不理解隐式进行的
+线程之间通信的工作机制，很可能会遇到各种奇怪的内存可见性问题。</p>
+<h1>2.Java 内存模型的抽象</h1>
+<p>在java中，所有实例域、静态域和数组元素存储在堆内存中，堆内存在线程之间共
+享（本文使用“共享变量”这个术语代指实例域，静态域和数组元素）。<strong>局部变量
+（ Local variables ），方法定义参数（java语言规范称之为 formal method
+parameters ）和异常处理器参数（ exception handler parameters ）</strong>不会在线程之间
+共享，它们不会有内存可见性问题，也不受内存模型的影响。
+Java 线程之间的通信由 Java 内存模型（本文简称为 JMM）控制，JMM 决定一个
+线程对共享变量的写入何时对另一个线程可见。从抽象的角度来看，JMM 定义了
+线程和主内存之间的抽象关系：<em>线程之间的共享变量存储在主内存（main
+memory）中，每个线程都有一个私有的本地内存（local memory），本地内存
+中存储了该线程以读/写共享变量的副本。</em>本地内存是 JMM 的一个抽象概念，并不
+真实存在。它涵盖了缓存，写缓冲区，寄存器以及其他的硬件和编译器优化。
+Java内存模型的抽象示意图如下：
+<img alt="内存模型" src="https://upload-images.jianshu.io/upload_images/10175660-c853cd1fda3fd2bb.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>从上图来看，线程 A 与线程 B 之间如要通信的话，必须要经历下面 2 个步骤：
+1. 首先，线程 A 把本地内存 A 中更新过的共享变量刷新到主内存中去。
+2. 然后，线程 B 到主内存中去读取线程 A 之前已更新过的共享变量。
+下面通过示意图来说明这两个步骤：
+<img alt="通信" src="https://upload-images.jianshu.io/upload_images/10175660-cf411cf01d5d85f6.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+如上图所示，本地内存 A 和 B 有主内存中共享变量 x 的副本。假设初始时，这三个
+内存中的 x 值都为 0。线程 A 在执行时，把更新后的 x 值（假设值为 1）临时存放
+在自己的本地内存 A 中。当线程 A 和线程 B 需要通信时，线程 A 首先会把自己本
+地内存中修改后的 x 值刷新到主内存中，此时主内存中的 x 值变为了 1。随后，线
+程 B 到主内存中去读取线程 A 更新后的 x 值，此时线程 B 的本地内存的 x 值也变
+为了 1。
+从整体来看，这两个步骤实质上是线程 A 在向线程 B 发送消息，而且这个通信过程
+必须要经过主内存。JMM 通过控制主内存与每个线程的本地内存之间的交互，来
+为 java 程序员提供内存可见性保证。</p>
+<h2>2.1 重排序</h2>
+<p>在执行程序时为了提高性能，编译器和处理器常常会对指令做重排序。重排序分三
+种类型：</p>
+<div class="highlight"><pre><span></span>1. 编译器优化的重排序。编译器在不改变单线程程序语义的前提下，可以重新安
+排语句的执行顺序。
+2. 指令级并行的重排序。现代处理器采用了指令级并行技术（Instruction-Level
+Parallelism， ILP）来将多条指令重叠执行。如果不存在数据依赖性，处理器
+可以改变语句对应机器指令的执行顺序。
+3. 内存系统的重排序。由于处理器使用缓存和读/写缓冲区，这使得加载和存储操
+作看上去可能是在乱序执行。
+</pre></div>
+
+
+<p>从 java 源代码到最终实际执行的指令序列，会分别经历下面三种重排序：
+<img alt="重排序" src="https://upload-images.jianshu.io/upload_images/10175660-31c9481176c5d59e.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+上述的 1 属于编译器重排序，2 和 3 属于处理器重排序。这些重排序都可能会导致
+多线程程序出现内存可见性问题。对于编译器，JMM 的编译器重排序规则会禁止
+特定类型的编译器重排序（不是所有的编译器重排序都要禁止）。对于处理器重排
+序，JMM 的处理器重排序规则会要求 java 编译器在生成指令序列时，插入特定类
+型的内存屏障（memory barriers，intel 称之为 memory fence）指令，通过内
+存屏障指令来禁止特定类型的处理器重排序（不是所有的处理器重排序都要禁
+止）。
+JMM 属于语言级的内存模型，它确保在不同的编译器和不同的处理器平台之上，
+通过禁止特定类型的编译器重排序和处理器重排序，为程序员提供一致的内存可见
+性保证。</p>
+<h2>2.2 处理器重排序与内存屏障指令</h2>
+<p>现代的处理器使用写缓冲区来临时保存向内存写入的数据。写缓冲区可以保证指令
+流水线持续运行，它可以避免由于处理器停顿下来等待向内存写入数据而产生的延
+迟。同时，通过以批处理的方式刷新写缓冲区，以及合并写缓冲区中对同一内存地
+址的多次写，可以减少对内存总线的占用。虽然写缓冲区有这么多好处，但每个处
+理器上的写缓冲区，仅仅对它所在的处理器可见。这个特性会对内存操作的执行顺
+序产生重要的影响：处理器对内存的读/写操作的执行顺序，不一定与内存实际发生的读/写操作顺序一致！为了具体说明，请看下面示例：
+<img alt="内存屏障" src="https://upload-images.jianshu.io/upload_images/10175660-38b3c569158b94a3.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+这里处理器 A 和处理器 B 可以同时把共享变量写入自己的写缓冲区（A1，B1），
+然后从内存中读取另一个共享变量（A2，B2），最后才把自己写缓存区中保存的
+脏数据刷新到内存中（A3，B3）。当以这种时序执行时，程序就可以得到 x = y =
+0 的结果。
+从内存操作实际发生的顺序来看，直到处理器 A 执行 A3 来刷新自己的写缓存区，
+写操作 A1 才算真正执行了。虽然处理器 A 执行内存操作的顺序为：A1-&gt;A2，但
+内存操作实际发生的顺序却是：A2-&gt;A1。此时，处理器 A 的内存操作顺序被重排
+序了（处理器 B 的情况和处理器 A 一样，这里就不赘述了）。
+这里的关键是，由于写缓冲区仅对自己的处理器可见，它会导致处理器执行内存操
+作的顺序可能会与内存实际的操作执行顺序不一致。由于现代的处理器都会使用写
+缓冲区，因此现代的处理器都会允许对写-读操作重排序。
+下面是常见处理器允许的重排序类型的列表：
+<img alt="处理器" src="https://upload-images.jianshu.io/upload_images/10175660-9e6b7e532486bea2.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+上表单元格中的“N”表示处理器不允许两个操作重排序，“Y”表示允许重排
+序。
+从上表我们可以看出：常见的处理器都允许 Store-Load 重排序；常见的处理器都
+不允许对存在数据依赖的操作做重排序。sparc-TSO 和 x86 拥有相对较强的处理器
+内存模型，它们仅允许对写-读操作做重排序（因为它们都使用了写缓冲区）。
+※注 1：sparc-TSO 是指以 TSO(Total Store Order)内存模型运行时，sparc 处理
+器的特性。
+※注 2：上表中的 x86 包括 x64 及 AMD64。
+※注 3：由于 ARM 处理器的内存模型与 PowerPC 处理器的内存模型非常类似，本文将忽
+略它。
+※注 4：数据依赖性后文会专门说明。
+为了保证内存可见性，java 编译器在生成指令序列的适当位置会插入内存屏障指令
+来禁止特定类型的处理器重排序。JMM 把内存屏障指令分为下列四类：
+<img alt="内存屏障指令" src="https://upload-images.jianshu.io/upload_images/10175660-750540dc3dfe2dc6.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+StoreLoad Barriers 是一个“全能型”的屏障，它同时具有其他三个屏障的效果。
+现代的多处理器大都支持该屏障（其他类型的屏障不一定被所有处理器支持）。执
+行该屏障开销会很昂贵，因为当前处理器通常要把写缓冲区中的数据全部刷新到内
+存中（buffer fully flush）。</p>
+<h2>2.3 happens-before</h2>
+<p>从 JDK5 开始，java 使用新的 JSR -133 内存模型（本文除非特别说明，针对的都
+是 JSR- 133 内存模型）。JSR-133 使用 happens-before 的概念来阐述操作之间
+的内存可见性。在 JMM 中，如果一个操作执行的结果需要对另一个操作可见，那
+么这两个操作之间必须要存在 happens-before 关系。这里提到的两个操作既可以
+是在一个线程之内，也可以是在不同线程之间。</p>
+<blockquote>
+<p>与程序员密切相关的 happens-before 规则如下：
+ 程序顺序规则：一个线程中的每个操作，happens- before 于该线程中的任意后续操作。
+ 监视器锁规则：对一个监视器的解锁，happens- before 于随后对这个监视器
+的加锁。
+ volatile 变量规则：对一个 volatile 域的写，happens- before 于任意后续对
+这个 volatile 域的读。
+ 传递性：如果 A happens- before B，且 B happens- before C，那么 A
+happens- before C。
+注意，两个操作之间具有 happens-before 关系，并不意味着前一个操作必须要在
+后一个操作之前执行！happens-before 仅仅要求前一个操作（执行的结果）对后
+一个操作可见，且前一个操作按顺序排在第二个操作之前（the first is visible to
+and ordered before the second）。happens- before 的定义很微妙，后文会具
+体说明 happens-before 为什么要这么定义。</p>
+</blockquote>
+<p>happens-before 与 JMM 的关系如下图所示：
+<img alt="happens-before" src="https://upload-images.jianshu.io/upload_images/10175660-328dd730f51e38e4.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+如上图所示，一个 happens-before 规则对应于一个或多个编译器和处理器重排序
+规则。对于 java 程序员来说，happens-before 规则简单易懂，它避免 java 程序
+员为了理解 JMM 提供的内存可见性保证而去学习复杂的重排序规则以及这些规则
+的具体实现。</p>
+<h1>3.重排序</h1>
+<h2>3.1数据依赖性</h2>
+<p>如果两个操作访问同一个变量，且这两个操作中有一个为写操作，此时这两个操作
+之间就存在数据依赖性。数据依赖分下列三种类型：
+<img alt="数据依赖" src="https://upload-images.jianshu.io/upload_images/10175660-ae7720e36f4af127.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+上面三种情况，只要重排序两个操作的执行顺序，程序的执行结果将会被改变。
+前面提到过，编译器和处理器可能会对操作做重排序。编译器和处理器在重排序
+时，会遵守数据依赖性，编译器和处理器不会改变存在数据依赖关系的两个操作的
+执行顺序。
+注意，这里所说的数据依赖性仅针对单个处理器中执行的指令序列和单个线程中执
+行的操作，不同处理器之间和不同线程之间的数据依赖性不被编译器和处理器考
+虑。</p>
+<h2>3.2 as-if-serial 语义</h2>
+<p>as-if-serial 语义的意思指：不管怎么重排序（编译器和处理器为了提高并行度），
+（单线程）程序的执行结果不能被改变。编译器，runtime 和处理器都必须遵守
+as-if-serial 语义。
+为了遵守 as-if-serial 语义，编译器和处理器不会对存在数据依赖关系的操作做重
+排序，因为这种重排序会改变执行结果。但是，如果操作之间不存在数据依赖关
+系，这些操作就可能被编译器和处理器重排序。为了具体说明，请看下面计算圆面
+积的代码示例：</p>
+<div class="highlight"><pre><span></span>double pi = 3.14; //A
+double r = 1.0; //B
+double area = pi * r * r; //C
+</pre></div>
+
+
+<p>上面三个操作的数据依赖关系如下图所示：
+<img alt="依赖关系.JPG" src="https://upload-images.jianshu.io/upload_images/10175660-cfadfaa0fd30af48.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+如上图所示，A 和 C 之间存在数据依赖关系，同时 B 和 C 之间也存在数据依赖关
+系。因此在最终执行的指令序列中，C 不能被重排序到 A 和 B 的前面（C 排到 A 和
+B 的前面，程序的结果将会被改变）。但 A 和 B 之间没有数据依赖关系，编译器和
+处理器可以重排序 A 和 B 之间的执行顺序。下图是该程序的两种执行顺序：
+<img alt="依赖关系" src="https://upload-images.jianshu.io/upload_images/10175660-542f588132b904ac.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+as-if-serial 语义把单线程程序保护了起来，遵守 as-if-serial 语义的编译器，
+runtime 和处理器共同为编写单线程程序的程序员创建了一个幻觉：单线程程序是按程序的顺序来执行的。as-if-serial 语义使单线程程序员无需担心重排序会干扰他
+们，也无需担心内存可见性问题。
+程序顺序规则
+根据 happens- before 的程序顺序规则，上面计算圆的面积的示例代码存在三个
+happens- before 关系：
+1. A happens- before B；
+2. B happens- before C；
+3. A happens- before C；
+这里的第 3 个 happens- before 关系，是根据 happens- before 的传递性推导出
+来的。
+这里 A happens- before B，但实际执行时 B 却可以排在 A 之前执行（看上面的
+重排序后的执行顺序）。在第一章提到过，如果 A happens- before B，JMM 并
+不要求 A 一定要在 B 之前执行。JMM 仅仅要求前一个操作（执行的结果）对后一
+个操作可见，且前一个操作按顺序排在第二个操作之前。这里操作 A 的执行结果不
+需要对操作 B 可见；而且重排序操作 A 和操作 B 后的执行结果，与操作 A 和操作
+B 按 happens- before 顺序执行的结果一致。在这种情况下，JMM 会认为这种重
+排序并不非法（ not illegal）， JMM 允许这种重排序。
+在计算机中，软件技术和硬件技术有一个共同的目标：在不改变程序执行结果的前
+提下，尽可能的开发并行度。编译器和处理器遵从这一目标，从 happens- before
+的定义我们可以看出，JMM 同样遵从这一目标。
+重排序对多线程的影响
+现在让我们来看看，重排序是否会改变多线程程序的执行结果。请看下面的示例代
+码：</p>
+<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">ReorderExample</span> <span class="p">{</span>
+
+<span class="kr">int</span> <span class="nx">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kr">boolean</span> <span class="nx">flag</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+<span class="kr">public</span> <span class="k">void</span> <span class="nx">writer() {</span>
+<span class="nx">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//1</span>
+<span class="nx">flag</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span> <span class="c1">//2</span>
+<span class="p">}</span>
+
+<span class="kr">public</span> <span class="k">void</span> <span class="nx">reader() {</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">flag</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//3</span>
+<span class="kr">int</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">a</span> <span class="o">*</span> <span class="nx">a</span><span class="p">;</span> <span class="c1">//4</span>
+<span class="err">……</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>flag 变量是个标记，用来标识变量 a 是否已被写入。这里假设有两个线程 A 和 B，
+A 首先执行 writer()方法，随后 B 线程接着执行 reader()方法。线程 B 在执行操作
+4 时，能否看到线程 A 在操作 1 对共享变量 a 的写入？
+答案是：不一定能看到。
+由于操作 1 和操作 2 没有数据依赖关系，编译器和处理器可以对这两个操作重排
+序；同样，操作 3 和操作 4 没有数据依赖关系，编译器和处理器也可以对这两个操
+作重排序。让我们先来看看，当操作 1 和操作 2 重排序时，可能会产生什么效果？
+请看下面的程序执行时序图：
+<img alt="图1.JPG" src="https://upload-images.jianshu.io/upload_images/10175660-dec9ecab8c32c08d.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+如上图所示，操作 1 和操作 2 做了重排序。程序执行时，线程 A 首先写标记变量
+flag，随后线程 B 读这个变量。由于条件判断为真，线程 B 将读取变量 a。此时，
+变量 a 还根本没有被线程 A 写入，在这里多线程程序的语义被重排序破坏了！
+※注：本文统一用红色的虚箭线标识错误的读操作，用绿色的虚箭线标识正确的读
+操作。
+下面再让我们看看，当操作 3 和操作 4 重排序时会产生什么效果（借助这个重排
+序，可以顺便说明控制依赖性）。下面是操作 3 和操作 4 重排序后，程序的执行时
+序图：
+<img alt="图2.JPG" src="https://upload-images.jianshu.io/upload_images/10175660-e1aa202378374647.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+在程序中，操作 3 和操作 4 存在控制依赖关系。当代码中存在控制依赖性时，会影
+响指令序列执行的并行度。为此，编译器和处理器会采用猜测（Speculation）执
+行来克服控制相关性对并行度的影响。以处理器的猜测执行为例，执行线程 B 的处
+理器可以提前读取并计算 a*a，然后把计算结果临时保存到一个名为重排序缓冲
+（reorder buffer ROB）的硬件缓存中。当接下来操作 3 的条件判断为真时，就把
+该计算结果写入变量 i 中。
+从图中我们可以看出，猜测执行实质上对操作 3 和 4 做了重排序。重排序在这里破
+坏了多线程程序的语义！
+在单线程程序中，对存在控制依赖的操作重排序，不会改变执行结果（这也是 as-
+if-serial 语义允许对存在控制依赖的操作做重排序的原因）；但在多线程程序中，
+对存在控制依赖的操作重排序，可能会改变程序的执行结果。</p>
+<h2>3.2数据竞争与顺序一致性保证</h2>
+<p>当程序未正确同步时，就可能会存在数据竞争。java 内存模型规范对数据竞争的定
+义如下：
+ 在一个线程中写一个变量，
+ 在另一个线程读同一个变量，
+ 而且写和读没有通过同步来排序。
+当代码中包含数据竞争时，程序的执行往往产生违反直觉的结果（前一章的示例正
+是如此）。如果一个多线程程序能正确同步，这个程序将是一个没有数据竞争的程
+序。
+JMM 对正确同步的多线程程序的内存一致性做了如下保证：
+ 如果程序是正确同步的，程序的执行将具有顺序一致性（sequentially
+consistent）--即程序的执行结果与该程序在顺序一致性内存模型中的执行结
+果相同。马上我们将会看到，这对于程序员来说是一个极强的保证。这里的同
+步是指广义上的同步，包括对常用同步原语（ synchronized ，volatile 和 final）
+的正确使用。</p>
+<h1>References</h1>
+<p><a href="http://ifeve.com/jsr133-cn/">JSR133中文版</a>
+<a href="http://ifeve.com/java-memory-model-0/">深入理解java内存模型</a></p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "concurrent/thread-jmm-happens-before.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+
+<h4>归档分类</h4>
+
+ <ul>
+     <!---->
+     <!--<li><a href="http://github.com">常用工具</a></li>-->
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+     <li >
+         <a href="/algorithm-datastructure/index.html">
+             Algorithm-DataStructure
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             classloader
+         </a>
+     </li>
+     <li class="active" >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm-datastructure/index.html">Algorithm-DataStructure</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+    <nav class="widget">
+        <h4>Links</h4>
+        <ul class="blank">
+    <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">stackoverflow</a></li>
+    <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+    <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+</body>
+</html>
