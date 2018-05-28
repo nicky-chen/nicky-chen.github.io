@@ -108,127 +108,127 @@
 <p><img alt="对象适配器类图" src="https://upload-images.jianshu.io/upload_images/10175660-c43e14eee5fcbbe1.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
 <p><strong>2.3 案例代码：</strong></p>
 <p>被适配对象</p>
-<div class="highlight"><pre><span></span>public class Adaptee {
-    public void adapteeMethod() {
-        System.out.println(&quot;这是我们已经实现的功能！&quot;);
-    }
-}
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Adaptee</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">adapteeMethod</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;这是我们已经实现的功能！&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre></div>
 
 
 <p>对象适配器</p>
-<div class="highlight"><pre><span></span>public class Adapter implements Target {
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Adapter</span> <span class="kd">implements</span> <span class="n">Target</span> <span class="o">{</span>
 
-    private Adaptee adaptee = new Adaptee();
+    <span class="kd">private</span> <span class="n">Adaptee</span> <span class="n">adaptee</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Adaptee</span><span class="o">();</span>
 
-    @Override
-    public void targetMethod() {
-        adaptee.adapteeMethod();
-    }
-}
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">targetMethod</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">adaptee</span><span class="o">.</span><span class="na">adapteeMethod</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre></div>
 
 
 <p>目标接口</p>
-<div class="highlight"><pre><span></span>public interface Target {
-    void targetMethod();
-}
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Target</span> <span class="o">{</span>
+    <span class="kt">void</span> <span class="nf">targetMethod</span><span class="o">();</span>
+<span class="o">}</span>
 </pre></div>
 
 
 <p>客户端调用</p>
-<div class="highlight"><pre><span></span>public class Client {
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="o">{</span>
 
-    public static void main(String[] args) {
-        Target target = new Adapter();
-        target.targetMethod();
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Target</span> <span class="n">target</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Adapter</span><span class="o">();</span>
+        <span class="n">target</span><span class="o">.</span><span class="na">targetMethod</span><span class="o">();</span>
 
-    }
-}
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre></div>
 
 
 <hr>
 <h1>3.JAVA源码中的运用</h1>
 <p>有时候我们需要把集合变成线程安全的集合</p>
-<div class="highlight"><pre><span></span>List&lt;Integer&gt; list = Collections.synchronizedList(new ArrayList&lt;&gt;(10));      
-Map&lt;String, String&gt; map = Collections.synchronizedMap(new HashMap&lt;&gt;(8));
+<div class="highlight"><pre><span></span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="n">Collections</span><span class="o">.</span><span class="na">synchronizedList</span><span class="o">(</span><span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;(</span><span class="mi">10</span><span class="o">));</span>      
+<span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="n">Collections</span><span class="o">.</span><span class="na">synchronizedMap</span><span class="o">(</span><span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;(</span><span class="mi">8</span><span class="o">));</span>
 </pre></div>
 
 
 <p>就拿Collections.synchronizedMap()来分析源码，其中</p>
 <p>目标接口 </p>
-<div class="highlight"><pre><span></span>Map&lt;K,V&gt; m
+<div class="highlight"><pre><span></span><span class="n">Map</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">m</span>
 </pre></div>
 
 
 <p>不多做说明，大家应该都知道这是字典的接口</p>
 <p>被适配对象</p>
-<div class="highlight"><pre><span></span>new HashMap&lt;&gt;(8)
+<div class="highlight"><pre><span></span><span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;(</span><span class="mi">8</span><span class="o">)</span>
 </pre></div>
 
 
 <p>同步适配器 <em>SynchronizedMap</em></p>
-<div class="highlight"><pre><span></span>    private static class SynchronizedMap&lt;K,V&gt;
-        implements Map&lt;K,V&gt;, Serializable {
-        private static final long serialVersionUID = 1978198479659022715L;
+<div class="highlight"><pre><span></span>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">SynchronizedMap</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span>
+        <span class="kd">implements</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;,</span> <span class="n">Serializable</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="mi">1978198479659022715L</span><span class="o">;</span>
 
-        private final Map&lt;K,V&gt; m;     // Backing Map
-        final Object      mutex;        // Object on which to synchronize
+        <span class="kd">private</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">m</span><span class="o">;</span>     <span class="c1">// Backing Map</span>
+        <span class="kd">final</span> <span class="n">Object</span>      <span class="n">mutex</span><span class="o">;</span>        <span class="c1">// Object on which to synchronize</span>
 
-        SynchronizedMap(Map&lt;K,V&gt; m) {
-            this.m = Objects.requireNonNull(m);
-            mutex = this;
-        }
+        <span class="n">SynchronizedMap</span><span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">m</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">m</span> <span class="o">=</span> <span class="n">Objects</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">m</span><span class="o">);</span>
+            <span class="n">mutex</span> <span class="o">=</span> <span class="k">this</span><span class="o">;</span>
+        <span class="o">}</span>
 
-        SynchronizedMap(Map&lt;K,V&gt; m, Object mutex) {
-            this.m = m;
-            this.mutex = mutex;
-        }
+        <span class="n">SynchronizedMap</span><span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">m</span><span class="o">,</span> <span class="n">Object</span> <span class="n">mutex</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">m</span> <span class="o">=</span> <span class="n">m</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">mutex</span> <span class="o">=</span> <span class="n">mutex</span><span class="o">;</span>
+        <span class="o">}</span>
 
-        public int size() {
-            synchronized (mutex) {return m.size();}
-        }
-        public boolean isEmpty() {
-            synchronized (mutex) {return m.isEmpty();}
-        }
-        public boolean containsKey(Object key) {
-            synchronized (mutex) {return m.containsKey(key);}
-        }
-        public boolean containsValue(Object value) {
-            synchronized (mutex) {return m.containsValue(value);}
-        }
-        public V get(Object key) {
-            synchronized (mutex) {return m.get(key);}
-        }
- public V put(K key, V value) {
-            synchronized (mutex) {return m.put(key, value);}
-        }
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="o">()</span> <span class="o">{</span>
+            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">mutex</span><span class="o">)</span> <span class="o">{</span><span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="na">size</span><span class="o">();}</span>
+        <span class="o">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isEmpty</span><span class="o">()</span> <span class="o">{</span>
+            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">mutex</span><span class="o">)</span> <span class="o">{</span><span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">();}</span>
+        <span class="o">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">containsKey</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">mutex</span><span class="o">)</span> <span class="o">{</span><span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">key</span><span class="o">);}</span>
+        <span class="o">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">containsValue</span><span class="o">(</span><span class="n">Object</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">mutex</span><span class="o">)</span> <span class="o">{</span><span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="na">containsValue</span><span class="o">(</span><span class="n">value</span><span class="o">);}</span>
+        <span class="o">}</span>
+        <span class="kd">public</span> <span class="n">V</span> <span class="nf">get</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">mutex</span><span class="o">)</span> <span class="o">{</span><span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);}</span>
+        <span class="o">}</span>
+ <span class="kd">public</span> <span class="n">V</span> <span class="nf">put</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">,</span> <span class="n">V</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">mutex</span><span class="o">)</span> <span class="o">{</span><span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);}</span>
+        <span class="o">}</span>
 
-//////////////此处省略方法
-}
+<span class="c1">//////////////此处省略方法</span>
+<span class="o">}</span>
 </pre></div>
 
 
 <p>很容易理解，在调用 synchronizedMap方法</p>
-<div class="highlight"><pre><span></span>public static &lt;K,V&gt; Map&lt;K,V&gt; synchronizedMap(Map&lt;K,V&gt; m) {
-        return new SynchronizedMap&lt;&gt;(m);
-    }
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="nf">synchronizedMap</span><span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">m</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">SynchronizedMap</span><span class="o">&lt;&gt;(</span><span class="n">m</span><span class="o">);</span>
+    <span class="o">}</span>
 </pre></div>
 
 
 <p>创建了一个同步适配器对象，其实就是注册了一把_mutex锁_</p>
-<div class="highlight"><pre><span></span>SynchronizedMap(Map&lt;K,V&gt; m) {
-            this.m = Objects.requireNonNull(m);
-            mutex = this;
-        }
+<div class="highlight"><pre><span></span><span class="n">SynchronizedMap</span><span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span><span class="n">V</span><span class="o">&gt;</span> <span class="n">m</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">m</span> <span class="o">=</span> <span class="n">Objects</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">m</span><span class="o">);</span>
+            <span class="n">mutex</span> <span class="o">=</span> <span class="k">this</span><span class="o">;</span>
+        <span class="o">}</span>
 </pre></div>
 
 
 <p>然后在调用具体方法的时候会竟如同步块，比如put方法</p>
-<div class="highlight"><pre><span></span> public V put(K key, V value) {
-            synchronized (mutex) {return m.put(key, value);}
-        }
+<div class="highlight"><pre><span></span> <span class="kd">public</span> <span class="n">V</span> <span class="nf">put</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">,</span> <span class="n">V</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">mutex</span><span class="o">)</span> <span class="o">{</span><span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);}</span>
+        <span class="o">}</span>
 </pre></div>
 
 
@@ -236,298 +236,298 @@ Map&lt;String, String&gt; map = Collections.synchronizedMap(new HashMap&lt;&gt;(
 <h1>4. 实际项目中运用</h1>
 <p>背景：有时候对于类的toString方法需要做修改，如果属性为空则赋值一些默认值，或者字符串为空的时候返回的是空字符串等，对此可以进行一些优化</p>
 <p>抽象父类 <em>AbstractDO</em></p>
-<div class="highlight"><pre><span></span>@Getter
-@Setter
-@EqualsAndHashCode(callSuper = false, of = {&quot;id&quot;})
-public abstract class AbstractDO implements Serializable {
+<div class="highlight"><pre><span></span><span class="nd">@Getter</span>
+<span class="nd">@Setter</span>
+<span class="nd">@EqualsAndHashCode</span><span class="o">(</span><span class="n">callSuper</span> <span class="o">=</span> <span class="kc">false</span><span class="o">,</span> <span class="n">of</span> <span class="o">=</span> <span class="o">{</span><span class="s">&quot;id&quot;</span><span class="o">})</span>
+<span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">AbstractDO</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
 
-    private static final long serialVersionUID = -1679770357930200297L;
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1679770357930200297L</span><span class="o">;</span>
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    <span class="nd">@Id</span>
+    <span class="nd">@GeneratedValue</span><span class="o">(</span><span class="n">strategy</span> <span class="o">=</span> <span class="n">GenerationType</span><span class="o">.</span><span class="na">IDENTITY</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
 
-    private Date createTime;
+    <span class="kd">private</span> <span class="n">Date</span> <span class="n">createTime</span><span class="o">;</span>
 
-    private Date updateTime;
+    <span class="kd">private</span> <span class="n">Date</span> <span class="n">updateTime</span><span class="o">;</span>
 
-}
+<span class="o">}</span>
 </pre></div>
 
 
 <p>具体实体类 <em>SysResources</em></p>
-<div class="highlight"><pre><span></span>@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class SysResources extends AbstractDO {
+<div class="highlight"><pre><span></span><span class="nd">@Getter</span>
+<span class="nd">@Setter</span>
+<span class="nd">@Builder</span>
+<span class="nd">@NoArgsConstructor</span>
+<span class="nd">@AllArgsConstructor</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SysResources</span> <span class="kd">extends</span> <span class="n">AbstractDO</span> <span class="o">{</span>
 
-    private static final long serialVersionUID = 1936021577348624761L;
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="mi">1936021577348624761L</span><span class="o">;</span>
 
-    /**
-     * 资源名
-     */
-    private String name;
+    <span class="cm">/**</span>
+<span class="cm">     * 资源名</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
 
-    /**
-     * 资源类型
-     */
-    private String type;
+    <span class="cm">/**</span>
+<span class="cm">     * 资源类型</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">type</span><span class="o">;</span>
 
-    /**
-     * 资源地址
-     */
-    private String url;
+    <span class="cm">/**</span>
+<span class="cm">     * 资源地址</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">url</span><span class="o">;</span>
 
-    /**
-     * 资源权限
-     */
-    private String permission;
+    <span class="cm">/**</span>
+<span class="cm">     * 资源权限</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">permission</span><span class="o">;</span>
 
-    /**
-     * 父级资源
-     */
-    private Long parentId;
+    <span class="cm">/**</span>
+<span class="cm">     * 父级资源</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="n">Long</span> <span class="n">parentId</span><span class="o">;</span>
 
-    /**
-     * 排序
-     */
-    private Integer sort;
+    <span class="cm">/**</span>
+<span class="cm">     * 排序</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="n">Integer</span> <span class="n">sort</span><span class="o">;</span>
 
-    /**
-     * 是否外部链接
-     */
-    private Boolean external;
+    <span class="cm">/**</span>
+<span class="cm">     * 是否外部链接</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">external</span><span class="o">;</span>
 
-    private Boolean available;
+    <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">available</span><span class="o">;</span>
 
-    /**
-     * 资源图标
-     */
-    private String icon;
+    <span class="cm">/**</span>
+<span class="cm">     * 资源图标</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">icon</span><span class="o">;</span>
 
-    @Transient
-    private String checked;
+    <span class="nd">@Transient</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">checked</span><span class="o">;</span>
 
-    @Transient
-    private SysResources parent;
+    <span class="nd">@Transient</span>
+    <span class="kd">private</span> <span class="n">SysResources</span> <span class="n">parent</span><span class="o">;</span>
 
-    @Transient
-    @Singular
-    private List&lt;SysResources&gt; nodes;
+    <span class="nd">@Transient</span>
+    <span class="nd">@Singular</span>
+    <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">SysResources</span><span class="o">&gt;</span> <span class="n">nodes</span><span class="o">;</span>
 
-    @Override
-    public String toString() {
-        //正常字符串拼接 省略
-    }
-}
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">//正常字符串拼接 省略</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre></div>
 
 
 <p>首先我的想法是不希望每次新建一个属性的时候去重新生成toString方法，当然你可以使用lombok的ToString注解去解决问题，下面说下我的思路：</p>
 <p>目标对象 <em>AdapteeTarget</em></p>
-<div class="highlight"><pre><span></span>public interface AdapteeTarget {
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">AdapteeTarget</span> <span class="o">{</span>
 
-    @Override
-    String toString();
+    <span class="nd">@Override</span>
+    <span class="n">String</span> <span class="nf">toString</span><span class="o">();</span>
 
-    /**
-     * StringBuilder拼接字符串
-     * @param capacity 初始化容量
-     */
-    default String builderToString(int capacity) {
-        final StringBuilder builder = new StringBuilder(capacity);
-        try {
-            BeanInfo beanInfo = Introspector.getBeanInfo(this.getClass(), Object.class);
-            PropertyDescriptor[] list = beanInfo.getPropertyDescriptors();
-            builder.append(beanInfo.getBeanDescriptor().getName()).append(&quot;{&quot;);
-            for (int i = 0; i &lt; list.length; i++) {
-                PropertyDescriptor descriptor = list[i];
-                if (i &gt; 0) {
-                    builder.append(&quot;, &quot;);
-                }
-                builder.append(descriptor.getName()).append(&quot;=&quot;).append(descriptor.getReadMethod().invoke(this));
-            }
-            builder.append(&quot;}&quot;);
-        } catch (IntrospectionException | ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
-        return builder.toString();
-    }
+    <span class="cm">/**</span>
+<span class="cm">     * StringBuilder拼接字符串</span>
+<span class="cm">     * @param capacity 初始化容量</span>
+<span class="cm">     */</span>
+    <span class="k">default</span> <span class="n">String</span> <span class="nf">builderToString</span><span class="o">(</span><span class="kt">int</span> <span class="n">capacity</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">final</span> <span class="n">StringBuilder</span> <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="n">capacity</span><span class="o">);</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">BeanInfo</span> <span class="n">beanInfo</span> <span class="o">=</span> <span class="n">Introspector</span><span class="o">.</span><span class="na">getBeanInfo</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">(),</span> <span class="n">Object</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+            <span class="n">PropertyDescriptor</span><span class="o">[]</span> <span class="n">list</span> <span class="o">=</span> <span class="n">beanInfo</span><span class="o">.</span><span class="na">getPropertyDescriptors</span><span class="o">();</span>
+            <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">beanInfo</span><span class="o">.</span><span class="na">getBeanDescriptor</span><span class="o">().</span><span class="na">getName</span><span class="o">()).</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;{&quot;</span><span class="o">);</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">list</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="n">PropertyDescriptor</span> <span class="n">descriptor</span> <span class="o">=</span> <span class="n">list</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;, &quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+                <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">descriptor</span><span class="o">.</span><span class="na">getName</span><span class="o">()).</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;=&quot;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">descriptor</span><span class="o">.</span><span class="na">getReadMethod</span><span class="o">().</span><span class="na">invoke</span><span class="o">(</span><span class="k">this</span><span class="o">));</span>
+            <span class="o">}</span>
+            <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;}&quot;</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IntrospectionException</span> <span class="o">|</span> <span class="n">ReflectiveOperationException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
 
-}
+<span class="o">}</span>
 </pre></div>
 
 
 <p>上面接口使用了java8接口的新特性和<a href="https://www.jianshu.com/p/086ba5cd3704">java内省知识对于javabean对象的获取</a></p>
 <p>首先基于类适配器思想，让 SysResources去实现AdapteeTarget这个接口，并重写toString方法。代码如下：</p>
-<div class="highlight"><pre><span></span>@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class SysResources extends AbstractDO implements AdapteeTarget{
+<div class="highlight"><pre><span></span><span class="nd">@Getter</span>
+<span class="nd">@Setter</span>
+<span class="nd">@Builder</span>
+<span class="nd">@NoArgsConstructor</span>
+<span class="nd">@AllArgsConstructor</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SysResources</span> <span class="kd">extends</span> <span class="n">AbstractDO</span> <span class="kd">implements</span> <span class="n">AdapteeTarget</span><span class="o">{</span>
 
-    private static final long serialVersionUID = 1936021577348624761L;
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="mi">1936021577348624761L</span><span class="o">;</span>
 
-    //关键代码。。。。。。。。。。。。
-    @Override
-    public String toString() {
-        return this.builderToString(1 &lt;&lt; 10);
-    }
-}
+    <span class="c1">//关键代码。。。。。。。。。。。。</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">builderToString</span><span class="o">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">10</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre></div>
 
 
 <p>这样如果项目中有很多实体类的时候，只需实现AdapteeTarget接口，覆写toString方法使用默认的this.builderToString方法就可以很方便解决问题。当然你可以说虽然你为了使用stringbuilder去优化字符串拼接，但是同时使用了反射，性能上并不能多大提升。确实，这样的写法只是减少对象的创建，但是性能不是最好的。</p>
 <p>但是，如果需要对toString方法有些定制化需求,也是一种选择。比如我们需要String类型的字段默认值为空字符串，那么我们可以创建如下适配器：</p>
 <p>字符串空适配器 <em>StringAdapter</em></p>
-<div class="highlight"><pre><span></span>public class StringAdapter&lt;T&gt; implements AdapteeTarget {
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">StringAdapter</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="n">AdapteeTarget</span> <span class="o">{</span>
 
-    private T t;
+    <span class="kd">private</span> <span class="n">T</span> <span class="n">t</span><span class="o">;</span>
 
-    private int capacity;
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">capacity</span><span class="o">;</span>
 
-    public StringAdapter(T t, int capacity) {
-        this.t = t;
-        this.capacity = capacity;
-    }
+    <span class="kd">public</span> <span class="nf">StringAdapter</span><span class="o">(</span><span class="n">T</span> <span class="n">t</span><span class="o">,</span> <span class="kt">int</span> <span class="n">capacity</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">capacity</span> <span class="o">=</span> <span class="n">capacity</span><span class="o">;</span>
+    <span class="o">}</span>
 
-    @Override
-    public String toString() {
-       return ToStringUtil.getObjectString(t, capacity);
-    }
-}
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+       <span class="k">return</span> <span class="n">ToStringUtil</span><span class="o">.</span><span class="na">getObjectString</span><span class="o">(</span><span class="n">t</span><span class="o">,</span> <span class="n">capacity</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre></div>
 
 
 <p><em>ToStringUtil</em> 工具类</p>
-<div class="highlight"><pre><span></span>public final class ToStringUtil {
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">ToStringUtil</span> <span class="o">{</span>
 
-    /**
-     * 字符串属性默认为&quot;&quot;
-     */
-    public static String getObjectString(Object t, int capacity) {
-        final StringBuilder builder = new StringBuilder(capacity);
-        try {
-            BeanInfo beanInfo = Introspector.getBeanInfo(t.getClass(), Object.class);
-            PropertyDescriptor[] list = beanInfo.getPropertyDescriptors();
-            builder.append(beanInfo.getBeanDescriptor().getName()).append(&quot;{&quot;);
-            commonBuilder(t, builder, list);
-            builder.append(&quot;}&quot;);
-        } catch (IntrospectionException | ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
-        return builder.toString();
-    }
+    <span class="cm">/**</span>
+<span class="cm">     * 字符串属性默认为&quot;&quot;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">getObjectString</span><span class="o">(</span><span class="n">Object</span> <span class="n">t</span><span class="o">,</span> <span class="kt">int</span> <span class="n">capacity</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">final</span> <span class="n">StringBuilder</span> <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="n">capacity</span><span class="o">);</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">BeanInfo</span> <span class="n">beanInfo</span> <span class="o">=</span> <span class="n">Introspector</span><span class="o">.</span><span class="na">getBeanInfo</span><span class="o">(</span><span class="n">t</span><span class="o">.</span><span class="na">getClass</span><span class="o">(),</span> <span class="n">Object</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+            <span class="n">PropertyDescriptor</span><span class="o">[]</span> <span class="n">list</span> <span class="o">=</span> <span class="n">beanInfo</span><span class="o">.</span><span class="na">getPropertyDescriptors</span><span class="o">();</span>
+            <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">beanInfo</span><span class="o">.</span><span class="na">getBeanDescriptor</span><span class="o">().</span><span class="na">getName</span><span class="o">()).</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;{&quot;</span><span class="o">);</span>
+            <span class="n">commonBuilder</span><span class="o">(</span><span class="n">t</span><span class="o">,</span> <span class="n">builder</span><span class="o">,</span> <span class="n">list</span><span class="o">);</span>
+            <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;}&quot;</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IntrospectionException</span> <span class="o">|</span> <span class="n">ReflectiveOperationException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
 
-    public static String getObjectStringValue(Class t, int capacity) {
-        final StringBuilder builder = new StringBuilder(capacity);
-        try {
-            BeanInfo beanInfo = Introspector.getBeanInfo(t, Object.class);
-            Object obj = t.newInstance();
-            PropertyDescriptor[] list = beanInfo.getPropertyDescriptors();
-            builder.append(beanInfo.getBeanDescriptor().getName()).append(&quot;{&quot;);
-            commonBuilder(obj, builder, list);
-            builder.append(&quot;}&quot;);
-        } catch (IntrospectionException | ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
-        return builder.toString();
-    }
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">getObjectStringValue</span><span class="o">(</span><span class="n">Class</span> <span class="n">t</span><span class="o">,</span> <span class="kt">int</span> <span class="n">capacity</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">final</span> <span class="n">StringBuilder</span> <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="n">capacity</span><span class="o">);</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">BeanInfo</span> <span class="n">beanInfo</span> <span class="o">=</span> <span class="n">Introspector</span><span class="o">.</span><span class="na">getBeanInfo</span><span class="o">(</span><span class="n">t</span><span class="o">,</span> <span class="n">Object</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+            <span class="n">Object</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="na">newInstance</span><span class="o">();</span>
+            <span class="n">PropertyDescriptor</span><span class="o">[]</span> <span class="n">list</span> <span class="o">=</span> <span class="n">beanInfo</span><span class="o">.</span><span class="na">getPropertyDescriptors</span><span class="o">();</span>
+            <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">beanInfo</span><span class="o">.</span><span class="na">getBeanDescriptor</span><span class="o">().</span><span class="na">getName</span><span class="o">()).</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;{&quot;</span><span class="o">);</span>
+            <span class="n">commonBuilder</span><span class="o">(</span><span class="n">obj</span><span class="o">,</span> <span class="n">builder</span><span class="o">,</span> <span class="n">list</span><span class="o">);</span>
+            <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;}&quot;</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IntrospectionException</span> <span class="o">|</span> <span class="n">ReflectiveOperationException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
 
-    /**
-     * 设置属性默认之短
-     */
-    public static String getObjectStringNotEmpty(Object t, int capacity, Map&lt;Class, Object&gt; map) {
+    <span class="cm">/**</span>
+<span class="cm">     * 设置属性默认之短</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">getObjectStringNotEmpty</span><span class="o">(</span><span class="n">Object</span> <span class="n">t</span><span class="o">,</span> <span class="kt">int</span> <span class="n">capacity</span><span class="o">,</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Class</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">map</span><span class="o">)</span> <span class="o">{</span>
 
-        if (CollectionUtils.isEmpty(map)) {
-            return getObjectString(t, capacity);
-        }
-        final StringBuilder builder = new StringBuilder(capacity);
-        try {
-            BeanInfo beanInfo = Introspector.getBeanInfo(t.getClass(), Object.class);
-            PropertyDescriptor[] list = beanInfo.getPropertyDescriptors();
-            builder.append(beanInfo.getBeanDescriptor().getName()).append(&quot;{&quot;);
-            defaultBuilder(t, map, builder, list);
-            builder.append(&quot;}&quot;);
-        } catch (IntrospectionException | ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
-        return builder.toString();
-    }
+        <span class="k">if</span> <span class="o">(</span><span class="n">CollectionUtils</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">map</span><span class="o">))</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">getObjectString</span><span class="o">(</span><span class="n">t</span><span class="o">,</span> <span class="n">capacity</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="kd">final</span> <span class="n">StringBuilder</span> <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="n">capacity</span><span class="o">);</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">BeanInfo</span> <span class="n">beanInfo</span> <span class="o">=</span> <span class="n">Introspector</span><span class="o">.</span><span class="na">getBeanInfo</span><span class="o">(</span><span class="n">t</span><span class="o">.</span><span class="na">getClass</span><span class="o">(),</span> <span class="n">Object</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+            <span class="n">PropertyDescriptor</span><span class="o">[]</span> <span class="n">list</span> <span class="o">=</span> <span class="n">beanInfo</span><span class="o">.</span><span class="na">getPropertyDescriptors</span><span class="o">();</span>
+            <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">beanInfo</span><span class="o">.</span><span class="na">getBeanDescriptor</span><span class="o">().</span><span class="na">getName</span><span class="o">()).</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;{&quot;</span><span class="o">);</span>
+            <span class="n">defaultBuilder</span><span class="o">(</span><span class="n">t</span><span class="o">,</span> <span class="n">map</span><span class="o">,</span> <span class="n">builder</span><span class="o">,</span> <span class="n">list</span><span class="o">);</span>
+            <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;}&quot;</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IntrospectionException</span> <span class="o">|</span> <span class="n">ReflectiveOperationException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
 
-    public static String getObjectDefaultValue(Class cls, int capacity, Map&lt;Class, Object&gt; map) {
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">getObjectDefaultValue</span><span class="o">(</span><span class="n">Class</span> <span class="n">cls</span><span class="o">,</span> <span class="kt">int</span> <span class="n">capacity</span><span class="o">,</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Class</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">map</span><span class="o">)</span> <span class="o">{</span>
 
-        final StringBuilder builder = new StringBuilder(capacity);
-        try {
-            Object obj = cls.newInstance();
-            BeanInfo beanInfo = Introspector.getBeanInfo(cls, Object.class);
-            PropertyDescriptor[] list = beanInfo.getPropertyDescriptors();
-            builder.append(beanInfo.getBeanDescriptor().getName()).append(&quot;{&quot;);
-            defaultBuilder(obj, map, builder, list);
-            builder.append(&quot;}&quot;);
-        } catch (IntrospectionException | ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
-        return builder.toString();
-    }
+        <span class="kd">final</span> <span class="n">StringBuilder</span> <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="n">capacity</span><span class="o">);</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">Object</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="na">newInstance</span><span class="o">();</span>
+            <span class="n">BeanInfo</span> <span class="n">beanInfo</span> <span class="o">=</span> <span class="n">Introspector</span><span class="o">.</span><span class="na">getBeanInfo</span><span class="o">(</span><span class="n">cls</span><span class="o">,</span> <span class="n">Object</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+            <span class="n">PropertyDescriptor</span><span class="o">[]</span> <span class="n">list</span> <span class="o">=</span> <span class="n">beanInfo</span><span class="o">.</span><span class="na">getPropertyDescriptors</span><span class="o">();</span>
+            <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">beanInfo</span><span class="o">.</span><span class="na">getBeanDescriptor</span><span class="o">().</span><span class="na">getName</span><span class="o">()).</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;{&quot;</span><span class="o">);</span>
+            <span class="n">defaultBuilder</span><span class="o">(</span><span class="n">obj</span><span class="o">,</span> <span class="n">map</span><span class="o">,</span> <span class="n">builder</span><span class="o">,</span> <span class="n">list</span><span class="o">);</span>
+            <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;}&quot;</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IntrospectionException</span> <span class="o">|</span> <span class="n">ReflectiveOperationException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
 
-    private static void defaultBuilder(Object t, Map&lt;Class, Object&gt; map, StringBuilder builder,
-            PropertyDescriptor[] list) throws IllegalAccessException, InvocationTargetException {
-        for (int i = 0; i &lt; list.length; i++) {
-            PropertyDescriptor descriptor = list[i];
-            if (i &gt; 0) {
-                builder.append(&quot;, &quot;);
-            }
-            builder.append(descriptor.getName()).append(&quot;=&quot;);
-            Object o = descriptor.getReadMethod().invoke(t);
-            Class type = descriptor.getPropertyType();
-            if (Objects.isNull(o) &amp;&amp; map.containsKey(type)) {
-                builder.append(map.get(type));
-            } else {
-                builder.append(o);
-            }
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">defaultBuilder</span><span class="o">(</span><span class="n">Object</span> <span class="n">t</span><span class="o">,</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Class</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">map</span><span class="o">,</span> <span class="n">StringBuilder</span> <span class="n">builder</span><span class="o">,</span>
+            <span class="n">PropertyDescriptor</span><span class="o">[]</span> <span class="n">list</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IllegalAccessException</span><span class="o">,</span> <span class="n">InvocationTargetException</span> <span class="o">{</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">list</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">PropertyDescriptor</span> <span class="n">descriptor</span> <span class="o">=</span> <span class="n">list</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;, &quot;</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">descriptor</span><span class="o">.</span><span class="na">getName</span><span class="o">()).</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;=&quot;</span><span class="o">);</span>
+            <span class="n">Object</span> <span class="n">o</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="na">getReadMethod</span><span class="o">().</span><span class="na">invoke</span><span class="o">(</span><span class="n">t</span><span class="o">);</span>
+            <span class="n">Class</span> <span class="n">type</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="na">getPropertyType</span><span class="o">();</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">Objects</span><span class="o">.</span><span class="na">isNull</span><span class="o">(</span><span class="n">o</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">map</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">type</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">type</span><span class="o">));</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">o</span><span class="o">);</span>
+            <span class="o">}</span>
 
-        }
-    }
+        <span class="o">}</span>
+    <span class="o">}</span>
 
-    private static void commonBuilder(Object t, StringBuilder builder, PropertyDescriptor[] list)
-            throws IllegalAccessException, InvocationTargetException {
-        for (int i = 0; i &lt; list.length; i++) {
-            PropertyDescriptor descriptor = list[i];
-            if (i &gt; 0) {
-                builder.append(&quot;, &quot;);
-            }
-            builder.append(descriptor.getName()).append(&quot;=&quot;);
-            Object o = descriptor.getReadMethod().invoke(t);
-            if (descriptor.getPropertyType() == String.class &amp;&amp; Objects.isNull(o)) {
-                builder.append(&quot;&#39;&#39;&quot;);
-            } else {
-                builder.append(o);
-            }
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">commonBuilder</span><span class="o">(</span><span class="n">Object</span> <span class="n">t</span><span class="o">,</span> <span class="n">StringBuilder</span> <span class="n">builder</span><span class="o">,</span> <span class="n">PropertyDescriptor</span><span class="o">[]</span> <span class="n">list</span><span class="o">)</span>
+            <span class="kd">throws</span> <span class="n">IllegalAccessException</span><span class="o">,</span> <span class="n">InvocationTargetException</span> <span class="o">{</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">list</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">PropertyDescriptor</span> <span class="n">descriptor</span> <span class="o">=</span> <span class="n">list</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;, &quot;</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">descriptor</span><span class="o">.</span><span class="na">getName</span><span class="o">()).</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;=&quot;</span><span class="o">);</span>
+            <span class="n">Object</span> <span class="n">o</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="na">getReadMethod</span><span class="o">().</span><span class="na">invoke</span><span class="o">(</span><span class="n">t</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">descriptor</span><span class="o">.</span><span class="na">getPropertyType</span><span class="o">()</span> <span class="o">==</span> <span class="n">String</span><span class="o">.</span><span class="na">class</span> <span class="o">&amp;&amp;</span> <span class="n">Objects</span><span class="o">.</span><span class="na">isNull</span><span class="o">(</span><span class="n">o</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;&#39;&#39;&quot;</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="n">builder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">o</span><span class="o">);</span>
+            <span class="o">}</span>
 
-        }
-    }
+        <span class="o">}</span>
+    <span class="o">}</span>
 
-}
+<span class="o">}</span>
 </pre></div>
 
 
 <p>我们按对象适配器的方式改造SysResources</p>
-<div class="highlight"><pre><span></span>public class SysResources extends AbstractDO {
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SysResources</span> <span class="kd">extends</span> <span class="n">AbstractDO</span> <span class="o">{</span>
 
-    @Override
-    public String toString() {
-        AdapteeTarget target = new StringAdapter&lt;&gt;(this, 1 &lt;&lt; 7);
-        return target.toString();
-    }
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">AdapteeTarget</span> <span class="n">target</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringAdapter</span><span class="o">&lt;&gt;(</span><span class="k">this</span><span class="o">,</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">7</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">target</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
 
-    public static void main(String[] args) {
-        System.out.println(new SysResources());
-    }
-}
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="k">new</span> <span class="n">SysResources</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre></div>
 
 
@@ -539,103 +539,103 @@ public class SysResources extends AbstractDO implements AdapteeTarget{
 <p>String字段的默认值都变成了空字符串</p>
 <hr>
 <p>当然我们也有其他需求，比如修改其他类型的默认值，那我们可以创建如下适配器：</p>
-<p>默认值自定义适配器_DefaultValueAdapter_</p>
-<div class="highlight"><pre><span></span>@AllArgsConstructor
-public class DefaultValueAdapter&lt;T&gt; implements AdapteeTarget {
+<p>默认值自定义适配器 <em>DefaultValueAdapter</em></p>
+<div class="highlight"><pre><span></span><span class="nd">@AllArgsConstructor</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">DefaultValueAdapter</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="n">AdapteeTarget</span> <span class="o">{</span>
 
-    private T t;
+    <span class="kd">private</span> <span class="n">T</span> <span class="n">t</span><span class="o">;</span>
 
-    private int capacity;
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">capacity</span><span class="o">;</span>
 
-    private Map&lt;Class, Object&gt; map;
+    <span class="kd">private</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Class</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">map</span><span class="o">;</span>
 
-    @Override
-    public String toString() {
-        return ToStringUtil.getObjectStringNotEmpty(t, capacity, map);
-    }
-}
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">ToStringUtil</span><span class="o">.</span><span class="na">getObjectStringNotEmpty</span><span class="o">(</span><span class="n">t</span><span class="o">,</span> <span class="n">capacity</span><span class="o">,</span> <span class="n">map</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre></div>
 
 
 <p>然后在重写 SysResources的toString方法</p>
-<div class="highlight"><pre><span></span>@Override
-    public String toString() {
-        Map&lt;Class, Object&gt; map = new HashMap&lt;&gt;(5);
-        map.put(Boolean.class, false);
-        map.put(Long.class, -1L);
-        map.put(List.class, new ArrayList&lt;&gt;(1));
-        AdapteeTarget target = new DefaultValueAdapter&lt;&gt;(this, 1 &lt;&lt; 10, map);
-        return target.toString();
-    }
+<div class="highlight"><pre><span></span><span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">Class</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;(</span><span class="mi">5</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">Boolean</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">Long</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="o">-</span><span class="mi">1L</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">List</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;(</span><span class="mi">1</span><span class="o">));</span>
+        <span class="n">AdapteeTarget</span> <span class="n">target</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DefaultValueAdapter</span><span class="o">&lt;&gt;(</span><span class="k">this</span><span class="o">,</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">10</span><span class="o">,</span> <span class="n">map</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">target</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
 </pre></div>
 
 
 <p>new一个对象得到的结果如下：</p>
-<div class="highlight"><pre><span></span>SysResources{available=false, checked=null, createTime=null, external=false, icon=null, id=-1, name=null, nodes=[], parent=null, parentId=-1, permission=null, sort=null, type=null, updateTime=null, url=null}
+<div class="highlight"><pre><span></span><span class="n">SysResources</span><span class="o">{</span><span class="n">available</span><span class="o">=</span><span class="kc">false</span><span class="o">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">null</span><span class="o">,</span> <span class="n">createTime</span><span class="o">=</span><span class="kc">null</span><span class="o">,</span> <span class="n">external</span><span class="o">=</span><span class="kc">false</span><span class="o">,</span> <span class="n">icon</span><span class="o">=</span><span class="kc">null</span><span class="o">,</span> <span class="n">id</span><span class="o">=-</span><span class="mi">1</span><span class="o">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">null</span><span class="o">,</span> <span class="n">nodes</span><span class="o">=[],</span> <span class="n">parent</span><span class="o">=</span><span class="kc">null</span><span class="o">,</span> <span class="n">parentId</span><span class="o">=-</span><span class="mi">1</span><span class="o">,</span> <span class="n">permission</span><span class="o">=</span><span class="kc">null</span><span class="o">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">null</span><span class="o">,</span> <span class="n">type</span><span class="o">=</span><span class="kc">null</span><span class="o">,</span> <span class="n">updateTime</span><span class="o">=</span><span class="kc">null</span><span class="o">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">null</span><span class="o">}</span>
 </pre></div>
 
 
 <p>Long类型的默认值为-1，Boolean对象默认值是 false</p>
 <p>另外当我们还有其他需求，比如toString方法只打印部分字段那么又必须写新的类,当适配器数量到达一定程定，我们可以参考Collections工具类考虑使用简单工厂方法：</p>
-<p>适配器_AdapterFactory_</p>
-<div class="highlight"><pre><span></span>public final class AdapterFactory {
+<p>适配器 <em>AdapterFactory</em></p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">AdapterFactory</span> <span class="o">{</span>
 
-    //默认值设定
-    public static  String builderDefaultValueAdapter(Map&lt;Class,Object&gt; map, int capacity, Class cls) {
-        return new DefaultValueAdapter(cls, capacity, map).toString() ;
-    }
-   //空字符串设定
-    public static String builderStringValueAdapter(Class cls, int capacity) {
-        return new StringAdapter(cls, capacity).toString();
-    }
+    <span class="c1">//默认值设定</span>
+    <span class="kd">public</span> <span class="kd">static</span>  <span class="n">String</span> <span class="nf">builderDefaultValueAdapter</span><span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Class</span><span class="o">,</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">map</span><span class="o">,</span> <span class="kt">int</span> <span class="n">capacity</span><span class="o">,</span> <span class="n">Class</span> <span class="n">cls</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">DefaultValueAdapter</span><span class="o">(</span><span class="n">cls</span><span class="o">,</span> <span class="n">capacity</span><span class="o">,</span> <span class="n">map</span><span class="o">).</span><span class="na">toString</span><span class="o">()</span> <span class="o">;</span>
+    <span class="o">}</span>
+   <span class="c1">//空字符串设定</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">builderStringValueAdapter</span><span class="o">(</span><span class="n">Class</span> <span class="n">cls</span><span class="o">,</span> <span class="kt">int</span> <span class="n">capacity</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">StringAdapter</span><span class="o">(</span><span class="n">cls</span><span class="o">,</span> <span class="n">capacity</span><span class="o">).</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
 
-    @AllArgsConstructor
-    private static class DefaultValueAdapter implements AdapteeTarget {
+    <span class="nd">@AllArgsConstructor</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DefaultValueAdapter</span> <span class="kd">implements</span> <span class="n">AdapteeTarget</span> <span class="o">{</span>
 
-        private Class t;
+        <span class="kd">private</span> <span class="n">Class</span> <span class="n">t</span><span class="o">;</span>
 
-        private int capacity;
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">capacity</span><span class="o">;</span>
 
-        private Map&lt;Class, Object&gt; map;
+        <span class="kd">private</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Class</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">map</span><span class="o">;</span>
 
 
-        @Override
-        public String toString() {
-            return ToStringUtil.getObjectDefaultValue(t, capacity, map);
-        }
-    }
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">ToStringUtil</span><span class="o">.</span><span class="na">getObjectDefaultValue</span><span class="o">(</span><span class="n">t</span><span class="o">,</span> <span class="n">capacity</span><span class="o">,</span> <span class="n">map</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
 
-    private static class StringAdapter implements AdapteeTarget {
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">StringAdapter</span> <span class="kd">implements</span> <span class="n">AdapteeTarget</span> <span class="o">{</span>
 
-        private Class t;
+        <span class="kd">private</span> <span class="n">Class</span> <span class="n">t</span><span class="o">;</span>
 
-        private int capacity;
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">capacity</span><span class="o">;</span>
 
-        public StringAdapter(Class t, int capacity) {
-            this.t = t;
-            this.capacity = capacity;
-        }
+        <span class="kd">public</span> <span class="nf">StringAdapter</span><span class="o">(</span><span class="n">Class</span> <span class="n">t</span><span class="o">,</span> <span class="kt">int</span> <span class="n">capacity</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">capacity</span> <span class="o">=</span> <span class="n">capacity</span><span class="o">;</span>
+        <span class="o">}</span>
 
-        @Override
-        public String toString() {
-            return ToStringUtil.getObjectStringValue(t, capacity);
-        }
-    }
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">ToStringUtil</span><span class="o">.</span><span class="na">getObjectStringValue</span><span class="o">(</span><span class="n">t</span><span class="o">,</span> <span class="n">capacity</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
 
-}
+<span class="o">}</span>
 </pre></div>
 
 
 <p>那么需要改进toString方法，如下:</p>
-<div class="highlight"><pre><span></span>    @Override
-    public String toString() {
-//        Map&lt;Class, Object&gt; map = new HashMap&lt;&gt;(5);
-//        map.put(Boolean.class, false);
-//        map.put(Long.class, -1L);
-//        map.put(List.class, new ArrayList&lt;&gt;(1));
-//        return AdapterFactory.builderDefaultValueAdapter(map, 1 &lt;&lt; 10, SysResources.class);
-        return AdapterFactory.builderStringValueAdapter(SysResources.class, 1 &lt;&lt; 10);
-    }
+<div class="highlight"><pre><span></span>    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+<span class="c1">//        Map&lt;Class, Object&gt; map = new HashMap&lt;&gt;(5);</span>
+<span class="c1">//        map.put(Boolean.class, false);</span>
+<span class="c1">//        map.put(Long.class, -1L);</span>
+<span class="c1">//        map.put(List.class, new ArrayList&lt;&gt;(1));</span>
+<span class="c1">//        return AdapterFactory.builderDefaultValueAdapter(map, 1 &lt;&lt; 10, SysResources.class);</span>
+        <span class="k">return</span> <span class="n">AdapterFactory</span><span class="o">.</span><span class="na">builderStringValueAdapter</span><span class="o">(</span><span class="n">SysResources</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">10</span><span class="o">);</span>
+    <span class="o">}</span>
 </pre></div>
 
 
