@@ -230,7 +230,7 @@ Map&lt;String, String&gt; map = Collections.synchronizedMap(new HashMap&lt;&gt;(
 <p>通过这种方式实现了map的线程安全同步，_Collections.synchronizedList方法_同理</p>
 <h1>4. 实际项目中运用</h1>
 <p>背景：有时候对于类的toString方法需要做修改，如果属性为空则赋值一些默认值，或者字符串为空的时候返回的是空字符串等，对此可以进行一些优化</p>
-<p>抽象父类_AbstractDO_</p>
+<p>抽象父类 <em>AbstractDO</em></p>
 <div class="highlight"><pre><span></span>@Getter
 @Setter
 @EqualsAndHashCode(callSuper = false, of = {&quot;id&quot;})
@@ -250,7 +250,7 @@ public abstract class AbstractDO implements Serializable {
 </pre></div>
 
 
-<p>具体实体类_SysResources_</p>
+<p>具体实体类 <em>SysResources</em></p>
 <div class="highlight"><pre><span></span>@Getter
 @Setter
 @Builder
