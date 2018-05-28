@@ -397,7 +397,7 @@ public class SysResources extends AbstractDO implements AdapteeTarget{
 </pre></div>
 
 
-<p>_ToStringUtil_工具类</p>
+<p><em>ToStringUtil</em> 工具类</p>
 <div class="highlight"><pre><span></span>public final class ToStringUtil {
 
     /**
@@ -409,20 +409,22 @@ public class SysResources extends AbstractDO implements AdapteeTarget{
             BeanInfo beanInfo = Introspector.getBeanInfo(t.getClass(), Object.class);
             PropertyDescriptor[] list = beanInfo.getPropertyDescriptors();
             builder.append(beanInfo.getBeanDescriptor().getName()).append(&quot;{&quot;);
-            for (int i = 0; i &lt; list.length; i++) {
-                PropertyDescriptor descriptor = list[i];
-                if (i &gt; 0) {
-                    builder.append(&quot;, &quot;);
-                }
-                builder.append(descriptor.getName()).append(&quot;=&quot;);
-                Object o = descriptor.getReadMethod().invoke(t);
-                if (descriptor.getPropertyType() == String.class &amp;&amp; Objects.isNull(o)) {
-                    builder.append(&quot;&#39;&#39;&quot;);
-                }else {
-                    builder.append(o);
-                }
+            commonBuilder(t, builder, list);
+            builder.append(&quot;}&quot;);
+        } catch (IntrospectionException | ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
+        return builder.toString();
+    }
 
-            }
+    public static String getObjectStringValue(Class t, int capacity) {
+        final StringBuilder builder = new StringBuilder(capacity);
+        try {
+            BeanInfo beanInfo = Introspector.getBeanInfo(t, Object.class);
+            Object obj = t.newInstance();
+            PropertyDescriptor[] list = beanInfo.getPropertyDescriptors();
+            builder.append(beanInfo.getBeanDescriptor().getName()).append(&quot;{&quot;);
+            commonBuilder(obj, builder, list);
             builder.append(&quot;}&quot;);
         } catch (IntrospectionException | ReflectiveOperationException e) {
             e.printStackTrace();
@@ -431,7 +433,7 @@ public class SysResources extends AbstractDO implements AdapteeTarget{
     }
 
     /**
-     *设置属性默认之短
+     * 设置属性默认之短
      */
     public static String getObjectStringNotEmpty(Object t, int capacity, Map&lt;Class, Object&gt; map) {
 
@@ -443,26 +445,65 @@ public class SysResources extends AbstractDO implements AdapteeTarget{
             BeanInfo beanInfo = Introspector.getBeanInfo(t.getClass(), Object.class);
             PropertyDescriptor[] list = beanInfo.getPropertyDescriptors();
             builder.append(beanInfo.getBeanDescriptor().getName()).append(&quot;{&quot;);
-            for (int i = 0; i &lt; list.length; i++) {
-                PropertyDescriptor descriptor = list[i];
-                if (i &gt; 0) {
-                    builder.append(&quot;, &quot;);
-                }
-                builder.append(descriptor.getName()).append(&quot;=&quot;);
-                Object o = descriptor.getReadMethod().invoke(t);
-                Class type = descriptor.getPropertyType();
-                if (Objects.isNull(o) &amp;&amp; map.containsKey(type)) {
-                    builder.append(map.get(type));
-                } else {
-                    builder.append(o);
-                }
-
-            }
+            defaultBuilder(t, map, builder, list);
             builder.append(&quot;}&quot;);
         } catch (IntrospectionException | ReflectiveOperationException e) {
             e.printStackTrace();
         }
         return builder.toString();
+    }
+
+    public static String getObjectDefaultValue(Class cls, int capacity, Map&lt;Class, Object&gt; map) {
+
+        final StringBuilder builder = new StringBuilder(capacity);
+        try {
+            Object obj = cls.newInstance();
+            BeanInfo beanInfo = Introspector.getBeanInfo(cls, Object.class);
+            PropertyDescriptor[] list = beanInfo.getPropertyDescriptors();
+            builder.append(beanInfo.getBeanDescriptor().getName()).append(&quot;{&quot;);
+            defaultBuilder(obj, map, builder, list);
+            builder.append(&quot;}&quot;);
+        } catch (IntrospectionException | ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
+        return builder.toString();
+    }
+
+    private static void defaultBuilder(Object t, Map&lt;Class, Object&gt; map, StringBuilder builder,
+            PropertyDescriptor[] list) throws IllegalAccessException, InvocationTargetException {
+        for (int i = 0; i &lt; list.length; i++) {
+            PropertyDescriptor descriptor = list[i];
+            if (i &gt; 0) {
+                builder.append(&quot;, &quot;);
+            }
+            builder.append(descriptor.getName()).append(&quot;=&quot;);
+            Object o = descriptor.getReadMethod().invoke(t);
+            Class type = descriptor.getPropertyType();
+            if (Objects.isNull(o) &amp;&amp; map.containsKey(type)) {
+                builder.append(map.get(type));
+            } else {
+                builder.append(o);
+            }
+
+        }
+    }
+
+    private static void commonBuilder(Object t, StringBuilder builder, PropertyDescriptor[] list)
+            throws IllegalAccessException, InvocationTargetException {
+        for (int i = 0; i &lt; list.length; i++) {
+            PropertyDescriptor descriptor = list[i];
+            if (i &gt; 0) {
+                builder.append(&quot;, &quot;);
+            }
+            builder.append(descriptor.getName()).append(&quot;=&quot;);
+            Object o = descriptor.getReadMethod().invoke(t);
+            if (descriptor.getPropertyType() == String.class &amp;&amp; Objects.isNull(o)) {
+                builder.append(&quot;&#39;&#39;&quot;);
+            } else {
+                builder.append(o);
+            }
+
+        }
     }
 
 }
