@@ -4,21 +4,21 @@ xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitem
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
-<loc>/</loc>
+<loc>https://nicky-chen.github.io/</loc>
 <lastmod>2018-05-29T09:35:43-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/archives.html</loc>
+<loc>https://nicky-chen.github.io/archives.html</loc>
 <lastmod>2018-05-29T09:35:43-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tags.html</loc>
+<loc>https://nicky-chen.github.io/tags.html</loc>
 <lastmod>2018-05-29T09:35:43-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
