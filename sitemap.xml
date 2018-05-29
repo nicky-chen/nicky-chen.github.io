@@ -4,378 +4,378 @@ xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitem
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
-<loc>https://github.com/nicky-chen/</loc>
+<loc></loc>
 <lastmod>2018-05-29T09:35:43-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/archives.html</loc>
+<loc>archives.html</loc>
 <lastmod>2018-05-29T09:35:43-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/tags.html</loc>
+<loc>tags.html</loc>
 <lastmod>2018-05-29T09:35:43-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/categories.html</loc>
+<loc>categories.html</loc>
 <lastmod>2018-05-29T09:35:43-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/yue-du-shu-dan.html</loc>
+<loc>yue-du-shu-dan.html</loc>
 <lastmod>2017-03-17T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.3</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/zai-xian-gong-ju.html</loc>
+<loc>zai-xian-gong-ju.html</loc>
 <lastmod>2017-08-18T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.3</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/kai-yuan-xiang-mu.html</loc>
+<loc>kai-yuan-xiang-mu.html</loc>
 <lastmod>2018-05-18T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.3</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/guan-yu-wo.html</loc>
+<loc>guan-yu-wo.html</loc>
 <lastmod>2018-05-27T13:15:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.3</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/design-pattern/adapter.html</loc>
+<loc>design-pattern/adapter.html</loc>
 <lastmod>2018-05-27T23:15:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/java-base/externalizable-interface.html</loc>
+<loc>java-base/externalizable-interface.html</loc>
 <lastmod>2018-05-23T22:36:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/design-pattern/template.html</loc>
+<loc>design-pattern/template.html</loc>
 <lastmod>2018-05-18T21:46:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/algorithm-datastructure/btree-info.html</loc>
+<loc>algorithm-datastructure/btree-info.html</loc>
 <lastmod>2018-05-17T19:39:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/concurrent/synchronized-principle.html</loc>
+<loc>concurrent/synchronized-principle.html</loc>
 <lastmod>2018-05-14T19:16:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/concurrent/juc-tree-info.html</loc>
+<loc>concurrent/juc-tree-info.html</loc>
 <lastmod>2018-05-13T20:16:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/mysql/SHOW-GLOBAL-STATUS.html</loc>
+<loc>mysql/SHOW-GLOBAL-STATUS.html</loc>
 <lastmod>2018-05-10T18:11:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/mysql/optimize-picture.html</loc>
+<loc>mysql/optimize-picture.html</loc>
 <lastmod>2018-05-08T18:34:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/mysql/design-rule.html</loc>
+<loc>mysql/design-rule.html</loc>
 <lastmod>2018-05-07T19:38:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/design-pattern/strategy.html</loc>
+<loc>design-pattern/strategy.html</loc>
 <lastmod>2018-05-06T17:20:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/concurrent/volatile-feature.html</loc>
+<loc>concurrent/volatile-feature.html</loc>
 <lastmod>2018-05-04T22:46:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/mysql/high-event.html</loc>
+<loc>mysql/high-event.html</loc>
 <lastmod>2018-04-28T20:18:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/mysql/process-fun.html</loc>
+<loc>mysql/process-fun.html</loc>
 <lastmod>2018-04-27T22:30:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/distrubuted/cap-base-flp.html</loc>
+<loc>distrubuted/cap-base-flp.html</loc>
 <lastmod>2018-04-25T18:43:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/java-base/string-builder-question.html</loc>
+<loc>java-base/string-builder-question.html</loc>
 <lastmod>2018-04-21T15:34:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/java-base/exception-introduce.html</loc>
+<loc>java-base/exception-introduce.html</loc>
 <lastmod>2018-04-17T19:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/concurrent/thread-jmm-happens-before.html</loc>
+<loc>concurrent/thread-jmm-happens-before.html</loc>
 <lastmod>2018-04-03T22:11:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/design-pattern/decorator.html</loc>
+<loc>design-pattern/decorator.html</loc>
 <lastmod>2018-03-28T11:22:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/distrubuted/interface-idempotency.html</loc>
+<loc>distrubuted/interface-idempotency.html</loc>
 <lastmod>2018-03-26T18:49:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/java-base/binary-operation.html</loc>
+<loc>java-base/binary-operation.html</loc>
 <lastmod>2018-03-21T22:17:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/classloader/classloader-chapter02.html</loc>
+<loc>classloader/classloader-chapter02.html</loc>
 <lastmod>2018-03-20T22:48:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/java-base/introspector.html</loc>
+<loc>java-base/introspector.html</loc>
 <lastmod>2018-03-13T15:15:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/classloader/classloader-chapter01.html</loc>
+<loc>classloader/classloader-chapter01.html</loc>
 <lastmod>2018-03-08T21:15:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/design-pattern/builder.html</loc>
+<loc>design-pattern/builder.html</loc>
 <lastmod>2017-12-19T22:15:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/design-pattern/builder-factory.html</loc>
+<loc>design-pattern/builder-factory.html</loc>
 <lastmod>2017-12-07T22:30:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/concurrent/thread-communication.html</loc>
+<loc>concurrent/thread-communication.html</loc>
 <lastmod>2017-11-18T21:52:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/concurrent/recursive-Lock.html</loc>
+<loc>concurrent/recursive-Lock.html</loc>
 <lastmod>2017-11-03T21:22:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/algorithm-datastructure/index.html</loc>
+<loc>algorithm-datastructure/index.html</loc>
 <lastmod>2018-05-17T19:39:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/classloader/index.html</loc>
+<loc>classloader/index.html</loc>
 <lastmod>2018-03-20T22:48:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/concurrent/index.html</loc>
+<loc>concurrent/index.html</loc>
 <lastmod>2018-05-14T19:16:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/design-pattern/index.html</loc>
+<loc>design-pattern/index.html</loc>
 <lastmod>2018-05-27T23:15:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/distrubuted/index.html</loc>
+<loc>distrubuted/index.html</loc>
 <lastmod>2018-04-25T18:43:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/java-base/index.html</loc>
+<loc>java-base/index.html</loc>
 <lastmod>2018-05-23T22:36:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/mysql/index.html</loc>
+<loc>mysql/index.html</loc>
 <lastmod>2018-05-10T18:11:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/tag/li-lun.html</loc>
+<loc>tag/li-lun.html</loc>
 <lastmod>2018-04-25T18:43:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/tag/chuang-jian-xing.html</loc>
+<loc>tag/chuang-jian-xing.html</loc>
 <lastmod>2017-12-19T22:15:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/tag/bing-fa-bian-cheng-si-wei-dao-tu.html</loc>
+<loc>tag/bing-fa-bian-cheng-si-wei-dao-tu.html</loc>
 <lastmod>2018-05-13T20:16:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/tag/ku-ji-you-hua.html</loc>
+<loc>tag/ku-ji-you-hua.html</loc>
 <lastmod>2018-05-10T18:11:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/tag/shu-ju-jie-gou.html</loc>
+<loc>tag/shu-ju-jie-gou.html</loc>
 <lastmod>2018-05-17T19:39:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/tag/xing-wei-xing.html</loc>
+<loc>tag/xing-wei-xing.html</loc>
 <lastmod>2018-05-18T21:46:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/tag/yuan-ma.html</loc>
+<loc>tag/yuan-ma.html</loc>
 <lastmod>2018-03-20T22:48:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/tag/jie-gou-xing.html</loc>
+<loc>tag/jie-gou-xing.html</loc>
 <lastmod>2018-05-27T23:15:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/tag/ji-chu.html</loc>
+<loc>tag/ji-chu.html</loc>
 <lastmod>2018-05-23T22:36:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/tag/mysqlsi-wei-dao-tu.html</loc>
+<loc>tag/mysqlsi-wei-dao-tu.html</loc>
 <lastmod>2018-05-08T18:34:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/tag/suo-you-hua.html</loc>
+<loc>tag/suo-you-hua.html</loc>
 <lastmod>2018-05-14T19:16:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://github.com/nicky-chen/author/nicky_chin.html</loc>
+<loc>author/nicky_chin.html</loc>
 <lastmod>2018-05-27T23:15:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
