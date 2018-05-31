@@ -25,7 +25,6 @@
 
 <body id="index" class="home">
 
-
     <div class="container">
 
         <div class="row">
@@ -38,7 +37,7 @@
               <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
 
                 <ul class="columns">
-                    <li><a href="/">Home</a></li>
+                    <li><a href="/">首页</a></li>
 
                     <li
 ><a href="/yue-du-shu-dan.html">阅读书单</a></li>
@@ -55,10 +54,15 @@
                 </ul>
             </div>
 
+
 <section id="content" class="body">
 
    <div class="row">
-        <div class="eleven columns">
+
+<div id="toc" class="threes columns" style="font-size: 65%">
+    <br>
+    <h4 style="font-size: 1rem">文章目录</h4>
+</div>        <div class="eleven columns">
 
 
             <header>
@@ -75,7 +79,7 @@
                 <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
               </address>
             </footer><!-- /.post-info -->
-            <div class="entry-content">
+            <div id="contents" class="entry-content">
               <p>最近没事在玩ASM框架，于是乎想将业务代码中的PO对象中的toString方法 在编译期间，自动转换了基于StringBuilder 拼接的代码。发现了一个奇怪的问题：
 实体类如下</p>
 <div class="highlight"><pre><span></span>@Getter
@@ -377,7 +381,7 @@ public class Banner implements Serializable{
 
         </div><!-- /.eleven.columns -->
 
-<div class="three columns">
+<div class="three columns" style="font-size: 80%">
 
 
     <nav class="widget">
@@ -407,8 +411,8 @@ public class Banner implements Serializable{
      <!---->
 
      <li >
-         <a href="/algorithm-datastructure/index.html">
-             Algorithm-DataStructure
+         <a href="/algorithm/index.html">
+             Algorithm
          </a>
      </li>
      <li >
@@ -447,7 +451,7 @@ public class Banner implements Serializable{
 <!--<h4>Categories</h4>-->
 <!--<ul class="blank">-->
 	<!---->
-		<!--<li><a href="/algorithm-datastructure/index.html">Algorithm-DataStructure</a></li>-->
+		<!--<li><a href="/algorithm/index.html">Algorithm</a></li>-->
 	<!---->
 		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
 	<!---->
@@ -511,7 +515,6 @@ public class Banner implements Serializable{
 
     <h4>相关文章推荐</h4>
     <ul>
-        <li><a href="/concurrent/recursive-Lock.html">可重入锁</a></li>
         <li><a href="/java-base/exception-introduce.html">Java异常处理-原理及优化建议</a></li>
         <li><a href="/mysql/high-event.html">MYSQL高级特性之【Event事件】</a></li>
         <li><a href="/java-base/binary-operation.html">java中位运算技巧</a></li>
@@ -519,6 +522,7 @@ public class Banner implements Serializable{
         <li><a href="/concurrent/thread-jmm-happens-before.html">java内存模型之[JMM][重排序][happens-before]</a></li>
         <li><a href="/mysql/process-fun.html">MYSQL高级特性之【存储过程与函数】</a></li>
         <li><a href="/mysql/design-rule.html">数据库设计三范式和反范式</a></li>
+        <li><a href="/concurrent/recursive-Lock.html">可重入锁</a></li>
         <li><a href="/java-base/externalizable-interface.html">自定义序列化之Externalizable接口</a></li>
         <li><a href="/java-base/introspector.html">Java 内省(Introspector)</a></li>
     </ul>
@@ -590,6 +594,7 @@ pageTracker._trackPageview();
   <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
   <script src="/theme/js/libs/gumby.min.js"></script>
   <script src="/theme/js/plugins.js"></script>
+  <script src="/theme/js/toc.js" type="text/javascript"></script>
     <script>
         (function () {
             var bp = document.createElement('script');

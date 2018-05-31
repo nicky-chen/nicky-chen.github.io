@@ -25,7 +25,6 @@
 
 <body id="index" class="home">
 
-
     <div class="container">
 
         <div class="row">
@@ -38,7 +37,7 @@
               <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
 
                 <ul class="columns">
-                    <li><a href="/">Home</a></li>
+                    <li><a href="/">首页</a></li>
 
                     <li
 ><a href="/yue-du-shu-dan.html">阅读书单</a></li>
@@ -55,10 +54,15 @@
                 </ul>
             </div>
 
+
 <section id="content" class="body">
 
    <div class="row">
-        <div class="eleven columns">
+
+<div id="toc" class="threes columns" style="font-size: 65%">
+    <br>
+    <h4 style="font-size: 1rem">文章目录</h4>
+</div>        <div class="eleven columns">
 
 
             <header>
@@ -75,7 +79,7 @@
                 <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
               </address>
             </footer><!-- /.post-info -->
-            <div class="entry-content">
+            <div id="contents" class="entry-content">
               <h2>1 概述</h2>
 <p>在项目中，经常因一些新增需求，导致同一业务的变更，如果所在类继承关系如下：Parent、Child、Grandparent，那么要在Child类上增强些功能怎么办？给Child类增加方法？那会对Grandparent产生什么影响？该如何去处理？看完本文，你会找到你的答案。</p>
 <p>JavaIO中，像下面的嵌套语句很常见，为什么要怎样定义呢？理解装饰模式后，你会找到答案。</p>
@@ -607,7 +611,7 @@ public ResultObject&lt;ResultVO&gt; registerUser(){
 
         </div><!-- /.eleven.columns -->
 
-<div class="three columns">
+<div class="three columns" style="font-size: 80%">
 
 
     <nav class="widget">
@@ -637,8 +641,8 @@ public ResultObject&lt;ResultVO&gt; registerUser(){
      <!---->
 
      <li >
-         <a href="/algorithm-datastructure/index.html">
-             Algorithm-DataStructure
+         <a href="/algorithm/index.html">
+             Algorithm
          </a>
      </li>
      <li >
@@ -677,7 +681,7 @@ public ResultObject&lt;ResultVO&gt; registerUser(){
 <!--<h4>Categories</h4>-->
 <!--<ul class="blank">-->
 	<!---->
-		<!--<li><a href="/algorithm-datastructure/index.html">Algorithm-DataStructure</a></li>-->
+		<!--<li><a href="/algorithm/index.html">Algorithm</a></li>-->
 	<!---->
 		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
 	<!---->
@@ -811,6 +815,7 @@ pageTracker._trackPageview();
   <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
   <script src="/theme/js/libs/gumby.min.js"></script>
   <script src="/theme/js/plugins.js"></script>
+  <script src="/theme/js/toc.js" type="text/javascript"></script>
     <script>
         (function () {
             var bp = document.createElement('script');

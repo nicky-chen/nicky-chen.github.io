@@ -25,7 +25,6 @@
 
 <body id="index" class="home">
 
-
     <div class="container">
 
         <div class="row">
@@ -38,7 +37,7 @@
               <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
 
                 <ul class="columns">
-                    <li><a href="/">Home</a></li>
+                    <li><a href="/">首页</a></li>
 
                     <li
 ><a href="/yue-du-shu-dan.html">阅读书单</a></li>
@@ -55,10 +54,15 @@
                 </ul>
             </div>
 
+
 <section id="content" class="body">
 
    <div class="row">
-        <div class="eleven columns">
+
+<div id="toc" class="threes columns" style="font-size: 65%">
+    <br>
+    <h4 style="font-size: 1rem">文章目录</h4>
+</div>        <div class="eleven columns">
 
 
             <header>
@@ -75,7 +79,7 @@
                 <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
               </address>
             </footer><!-- /.post-info -->
-            <div class="entry-content">
+            <div id="contents" class="entry-content">
               <h1>1 异常层次结构</h1>
 <p>异常指不期而至的各种状况，如：文件找不到、网络连接失败、非法参数等。异常是一个事件，它发生在程序运行期间，干扰了正常的指令流程。Java通 过API中Throwable类的众多子类描述各种不同的异常。因而，Java异常都是对象，是Throwable子类的实例，描述了出现在一段编码中的 错误条件。当条件生成时，错误将引发异常。
       Java异常类层次结构图：
@@ -871,7 +875,7 @@ java.lang.IllegalArgumentException: incorrect argument passed</p>
 
         </div><!-- /.eleven.columns -->
 
-<div class="three columns">
+<div class="three columns" style="font-size: 80%">
 
 
     <nav class="widget">
@@ -901,8 +905,8 @@ java.lang.IllegalArgumentException: incorrect argument passed</p>
      <!---->
 
      <li >
-         <a href="/algorithm-datastructure/index.html">
-             Algorithm-DataStructure
+         <a href="/algorithm/index.html">
+             Algorithm
          </a>
      </li>
      <li >
@@ -941,7 +945,7 @@ java.lang.IllegalArgumentException: incorrect argument passed</p>
 <!--<h4>Categories</h4>-->
 <!--<ul class="blank">-->
 	<!---->
-		<!--<li><a href="/algorithm-datastructure/index.html">Algorithm-DataStructure</a></li>-->
+		<!--<li><a href="/algorithm/index.html">Algorithm</a></li>-->
 	<!---->
 		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
 	<!---->
@@ -1005,7 +1009,6 @@ java.lang.IllegalArgumentException: incorrect argument passed</p>
 
     <h4>相关文章推荐</h4>
     <ul>
-        <li><a href="/concurrent/recursive-Lock.html">可重入锁</a></li>
         <li><a href="/mysql/high-event.html">MYSQL高级特性之【Event事件】</a></li>
         <li><a href="/java-base/binary-operation.html">java中位运算技巧</a></li>
         <li><a href="/concurrent/thread-communication.html">多线程之线程通信摘要</a></li>
@@ -1013,6 +1016,7 @@ java.lang.IllegalArgumentException: incorrect argument passed</p>
         <li><a href="/mysql/process-fun.html">MYSQL高级特性之【存储过程与函数】</a></li>
         <li><a href="/java-base/string-builder-question.html">字符串拼接的疑惑</a></li>
         <li><a href="/mysql/design-rule.html">数据库设计三范式和反范式</a></li>
+        <li><a href="/concurrent/recursive-Lock.html">可重入锁</a></li>
         <li><a href="/java-base/externalizable-interface.html">自定义序列化之Externalizable接口</a></li>
         <li><a href="/java-base/introspector.html">Java 内省(Introspector)</a></li>
     </ul>
@@ -1084,6 +1088,7 @@ pageTracker._trackPageview();
   <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
   <script src="/theme/js/libs/gumby.min.js"></script>
   <script src="/theme/js/plugins.js"></script>
+  <script src="/theme/js/toc.js" type="text/javascript"></script>
     <script>
         (function () {
             var bp = document.createElement('script');

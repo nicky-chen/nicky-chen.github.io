@@ -492,8 +492,15 @@ abbr {
   width: 12.72727%;
 }
 .row .three.columns {
-  width: 20%;
+  width: 13%;
 }
+.row .threes.columns {
+  width: 10%;
+}
+.row .eleven.columns {
+  width: 73%;
+}
+
 .row .four.columns {
   width: 27.27273%;
 }
@@ -515,9 +522,7 @@ abbr {
 .row .ten.columns {
   width: 70.90909%;
 }
-.row .eleven.columns {
-  width: 78.18182%;
-}
+
 .row .twelve.columns {
   width: 85.45455%;
 }

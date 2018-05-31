@@ -25,7 +25,6 @@
 
 <body id="index" class="home">
 
-
     <div class="container">
 
         <div class="row">
@@ -38,7 +37,7 @@
               <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
 
                 <ul class="columns">
-                    <li><a href="/">Home</a></li>
+                    <li><a href="/">首页</a></li>
 
                     <li
 ><a href="/yue-du-shu-dan.html">阅读书单</a></li>
@@ -55,10 +54,21 @@
                 </ul>
             </div>
 
+
 <section id="content" class="body">
 
    <div class="row">
-        <div class="eleven columns">
+
+<div id="toc" class="threes columns" style="font-size: 65%">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h4 style="font-size: 1rem">文章目录</h4>
+</div>        <div class="eleven columns">
 
 
             <header>
@@ -75,7 +85,7 @@
                 <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
               </address>
             </footer><!-- /.post-info -->
-            <div class="entry-content">
+            <div id="contents" class="entry-content">
               <h1>1 背景</h1>
 <p>B-Tree是为磁盘等外存储设备设计的一种平衡查找树。因此在讲B-Tree之前先了解下磁盘的相关知识。系统从磁盘读取数据到内存时是以磁盘块（block）为基本单位的，位于同一个磁盘块中的数据会被一次性读取出来，而不是需要什么取什么。
 InnoDB存储引擎中有页（Page）的概念，页是其磁盘管理的最小单位。InnoDB存储引擎中默认每个页的大小为16KB，可通过参数innodb_page_size将页的大小设置为4K、8K、16K，在MySQL中可通过如下命令查看页的大小：</p>
@@ -190,7 +200,7 @@ b.判断该结点是否还有空位,即该结点关键字总数是否满足n&lt;
 
         </div><!-- /.eleven.columns -->
 
-<div class="three columns">
+<div class="three columns" style="font-size: 80%">
 
 
     <nav class="widget">
@@ -390,6 +400,7 @@ pageTracker._trackPageview();
   <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
   <script src="/theme/js/libs/gumby.min.js"></script>
   <script src="/theme/js/plugins.js"></script>
+  <script src="/theme/js/toc.js" type="text/javascript"></script>
     <script>
         (function () {
             var bp = document.createElement('script');
