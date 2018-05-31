@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"><channel><title>南乡清水 - Algorithm</title><link>/</link><description></description><lastBuildDate>Thu, 17 May 2018 19:39:00 +0800</lastBuildDate><item><title>数据结构之BTree和B+Tree(多路平衡查找树 )</title><link>/algorithm/btree-info.html</link><description>&lt;h1&gt;1 背景&lt;/h1&gt;
+&lt;p&gt;B-Tree是为磁盘等外存储设备设计的一种平衡查找树。因此在讲B-Tree之前先了解下磁盘的相关知识。系统从磁盘读取数据到内存时是以磁盘块（block）为基本单位的，位于同一个磁盘块中的数据会被一次性读取出来，而不是需要什么取什么。
+InnoDB存储引擎中有页（Page）的概念，页是其磁盘管理的最小单位。InnoDB存储引擎中默认每个页的大小为16KB，可通过参数innodb_page_size将页的大小设置为4K、8K、16K，在MySQL中可通过如下命令查看页的大小：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mysql&amp;gt; show variables like &amp;#39;innodb_page_size&amp;#39;;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;而系统一个磁盘块的存储空间往往没有这么大，因此InnoDB每次申请磁盘空间时都会是若干地址连续磁盘块来达到页的大小16KB。InnoDB在把磁盘数据读入到磁盘时会以页为基本单位，在查询数据时如果一个页中的每条数据都能有助于定位数据记录的位置，这将会减少磁盘I/O次数，提高查询效率。&lt;/p&gt;
+&lt;h1&gt;2 定义与特性&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;B-Tree&lt;/strong&gt;
+B-Tree结构的数据可以让系统高效的找到数据所在的磁盘块。为了描述B-Tree，首先定义一条记录为一个二元组[key, data] ，key为记录的键值(关键字)，对应表中的主键值，data为一行记录中除主键外的数据。对于不同的记录，key值互不相同。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;一棵m阶的B-Tree有如下特性： 
+1. 每个节点最多有m个孩子。 
+2. 除了根节点和叶子节点外，其它每个节点至少有Ceil …&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Thu, 17 May 2018 19:39:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-05-17:/algorithm/btree-info.html</guid><category>数据结构</category></item></channel></rss>
