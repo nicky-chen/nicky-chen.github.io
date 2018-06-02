@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>Fail-Fast和Fail-Safe机制</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+        <link href="/feeds/java-base.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+        <link rel="shortcut icon" href="/theme/images/favicon.ico">
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+
+                <ul class="columns">
+                    <li><a href="/">首页</a></li>
+
+                    <li
+><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                    <li
+><a href="/zai-xian-gong-ju.html">在线工具</a></li>
+                    <li
+><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                    <li
+><a href="/guan-yu-wo.html">关于我</a></li>
+                     <li><a href="/archives.html"><i class="active"></i>归档日志</a></li>
+                    <form class="navbar-search pull-right" action="/search.html">
+                        <input type="text" class="search-query" placeholder="站内搜" name="q" id="s">
+                    </form>
+                </ul>
+            </div>
+
+
+<section id="content" class="body">
+
+   <div class="row">
+
+<div id="toc" class="threes columns" style="font-size: 65%">
+    <br>
+    <h4 style="font-size: 1rem">文章目录</h4>
+</div>        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/java-base/fail-fast-safe.html" rel="bookmark"
+                   title="Permalink to Fail-Fast和Fail-Safe机制">Fail-Fast和Fail-Safe机制</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2018-06-02T19:01:00+08:00">
+                周六 02 六月 2018
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div id="contents" class="entry-content">
+              <h1>1 Fail-Fast</h1>
+<h3>1.1 fail-fast定义</h3>
+<p>fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件
+例如：当某一个线程A通过iterator去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出ConcurrentModificationException异常，产生fail-fast事件</p>
+<h3>1.2 Iterator与fast-fail机制</h3>
+<p><strong>1.2.1 Iterator的好处</strong>
+java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。
+比如下面的 <em>ArrayList</em> 和  <em>ImmutableList</em> 遍历的例子：</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IteratorTest</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="n">Lists</span><span class="o">.</span><span class="na">newArrayList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">11</span><span class="o">,</span> <span class="mi">18</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="mi">20</span><span class="o">,</span> <span class="mi">99</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">ImmutableList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">integerList</span> <span class="o">=</span> <span class="n">ImmutableList</span><span class="o">.</span><span class="na">copyOf</span><span class="o">(</span><span class="n">list</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">iterator1</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">iterator1</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">iterator1</span><span class="o">.</span><span class="na">next</span><span class="o">());</span>
+        <span class="o">}</span>
+
+        <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">iterator2</span> <span class="o">=</span> <span class="n">integerList</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">iterator2</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">iterator2</span><span class="o">.</span><span class="na">next</span><span class="o">());</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>我们去遍历的时候并不需要关心内部细节，但实际上ImmutableList是一个固定容量的list,不能进行 <em>remove</em> 和  <em>add</em> 方法的操作</p>
+<p><strong>1.2.2 fail-fast模拟</strong>
+fast-fail事件产生的条件：当多个线程对Collection进行操作时，若其中某一个线程通过iterator去遍历集合时，该集合的内容被其他线程所改变；则会抛出 <em>ConcurrentModificationException</em> 异常</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IteratorTest</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="n">Lists</span><span class="o">.</span><span class="na">newArrayList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">11</span><span class="o">,</span> <span class="mi">18</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="mi">20</span><span class="o">,</span> <span class="mi">99</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+
+        <span class="kd">final</span> <span class="n">IteratorTest</span> <span class="n">test</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IteratorTest</span><span class="o">();</span>
+        <span class="kd">final</span> <span class="n">ThreadFactory</span> <span class="n">threadFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadFactoryBuilder</span><span class="o">().</span><span class="na">setNameFormat</span><span class="o">(</span><span class="s">&quot;iterator-[%d]&quot;</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+        <span class="kd">final</span> <span class="n">RejectedExecutionHandler</span> <span class="n">handler</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadPoolExecutor</span><span class="o">.</span><span class="na">AbortPolicy</span><span class="o">();</span>
+        <span class="kd">final</span> <span class="n">ThreadPoolExecutor</span> <span class="n">pool</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadPoolExecutor</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">8</span><span class="o">,</span> <span class="mi">5L</span><span class="o">,</span>
+                <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">,</span> <span class="k">new</span> <span class="n">SynchronousQueue</span><span class="o">&lt;&gt;(</span><span class="kc">false</span><span class="o">),</span> <span class="n">threadFactory</span><span class="o">,</span> <span class="n">handler</span><span class="o">);</span>
+        <span class="kd">final</span> <span class="n">CountDownLatch</span> <span class="n">latch</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CountDownLatch</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+
+            <span class="kd">final</span> <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+
+            <span class="n">Runnable</span> <span class="n">task</span> <span class="o">=</span> <span class="o">()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+                <span class="k">try</span> <span class="o">{</span>
+                    <span class="n">latch</span><span class="o">.</span><span class="na">await</span><span class="o">();</span>
+                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+                <span class="o">}</span>
+                <span class="kt">int</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">ThreadLocalRandom</span><span class="o">.</span><span class="na">current</span><span class="o">().</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">Range</span><span class="o">.</span><span class="na">closedOpen</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">2</span><span class="o">).</span><span class="na">contains</span><span class="o">(</span><span class="n">seed</span><span class="o">))</span> <span class="o">{</span>
+                    <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">index</span> <span class="o">*</span> <span class="n">seed</span><span class="o">);</span>
+                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                    <span class="n">list</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+                <span class="o">}</span>
+                <span class="n">test</span><span class="o">.</span><span class="na">iteratorElements</span><span class="o">();</span>
+            <span class="o">};</span>
+            <span class="n">pool</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">task</span><span class="o">);</span>
+
+        <span class="o">}</span>
+        <span class="n">latch</span><span class="o">.</span><span class="na">countDown</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;start task&quot;</span><span class="o">);</span>
+
+        <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+        <span class="n">pool</span><span class="o">.</span><span class="na">shutdown</span><span class="o">();</span>
+
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">iteratorElements</span><span class="o">()</span> <span class="o">{</span>
+
+        <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">iterator1</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">iterator1</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;: &quot;</span> <span class="o">+</span> <span class="n">iterator1</span><span class="o">.</span><span class="na">next</span><span class="o">());</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<p>随机打印结果如下</p>
+<div class="highlight"><pre><span></span>start task
+iterator-[2]: 1
+iterator-[3]: 1
+iterator-[3]: 10
+iterator-[1]: 1
+iterator-[3]: 11
+iterator-[3]: 18
+iterator-[3]: -1
+iterator-[3]: 20
+iterator-[3]: 99
+iterator-[3]: 1
+iterator-[3]: 0
+iterator-[3]: 0
+iterator-[3]: 3
+Exception in thread &quot;iterator-[0]&quot; Exception in thread &quot;iterator-[4]&quot; Exception in thread &quot;iterator-[2]&quot; Exception in thread &quot;iterator-[1]&quot; java.util.ConcurrentModificationException
+    at java.util.ArrayList$Itr.checkForComodification(ArrayList.java:901)
+    at java.util.ArrayList$Itr.next(ArrayList.java:851)
+    at com.nicky.copyonwrite.IteratorTest.iteratorElements(IteratorTest.java:67)
+    at com.nicky.copyonwrite.IteratorTest.lambda$main$0(IteratorTest.java:48)
+    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+    at java.lang.Thread.run(Thread.java:745)
+</pre></div>
+
+
+<p>从打印结果我们可以得知，同时启动五个线程去迭代list，迭代途中iterator-[1]首先抛出异常java.util.ConcurrentModificationException！即产生fail-fast事件</p>
+<h3>1.3 ArrayList中ConcurrentModificationException原因</h3>
+<p>我们根据异常调用链查看源码，iterator1.next()在进入ArrayList-851行代码的时候出现错误：</p>
+<div class="highlight"><pre><span></span><span class="kd">private</span> <span class="kd">class</span> <span class="nc">Itr</span> <span class="kd">implements</span> <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">cursor</span><span class="o">;</span>       <span class="c1">//下个返回元素的位置</span>
+        <span class="kt">int</span> <span class="n">lastRet</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="c1">// 上一个返回元素的位置; 如果是-1则一个表示没有这个元素</span>
+
+        <span class="c1">// 以后每次遍历List中的元素的时候，都会比较expectedModCount和modCount是否相等；</span>
+        <span class="c1">// 若不相等，则抛出ConcurrentModificationException异常，产生fail-fast事件。</span>
+        <span class="kt">int</span> <span class="n">expectedModCount</span> <span class="o">=</span> <span class="n">modCount</span><span class="o">;</span>
+        <span class="c1">//如果下一个可返回元素位置不等于list的size</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasNext</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">cursor</span> <span class="o">!=</span> <span class="n">size</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">&quot;unchecked&quot;</span><span class="o">)</span>
+        <span class="kd">public</span> <span class="n">E</span> <span class="nf">next</span><span class="o">()</span> <span class="o">{</span>
+          <span class="c1">//如果下一个可返回元素位置不等于list的size，抛异常</span>
+            <span class="n">checkForComodification</span><span class="o">();</span>
+            <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">;</span>
+            <span class="c1">//如果下一个元素的位置大于size则抛出NoSuchElementException</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">size</span><span class="o">)</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">NoSuchElementException</span><span class="o">();</span>
+           <span class="c1">//获取外部类ArrayList实例中的数据</span>
+            <span class="n">Object</span><span class="o">[]</span> <span class="n">elementData</span> <span class="o">=</span> <span class="n">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">elementData</span><span class="o">;</span>
+       <span class="c1">//快速失败机制</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">elementData</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">ConcurrentModificationException</span><span class="o">();</span>
+            <span class="c1">//下一个可访问的元素位置+1</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="c1">//返回值并给lastRet赋值</span>
+            <span class="k">return</span> <span class="o">(</span><span class="n">E</span><span class="o">)</span> <span class="n">elementData</span><span class="o">[</span><span class="n">lastRet</span> <span class="o">=</span> <span class="n">i</span><span class="o">];</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">lastRet</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">();</span>
+            <span class="n">checkForComodification</span><span class="o">();</span>
+
+            <span class="k">try</span> <span class="o">{</span>
+              <span class="c1">//移除上一个返回 的元素</span>
+                <span class="n">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">lastRet</span><span class="o">);</span>
+              <span class="c1">//给下一个访问元素位置更新</span>
+                <span class="n">cursor</span> <span class="o">=</span> <span class="n">lastRet</span><span class="o">;</span>
+                <span class="c1">//给上一个访问元素复原</span>
+                <span class="n">lastRet</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+                <span class="n">expectedModCount</span> <span class="o">=</span> <span class="n">modCount</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IndexOutOfBoundsException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">ConcurrentModificationException</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+</pre></div>
+
+
+<p>很好理解，迭代器尽最大努力检查遍历途中list的容量是否改变，或者元素的偏移量发生了变动，如改变，则抛出ConcurrentModificationException异常</p>
+<h1>2 fail-safe</h1>
+<h3>2.1 定义</h3>
+<p>fail-safe任何对集合结构的修改都会在一个复制的集合上进行修改，因此不会抛出ConcurrentModificationException</p>
+<p><strong>fail-safe机制有两个问题</strong>
+<em> 1 需要复制集合，产生大量的无效对象，开销大
+</em> 2 无法保证读取的数据是目前原始数据结构中的数据。</p>
+<h3>2.2 解决fail-fast之CopyOnWriteArrayList</h3>
+<p>我们查看下add方法和remove方法的源码：</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">add</span><span class="o">(</span><span class="n">E</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">final</span> <span class="n">ReentrantLock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">lock</span><span class="o">;</span>
+        <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">Object</span><span class="o">[]</span> <span class="n">elements</span> <span class="o">=</span> <span class="n">getArray</span><span class="o">();</span>
+            <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">elements</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+            <span class="n">Object</span><span class="o">[]</span> <span class="n">newElements</span> <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">copyOf</span><span class="o">(</span><span class="n">elements</span><span class="o">,</span> <span class="n">len</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="n">newElements</span><span class="o">[</span><span class="n">len</span><span class="o">]</span> <span class="o">=</span> <span class="n">e</span><span class="o">;</span>
+            <span class="n">setArray</span><span class="o">(</span><span class="n">newElements</span><span class="o">);</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">...........................</span>
+    <span class="kd">public</span> <span class="n">E</span> <span class="nf">remove</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">final</span> <span class="n">ReentrantLock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">lock</span><span class="o">;</span>
+        <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">Object</span><span class="o">[]</span> <span class="n">elements</span> <span class="o">=</span> <span class="n">getArray</span><span class="o">();</span>
+            <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">elements</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+            <span class="n">E</span> <span class="n">oldValue</span> <span class="o">=</span> <span class="n">get</span><span class="o">(</span><span class="n">elements</span><span class="o">,</span> <span class="n">index</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">numMoved</span> <span class="o">=</span> <span class="n">len</span> <span class="o">-</span> <span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">numMoved</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+                <span class="n">setArray</span><span class="o">(</span><span class="n">Arrays</span><span class="o">.</span><span class="na">copyOf</span><span class="o">(</span><span class="n">elements</span><span class="o">,</span> <span class="n">len</span> <span class="o">-</span> <span class="mi">1</span><span class="o">));</span>
+            <span class="k">else</span> <span class="o">{</span>
+                <span class="n">Object</span><span class="o">[]</span> <span class="n">newElements</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">[</span><span class="n">len</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">elements</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">newElements</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">index</span><span class="o">);</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">elements</span><span class="o">,</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">newElements</span><span class="o">,</span> <span class="n">index</span><span class="o">,</span>
+                                 <span class="n">numMoved</span><span class="o">);</span>
+                <span class="n">setArray</span><span class="o">(</span><span class="n">newElements</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="n">oldValue</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>在添加元素或删除元素操作时候都会上锁，然后创建一个新的数组，让当前下标的元素删除或者添加，最后将原数组的地址指向新的数组，完成复制。
+这样的好处是不会出现fail-fast,但是只要增删操作就会上锁，影响效率。同时增加对象容量，容易OOM。并且在遍历中，list的元素并不一定是最终的元素集合，所以只能保证最终一致性</p>
+<h3>2.3 fail-fast和 fail-safe 的区别</h3>
+<p><img alt="两者区别" src="https://upload-images.jianshu.io/upload_images/10175660-eac2b412e2ca676e.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h1>3 Reference</h1>
+<p>http://www.cnblogs.com/skywang12345/p/3308762.html</p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "java-base/fail-fast-safe.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns" style="font-size: 80%">
+
+
+    <nav class="widget">
+        <h4>个人链接</h4>
+        <ul class="blank">
+            <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">StackOverFlow</a></li>
+            <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+            <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+        </ul>
+    </nav>
+
+<h4>专题分类</h4>
+
+ <ul>
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/zai-xian-gong-ju.html">在线工具</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+
+     <li >
+         <a href="/algorithm/index.html">
+             Algorithm
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             classloader
+         </a>
+     </li>
+     <li >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li class="active" >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm/index.html">Algorithm</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+<h4>标签</h4>
+	<ul class="blank">
+	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
+	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
+	    <li class="danger label" ><a href="/tag/bing-fa-bian-cheng-si-wei-dao-tu.html">并发编程思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
+	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
+	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
+	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
+	    <li class="danger label" ><a href="/tag/mysqlsi-wei-dao-tu.html">mysql思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
+</ul>
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+
+
+</div> </div><!-- /.row -->
+  <div class="pagination">★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆
+      <ul>
+        <li class="prev"><a href="/design-pattern/adapter.html">Next →</a></li>
+        <li><a href="/archives.html">博客导航</a></li>
+        <li class="next"><a href="/">← 上一篇</a></li>
+      </ul>
+    </div>
+
+    <h4>相关文章推荐</h4>
+    <ul>
+        <li><a href="/java-base/binary-operation.html">java中位运算技巧</a></li>
+        <li><a href="/java-base/externalizable-interface.html">自定义序列化之Externalizable接口</a></li>
+        <li><a href="/concurrent/thread-jmm-happens-before.html">java内存模型之[JMM][重排序][happens-before]</a></li>
+        <li><a href="/mysql/process-fun.html">MYSQL高级特性之【存储过程与函数】</a></li>
+        <li><a href="/java-base/exception-introduce.html">Java异常处理-原理及优化建议</a></li>
+        <li><a href="/java-base/string-builder-question.html">字符串拼接的疑惑</a></li>
+        <li><a href="/mysql/high-event.html">MYSQL高级特性之【Event事件】</a></li>
+        <li><a href="/java-base/introspector.html">Java 内省(Introspector)</a></li>
+        <li><a href="/mysql/design-rule.html">数据库设计三范式和反范式</a></li>
+        <li><a href="/concurrent/thread-communication.html">多线程之线程通信摘要</a></li>
+    </ul>
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-119892182-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+  <script src="/theme/js/toc.js" type="text/javascript"></script>
+    <script>
+        (function () {
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+</body>
+</html>
