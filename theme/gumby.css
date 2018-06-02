@@ -448,7 +448,7 @@ abbr {
 }*/
 .row {
   width: 100%;
-  max-width: 1100px;
+  max-width: 1200px;
   min-width: 320px;
   margin: 0 auto;
 }
@@ -495,10 +495,10 @@ abbr {
   width: 13%;
 }
 .row .threes.columns {
-  width: 10%;
+  width: 12%;
 }
 .row .eleven.columns {
-  width: 73%;
+  width: 71%;
 }
 
 .row .four.columns {
