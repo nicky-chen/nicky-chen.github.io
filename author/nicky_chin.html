@@ -63,6 +63,40 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/fail-fast-safe.html" rel="bookmark" title="Permalink to Fail-Fast和Fail-Safe机制">Fail-Fast和Fail-Safe机制</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-06-02T19:01:00+08:00"> 周六 02 六月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 Fail-Fast</h1>
+<h3>1.1 fail-fast定义</h3>
+<p>fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件
+例如：当某一个线程A通过iterator去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出ConcurrentModificationException异常，产生fail-fast事件</p>
+<h3>1.2 Iterator与fast-fail机制</h3>
+<p><strong>1.2.1 Iterator的好处</strong>
+java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。
+比如下面的 <em>ArrayList</em> 和  <em>ImmutableList</em> 遍历的例子：</p>
+<div class="highlight"><pre><span></span>public class IteratorTest {
+
+    public static List&lt;Integer&gt; list = Lists.newArrayList(1, 10, 11, 18, -1, 20, 99);
+
+    public …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/fail-fast-safe.html" rel="bookmark" title="Permalink to Fail-Fast和Fail-Safe机制">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/design-pattern/adapter.html" rel="bookmark" title="Permalink to 实际项目运用之Adapter模式（适配器模式）">实际项目运用之Adapter模式（适配器模式）</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-05-27T23:15:00+08:00"> 周日 27 五月 2018 </abbr>
@@ -234,47 +268,6 @@ B-Tree结构的数据可以让系统高效的找到数据所在的磁盘块。�
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
                                             <a class="danger label" href="/tag/shu-ju-jie-gou.html">数据结构</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/concurrent/synchronized-principle.html" rel="bookmark" title="Permalink to synchronized实现原理及锁优化">synchronized实现原理及锁优化</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-05-14T19:16:00+08:00"> 周一 14 五月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1.引言</h1>
-<p>并发编程中synchronized是重量级锁，但随着JVM1.6对synchronized进行优化后，有些情况下它并不那么重，本文介绍了Java SE1.6中为了减少获得锁和释放锁带来的性能消耗而引入的偏向锁和轻量级锁，以及锁的存储结构和升级过程。</p>
-<h1>2.术语定义</h1>
-<p><strong>CAS(Compare and Swap):</strong>  比较并交换。用于在硬件层面上提供原子性操作。在 Intel 处理器中，比较并交换通过指令cmpxchg实现。比较是否和给定的数值一致，如果一致则修改，不一致则不修改。</p>
-<h1>3.同步的基础</h1>
-<p>Java中的每一个对象都可以作为锁。
-对于同步方法，锁是当前实例对象。
-对于静态同步方法，锁是当前对象的Class对象。
-对于同步方法块，锁是synchonized括号里配置的对象。</p>
-<p>我们通过java代码和字节码分析下
-java代码如下：</p>
-<div class="highlight"><pre><span></span>public class SyncTest {
-
-    private static double a = 1;
-
-    public synchronized void plusNumber() {
-        a++;
-    }
-
-    public …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/concurrent/synchronized-principle.html" rel="bookmark" title="Permalink to synchronized实现原理及锁优化">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/suo-you-hua.html">锁优化</a>
                                 </div>
 
 

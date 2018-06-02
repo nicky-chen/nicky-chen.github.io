@@ -64,6 +64,40 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/fail-fast-safe.html" rel="bookmark" title="Permalink to Fail-Fast和Fail-Safe机制">Fail-Fast和Fail-Safe机制</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-06-02T19:01:00+08:00"> 周六 02 六月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 Fail-Fast</h1>
+<h3>1.1 fail-fast定义</h3>
+<p>fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件
+例如：当某一个线程A通过iterator去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出ConcurrentModificationException异常，产生fail-fast事件</p>
+<h3>1.2 Iterator与fast-fail机制</h3>
+<p><strong>1.2.1 Iterator的好处</strong>
+java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。
+比如下面的 <em>ArrayList</em> 和  <em>ImmutableList</em> 遍历的例子：</p>
+<div class="highlight"><pre><span></span>public class IteratorTest {
+
+    public static List&lt;Integer&gt; list = Lists.newArrayList(1, 10, 11, 18, -1, 20, 99);
+
+    public …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/fail-fast-safe.html" rel="bookmark" title="Permalink to Fail-Fast和Fail-Safe机制">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/java-base/externalizable-interface.html" rel="bookmark" title="Permalink to 自定义序列化之Externalizable接口">自定义序列化之Externalizable接口</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-05-23T22:36:00+08:00"> 周三 23 五月 2018 </abbr>
@@ -211,45 +245,6 @@ public class Banner implements Serializable{
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/java-base/introspector.html" rel="bookmark" title="Permalink to Java 内省(Introspector)">Java 内省(Introspector)</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-03-13T15:15:00+08:00"> 周二 13 三月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p><strong>内省(Introspector) 是Java 语言对 JavaBean 类属性、事件的一种缺省处理方法。</strong></p>
-<p>JavaBean是一种特殊的类，主要用于传递数据信息，这种类中的方法主要用于访问私有的字段，且方法名符合某种命名规则。如果在两个模块之间传递信息，可以将信息封装进JavaBean中，这种对象称为“值对象”(Value Object)，或“VO”。方法比较少。这些信息储存在类的私有变量中，通过set()、get()获得。</p>
-<p>例如类Use :</p>
-<div class="highlight"><pre><span></span>public class User {
-
-    private String name;
-
-    private String address;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/java-base/introspector.html" rel="bookmark" title="Permalink to Java 内省(Introspector)">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -380,7 +375,8 @@ public class Banner implements Serializable{
 </div> </div><!-- /.row -->
 
 <p class="paginator">
-    Page 1 / 1
+    Page 1 / 2
+        <a href="/java-base/index2.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->
 

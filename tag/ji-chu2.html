@@ -63,6 +63,46 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/mysql/process-fun.html" rel="bookmark" title="Permalink to MYSQL高级特性之【存储过程与函数】">MYSQL高级特性之【存储过程与函数】</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-04-27T22:30:00+08:00"> 周五 27 四月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>一、定义</h1>
+<p>存储程序可以分为存储过程和函数。</p>
+<h2>1.1 存储过程的定义</h2>
+<p><strong>存储过程（Stored Procedure）</strong>是一组为了完成特定功能的SQL语句集。存储过程在数据库中经过第一次编译后再次调用不需要再次编译，用户通过指定存储过程的名字并给出参数（如果该存储过程带有参数）来执行它。</p>
+<h2>1.2 函数的定义</h2>
+<p>存储函数（简称<strong>函数</strong>）在本质上与存储过程没有区别。</p>
+<p>只是函数有如：只能返回一个变量的限制，而存储过程可以返回多个。函数是可以嵌入在SQL中使用，可以在select中调用，而存储过程不行。</p>
+<h1>二、创建存储过程和函数</h1>
+<p>存储过程和函数的创建过程很相似。</p>
+<h2>2.1 创建存储过程</h2>
+<p>语法</p>
+<blockquote>
+<p>CREATE PROCEDURE sp_name ([ proc_parameter ]) [ characteristics..] routine_body </p>
+</blockquote>
+<p>proc_parameter指定存储过程的参数列表，列表形式如下：</p>
+<blockquote>
+<p>[IN|OUT|INOUT] param_name type</p>
+</blockquote>
+<p>其中in表示输入参数，out表示输出参数，inout表示既可以输入也可以输出 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/mysql/process-fun.html" rel="bookmark" title="Permalink to MYSQL高级特性之【存储过程与函数】">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/java-base/string-builder-question.html" rel="bookmark" title="Permalink to 字符串拼接的疑惑">字符串拼接的疑惑</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-04-21T15:34:00+08:00"> 周六 21 四月 2018 </abbr>
@@ -189,45 +229,6 @@ Java 的并发采用的是共享内存模型，Java 线程之间的通信总是�
 <p>按位与是指：参加运算的两个数据，按二进制位进行“与”运算。如果两个相应的二进制位都为１，则该位的结果值为1；否则为0。内存储存数据的基本单位是字节（Byte），一个字节由8个位（bit)所组成。位是用以描述电脑数据量的最小单位。二进制系统中 …</p> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/java-base/binary-operation.html" rel="bookmark" title="Permalink to java中位运算技巧">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/java-base/introspector.html" rel="bookmark" title="Permalink to Java 内省(Introspector)">Java 内省(Introspector)</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-03-13T15:15:00+08:00"> 周二 13 三月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p><strong>内省(Introspector) 是Java 语言对 JavaBean 类属性、事件的一种缺省处理方法。</strong></p>
-<p>JavaBean是一种特殊的类，主要用于传递数据信息，这种类中的方法主要用于访问私有的字段，且方法名符合某种命名规则。如果在两个模块之间传递信息，可以将信息封装进JavaBean中，这种对象称为“值对象”(Value Object)，或“VO”。方法比较少。这些信息储存在类的私有变量中，通过set()、get()获得。</p>
-<p>例如类Use :</p>
-<div class="highlight"><pre><span></span>public class User {
-
-    private String name;
-
-    private String address;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/java-base/introspector.html" rel="bookmark" title="Permalink to Java 内省(Introspector)">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 

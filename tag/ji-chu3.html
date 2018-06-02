@@ -63,6 +63,45 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/introspector.html" rel="bookmark" title="Permalink to Java 内省(Introspector)">Java 内省(Introspector)</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-03-13T15:15:00+08:00"> 周二 13 三月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p><strong>内省(Introspector) 是Java 语言对 JavaBean 类属性、事件的一种缺省处理方法。</strong></p>
+<p>JavaBean是一种特殊的类，主要用于传递数据信息，这种类中的方法主要用于访问私有的字段，且方法名符合某种命名规则。如果在两个模块之间传递信息，可以将信息封装进JavaBean中，这种对象称为“值对象”(Value Object)，或“VO”。方法比较少。这些信息储存在类的私有变量中，通过set()、get()获得。</p>
+<p>例如类Use :</p>
+<div class="highlight"><pre><span></span>public class User {
+
+    private String name;
+
+    private String address;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/introspector.html" rel="bookmark" title="Permalink to Java 内省(Introspector)">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/concurrent/thread-communication.html" rel="bookmark" title="Permalink to 多线程之线程通信摘要">多线程之线程通信摘要</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2017-11-18T21:52:00+08:00"> 周六 18 十一月 2017 </abbr>

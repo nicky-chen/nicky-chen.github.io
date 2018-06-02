@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>南乡清水 - java-base</title><link>/</link><description></description><lastBuildDate>Wed, 23 May 2018 22:36:00 +0800</lastBuildDate><item><title>自定义序列化之Externalizable接口</title><link>/java-base/externalizable-interface.html</link><description>&lt;p&gt;&lt;strong&gt;Externalizable简介&lt;/strong&gt;
+<rss version="2.0"><channel><title>南乡清水 - java-base</title><link>/</link><description></description><lastBuildDate>Sat, 02 Jun 2018 19:01:00 +0800</lastBuildDate><item><title>Fail-Fast和Fail-Safe机制</title><link>/java-base/fail-fast-safe.html</link><description>&lt;h1&gt;1 Fail-Fast&lt;/h1&gt;
+&lt;h3&gt;1.1 fail-fast定义&lt;/h3&gt;
+&lt;p&gt;fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件
+例如：当某一个线程A通过iterator去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出ConcurrentModificationException异常，产生fail-fast事件&lt;/p&gt;
+&lt;h3&gt;1.2 Iterator与fast-fail机制&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;1.2.1 Iterator的好处&lt;/strong&gt;
+java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。
+比如下面的 &lt;em&gt;ArrayList&lt;/em&gt; 和  &lt;em&gt;ImmutableList&lt;/em&gt; 遍历的例子：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;public class IteratorTest {
+
+    public static List&amp;lt;Integer&amp;gt; list = Lists.newArrayList(1, 10, 11, 18, -1, 20, 99);
+
+    public …&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Sat, 02 Jun 2018 19:01:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-06-02:/java-base/fail-fast-safe.html</guid><category>基础</category></item><item><title>自定义序列化之Externalizable接口</title><link>/java-base/externalizable-interface.html</link><description>&lt;p&gt;&lt;strong&gt;Externalizable简介&lt;/strong&gt;
 Externalizable是一种优先级要高于 Serializable 的序列化机制接口，
 这个接口提供了writeExternal()和readExternal()方法用于指定序列化哪些属性。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Externalizable接口与Serializable接口区别&lt;/strong&gt;
