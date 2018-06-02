@@ -7,11 +7,11 @@
 &lt;p&gt;&lt;strong&gt;1.2.1 Iterator的好处&lt;/strong&gt;
 java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。
 比如下面的 &lt;em&gt;ArrayList&lt;/em&gt; 和  &lt;em&gt;ImmutableList&lt;/em&gt; 遍历的例子：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;public class IteratorTest {
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;IteratorTest&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
 
-    public static List&amp;lt;Integer&amp;gt; list = Lists.newArrayList(1, 10, 11, 18, -1, 20, 99);
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="n"&gt;List&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;Integer&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;list&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Lists&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;newArrayList&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;11&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;99&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
 
-    public …&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Sat, 02 Jun 2018 19:01:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-06-02:/java-base/fail-fast-safe.html</guid><category>基础</category></item><item><title>自定义序列化之Externalizable接口</title><link>/java-base/externalizable-interface.html</link><description>&lt;p&gt;&lt;strong&gt;Externalizable简介&lt;/strong&gt;
+    &lt;span class="kd"&gt;public …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Sat, 02 Jun 2018 19:01:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-06-02:/java-base/fail-fast-safe.html</guid><category>基础</category></item><item><title>自定义序列化之Externalizable接口</title><link>/java-base/externalizable-interface.html</link><description>&lt;p&gt;&lt;strong&gt;Externalizable简介&lt;/strong&gt;
 Externalizable是一种优先级要高于 Serializable 的序列化机制接口，
 这个接口提供了writeExternal()和readExternal()方法用于指定序列化哪些属性。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Externalizable接口与Serializable接口区别&lt;/strong&gt;

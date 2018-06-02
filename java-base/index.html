@@ -79,11 +79,11 @@
 <p><strong>1.2.1 Iterator的好处</strong>
 java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。
 比如下面的 <em>ArrayList</em> 和  <em>ImmutableList</em> 遍历的例子：</p>
-<div class="highlight"><pre><span></span>public class IteratorTest {
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IteratorTest</span> <span class="o">{</span>
 
-    public static List&lt;Integer&gt; list = Lists.newArrayList(1, 10, 11, 18, -1, 20, 99);
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="n">Lists</span><span class="o">.</span><span class="na">newArrayList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">11</span><span class="o">,</span> <span class="mi">18</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="mi">20</span><span class="o">,</span> <span class="mi">99</span><span class="o">);</span>
 
-    public …</pre></div> </div><!-- /.entry-content -->
+    <span class="kd">public …</span></pre></div> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/java-base/fail-fast-safe.html" rel="bookmark" title="Permalink to Fail-Fast和Fail-Safe机制">Read more <i class="icon-arrow-right"></i></a></div>
 
