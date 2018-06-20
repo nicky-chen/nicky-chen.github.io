@@ -63,6 +63,132 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/externalizable-interface.html" rel="bookmark" title="Permalink to 自定义序列化之Externalizable接口">自定义序列化之Externalizable接口</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-23T22:36:00+08:00"> 周三 23 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p><strong>Externalizable简介</strong>
+Externalizable是一种优先级要高于 Serializable 的序列化机制接口，
+这个接口提供了writeExternal()和readExternal()方法用于指定序列化哪些属性。</p>
+<p><strong>Externalizable接口与Serializable接口区别</strong>
+<em> 1 Serializable序列化时不会调用默认的构造器，而Externalizable序列化时会调用默认构造器
+</em> 2 transient关键字对Externalizable无效</p>
+<p><strong>代码事例</strong></p>
+<p>公共抽象实体类AbstractDO</p>
+<div class="highlight"><pre><span></span>public abstract class AbstractDO implements Externalizable {
+
+    private static final long serialVersionUID = -1679770357930200297L;
+
+    private Long id;
+
+    private Date createTime;
+
+    private Date updateTime;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/externalizable-interface.html" rel="bookmark" title="Permalink to 自定义序列化之Externalizable接口">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/design-pattern/template.html" rel="bookmark" title="Permalink to 设计模式之Template模式（模版模式）">设计模式之Template模式（模版模式）</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-18T21:46:00+08:00"> 周五 18 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 模式简介</h1>
+<p><strong>1.1 模版方法模式的定义：</strong>
+模版方法模式在一个方法中定义一个算法的骨架，而将一些步骤延迟到子类中。模版方法使得子类可以在不改变算法结构的情况下，重新定义算法中的某些步骤。</p>
+<p><strong>1.2 结构</strong>
+<img alt="模版方法" src="https://upload-images.jianshu.io/upload_images/10175660-4b852101cc35ec28.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><strong>1.3 模式的组成</strong></p>
+<p><strong><em>抽象类（AbstractClass）:</em></strong> 定义抽象的原语操作（primitive operation） ，具体的子类将重定义它们以实现一个算法， 实现一个模板方法,定义一个算法的骨架。该模板方法不仅调用原语操作，也调用定义。
+<strong><em>具体子类 （ConcreteClass）:</em></strong> 实现原语操作以完成算法中与特定子类相关的步骤。</p>
+<p><strong>1.4 优缺点</strong></p>
+<blockquote>
+<p>模版方法模式的优点：
+   封装不变部分，扩展可变部分；
+   提取公共代码，便于维护；
+   行为由父类控制，子类实现。</p>
+<p>模版方法模式的缺点：
+   每一个不同的实现都需要一个子类来实现，导致类个数增加，使系统更加庞大</p>
+<p>模版方法模式的适用场景：
+   当类中有多个子类共有的方法
+   当有重要的、复杂的方法时，可以考虑作为模板方法</p>
+</blockquote>
+<h1>2 案例</h1>
+<p>抽象类 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/design-pattern/template.html" rel="bookmark" title="Permalink to 设计模式之Template模式（模版模式）">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/xing-wei-xing.html">行为型</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/algorithm/btree-info.html" rel="bookmark" title="Permalink to 数据结构之BTree和B+Tree(多路平衡查找树 )">数据结构之BTree和B+Tree(多路平衡查找树 )</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-17T19:39:00+08:00"> 周四 17 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 背景</h1>
+<p>B-Tree是为磁盘等外存储设备设计的一种平衡查找树。因此在讲B-Tree之前先了解下磁盘的相关知识。系统从磁盘读取数据到内存时是以磁盘块（block）为基本单位的，位于同一个磁盘块中的数据会被一次性读取出来，而不是需要什么取什么。
+InnoDB存储引擎中有页（Page）的概念，页是其磁盘管理的最小单位。InnoDB存储引擎中默认每个页的大小为16KB，可通过参数innodb_page_size将页的大小设置为4K、8K、16K，在MySQL中可通过如下命令查看页的大小：</p>
+<div class="highlight"><pre><span></span>mysql&gt; show variables like &#39;innodb_page_size&#39;;
+</pre></div>
+
+
+<p>而系统一个磁盘块的存储空间往往没有这么大，因此InnoDB每次申请磁盘空间时都会是若干地址连续磁盘块来达到页的大小16KB。InnoDB在把磁盘数据读入到磁盘时会以页为基本单位，在查询数据时如果一个页中的每条数据都能有助于定位数据记录的位置，这将会减少磁盘I/O次数，提高查询效率。</p>
+<h1>2 定义与特性</h1>
+<p><strong>B-Tree</strong>
+B-Tree结构的数据可以让系统高效的找到数据所在的磁盘块。为了描述B-Tree，首先定义一条记录为一个二元组[key, data] ，key为记录的键值(关键字)，对应表中的主键值，data为一行记录中除主键外的数据。对于不同的记录，key值互不相同。</p>
+<div class="highlight"><pre><span></span>一棵m阶的B-Tree有如下特性： 
+1. 每个节点最多有m个孩子。 
+2. 除了根节点和叶子节点外，其它每个节点至少有Ceil …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/algorithm/btree-info.html" rel="bookmark" title="Permalink to 数据结构之BTree和B+Tree(多路平衡查找树 )">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/shu-ju-jie-gou.html">数据结构</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/concurrent/synchronized-principle.html" rel="bookmark" title="Permalink to synchronized实现原理及锁优化">synchronized实现原理及锁优化</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-05-14T19:16:00+08:00"> 周一 14 五月 2018 </abbr>
@@ -127,127 +253,6 @@ java代码如下：</p>
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
                                             <a class="danger label" href="/tag/bing-fa-bian-cheng-si-wei-dao-tu.html">并发编程思维导图</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/mysql/SHOW-GLOBAL-STATUS.html" rel="bookmark" title="Permalink to 库级优化之SHOW GLOBAL STATUS">库级优化之SHOW GLOBAL STATUS</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-05-10T18:11:00+08:00"> 周四 10 五月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p><strong>慢查询</strong></p>
-<div class="highlight"><pre><span></span>//查询慢线程情况
-show global status like &#39;%slow%&#39;
-
-+---------------------+-------+     
-| Variable_name       | Value |     
-+---------------------+-------+     
-| Slow_launch_threads | 1     |     
-| Slow_queries        | 100   |     
-+---------------------+-------+   
-
-如果Slow_launch_threads值较大，说明有些东西正在延迟连接的新线程
-
-//查询慢查询日志是否开启
-show variables like &#39;%slow%&#39;
-
-+---------------------+--------------------------------------+
-| Variable_name       | Value                                |
-+---------------------+--------------------------------------+
-|log_slow_admin_statements|    ON                            |
-|log_slow_slave_statements|     OFF                          |
-| slow_launch_time    | 2                                    |
-| slow_query_log      | ON                                   |
-| slow_query_log_file |     /home/mysql/mysql/slow_query.log |
-+---------------------+--------------------------------------+
-
-log_slow_admin_statements表示是否将慢管理语句例如ANALYZE TABLE和ALTER TABLE等记入慢查询日志
- log_slow_slave_statements 表示是否管理分区慢查询记录，一般不会去选择分区，所以不考虑
-</pre></div>
-
-
-<p>配置中一定要开启慢查询，这对服务器性能损耗并不大，如上面的打印结果得知：超过2秒即为慢查询，一共有100条慢查询 。当然我们在后台也可以做sql拦截记录，定制化慢查询语句 …</p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/mysql/SHOW-GLOBAL-STATUS.html" rel="bookmark" title="Permalink to 库级优化之SHOW GLOBAL STATUS">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ku-ji-you-hua.html">库级优化</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/mysql/optimize-picture.html" rel="bookmark" title="Permalink to 后端开发需要了解的mysql优化方向">后端开发需要了解的mysql优化方向</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-05-08T18:34:00+08:00"> 周二 08 五月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>优化思维导图</h1>
-<p><img alt="mysql优化思维导图" src="https://upload-images.jianshu.io/upload_images/10175660-dbeb71ebc3ad751b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<h1>参数优化注意事项</h1>
-<p>参数优化分为 动态参数配置 和 配置文件的配置，建议在启动mysql之前配置好优化参数，这样将会全局有效，如使用动态参数配置可能会不生效或出现问题,并且如果数据库重启那么之前的优化参数都会失效</p>
-<div class="highlight"><pre><span></span>SHOW VARIABLES LIKE &#39;sort%&#39;
-修改会话级变量
-set SESSION sort_buffer_size=720000
-退出重新连接后，此参数恢复原值
-
-修改全局变量 
-set GLOBAL sort_buffer_size = 720000
-</pre></div>
-
-
-<h1>优化系列</h1>
-<p><a href="https://www.jianshu.com/p/bfc8aaa0b9f4">库级优化之SHOW GLOBAL STATUS</a></p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/mysql/optimize-picture.html" rel="bookmark" title="Permalink to 后端开发需要了解的mysql优化方向">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/mysqlsi-wei-dao-tu.html">mysql思维导图</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/mysql/design-rule.html" rel="bookmark" title="Permalink to 数据库设计三范式和反范式">数据库设计三范式和反范式</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-05-07T19:38:00+08:00"> 周一 07 五月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>数据库范式</h1>
-<p><strong>范式的级别</strong>
-      设计关系数据库时，遵从不同的规范要求，设计出合理的关系型数据库，这些不同的规范要求被称为不同的范式，各种范式呈递次规范，越高的范式数据库冗余越小。
-      目前关系数据库有六种范式：<strong><em>第一范式（1NF）、第二范式（2NF）、第三范式（3NF）、巴斯-科德范式（BCNF）、第四范式(4NF）和第五范式（5NF，又称完美范式）。</em></strong>
-      范式越高，冗余最低，一般到三范式，再往上，表越多，可能导致查询效率下降。所以有时为了提高运行效率，可以让数据冗余(反三范式，一般某个数据经常被访问时，比如数据表里存放了语文数学英语成绩，但是如果在某个时间经常要得到它的总分，每次都要进行计算会降低性能，可以加上总分这个冗余字段)。
-      后面的范式是在满足前面范式的基础上，比如满足第二范式的一定满足第一范式。
-<strong>第一范式（1NF）：确保每一列的原子性</strong>
-如果每一列都是不可再分的最小数据单元，则满足第一范式。
-<img alt="第一范式" src="https://upload-images.jianshu.io/upload_images/10175660-7f1d5f71d9be0501.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p>但是具体地址到底要不要拆分 还要看具体情形，比如看看将来会不会按国家或者省市进行分类汇总或者排序，如果需要，最好就拆，如果不需要而仅仅起字符串的作用，可以不拆 …</p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/mysql/design-rule.html" rel="bookmark" title="Permalink to 数据库设计三范式和反范式">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
                                 </div>
 
 
@@ -354,9 +359,11 @@ set GLOBAL sort_buffer_size = 720000
 	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
+	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/mysqlsi-wei-dao-tu.html">mysql思维导图</a></li>
 	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
-	    <li class="danger label" ><a href="/tag/mysqlsi-wei-dao-tu.html">mysql思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
 </ul>
 
@@ -384,7 +391,7 @@ set GLOBAL sort_buffer_size = 720000
 
 <p class="paginator">
             <a href="/index.html"><i class="icon-arrow-left"></i></a>
-    Page 2 / 6
+    Page 2 / 7
         <a href="/index3.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->

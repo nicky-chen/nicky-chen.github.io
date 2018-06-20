@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>南乡清水 - distrubuted</title><link>/</link><description></description><lastBuildDate>Wed, 25 Apr 2018 18:43:00 +0800</lastBuildDate><item><title>分布式之【CAP理论、BASE理论 、FLP不可能定理】</title><link>/distrubuted/cap-base-flp.html</link><description>&lt;h1&gt;1.分布式系统的CAP理论&lt;/h1&gt;
+<rss version="2.0"><channel><title>南乡清水 - distrubuted</title><link>/</link><description></description><lastBuildDate>Wed, 20 Jun 2018 22:28:00 +0800</lastBuildDate><item><title>分布式全局序列ID方案之Flicker优化方案</title><link>/distrubuted/id-flicker.html</link><description>&lt;h1&gt;1 Flicker的解决方案&lt;/h1&gt;
+&lt;p&gt;MySQL中id自增的特性，可以借此来生成全局的序列号，Flicker在解决全局ID生成方案里就采用了MySQL自增长ID的机制（auto_increment + replace into + MyISAM）。一个生成64位ID方案具体就是这样的： 
+先创建单独的数据库，然后创建一个表：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;CREATE TABLE borrow_order (
+id bigint(20) unsigned NOT NULL auto_increment,
+stub char(1) NOT NULL default &amp;#39;&amp;#39;,
+PRIMARY KEY (id),
+UNIQUE KEY stub (stub)
+) ENGINE=MyISAM
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;当我们插入记录后，执行SELECT * from borrow_order ，查询结果就是这样的：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;+-------------------+------+
+| id | stub |
++-------------------+------+
+| 1 | 192.168.100.102      |
++-------------------+------+
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;在我们的应用端需要做下面这两个操作 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Wed, 20 Jun 2018 22:28:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-06-20:/distrubuted/id-flicker.html</guid><category>分布式ID方案</category></item><item><title>分布式全局序列ID方案之Snowflake算法</title><link>/distrubuted/id-snowflake.html</link><description>&lt;h1&gt;1 背景&lt;/h1&gt;
+&lt;p&gt;在分布式项目中，在业务数据中需要生成一个全局唯一的序列号，比如：消息标识，订单标识，用户标识等等。同时对于id生成的要求如下：
+&lt;em&gt; 全局唯一
+&lt;/em&gt; 趋势有序
+&lt;em&gt; 主键索引 方便排序
+&lt;/em&gt; 高可用
+* 高并发&lt;/p&gt;
+&lt;h1&gt;2 基础方案&lt;/h1&gt;
+&lt;h3&gt;2.1 数据库主键自增&lt;/h3&gt;
+&lt;p&gt;利用mysql的auto_increment特性&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;优点：
+（1）能够保证唯一性 
+（2）能够保证递增性
+（3）步长固定&lt;/p&gt;
+&lt;p&gt;缺点：
+（1）无法高可用：普通的一主多从+读写分离架构，自增ID写入请求，主库挂了就GG
+（2）无法高并发：写入是单点，数据库主库的写性能决定ID的生成性能上限，并且难以扩展&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;2.2 UUID&lt;/h3&gt;
+&lt;p&gt;uuid算法是比较常用的算法，根据UUID的特性，可以产生一个唯一的字符串&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;优点：
+（1）本地生成ID，无需远程服务调用 …&lt;/p&gt;&lt;/blockquote&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Sun, 17 Jun 2018 22:53:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-06-17:/distrubuted/id-snowflake.html</guid><category>分布式ID方案</category></item><item><title>分布式项目知识要点</title><link>/distrubuted/distrubuted-knowledge.html</link><description>&lt;p&gt;&lt;img alt="分布式专题" src="https://upload-images.jianshu.io/upload_images/10175660-e6939718f6890048.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Wed, 13 Jun 2018 21:58:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-06-13:/distrubuted/distrubuted-knowledge.html</guid><category>思维导图</category></item><item><title>分布式之【CAP理论、BASE理论 、FLP不可能定理】</title><link>/distrubuted/cap-base-flp.html</link><description>&lt;h1&gt;1.分布式系统的CAP理论&lt;/h1&gt;
 &lt;h2&gt;1.1 CAP理论概述&lt;/h2&gt;
 &lt;p&gt;2000年7月，加州大学伯克利分校的Eric Brewer教授在ACM PODC会议上提出CAP猜想。2年后，麻省理工学院的Seth Gilbert和Nancy Lynch从理论上证明了CAP。之后，CAP理论正式成为分布式计算领域的公认定理。&lt;/p&gt;
 &lt;p&gt;一个分布式系统最多只能同时满足一致性（Consistency）、可用性（Availability）和分区容错性（Partition tolerance）这三项中的两项。&lt;/p&gt;

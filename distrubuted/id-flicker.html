@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>分布式全局序列ID方案之Flicker优化方案</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+        <link href="/feeds/distrubuted.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+        <link rel="shortcut icon" href="/theme/images/favicon.ico">
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+
+                <ul class="columns">
+                    <li><a href="/">首页</a></li>
+
+                    <li
+><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                    <li
+><a href="/zai-xian-gong-ju.html">在线工具</a></li>
+                    <li
+><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                    <li
+><a href="/guan-yu-wo.html">关于我</a></li>
+                     <li><a href="/archives.html"><i class="active"></i>归档日志</a></li>
+                    <form class="navbar-search pull-right" action="/search.html">
+                        <input type="text" class="search-query" placeholder="站内搜" name="q" id="s">
+                    </form>
+                </ul>
+            </div>
+
+
+<section id="content" class="body">
+
+   <div class="row">
+
+<div id="toc" class="threes columns" style="font-size: 65%">
+    <br>
+    <h4 style="font-size: 1rem">文章目录</h4>
+</div>        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/distrubuted/id-flicker.html" rel="bookmark"
+                   title="Permalink to 分布式全局序列ID方案之Flicker优化方案">分布式全局序列ID方案之Flicker优化方案</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2018-06-20T22:28:00+08:00">
+                周三 20 六月 2018
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div id="contents" class="entry-content">
+              <h1>1 Flicker的解决方案</h1>
+<p>MySQL中id自增的特性，可以借此来生成全局的序列号，Flicker在解决全局ID生成方案里就采用了MySQL自增长ID的机制（auto_increment + replace into + MyISAM）。一个生成64位ID方案具体就是这样的： 
+先创建单独的数据库，然后创建一个表：</p>
+<div class="highlight"><pre><span></span>CREATE TABLE borrow_order (
+id bigint(20) unsigned NOT NULL auto_increment,
+stub char(1) NOT NULL default &#39;&#39;,
+PRIMARY KEY (id),
+UNIQUE KEY stub (stub)
+) ENGINE=MyISAM
+</pre></div>
+
+
+<p>当我们插入记录后，执行SELECT * from borrow_order ，查询结果就是这样的：</p>
+<div class="highlight"><pre><span></span>+-------------------+------+
+| id | stub |
++-------------------+------+
+| 1 | 192.168.100.102      |
++-------------------+------+
+</pre></div>
+
+
+<p>在我们的应用端需要做下面这两个操作，在一个事务会话里提交：</p>
+<div class="highlight"><pre><span></span>REPLACE INTO borrow_order (stub) VALUES (&#39;192.168.100.102&#39;);
+SELECT LAST_INSERT_ID();
+</pre></div>
+
+
+<p>上述操作，通过 replace into 操作，首先尝试插入数据到表中，如果发现表中已经有此行数据则先删除此行数据，然后插入新的数据。 如果没有此行数据的话，直接插入新数据。<em>注意：插入的行字段需要有主键索引或者唯一索引，否则会出错</em></p>
+<p>通过上述方式，就可以拿到不重复且自增的ID了。 
+到上面为止，我们只是在单台数据库上生成ID，从高可用角度考虑，接下来就要解决单点故障问题：Flicker启用了两台数据库服务器来生成ID，通过区分auto_increment的起始值和步长来生成奇偶数的ID。</p>
+<div class="highlight"><pre><span></span><span class="n">DBServer1</span><span class="o">:</span>
+<span class="n">auto</span><span class="o">-</span><span class="n">increment</span><span class="o">-</span><span class="n">increment</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">auto</span><span class="o">-</span><span class="n">increment</span><span class="o">-</span><span class="n">offset</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">DBServer2</span><span class="o">:</span>
+<span class="n">auto</span><span class="o">-</span><span class="n">increment</span><span class="o">-</span><span class="n">increment</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">auto</span><span class="o">-</span><span class="n">increment</span><span class="o">-</span><span class="n">offset</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+
+
+<p>最后，在客户端只需要通过轮询方式取ID就可以了。</p>
+<p>优点：充分借助数据库的自增ID机制，提供高可靠性，生成的ID有序。
+缺点：占用两个独立的MySQL实例，有些浪费资源，成本较高
+数据库中记录过多，每次生成id都需要请求数据库</p>
+<h1>2 优化方案</h1>
+<blockquote>
+<p>采用批量生成的方式，内存缓存号段，降低数据库的写压力，提升整体性能</p>
+</blockquote>
+<h3>2.1 方案1 mysql双主架构</h3>
+<p>采用双主架构的方式来显示高可用，数据库只值存在已备用号段的最大值。
+我们新建一张表</p>
+<div class="highlight"><pre><span></span>CREATE TABLE `id_generator` (
+  `id` int(10) NOT NULL,
+  `current_max_id` bigint(20) NOT NULL COMMENT &#39;当前最大id&#39;,
+  `increment_step` int(10) NOT NULL COMMENT &#39;步幅长度&#39;,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</pre></div>
+
+
+<p>如此我们可以通过 <strong>getIdService服务</strong> 来对单实例数据库批量获取id，具体步骤如下：
+<img alt="号段逻辑" src="https://upload-images.jianshu.io/upload_images/10175660-05df5de3d21e30f4.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><strong>优缺点</strong></p>
+<blockquote>
+<p>优点
+数据库只保存一条记录
+性能极大增强</p>
+<p>缺点：
+如getIdService重启，内存中未使用的ID号段未分配，导致ID空洞
+服务没有做HA，无法保证高可用</p>
+</blockquote>
+<p><strong>问题解决方案：</strong> 数据库使用双主架构保证高可用，服务通过多个getIdService服务去获取Id，减少ID空洞的数量</p>
+<p>上述方案还是存在问题，当多个服务去访问数据库，或者同一服务同时多个线程去访问就会产生竞态条件，产生并发安全问题。
+在当前<strong>读多写少</strong>的场景下，我们可以使用数据库CAS乐观锁去解决并发问题来保证原子性。</p>
+<div class="highlight"><pre><span></span>假设 同时有两个服务获取到current_max_id的最大值都是3000，然后生成号段后，
+回写数据库update id_generator set current_max_id=4000; 此时就会产生的id就会重复，
+我们通过CAS方式改写为：update id_generator set current_max_id=4000 where max_id=3000;
+来保证生成的id全局唯一
+</pre></div>
+
+
+<p>该方案的好处是：</p>
+<p>水平扩展达到分布式ID生成服务性能
+使用CAS简洁的保证不会生成重复的ID</p>
+<p>缺点：
+由于有多个service，生成的ID 不是绝对递增的，而是趋势递增的</p>
+<h3>2.2 方案2 多实例</h3>
+<p>基于Flicker方案</p>
+<div class="highlight"><pre><span></span>REPLACE INTO borrow_order (stub) VALUES (&#39;192.168.1.1&#39;);
+SELECT LAST_INSERT_ID();
+</pre></div>
+
+
+<p>当多个服务器的时候，这个表是这样的：</p>
+<p>id   stub
+5    192.168.1.1
+2    192.168.1.2
+3    192.168.1.3
+4    192.168.1.4</p>
+<p>每台服务器设置好增幅只更新自己的那条记录，保证了单线程操作单行记录。这时候每个机器拿到的分别是5,2,3,4这4个id。这方案直接通过服务器隔离，解决原子性获得id的问题。</p>
+<h3>2.3 服务层原子性操作CAS</h3>
+<p>我们可以AtomicLong来实现ID自增，流程图如下：</p>
+<p><img alt="后台服务id获取流量" src="https://upload-images.jianshu.io/upload_images/10175660-2e24cf2a51dbe094.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>伪代码实现</p>
+<div class="highlight"><pre><span></span>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">AtomicLong</span> <span class="n">atomicLong</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Long</span> <span class="n">currentMaxId</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">deployIdService</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="c1">//判断是否为空调用id生成服务</span>
+        <span class="n">getIdService</span><span class="o">();</span>
+        <span class="c1">//判断内存中的号段是否使用完</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">atomicLong</span><span class="o">.</span><span class="na">get</span><span class="o">()</span> <span class="o">&lt;</span> <span class="n">currentMaxId</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">//获取id</span>
+            <span class="kt">long</span> <span class="n">id</span> <span class="o">=</span> <span class="n">atomicLong</span><span class="o">.</span><span class="na">getAndIncrement</span><span class="o">();</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="c1">//使用重新分配</span>
+            <span class="n">atomicLong</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="mi">200</span><span class="o">);</span>
+            <span class="n">currentMaxId</span> <span class="o">=</span> <span class="mi">300L</span><span class="o">;</span>
+        <span class="o">}</span>  
+ <span class="o">}</span>
+</pre></div>
+
+
+<p>这里有个小问题，就是在服务器重启后，因为号码缓存在内存，会浪费掉一部分用户ID没有发出去，所以在可能频繁发布的应用中，尽量减小号段放大的步长n，能够减少浪费。
+如果再追求极致，可以监听spring或者servlet上下文的销毁事件，把当前即将发出去的用户ID保存起来，下次启动时候加载进入内存。</p>
+<h1>Reference</h1>
+<p><a href="https://mp.weixin.qq.com/s/QtjpUpl2FF0DKPPHh6HDGg">浅谈CAS在分布式ID生成方案上的应用 </a>
+<a href="https://mp.weixin.qq.com/s?__biz=MjM5MDI3MjA5MQ==&amp;mid=2697266651&amp;idx=2&amp;sn=77a5b0d4cabcbb00fafeb6a409b93cd7&amp;scene=21#wechat_redirect">分布式架构系统生成全局唯一序列号的一个思路</a></p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "distrubuted/id-flicker.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns" style="font-size: 80%">
+
+
+    <nav class="widget">
+        <h4>个人链接</h4>
+        <ul class="blank">
+            <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">StackOverFlow</a></li>
+            <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+            <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+        </ul>
+    </nav>
+
+<h4>专题分类</h4>
+
+ <ul>
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/zai-xian-gong-ju.html">在线工具</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+
+     <li >
+         <a href="/algorithm/index.html">
+             Algorithm
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             classloader
+         </a>
+     </li>
+     <li >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li class="active" >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm/index.html">Algorithm</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+<h4>标签</h4>
+	<ul class="blank">
+	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
+	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
+	    <li class="danger label" ><a href="/tag/bing-fa-bian-cheng-si-wei-dao-tu.html">并发编程思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
+	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
+	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/mysqlsi-wei-dao-tu.html">mysql思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
+	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
+	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
+</ul>
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+
+
+</div> </div><!-- /.row -->
+  <div class="pagination">★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆
+      <ul>
+        <li class="prev"><a href="/distrubuted/id-snowflake.html">Next →</a></li>
+        <li><a href="/archives.html">博客导航</a></li>
+        <li class="next"><a href="/">← 上一篇</a></li>
+      </ul>
+    </div>
+
+    <h4>相关文章推荐</h4>
+    <ul>
+        <li><a href="/distrubuted/id-snowflake.html">分布式全局序列ID方案之Snowflake算法</a></li>
+    </ul>
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-119892182-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+  <script src="/theme/js/toc.js" type="text/javascript"></script>
+    <script>
+        (function () {
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>分布式全局序列ID方案之Snowflake算法</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+        <link href="/feeds/distrubuted.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+        <link rel="shortcut icon" href="/theme/images/favicon.ico">
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+
+                <ul class="columns">
+                    <li><a href="/">首页</a></li>
+
+                    <li
+><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                    <li
+><a href="/zai-xian-gong-ju.html">在线工具</a></li>
+                    <li
+><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                    <li
+><a href="/guan-yu-wo.html">关于我</a></li>
+                     <li><a href="/archives.html"><i class="active"></i>归档日志</a></li>
+                    <form class="navbar-search pull-right" action="/search.html">
+                        <input type="text" class="search-query" placeholder="站内搜" name="q" id="s">
+                    </form>
+                </ul>
+            </div>
+
+
+<section id="content" class="body">
+
+   <div class="row">
+
+<div id="toc" class="threes columns" style="font-size: 65%">
+    <br>
+    <h4 style="font-size: 1rem">文章目录</h4>
+</div>        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/distrubuted/id-snowflake.html" rel="bookmark"
+                   title="Permalink to 分布式全局序列ID方案之Snowflake算法">分布式全局序列ID方案之Snowflake算法</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2018-06-17T22:53:00+08:00">
+                周日 17 六月 2018
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div id="contents" class="entry-content">
+              <h1>1 背景</h1>
+<p>在分布式项目中，在业务数据中需要生成一个全局唯一的序列号，比如：消息标识，订单标识，用户标识等等。同时对于id生成的要求如下：
+<em> 全局唯一
+</em> 趋势有序
+<em> 主键索引 方便排序
+</em> 高可用
+* 高并发</p>
+<h1>2 基础方案</h1>
+<h3>2.1 数据库主键自增</h3>
+<p>利用mysql的auto_increment特性</p>
+<blockquote>
+<p>优点：
+（1）能够保证唯一性 
+（2）能够保证递增性
+（3）步长固定</p>
+<p>缺点：
+（1）无法高可用：普通的一主多从+读写分离架构，自增ID写入请求，主库挂了就GG
+（2）无法高并发：写入是单点，数据库主库的写性能决定ID的生成性能上限，并且难以扩展</p>
+</blockquote>
+<h3>2.2 UUID</h3>
+<p>uuid算法是比较常用的算法，根据UUID的特性，可以产生一个唯一的字符串</p>
+<blockquote>
+<p>优点：
+（1）本地生成ID，无需远程服务调用，低延时
+（2）扩展性好，基本可以-认为没有性能上限</p>
+<p>缺点：
+（1）无法保证趋势递增
+（2）uuid字符串过长，作为主键建立索引查询效率低，常见优化方案为“转化为两个uint64整数存储”或者“折半存储”（折半后不能保证唯一性）
+（3）如使用实现版本的=不一样，在高并发情况下可能会出现UUID重复情况</p>
+</blockquote>
+<h3>2.3 时间戳</h3>
+<blockquote>
+<p>优点：
+（1）本地生成ID，无需远程调用，低延时
+（2）ID趋势递增
+（3）ID是整数，建立索引后查询效率高</p>
+<p>缺点：
+（1）如果并发量超过1000，会生成重复的ID</p>
+</blockquote>
+<h1>3 Twitter Snowflake</h1>
+<h3>3.1 简介</h3>
+<p>snowflake是twitter开源的分布式ID生成算法，其核心思想是：一个long型的ID，使用其中41bit作为毫秒数，10bit作为机器编号，12bit作为毫秒内序列号。这个算法单机每秒内理论上最多可以生成1000*(2^12)，也就是400W的ID，完全能满足业务的需求</p>
+<h3>3.2 图示详解</h3>
+<p><img alt="雪花算法数据结构" src="https://upload-images.jianshu.io/upload_images/10175660-c014113c0fa61193.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>（1）1位：标识部分，在java中由于long的最高位是符号位，正数是0，负数是1，一般生成的ID为正数，所以为0</p>
+<p>（2）41位：时间戳部分，这个是毫秒级的时间，<em>一般实现上不会存储当前的时间戳，而是时间戳的差值（当前时间-固定的开始时间）</em>，这样可以使产生的ID从更小值开始；41位的时间戳可以使用69年，(1L &lt;&lt; 41) / (1000L * 60 * 60 * 24 * 365) = 69年</p>
+<p>（3）10位：节点部分，Twitter实现中使用前5位作为数据中心机房标识，后5位作为单机房机器标识，可以部署1024个节点</p>
+<p>（4）12位：序列号部分，支持同一毫秒内同一个节点可以生成4096个ID</p>
+<p><strong>SnowFlake算法生成的ID大致上是按照时间递增的，用在分布式系统中，需注意数据中心标识和机器标识必须唯一，这样才能保证每个节点生成的ID都是唯一</strong></p>
+<h3>3.3 java实现</h3>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IdWorker</span> <span class="o">{</span>
+
+    <span class="c1">//idepoch + datacenterId + workerId + sequence</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">workerId</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">datacenterId</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">idepoch</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 前5位作为数据中心机房标识，后5位作为同一机房机器标识</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">WORKER_ID_BITS</span> <span class="o">=</span> <span class="mi">5L</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">DATACENTER_ID_BITS</span> <span class="o">=</span> <span class="mi">5L</span><span class="o">;</span>
+
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">MAX_WORKER_ID</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1L</span> <span class="o">^</span> <span class="o">(-</span><span class="mi">1L</span> <span class="o">&lt;&lt;</span> <span class="n">WORKER_ID_BITS</span><span class="o">);</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 单机房最多机器为           1111 1111 ^ 1110 0000   0001 1111</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">MAX_DATACENTER_ID</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1L</span> <span class="o">^</span> <span class="o">(-</span><span class="mi">1L</span> <span class="o">&lt;&lt;</span> <span class="n">DATACENTER_ID_BITS</span><span class="o">);</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 序列号12位</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">SEQUENCE_BITS</span> <span class="o">=</span> <span class="mi">12L</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">WORKER_ID_SHIFT</span> <span class="o">=</span> <span class="n">SEQUENCE_BITS</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">DATACENTER_ID_SHIFT</span> <span class="o">=</span> <span class="n">SEQUENCE_BITS</span> <span class="o">+</span> <span class="n">WORKER_ID_BITS</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">TIMESTAMP_LEFT_SHIFT</span> <span class="o">=</span> <span class="n">SEQUENCE_BITS</span> <span class="o">+</span> <span class="n">WORKER_ID_BITS</span> <span class="o">+</span> <span class="n">DATACENTER_ID_BITS</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">SEQUENCE_MASK</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1L</span> <span class="o">^</span> <span class="o">(-</span><span class="mi">1L</span> <span class="o">&lt;&lt;</span> <span class="n">SEQUENCE_BITS</span><span class="o">);</span>
+
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">lastTimestamp</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1L</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">sequence</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Random</span> <span class="n">r</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
+
+    <span class="kd">public</span> <span class="nf">IdWorker</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">(</span><span class="mi">1344322705519L</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nf">IdWorker</span><span class="o">(</span><span class="kt">long</span> <span class="n">idepoch</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">(</span><span class="n">r</span><span class="o">.</span><span class="na">nextInt</span><span class="o">((</span><span class="kt">int</span><span class="o">)</span> <span class="n">MAX_WORKER_ID</span><span class="o">),</span> <span class="n">r</span><span class="o">.</span><span class="na">nextInt</span><span class="o">((</span><span class="kt">int</span><span class="o">)</span> <span class="n">MAX_DATACENTER_ID</span><span class="o">),</span> <span class="mi">0</span><span class="o">,</span> <span class="n">idepoch</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nf">IdWorker</span><span class="o">(</span><span class="kt">long</span> <span class="n">workerId</span><span class="o">,</span> <span class="kt">long</span> <span class="n">datacenterId</span><span class="o">,</span> <span class="kt">long</span> <span class="n">sequence</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">(</span><span class="n">workerId</span><span class="o">,</span> <span class="n">datacenterId</span><span class="o">,</span> <span class="n">sequence</span><span class="o">,</span> <span class="mi">1344322705519L</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">//</span>
+    <span class="kd">public</span> <span class="nf">IdWorker</span><span class="o">(</span><span class="kt">long</span> <span class="n">workerId</span><span class="o">,</span> <span class="kt">long</span> <span class="n">datacenterId</span><span class="o">,</span> <span class="kt">long</span> <span class="n">sequence</span><span class="o">,</span> <span class="kt">long</span> <span class="n">idepoch</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">workerId</span> <span class="o">=</span> <span class="n">workerId</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">datacenterId</span> <span class="o">=</span> <span class="n">datacenterId</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">sequence</span> <span class="o">=</span> <span class="n">sequence</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">idepoch</span> <span class="o">=</span> <span class="n">idepoch</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">workerId</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">workerId</span> <span class="o">&gt;</span> <span class="n">MAX_WORKER_ID</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalArgumentException</span><span class="o">(</span><span class="s">&quot;workerId is illegal: &quot;</span> <span class="o">+</span> <span class="n">workerId</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">datacenterId</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">datacenterId</span> <span class="o">&gt;</span> <span class="n">MAX_DATACENTER_ID</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalArgumentException</span><span class="o">(</span><span class="s">&quot;datacenterId is illegal: &quot;</span> <span class="o">+</span> <span class="n">workerId</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">idepoch</span> <span class="o">&gt;=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">())</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalArgumentException</span><span class="o">(</span><span class="s">&quot;idepoch is illegal: &quot;</span> <span class="o">+</span> <span class="n">idepoch</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getDatacenterId</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">datacenterId</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getWorkerId</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">workerId</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getTime</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getId</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kt">long</span> <span class="n">id</span> <span class="o">=</span> <span class="n">nextId</span><span class="o">();</span>
+        <span class="k">return</span> <span class="n">id</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">synchronized</span> <span class="kt">long</span> <span class="nf">nextId</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kt">long</span> <span class="n">timestamp</span> <span class="o">=</span> <span class="n">timeGen</span><span class="o">();</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">timestamp</span> <span class="o">&lt;</span> <span class="n">lastTimestamp</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="s">&quot;Clock moved backwards.&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">lastTimestamp</span> <span class="o">==</span> <span class="n">timestamp</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">sequence</span> <span class="o">=</span> <span class="o">(</span><span class="n">sequence</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="o">&amp;</span> <span class="n">SEQUENCE_MASK</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">sequence</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">timestamp</span> <span class="o">=</span> <span class="n">tilNextMillis</span><span class="o">(</span><span class="n">lastTimestamp</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">sequence</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">lastTimestamp</span> <span class="o">=</span> <span class="n">timestamp</span><span class="o">;</span>
+        <span class="kt">long</span> <span class="n">id</span> <span class="o">=</span> <span class="o">((</span><span class="n">timestamp</span> <span class="o">-</span> <span class="n">idepoch</span><span class="o">)</span> <span class="o">&lt;&lt;</span> <span class="n">TIMESTAMP_LEFT_SHIFT</span><span class="o">)</span>
+                <span class="o">|</span> <span class="o">(</span><span class="n">datacenterId</span> <span class="o">&lt;&lt;</span> <span class="n">DATACENTER_ID_SHIFT</span><span class="o">)</span><span class="c1">//</span>
+                <span class="o">|</span> <span class="o">(</span><span class="n">workerId</span> <span class="o">&lt;&lt;</span> <span class="n">WORKER_ID_SHIFT</span><span class="o">)</span><span class="c1">//</span>
+                <span class="o">|</span> <span class="n">sequence</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">id</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * get the timestamp (millis second) of id</span>
+<span class="cm">     * @param id the nextId</span>
+<span class="cm">     * @return the timestamp of id</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getIdTimestamp</span><span class="o">(</span><span class="kt">long</span> <span class="n">id</span><span class="o">){</span>
+        <span class="k">return</span> <span class="n">idepoch</span> <span class="o">+</span> <span class="o">(</span><span class="n">id</span> <span class="o">&gt;&gt;</span> <span class="n">TIMESTAMP_LEFT_SHIFT</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">long</span> <span class="nf">tilNextMillis</span><span class="o">(</span><span class="kt">long</span> <span class="n">lastTimestamp</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">long</span> <span class="n">timestamp</span> <span class="o">=</span> <span class="n">timeGen</span><span class="o">();</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">timestamp</span> <span class="o">&lt;=</span> <span class="n">lastTimestamp</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="n">timeGen</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">timestamp</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">long</span> <span class="nf">timeGen</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">final</span> <span class="n">StringBuilder</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="s">&quot;IdWorker{&quot;</span><span class="o">);</span>
+        <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;workerId=&quot;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">workerId</span><span class="o">);</span>
+        <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;, datacenterId=&quot;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">datacenterId</span><span class="o">);</span>
+        <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;, idepoch=&quot;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">idepoch</span><span class="o">);</span>
+        <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;, lastTimestamp=&quot;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">lastTimestamp</span><span class="o">);</span>
+        <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;, sequence=&quot;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">sequence</span><span class="o">);</span>
+        <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="sc">&#39;}&#39;</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">IdWorker</span> <span class="n">worker</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IdWorker</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">worker</span><span class="o">.</span><span class="na">nextId</span><span class="o">());</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">worker</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">worker</span><span class="o">.</span><span class="na">nextId</span><span class="o">());</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">worker</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<p>运行main方法结果如下</p>
+<div class="highlight"><pre><span></span>6414116920725520384
+IdWorker{workerId=12, datacenterId=21, idepoch=2, lastTimestamp=1529244642432, sequence=0}
+6414116920729714688
+IdWorker{workerId=12, datacenterId=21, idepoch=2, lastTimestamp=1529244642433, sequence=0}
+</pre></div>
+
+
+<p>得到两个二进制是64位的十进制整数</p>
+<h3>3.4 优缺点</h3>
+<p>这样设计的64bit标识，可以保证：
+（1）每个业务线、每个机房、每个机器生成的ID都是不同的
+（2）同一个机器，每个毫秒内生成的ID都是不同的
+（3）同一个机器，同一个毫秒内，以序列号区区分保证生成的ID是不同的
+（4）将毫秒数放在最高位，保证生成的ID是趋势递增的</p>
+<p><strong>缺点</strong>
+（1）由于“没有一个全局时钟”，每台服务器分配的ID是绝对递增的，但从全局看，生成的ID只是趋势递增的（有些服务器时间早，有些服务器的时间晚）
+（2）如ID作为取模分库分表的依据，为了分库分表后数据均匀，ID生成往往有“取模随机性”的需求，所以通常把每秒内的序列号放在ID的最末位，保证生成的ID随机，否则取模会不均匀</p>
+<h3>3.5 雪花算法第三方库</h3>
+<p><a href="https://github.com/baidu/uid-generator">baidu / uid-generator</a>
+<a href="https://github.com/cloudatee/vesta-id-generator">cloudatee/vesta-id-generator</a></p>
+<h1>Reference</h1>
+<p><a href="https://mp.weixin.qq.com/s/0H-GEXlFnM1z-THI8ZGV2Q">细聊分布式ID生成方法</a></p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "distrubuted/id-snowflake.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns" style="font-size: 80%">
+
+
+    <nav class="widget">
+        <h4>个人链接</h4>
+        <ul class="blank">
+            <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">StackOverFlow</a></li>
+            <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+            <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+        </ul>
+    </nav>
+
+<h4>专题分类</h4>
+
+ <ul>
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/zai-xian-gong-ju.html">在线工具</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+
+     <li >
+         <a href="/algorithm/index.html">
+             Algorithm
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             classloader
+         </a>
+     </li>
+     <li >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li class="active" >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm/index.html">Algorithm</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+<h4>标签</h4>
+	<ul class="blank">
+	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
+	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
+	    <li class="danger label" ><a href="/tag/bing-fa-bian-cheng-si-wei-dao-tu.html">并发编程思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
+	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
+	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/mysqlsi-wei-dao-tu.html">mysql思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
+	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
+	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
+</ul>
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+
+
+</div> </div><!-- /.row -->
+  <div class="pagination">★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆
+      <ul>
+        <li class="prev"><a href="/distrubuted/distrubuted-knowledge.html">Next →</a></li>
+        <li><a href="/archives.html">博客导航</a></li>
+        <li class="next"><a href="/distrubuted/id-flicker.html">← Previous</a></li>
+      </ul>
+    </div>
+
+    <h4>相关文章推荐</h4>
+    <ul>
+        <li><a href="/distrubuted/id-flicker.html">分布式全局序列ID方案之Flicker优化方案</a></li>
+    </ul>
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-119892182-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+  <script src="/theme/js/toc.js" type="text/javascript"></script>
+    <script>
+        (function () {
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+</body>
+</html>

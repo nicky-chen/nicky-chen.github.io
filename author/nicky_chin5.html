@@ -63,6 +63,119 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/concurrent/thread-jmm-happens-before.html" rel="bookmark" title="Permalink to java内存模型之[JMM][重排序][happens-before]">java内存模型之[JMM][重排序][happens-before]</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-04-03T22:11:00+08:00"> 周二 03 四月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1.并发编程模型的分类</h1>
+<p>在并发编程中，我们需要处理两个关键问题：线程之间如何通信及线程之间如何同
+步（这里的线程是指并发执行的活动实体）。通信是指线程之间以何种机制来交换
+信息。在命令式编程中，线程之间的通信机制有两种：<em>共享内存和消息传递</em>。
+在共享内存的并发模型里，线程之间共享程序的公共状态，线程之间通过写-读内
+存中的公共状态来隐式进行通信。在消息传递的并发模型里，线程之间没有公共状
+态，线程之间必须通过明确的发送消息来显式进行通信。
+同步是指程序用于控制不同线程之间操作发生相对顺序的机制。在共享内存并发模
+型里，同步是显式进行的。程序员必须显式指定某个方法或某段代码需要在线程之
+间互斥执行。在消息传递的并发模型里，由于消息的发送必须在消息的接收之前，
+因此同步是隐式进行的。
+Java 的并发采用的是共享内存模型，Java 线程之间的通信总是隐式进行，整个通
+信过程对程序员完全透明。如果编写多线程程序的 Java 程序员不理解隐式进行的
+线程之间通信的工作机制，很可能会遇到各种奇怪的内存可见性问题。</p>
+<h1>2.Java 内存模型的抽象</h1>
+<p>在java中，所有实例域、静态域和数组元素存储在堆内存中，堆内存在线程之间共
+享（本文使用“共享变量 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/concurrent/thread-jmm-happens-before.html" rel="bookmark" title="Permalink to java内存模型之[JMM][重排序][happens-before]">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/design-pattern/decorator.html" rel="bookmark" title="Permalink to 实际项目运用之Decorator模式（装饰器模式）">实际项目运用之Decorator模式（装饰器模式）</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-03-28T11:22:00+08:00"> 周三 28 三月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h2>1 概述</h2>
+<p>在项目中，经常因一些新增需求，导致同一业务的变更，如果所在类继承关系如下：Parent、Child、Grandparent，那么要在Child类上增强些功能怎么办？给Child类增加方法？那会对Grandparent产生什么影响？该如何去处理？看完本文，你会找到你的答案。</p>
+<p>JavaIO中，像下面的嵌套语句很常见，为什么要怎样定义呢？理解装饰模式后，你会找到答案。</p>
+<div class="highlight"><pre><span></span>FilterInputStream filterInputStreasm = new BufferedInputStream(new FileInputStream(new File(&quot;/user/a&quot;)));
+</pre></div>
+
+
+<h3>1.1案例</h3>
+<p>例如下面一个功能需求，4s店的汽车销售向客户推销自家品牌的产品，我们用代码实现，关系如下：</p>
+<p><img alt="类图" src="https://upload-images.jianshu.io/upload_images/10175660-789e0242028d08b0.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>具体代码：
+汽车销售类</p>
+<div class="highlight"><pre><span></span>public abstract class CarSale {
+
+    /**
+     * 推销车的详情
+     */
+    public abstract void displayCarInfo();
+
+    /**
+     * 客户签订购买合同
+     */
+    public abstract …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/design-pattern/decorator.html" rel="bookmark" title="Permalink to 实际项目运用之Decorator模式（装饰器模式）">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/jie-gou-xing.html">结构型</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/distrubuted/interface-idempotency.html" rel="bookmark" title="Permalink to 接口设计的幂等性考虑">接口设计的幂等性考虑</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-03-26T18:49:00+08:00"> 周一 26 三月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h2>分布式系统接口幂等性</h2>
+<h3>1.幂等性定义</h3>
+<h4>1.1 数学定义</h4>
+<blockquote>
+<p>在数学里，幂等有两种主要的定义：- 在某二元运算下，幂等元素是指被自己重复运算(或对于函数是为复合)的结果等于它自己的元素。例如，乘法下唯一两个幂等实数为0和1。即 s *s = s- 某一元运算为幂等的时，其作用在任一元素两次后会和其作用一次的结果相同。例如，高斯符号便是幂等的，即f(f(x)) = f(x)。</p>
+</blockquote>
+<h4>1.2 HTTP规范的定义</h4>
+<p>在HTTP/1.1规范中幂等性的定义是：</p>
+<blockquote>
+<p>A request method is considered "idempotent" if the intended effect on the server of multiple identical requests …</p></blockquote> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/distrubuted/interface-idempotency.html" rel="bookmark" title="Permalink to 接口设计的幂等性考虑">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/li-lun.html">理论</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/java-base/binary-operation.html" rel="bookmark" title="Permalink to java中位运算技巧">java中位运算技巧</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-03-21T22:17:00+08:00"> 周三 21 三月 2018 </abbr>
@@ -116,123 +229,6 @@
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
                                             <a class="danger label" href="/tag/yuan-ma.html">源码</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/java-base/introspector.html" rel="bookmark" title="Permalink to Java 内省(Introspector)">Java 内省(Introspector)</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-03-13T15:15:00+08:00"> 周二 13 三月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p><strong>内省(Introspector) 是Java 语言对 JavaBean 类属性、事件的一种缺省处理方法。</strong></p>
-<p>JavaBean是一种特殊的类，主要用于传递数据信息，这种类中的方法主要用于访问私有的字段，且方法名符合某种命名规则。如果在两个模块之间传递信息，可以将信息封装进JavaBean中，这种对象称为“值对象”(Value Object)，或“VO”。方法比较少。这些信息储存在类的私有变量中，通过set()、get()获得。</p>
-<p>例如类Use :</p>
-<div class="highlight"><pre><span></span>public class User {
-
-    private String name;
-
-    private String address;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/java-base/introspector.html" rel="bookmark" title="Permalink to Java 内省(Introspector)">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/classloader/classloader-chapter01.html" rel="bookmark" title="Permalink to ClassLoader类加载分析（一）">ClassLoader类加载分析（一）</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-03-08T21:15:00+08:00"> 周四 08 三月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>一、什么是Classloader</h1>
-<p>一个Java程序要想运行起来，首先需要经过编译生成 .class文件，然后创建一个运行环境（jvm）来加载字节码文件到内存运行，而.class 文件是怎样被加载中jvm 中的就是Java Classloader所做的事情。
-<img alt="class文件执行过程" src="http://upload-images.jianshu.io/upload_images/10175660-fc4f3b0b39421a8b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p>那么.class文件什么时候会被类加载器加载到jvm中运行那？比如执行new操作时候，当我们使用Class.forName(“包路径+类名”)，Class.forName(“包路径+类名”,classloader),classloader.loadclass(“包路径+类名”);时候就触发了类加载器去类加载对应的路径去查找*.class,并创建Class对象。</p>
-<h1>类的加载过程</h1>
-<p>类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：</p>
-<p>1、装载</p>
-<p>2-4、链接 -包括 【验证、准备、解析】</p>
-<p>5、初始化</p>
-<p>6、使用</p>
-<p>7、卸载 …</p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/classloader/classloader-chapter01.html" rel="bookmark" title="Permalink to ClassLoader类加载分析（一）">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/yuan-ma.html">源码</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/design-pattern/builder.html" rel="bookmark" title="Permalink to 设计模式之builder模式">设计模式之builder模式</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2017-12-19T22:15:00+08:00"> 周二 19 十二月 2017 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>建造者模式也叫生成器模式，和抽象工厂模式相似，也是一种构建复杂对象的模式。</p>
-<p><strong>建造者模式中的角色分类</strong>： 
- 抽象建造者Builder：接口类型，用于规范各个产品的组成部分； 
- 具体建造者ConcreteBuilder：实现Builder中的所有方法，返回一个产品实例； 
- 指导者Director：指挥建造者制造相应的产品 
- 产品Product：用户最终看到的复杂对象。</p>
-<p>假设我们有一个向客户发送新年祝福邮件的需求，而邮件内容可以是纯文档的，也可以是有动画的，也可以是有音频的，可以动态的添加个组件</p>
-<p>uml下图所示： 
-<img alt="建造者模式" src="http://upload-images.jianshu.io/upload_images/10175660-73b74bcbd9ee9ba9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p>如上图所示，邮箱有多个组件，包含收件人，发送人，内容，音乐等 
-通过具体的建造者添加不同的组件模版，最后通过指挥者去调用抽象建造者 
-来返回具体的email对象</p>
-<p>代码如下
-==================product======================</p>
-<div class="highlight"><pre><span></span><span class="nt">public</span> <span class="nt">interface</span> <span class="nt">Module</span> <span class="p">{</span>
-
-<span class="err">String</span> <span class="err">showInfo(String</span> <span class="err">info)</span><span class="p">;</span>
-
-<span class="p">}</span><span class="err">`</span>
-
-<span class="nt">public</span> <span class="nt">abstract</span> <span class="nt">class</span> <span class="nt">CommonModule</span> <span class="nt">implements</span> <span class="nt">Module</span> <span class="p">{</span>
-
-<span class="err">protected</span> <span class="err">String</span> <span class="err">moduleName</span><span class="p">;</span>
-
-<span class="err">protected</span> <span class="err">String</span> <span class="err">productionTime …</span></pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/design-pattern/builder.html" rel="bookmark" title="Permalink to 设计模式之builder模式">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/chuang-jian-xing.html">创建型</a>
                                 </div>
 
 
@@ -339,9 +335,11 @@
 	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
+	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/mysqlsi-wei-dao-tu.html">mysql思维导图</a></li>
 	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
-	    <li class="danger label" ><a href="/tag/mysqlsi-wei-dao-tu.html">mysql思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
 </ul>
 
@@ -369,7 +367,7 @@
 
 <p class="paginator">
             <a href="/author/nicky_chin4.html"><i class="icon-arrow-left"></i></a>
-    Page 5 / 6
+    Page 5 / 7
         <a href="/author/nicky_chin6.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->
