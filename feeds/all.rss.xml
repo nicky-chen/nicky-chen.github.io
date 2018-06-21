@@ -170,7 +170,7 @@ java代码如下：&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://www.jianshu.com/p/6ac7207d81d3"&gt;java内存模型之[JMM][重排序][happens-before]&lt;/a&gt;
 &lt;a href="https://www.jianshu.com/p/53da4e746657"&gt;volatile关键字原理实现及应用&lt;/a&gt;
 &lt;a href="https://www.jianshu.com/p/1ea87c152413"&gt;synchronized实现原理及锁优化&lt;/a&gt;
-=============不定期更新============================&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Sun, 13 May 2018 20:16:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-05-13:/concurrent/juc-tree-info.html</guid><category>并发编程思维导图</category></item><item><title>库级优化之SHOW GLOBAL STATUS</title><link>/mysql/SHOW-GLOBAL-STATUS.html</link><description>&lt;p&gt;&lt;strong&gt;慢查询&lt;/strong&gt;&lt;/p&gt;
+=============不定期更新============================&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Sun, 13 May 2018 20:16:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-05-13:/concurrent/juc-tree-info.html</guid><category>思维导图</category></item><item><title>库级优化之SHOW GLOBAL STATUS</title><link>/mysql/SHOW-GLOBAL-STATUS.html</link><description>&lt;p&gt;&lt;strong&gt;慢查询&lt;/strong&gt;&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;//查询慢线程情况
 show global status like &amp;#39;%slow%&amp;#39;
 
@@ -216,7 +216,7 @@ set GLOBAL sort_buffer_size = 720000
 
 
 &lt;h1&gt;优化系列&lt;/h1&gt;
-&lt;p&gt;&lt;a href="https://www.jianshu.com/p/bfc8aaa0b9f4"&gt;库级优化之SHOW GLOBAL STATUS&lt;/a&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Tue, 08 May 2018 18:34:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-05-08:/mysql/optimize-picture.html</guid><category>mysql思维导图</category></item><item><title>数据库设计三范式和反范式</title><link>/mysql/design-rule.html</link><description>&lt;h1&gt;数据库范式&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://www.jianshu.com/p/bfc8aaa0b9f4"&gt;库级优化之SHOW GLOBAL STATUS&lt;/a&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Tue, 08 May 2018 18:34:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-05-08:/mysql/optimize-picture.html</guid><category>思维导图</category></item><item><title>数据库设计三范式和反范式</title><link>/mysql/design-rule.html</link><description>&lt;h1&gt;数据库范式&lt;/h1&gt;
 &lt;p&gt;&lt;strong&gt;范式的级别&lt;/strong&gt;
       设计关系数据库时，遵从不同的规范要求，设计出合理的关系型数据库，这些不同的规范要求被称为不同的范式，各种范式呈递次规范，越高的范式数据库冗余越小。
       目前关系数据库有六种范式：&lt;strong&gt;&lt;em&gt;第一范式（1NF）、第二范式（2NF）、第三范式（3NF）、巴斯-科德范式（BCNF）、第四范式(4NF）和第五范式（5NF，又称完美范式）。&lt;/em&gt;&lt;/strong&gt;

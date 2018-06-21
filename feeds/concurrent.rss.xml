@@ -25,7 +25,7 @@ java代码如下：&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://www.jianshu.com/p/6ac7207d81d3"&gt;java内存模型之[JMM][重排序][happens-before]&lt;/a&gt;
 &lt;a href="https://www.jianshu.com/p/53da4e746657"&gt;volatile关键字原理实现及应用&lt;/a&gt;
 &lt;a href="https://www.jianshu.com/p/1ea87c152413"&gt;synchronized实现原理及锁优化&lt;/a&gt;
-=============不定期更新============================&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Sun, 13 May 2018 20:16:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-05-13:/concurrent/juc-tree-info.html</guid><category>并发编程思维导图</category></item><item><title>volatile关键字原理实现及应用</title><link>/concurrent/volatile-feature.html</link><description>&lt;h1&gt;1.并发编程中的三个概念&lt;/h1&gt;
+=============不定期更新============================&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Sun, 13 May 2018 20:16:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-05-13:/concurrent/juc-tree-info.html</guid><category>思维导图</category></item><item><title>volatile关键字原理实现及应用</title><link>/concurrent/volatile-feature.html</link><description>&lt;h1&gt;1.并发编程中的三个概念&lt;/h1&gt;
 &lt;p&gt;在并发编程中, 需要了解线程的三个概念：原子性，可见性，有序性：&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;1.1.原子性&lt;/strong&gt;&lt;/p&gt;
 &lt;blockquote&gt;

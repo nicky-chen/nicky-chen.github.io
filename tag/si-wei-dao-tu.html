@@ -84,6 +84,72 @@
 
 
                         </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/concurrent/juc-tree-info.html" rel="bookmark" title="Permalink to JUC知识点总结">JUC知识点总结</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-13T20:16:00+08:00"> 周日 13 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>作为并发的基础，我们需要熟悉掌握JUC相关的知识，才能更好的在实际项目中运用，
+下面是整理出来的juc思维导图：</p>
+<p><img alt="JUC知识点总结.png" src="https://upload-images.jianshu.io/upload_images/10175660-4bceb180f4aacafe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h1>系列文章</h1>
+<p><a href="https://www.jianshu.com/p/6ac7207d81d3">java内存模型之[JMM][重排序][happens-before]</a>
+<a href="https://www.jianshu.com/p/53da4e746657">volatile关键字原理实现及应用</a>
+<a href="https://www.jianshu.com/p/1ea87c152413">synchronized实现原理及锁优化</a>
+=============不定期更新============================</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/concurrent/juc-tree-info.html" rel="bookmark" title="Permalink to JUC知识点总结">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/si-wei-dao-tu.html">思维导图</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/mysql/optimize-picture.html" rel="bookmark" title="Permalink to 后端开发需要了解的mysql优化方向">后端开发需要了解的mysql优化方向</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-08T18:34:00+08:00"> 周二 08 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>优化思维导图</h1>
+<p><img alt="mysql优化思维导图" src="https://upload-images.jianshu.io/upload_images/10175660-dbeb71ebc3ad751b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h1>参数优化注意事项</h1>
+<p>参数优化分为 动态参数配置 和 配置文件的配置，建议在启动mysql之前配置好优化参数，这样将会全局有效，如使用动态参数配置可能会不生效或出现问题,并且如果数据库重启那么之前的优化参数都会失效</p>
+<div class="highlight"><pre><span></span>SHOW VARIABLES LIKE &#39;sort%&#39;
+修改会话级变量
+set SESSION sort_buffer_size=720000
+退出重新连接后，此参数恢复原值
+
+修改全局变量 
+set GLOBAL sort_buffer_size = 720000
+</pre></div>
+
+
+<h1>优化系列</h1>
+<p><a href="https://www.jianshu.com/p/bfc8aaa0b9f4">库级优化之SHOW GLOBAL STATUS</a></p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/mysql/optimize-picture.html" rel="bookmark" title="Permalink to 后端开发需要了解的mysql优化方向">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/si-wei-dao-tu.html">思维导图</a>
+                                </div>
+
+
+
+                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -180,13 +246,11 @@
 	<ul class="blank">
 	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
 	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
-	    <li class="danger label" ><a href="/tag/bing-fa-bian-cheng-si-wei-dao-tu.html">并发编程思维导图</a></li>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
 	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
-	    <li class="danger label" ><a href="/tag/mysqlsi-wei-dao-tu.html">mysql思维导图</a></li>
 	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
 	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
