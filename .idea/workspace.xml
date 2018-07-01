@@ -2,88 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list id="b5937023-c407-40d8-b7aa-bcba4a685ed0" name="Default" comment="" />
-    <list default="true" id="119c48ed-5227-48e3-b916-4f239060df21" name="Revert: 加入相关文章和导航" comment="sitemap更新">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/design-pattern/responsibility-chain.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/design-pattern/singletion.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/distrubuted/id-redis.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/distrubuted/index2.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/java-base/jndi-introdution.html" />
+    <list default="true" id="119c48ed-5227-48e3-b916-4f239060df21" name="Revert: 加入相关文章和导航" comment="refactor(博客index): 页数调整&#10;&#10;新增两个模式和id方案 jndi&#10;&#10;BREAKING CHANGE: page修改&#10;&#10;Closes #001">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/algorithm/btree-info.html" afterPath="$PROJECT_DIR$/algorithm/btree-info.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/algorithm/index.html" afterPath="$PROJECT_DIR$/algorithm/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/archives.html" afterPath="$PROJECT_DIR$/archives.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/author/nicky_chin.html" afterPath="$PROJECT_DIR$/author/nicky_chin.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/author/nicky_chin2.html" afterPath="$PROJECT_DIR$/author/nicky_chin2.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/author/nicky_chin3.html" afterPath="$PROJECT_DIR$/author/nicky_chin3.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/author/nicky_chin4.html" afterPath="$PROJECT_DIR$/author/nicky_chin4.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/author/nicky_chin5.html" afterPath="$PROJECT_DIR$/author/nicky_chin5.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/author/nicky_chin6.html" afterPath="$PROJECT_DIR$/author/nicky_chin6.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/author/nicky_chin7.html" afterPath="$PROJECT_DIR$/author/nicky_chin7.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/authors.html" afterPath="$PROJECT_DIR$/authors.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classloader/classloader-chapter01.html" afterPath="$PROJECT_DIR$/classloader/classloader-chapter01.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classloader/classloader-chapter02.html" afterPath="$PROJECT_DIR$/classloader/classloader-chapter02.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classloader/index.html" afterPath="$PROJECT_DIR$/classloader/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/index.html" afterPath="$PROJECT_DIR$/concurrent/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/index2.html" afterPath="$PROJECT_DIR$/concurrent/index2.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/juc-tree-info.html" afterPath="$PROJECT_DIR$/concurrent/juc-tree-info.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/recursive-Lock.html" afterPath="$PROJECT_DIR$/concurrent/recursive-Lock.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/synchronized-principle.html" afterPath="$PROJECT_DIR$/concurrent/synchronized-principle.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/thread-communication.html" afterPath="$PROJECT_DIR$/concurrent/thread-communication.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/thread-jmm-happens-before.html" afterPath="$PROJECT_DIR$/concurrent/thread-jmm-happens-before.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/volatile-feature.html" afterPath="$PROJECT_DIR$/concurrent/volatile-feature.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/adapter.html" afterPath="$PROJECT_DIR$/design-pattern/adapter.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/builder-factory.html" afterPath="$PROJECT_DIR$/design-pattern/builder-factory.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/builder.html" afterPath="$PROJECT_DIR$/design-pattern/builder.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/decorator.html" afterPath="$PROJECT_DIR$/design-pattern/decorator.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/index.html" afterPath="$PROJECT_DIR$/design-pattern/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/index2.html" afterPath="$PROJECT_DIR$/design-pattern/index2.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/strategy.html" afterPath="$PROJECT_DIR$/design-pattern/strategy.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/template.html" afterPath="$PROJECT_DIR$/design-pattern/template.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/cap-base-flp.html" afterPath="$PROJECT_DIR$/distrubuted/cap-base-flp.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/distrubuted-knowledge.html" afterPath="$PROJECT_DIR$/distrubuted/distrubuted-knowledge.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/id-flicker.html" afterPath="$PROJECT_DIR$/distrubuted/id-flicker.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/id-snowflake.html" afterPath="$PROJECT_DIR$/distrubuted/id-snowflake.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/index.html" afterPath="$PROJECT_DIR$/distrubuted/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/interface-idempotency.html" afterPath="$PROJECT_DIR$/distrubuted/interface-idempotency.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/feeds/all.rss.xml" afterPath="$PROJECT_DIR$/feeds/all.rss.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/feeds/design-pattern.rss.xml" afterPath="$PROJECT_DIR$/feeds/design-pattern.rss.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/feeds/distrubuted.rss.xml" afterPath="$PROJECT_DIR$/feeds/distrubuted.rss.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/feeds/java-base.rss.xml" afterPath="$PROJECT_DIR$/feeds/java-base.rss.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index2.html" afterPath="$PROJECT_DIR$/index2.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index3.html" afterPath="$PROJECT_DIR$/index3.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index4.html" afterPath="$PROJECT_DIR$/index4.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index5.html" afterPath="$PROJECT_DIR$/index5.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index6.html" afterPath="$PROJECT_DIR$/index6.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index7.html" afterPath="$PROJECT_DIR$/index7.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/binary-operation.html" afterPath="$PROJECT_DIR$/java-base/binary-operation.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/exception-introduce.html" afterPath="$PROJECT_DIR$/java-base/exception-introduce.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/externalizable-interface.html" afterPath="$PROJECT_DIR$/java-base/externalizable-interface.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/fail-fast-safe.html" afterPath="$PROJECT_DIR$/java-base/fail-fast-safe.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/index.html" afterPath="$PROJECT_DIR$/java-base/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/index2.html" afterPath="$PROJECT_DIR$/java-base/index2.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/introspector.html" afterPath="$PROJECT_DIR$/java-base/introspector.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/string-builder-question.html" afterPath="$PROJECT_DIR$/java-base/string-builder-question.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mysql/SHOW-GLOBAL-STATUS.html" afterPath="$PROJECT_DIR$/mysql/SHOW-GLOBAL-STATUS.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mysql/design-rule.html" afterPath="$PROJECT_DIR$/mysql/design-rule.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mysql/high-event.html" afterPath="$PROJECT_DIR$/mysql/high-event.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mysql/index.html" afterPath="$PROJECT_DIR$/mysql/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mysql/optimize-picture.html" afterPath="$PROJECT_DIR$/mysql/optimize-picture.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mysql/process-fun.html" afterPath="$PROJECT_DIR$/mysql/process-fun.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sitemap.xml" afterPath="$PROJECT_DIR$/sitemap.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/chuang-jian-xing.html" afterPath="$PROJECT_DIR$/tag/chuang-jian-xing.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/fen-bu-shi-idfang-an.html" afterPath="$PROJECT_DIR$/tag/fen-bu-shi-idfang-an.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/ji-chu.html" afterPath="$PROJECT_DIR$/tag/ji-chu.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/ji-chu2.html" afterPath="$PROJECT_DIR$/tag/ji-chu2.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/ji-chu3.html" afterPath="$PROJECT_DIR$/tag/ji-chu3.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/jie-gou-xing.html" afterPath="$PROJECT_DIR$/tag/jie-gou-xing.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/ku-ji-you-hua.html" afterPath="$PROJECT_DIR$/tag/ku-ji-you-hua.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/li-lun.html" afterPath="$PROJECT_DIR$/tag/li-lun.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/shu-ju-jie-gou.html" afterPath="$PROJECT_DIR$/tag/shu-ju-jie-gou.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/si-wei-dao-tu.html" afterPath="$PROJECT_DIR$/tag/si-wei-dao-tu.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/suo-you-hua.html" afterPath="$PROJECT_DIR$/tag/suo-you-hua.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/xing-wei-xing.html" afterPath="$PROJECT_DIR$/tag/xing-wei-xing.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/yuan-ma.html" afterPath="$PROJECT_DIR$/tag/yuan-ma.html" />
     </list>
     <ignored path=".idea/vcs.xml" />
     <ignored path=".idea/inspectionProfiles/profiles_settings.xml" />
@@ -102,88 +22,8 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="robots.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/robots.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="44">
-              <caret line="2" column="9" lean-forward="false" selection-start-line="2" selection-start-column="9" selection-end-line="2" selection-end-column="9" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="toc.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/theme/js/toc.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="110">
-              <caret line="5" column="62" lean-forward="false" selection-start-line="5" selection-start-column="62" selection-end-line="5" selection-end-column="62" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sitemap.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sitemap.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="9" column="5" lean-forward="false" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="workspace.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gumby.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/theme/gumby.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="10934">
-              <caret line="497" column="13" lean-forward="false" selection-start-line="497" selection-start-column="13" selection-end-line="497" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="66eb9d80f3286c2c541ee3a02987f952.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/66eb9d80f3286c2c541ee3a02987f952.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="32" lean-forward="false" selection-start-line="0" selection-start-column="32" selection-end-line="0" selection-end-column="32" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tags.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tags.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="946">
-              <caret line="43" column="50" lean-forward="false" selection-start-line="43" selection-start-column="50" selection-end-line="43" selection-end-column="50" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="fail-fast-safe.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/java-base/fail-fast-safe.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="zai-xian-gong-ju.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/zai-xian-gong-ju.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -676,7 +516,14 @@
       <option name="project" value="LOCAL" />
       <updated>1529806872067</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="refactor(博客index): 页数调整&#10;&#10;新增两个模式和id方案 jndi&#10;&#10;BREAKING CHANGE: page修改&#10;&#10;Closes #001">
+      <created>1530421300061</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1530421300061</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -687,7 +534,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.57094973" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.57094973" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -757,7 +604,8 @@
     <MESSAGE value="fast" />
     <MESSAGE value="提交css" />
     <MESSAGE value="sitemap更新" />
-    <option name="LAST_COMMIT_MESSAGE" value="sitemap更新" />
+    <MESSAGE value="refactor(博客index): 页数调整&#10;&#10;新增两个模式和id方案 jndi&#10;&#10;BREAKING CHANGE: page修改&#10;&#10;Closes #001" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor(博客index): 页数调整&#10;&#10;新增两个模式和id方案 jndi&#10;&#10;BREAKING CHANGE: page修改&#10;&#10;Closes #001" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
