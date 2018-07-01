@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>南乡清水 - java-base</title><link>/</link><description></description><lastBuildDate>Sat, 02 Jun 2018 19:01:00 +0800</lastBuildDate><item><title>Fail-Fast和Fail-Safe机制</title><link>/java-base/fail-fast-safe.html</link><description>&lt;h1&gt;1 Fail-Fast&lt;/h1&gt;
+<rss version="2.0"><channel><title>南乡清水 - java-base</title><link>/</link><description></description><lastBuildDate>Mon, 25 Jun 2018 20:01:00 +0800</lastBuildDate><item><title>JNDI知识摘要</title><link>/java-base/jndi-introdution.html</link><description>&lt;h1&gt;1  什么是JNDI？&lt;/h1&gt;
+&lt;p&gt;JNDI(Java Naming and Directory Interface,Java命名和目录接口)是SUN公司提供的一种标准的Java命名系统接口，JNDI提供统一的客户端API，通过不同的访问提供者接口JNDI服务供应接口(SPI)的实现，由管理者将JNDI API映射为特定的命名服务和目录系统，使得Java应用程序可以和这些命名服务和目录服务之间进行交互&lt;/p&gt;
+&lt;p&gt;通过JNDI可以实现对象的创建与托管,和对象的使用过程完全解耦&lt;/p&gt;
+&lt;p&gt;比如:&lt;strong&gt;在application的底层创建对象,并将对象bind到特定的context中,对象的创建过程或者"查找"方式只有此底层模块支持,外部程序不可见.对于对象的使用者(调用者)只能通过JNDI的方式获取对象,对象使用者无法直接创建对象等&lt;/strong&gt;&lt;/p&gt;
+&lt;h1&gt;2 JNDI架构&lt;/h1&gt;
+&lt;p&gt;&lt;img alt="架构" src="https://upload-images.jianshu.io/upload_images/10175660-e3cc6625588ad25d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"&gt;&lt;/p&gt;
+&lt;p&gt;关于JNDI要注意的重要一点是，它提供了应用编程接口(application programming interface，API)和服务提供者接口(service provider interface，SPI)。这一点的真正含义是，要让应用与命名服务或目录服务交互，必须有这个服务的JNDI服务提供者，这正是JNDI SPI发挥作用的地方。服务提供者基本上是一组类，这些类为各种具体的命名和目录服务实现了JNDI接口 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Mon, 25 Jun 2018 20:01:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-06-25:/java-base/jndi-introdution.html</guid><category>基础</category></item><item><title>Fail-Fast和Fail-Safe机制</title><link>/java-base/fail-fast-safe.html</link><description>&lt;h1&gt;1 Fail-Fast&lt;/h1&gt;
 &lt;h3&gt;1.1 fail-fast定义&lt;/h3&gt;
 &lt;p&gt;fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件
 例如：当某一个线程A通过iterator去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出ConcurrentModificationException异常，产生fail-fast事件&lt;/p&gt;

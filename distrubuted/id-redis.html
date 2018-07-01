@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>分布式全局序列ID方案之Redis优化方案</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+        <link href="/feeds/distrubuted.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+        <link rel="shortcut icon" href="/theme/images/favicon.ico">
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+
+                <ul class="columns">
+                    <li><a href="/">首页</a></li>
+
+                    <li
+><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                    <li
+><a href="/zai-xian-gong-ju.html">在线工具</a></li>
+                    <li
+><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                    <li
+><a href="/guan-yu-wo.html">关于我</a></li>
+                     <li><a href="/archives.html"><i class="active"></i>归档日志</a></li>
+                    <form class="navbar-search pull-right" action="/search.html">
+                        <input type="text" class="search-query" placeholder="站内搜" name="q" id="s">
+                    </form>
+                </ul>
+            </div>
+
+
+<section id="content" class="body">
+
+   <div class="row">
+
+<div id="toc" class="threes columns" style="font-size: 65%">
+    <br>
+    <h4 style="font-size: 1rem">文章目录</h4>
+</div>        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/distrubuted/id-redis.html" rel="bookmark"
+                   title="Permalink to 分布式全局序列ID方案之Redis优化方案">分布式全局序列ID方案之Redis优化方案</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2018-06-24T15:28:00+08:00">
+                周日 24 六月 2018
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div id="contents" class="entry-content">
+              <h1>1 Redis的Flicker方案</h1>
+<p>利用redis的lua脚本功能，在每个节点上通过lua脚本生成唯一ID，生成的ID为64位，具体如下：</p>
+<p>使用41 bit来存放时间，精确到毫秒，可以使用到2039年
+使用12 bit来存放逻辑分片ID，最大分片ID是4095
+使用10 bit来存放自增长ID，则每个节点，每毫秒最多可生成1024个ID
+比如GTM时间 2018年6月24日11点23分 ，它的距1970年的毫秒数是 1529810591000，假定分片ID是60，自增长序列是20，则生成的ID是：</p>
+<div class="highlight"><pre><span></span>6416490681073670164 = 1529810591000 &lt;&lt; 22 | 60 &lt;&lt; 10 | 20
+redis提供了TIME命令，取得redis服务器的秒值和微秒值
+毫秒值获取命令：EVAL &quot;local current = redis.call(&#39;TIME&#39;) ;return a[1]*1000 + a[2]/1000&quot; 0
+生成最终ID : current &lt;&lt; (12 + 10)) | (shardingId &lt;&lt; 10) | seq
+</pre></div>
+
+
+<h1>2 ID原子性自增方案</h1>
+<h3>2.1 Redis HINCRBY 命令</h3>
+<p>Redis 的 INCR 命令支持  “INCR AND GET” 原子操作。利用这个特性，我们可以在 Redis 中存序列号，让分布式环境中多个取号服务在 Redis 中通过 INCR 命令来实现取号；同时 Redis 是单进程单线程架构，不会因为多个取号方的 INCR 命令导致取号重复。因此，基于 Redis 的 INCR 命令实现序列号的生成基本能满足全局唯一与单调递增的特性，并且性能还不错。</p>
+<p>实际上，为了存储序列号的更多相关信息，我们使用了 Redis 的 Hash 数据结构，Redis 同样为 Hash 提供 HINCRBY 命令来实现 “INCR AND GET” 原子操作。</p>
+<h3>2.2 Redis宕机问题</h3>
+<p>Redis 在提供高性能存取的同时，支持<em>RDB 和 AOF 持久化</em>，来保证宕机后的数据恢复：
+<img alt="持久化" src="https://upload-images.jianshu.io/upload_images/10175660-e9a681803ad5aa5a.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<ul>
+<li>如果开启 RDB 持久化，由于最近一次快照时间和最新一条 HINCRBY 命令的时间有可能存在时间差，宕机后通过 RDB 快照恢复数据集会发生取号重复的情况</li>
+<li>如果使用 AOF 持久化，通过追加写命令到 AOF 文件的方式记录所有 Redis 服务器的写命令，不会发生取号重复的情况。但 AOF 持久化会损耗性能并且在宕机重启后可能由于文件过大导致恢复数据时间过长，并且通过 AOF 重写来压缩文件，在写 AOF 时发生宕机导致文件出错，则需要较多时间去人为恢复 AOF 文件</li>
+</ul>
+<h3>2.3 宕机恢复方案</h3>
+<p><img alt="宕机恢复方案" src="https://upload-images.jianshu.io/upload_images/10175660-5a5971f4bb66537b.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>利用mysql记录最大序列号 max，然后设计一个服务定期统计序列号消费速度，当 Redis 中当前可取序列号接近 max 时自动更新 max 到一个适当的值，存入数据库和 Redis。在 Redis 宕机的情况下，将从数据库拉取最大值复成 Redis 当前已取序列号，防止 Redis 取号重复。当然，mysql也可能发生宕机，不过由于取号操作在 Redis，可增加最大可取序列号来提供足够时间恢复mysql</p>
+<p>数据预热伪代码：</p>
+<div class="highlight"><pre><span></span><span class="nd">@Component</span>
+<span class="nd">@Order</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="mi">1</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CacheRunner</span> <span class="kd">implements</span> <span class="n">CommandLineRunner</span> <span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="n">String</span><span class="o">...</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">//doSomething</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;==================id预加载=======================&quot;</span><span class="o">);</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>通过实现CommandLineRunner的方式，完成数据的预加载，宕机重启，可通过后台服务刷新redis可用最大值来解决</p>
+<h3>2.3 Redis设计</h3>
+<p><strong>i 数据结构</strong></p>
+<p>采用原子性hash,具体设计如下：</p>
+<p><img alt="id信息" src="https://upload-images.jianshu.io/upload_images/10175660-edc6f35d25872751.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>其中
+<strong>cur</strong> 表示当前游标位置，即最新生成的序列号id
+<strong>max</strong> 表示当前情况下允许生成的最大序列号
+<strong>seq_recently</strong> 统计5分钟消耗的id数量
+<strong>seq_long_term</strong> 统计30分钟内消耗的id数量</p>
+<p><strong>ii Redis调用分析</strong></p>
+<p>通过 <strong>HINCRBY</strong> 命令生成ID并且取出，然后校验当前值是否超出了最大可用序列号 max。seqs_recently 和 seqs_long_term 记录了当前序列消耗的序列号数，用于计算之后增大 max 的步长，即扩容算法。具体生成id代码如下：</p>
+<div class="highlight"><pre><span></span>   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="nf">hashIncrementAndGetNumber</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">fields</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Jedis</span> <span class="n">jedis</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">jedis</span> <span class="o">=</span> <span class="n">getJedis</span><span class="o">();</span>
+            <span class="n">String</span> <span class="n">script</span> <span class="o">=</span>
+                    <span class="s">&quot;local maxSeqNumStr = redis.pcall(&#39;HGET&#39;, KEYS[1], ARGV[1]) &quot;</span>
+                    <span class="o">+</span><span class="s">&quot;if type(maxSeqNumStr) == &#39;boolean&#39; and maxSeqNumStr == false then return nil end &quot;</span><span class="o">+</span>
+                    <span class="s">&quot;local maxSeqNum = tonumber(maxSeqNumStr) &quot;</span>
+                    <span class="o">+</span> <span class="s">&quot;local seqNum = redis.pcall(&#39;HINCRBY&#39;, KEYS[1], ARGV[2], ARGV[3]) &quot;</span>
+                    <span class="o">+</span> <span class="s">&quot;if seqNum &lt;= maxSeqNum then &quot;</span>
+                    <span class="o">+</span> <span class="s">&quot; return seqNum else return nil end&quot;</span><span class="o">;</span>
+            <span class="n">Object</span> <span class="n">result</span> <span class="o">=</span> <span class="n">jedis</span><span class="o">.</span><span class="na">eval</span><span class="o">(</span><span class="n">script</span><span class="o">,</span> <span class="n">Collections</span><span class="o">.</span><span class="na">singletonList</span><span class="o">(</span><span class="n">key</span><span class="o">),</span> <span class="n">fields</span><span class="o">);</span>
+            <span class="k">return</span> <span class="o">(</span><span class="kt">long</span><span class="o">)</span> <span class="n">result</span><span class="o">;</span>
+
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&quot;releaseRedisLock error : &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">);</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1L</span><span class="o">;</span>
+
+        <span class="o">}</span><span class="k">finally</span> <span class="o">{</span>
+            <span class="n">recycleJedisOjbect</span><span class="o">(</span><span class="n">jedis</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="n">通过</span> <span class="nf">hashIncrementAndGetNumber</span><span class="o">(</span><span class="s">&quot;roborder:hash&quot;</span><span class="o">,</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="s">&quot;max&quot;</span><span class="o">,</span> <span class="s">&quot;cur&quot;</span><span class="o">,</span> <span class="s">&quot;1&quot;</span><span class="o">));</span><span class="n">获取值</span><span class="err">，</span><span class="n">自增步幅</span> <span class="err">＋</span><span class="mi">1</span>
+</pre></div>
+
+
+<h3>2.4 Mysql设计</h3>
+<p>mysql表设计无需赘述</p>
+<div class="highlight"><pre><span></span>CREATE TABLE `id_generator` (
+  `id` int(10) NOT NULL,
+  `current_max_id` bigint(20) NOT NULL COMMENT &#39;当前最大id&#39;,
+  `increment_step` int(10) NOT NULL COMMENT &#39;步幅长度&#39;,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</pre></div>
+
+
+<p>通过定时任务计算max服务，根据 seqs_recently 和 seqs_long_term，预估之后一小时所需要消耗的序列号数。如果当前剩余序列号数不足以支撑十五分钟，则扩容计算之后一小时将消耗的序列号数作为步长，更新 max 到 MySql 和 Redis，保证客户端应用每次能获取到有效的序列号</p>
+<p>当然，如果还未来得及计算序列号的消耗，而序列号的使用已达到可用序列号的最大值，可利用fail-fast 机制，提示异常，防止线程阻塞带来的问题</p>
+<h1>Reference</h1>
+<p><a href="https://www.jianshu.com/p/b06e75af0268">万亿级调用系统：微信序列号生成器架构设计及演变</a>
+<a href="https://tech.meituan.com/MT_Leaf.html">美团点评分布式ID生成系统</a></p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "distrubuted/id-redis.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns" style="font-size: 80%">
+
+
+    <nav class="widget">
+        <h4>个人链接</h4>
+        <ul class="blank">
+            <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">StackOverFlow</a></li>
+            <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+            <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+        </ul>
+    </nav>
+
+<h4>专题分类</h4>
+
+ <ul>
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/zai-xian-gong-ju.html">在线工具</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+
+     <li >
+         <a href="/algorithm/index.html">
+             Algorithm
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             classloader
+         </a>
+     </li>
+     <li >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li class="active" >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm/index.html">Algorithm</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+<h4>标签</h4>
+	<ul class="blank">
+	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
+	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
+	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
+	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
+	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
+	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
+	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
+	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
+</ul>
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+
+
+</div> </div><!-- /.row -->
+  <div class="pagination">★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆
+      <ul>
+        <li class="prev"><a href="/distrubuted/id-flicker.html">Next →</a></li>
+        <li><a href="/archives.html">博客导航</a></li>
+        <li class="next"><a href="/java-base/jndi-introdution.html">← Previous</a></li>
+      </ul>
+    </div>
+
+    <h4>相关文章推荐</h4>
+    <ul>
+        <li><a href="/distrubuted/id-flicker.html">分布式全局序列ID方案之Flicker优化方案</a></li>
+        <li><a href="/distrubuted/id-snowflake.html">分布式全局序列ID方案之Snowflake算法</a></li>
+    </ul>
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-119892182-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+  <script src="/theme/js/toc.js" type="text/javascript"></script>
+    <script>
+        (function () {
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+</body>
+</html>

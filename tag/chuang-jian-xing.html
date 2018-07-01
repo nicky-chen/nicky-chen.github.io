@@ -63,6 +63,54 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/design-pattern/singletion.html" rel="bookmark" title="Permalink to 设计模式之单例模式终极版【克隆-序列化-反射】">设计模式之单例模式终极版【克隆-序列化-反射】</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-06-07T22:15:00+08:00"> 周四 07 六月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 基本内容</h1>
+<h3>1.1 概念</h3>
+<p>单例模式，是指在任何时候，该类只能被实例化一次，在任何时候，访问该类的对象，对象都是同一个。只要是程序员都会使用到，甚至都不能算是设计模式。但是在我们使用中也需要了解一下单例特性和使用场景</p>
+<h3>1.2 模式优缺点</h3>
+<p>单例模式有以下优点：</p>
+<blockquote>
+<p>使用单例模式可以严格的控制用户怎样以及如何访问它
+节约系统资源，提高系统的性能</p>
+</blockquote>
+<p>单例模式有以下缺点：</p>
+<blockquote>
+<p>不易扩展
+单例类职责过重，在一定程度上违背了“单一职责原则”
+如实例化对象长时间未使用，会GC回收，导致对象状态的丢失</p>
+</blockquote>
+<p>#2 单例模式分类</p>
+<h3>2.1 饿汉模式</h3>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SingletonEHan</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="nf">SingletonEHan</span><span class="o">()</span> <span class="o">{}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 1.单例模式的饿汉式</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">SingletonEHan</span> <span class="n">singletonEHan</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SingletonEHan</span><span class="o">();</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">SingletonEHan …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/design-pattern/singletion.html" rel="bookmark" title="Permalink to 设计模式之单例模式终极版【克隆-序列化-反射】">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/chuang-jian-xing.html">创建型</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/design-pattern/builder.html" rel="bookmark" title="Permalink to 设计模式之builder模式">设计模式之builder模式</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2017-12-19T22:15:00+08:00"> 周二 19 十二月 2017 </abbr>
@@ -246,13 +294,13 @@
 	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
 	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
-	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
-	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
-	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
+	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
 </ul>
 
 

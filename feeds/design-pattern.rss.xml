@@ -1,5 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>南乡清水 - design-pattern</title><link>/</link><description></description><lastBuildDate>Sun, 27 May 2018 23:15:00 +0800</lastBuildDate><item><title>实际项目运用之Adapter模式（适配器模式）</title><link>/design-pattern/adapter.html</link><description>&lt;h1&gt;1. 模式简介&lt;/h1&gt;
+<rss version="2.0"><channel><title>南乡清水 - design-pattern</title><link>/</link><description></description><lastBuildDate>Fri, 29 Jun 2018 22:18:00 +0800</lastBuildDate><item><title>实际项目运用之Responsibility-Chain模式（责任链模式）</title><link>/design-pattern/responsibility-chain.html</link><description>&lt;h1&gt;1 模式概要&lt;/h1&gt;
+&lt;h3&gt;1.1 简介&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;责任链模式为请求创建一个接收者对象链，每个接收者都包含对另一个接收者的引用，如果一个对象不能处理该请求，那么它会把请求传给下一个接收者，依此类推&lt;/li&gt;
+&lt;li&gt;责任链模式避免了请求的发送者和接收者耦合在一起，让多个对象都有可能接收请求，将这些对象连成一条链，并且沿着这条链传递请求，直到有对象处理它为止&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;1.2 责任链模式优缺点&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;优点&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;降低耦合度。它将请求的发送者和接收者解耦
+简化了对象，使得对象不需要知道链的结构
+增强给对象指派职责的灵活性，允许动态地新增或者删除责任链
+增加新的请求处理类方便&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;缺点&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;不能保证请求一定被接收；
+系统性能将受到一定影响，调试时不方便，可能会造成循环调用&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1&gt;2 模式结构&lt;/h1&gt;
+&lt;h3&gt;2.1 对象定义&lt;/h3&gt;
+&lt;p&gt;&lt;em&gt;Handler（抽象处理者）&lt;/em&gt;： 定义一个处理请求的接口，提供对后续处理者的引用
+&lt;em&gt;ConcreteHandler（具体处理者）&lt;/em&gt;： 抽象处理者的子类，处理用户请求，可选将请求处理掉还是传给下家；在具体处理者中可以访问链中下一个对象，以便请求的转发&lt;/p&gt;
+&lt;h3&gt;2.2 类图及设计 …&lt;/h3&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Fri, 29 Jun 2018 22:18:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-06-29:/design-pattern/responsibility-chain.html</guid><category>行为型</category></item><item><title>设计模式之单例模式终极版【克隆-序列化-反射】</title><link>/design-pattern/singletion.html</link><description>&lt;h1&gt;1 基本内容&lt;/h1&gt;
+&lt;h3&gt;1.1 概念&lt;/h3&gt;
+&lt;p&gt;单例模式，是指在任何时候，该类只能被实例化一次，在任何时候，访问该类的对象，对象都是同一个。只要是程序员都会使用到，甚至都不能算是设计模式。但是在我们使用中也需要了解一下单例特性和使用场景&lt;/p&gt;
+&lt;h3&gt;1.2 模式优缺点&lt;/h3&gt;
+&lt;p&gt;单例模式有以下优点：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;使用单例模式可以严格的控制用户怎样以及如何访问它
+节约系统资源，提高系统的性能&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;单例模式有以下缺点：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;不易扩展
+单例类职责过重，在一定程度上违背了“单一职责原则”
+如实例化对象长时间未使用，会GC回收，导致对象状态的丢失&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;#2 单例模式分类&lt;/p&gt;
+&lt;h3&gt;2.1 饿汉模式&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;SingletonEHan&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+    &lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="nf"&gt;SingletonEHan&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{}&lt;/span&gt;
+
+    &lt;span class="cm"&gt;/**&lt;/span&gt;
+&lt;span class="cm"&gt;     * 1.单例模式的饿汉式&lt;/span&gt;
+&lt;span class="cm"&gt;     */&lt;/span&gt;
+    &lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="n"&gt;SingletonEHan&lt;/span&gt; &lt;span class="n"&gt;singletonEHan&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;SingletonEHan&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="n"&gt;SingletonEHan …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Thu, 07 Jun 2018 22:15:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-06-07:/design-pattern/singletion.html</guid><category>创建型</category></item><item><title>实际项目运用之Adapter模式（适配器模式）</title><link>/design-pattern/adapter.html</link><description>&lt;h1&gt;1. 模式简介&lt;/h1&gt;
 &lt;p&gt;适配器模式解决的问题：让原本因为接口不兼容而不能一起工作的类可以一起工作&lt;/p&gt;
 &lt;p&gt;适配器模式中有三种角色：&lt;/p&gt;
 &lt;ul&gt;

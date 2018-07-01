@@ -64,6 +64,34 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/jndi-introdution.html" rel="bookmark" title="Permalink to JNDI知识摘要">JNDI知识摘要</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-06-25T20:01:00+08:00"> 周一 25 六月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1  什么是JNDI？</h1>
+<p>JNDI(Java Naming and Directory Interface,Java命名和目录接口)是SUN公司提供的一种标准的Java命名系统接口，JNDI提供统一的客户端API，通过不同的访问提供者接口JNDI服务供应接口(SPI)的实现，由管理者将JNDI API映射为特定的命名服务和目录系统，使得Java应用程序可以和这些命名服务和目录服务之间进行交互</p>
+<p>通过JNDI可以实现对象的创建与托管,和对象的使用过程完全解耦</p>
+<p>比如:<strong>在application的底层创建对象,并将对象bind到特定的context中,对象的创建过程或者"查找"方式只有此底层模块支持,外部程序不可见.对于对象的使用者(调用者)只能通过JNDI的方式获取对象,对象使用者无法直接创建对象等</strong></p>
+<h1>2 JNDI架构</h1>
+<p><img alt="架构" src="https://upload-images.jianshu.io/upload_images/10175660-e3cc6625588ad25d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>关于JNDI要注意的重要一点是，它提供了应用编程接口(application programming interface，API)和服务提供者接口(service provider interface，SPI)。这一点的真正含义是，要让应用与命名服务或目录服务交互，必须有这个服务的JNDI服务提供者，这正是JNDI SPI发挥作用的地方。服务提供者基本上是一组类，这些类为各种具体的命名和目录服务实现了JNDI接口 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/jndi-introdution.html" rel="bookmark" title="Permalink to JNDI知识摘要">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/java-base/fail-fast-safe.html" rel="bookmark" title="Permalink to Fail-Fast和Fail-Safe机制">Fail-Fast和Fail-Safe机制</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-06-02T19:01:00+08:00"> 周六 02 六月 2018 </abbr>
@@ -214,37 +242,6 @@ public class Banner implements Serializable{
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/java-base/binary-operation.html" rel="bookmark" title="Permalink to java中位运算技巧">java中位运算技巧</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-03-21T22:17:00+08:00"> 周三 21 三月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>位运算符主要针对二进制，它包括了：“与”、“非”、“或”、“异或”。</p>
-<h2>运算符 含义 描述</h2>
-<p>【&amp;】 按位与 如果两个相应的二进制位都为1，则该位的结果值为1，否则为0
-【|】按位或 两个相应的二进制位中只要有一个为1，该位的结果值为1
-【^】 按位异或 若参加运算的两个二进制位值相同则为0，否则为1
-【~】 取反 ~是一元运算符，用来对一个二进制数按位取反，即将0变1，将1变0
-【&lt;&lt;】 左移 用来将一个数的各二进制位全部左移N位，右补0
-【&gt;&gt;】右移 将一个数的各二进制位右移N位，移到右端的低位被舍弃，对于无符号数，高位补0</p>
-<h4>1、“按位与”运算符（&amp;）</h4>
-<p>按位与是指：参加运算的两个数据，按二进制位进行“与”运算。如果两个相应的二进制位都为１，则该位的结果值为1；否则为0。内存储存数据的基本单位是字节（Byte），一个字节由8个位（bit)所组成。位是用以描述电脑数据量的最小单位。二进制系统中 …</p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/java-base/binary-operation.html" rel="bookmark" title="Permalink to java中位运算技巧">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -343,13 +340,13 @@ public class Banner implements Serializable{
 	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
 	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
-	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
-	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
-	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
+	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
 </ul>
 
 

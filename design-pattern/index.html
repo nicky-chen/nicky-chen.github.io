@@ -64,6 +64,99 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/design-pattern/responsibility-chain.html" rel="bookmark" title="Permalink to 实际项目运用之Responsibility-Chain模式（责任链模式）">实际项目运用之Responsibility-Chain模式（责任链模式）</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-06-29T22:18:00+08:00"> 周五 29 六月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 模式概要</h1>
+<h3>1.1 简介</h3>
+<ul>
+<li>责任链模式为请求创建一个接收者对象链，每个接收者都包含对另一个接收者的引用，如果一个对象不能处理该请求，那么它会把请求传给下一个接收者，依此类推</li>
+<li>责任链模式避免了请求的发送者和接收者耦合在一起，让多个对象都有可能接收请求，将这些对象连成一条链，并且沿着这条链传递请求，直到有对象处理它为止</li>
+</ul>
+<h3>1.2 责任链模式优缺点</h3>
+<p><strong>优点</strong></p>
+<blockquote>
+<p>降低耦合度。它将请求的发送者和接收者解耦
+简化了对象，使得对象不需要知道链的结构
+增强给对象指派职责的灵活性，允许动态地新增或者删除责任链
+增加新的请求处理类方便</p>
+</blockquote>
+<p><strong>缺点</strong></p>
+<blockquote>
+<p>不能保证请求一定被接收；
+系统性能将受到一定影响，调试时不方便，可能会造成循环调用</p>
+</blockquote>
+<h1>2 模式结构</h1>
+<h3>2.1 对象定义</h3>
+<p><em>Handler（抽象处理者）</em>： 定义一个处理请求的接口，提供对后续处理者的引用
+<em>ConcreteHandler（具体处理者）</em>： 抽象处理者的子类，处理用户请求，可选将请求处理掉还是传给下家；在具体处理者中可以访问链中下一个对象，以便请求的转发</p>
+<h3>2.2 类图及设计 …</h3> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/design-pattern/responsibility-chain.html" rel="bookmark" title="Permalink to 实际项目运用之Responsibility-Chain模式（责任链模式）">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/xing-wei-xing.html">行为型</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/design-pattern/singletion.html" rel="bookmark" title="Permalink to 设计模式之单例模式终极版【克隆-序列化-反射】">设计模式之单例模式终极版【克隆-序列化-反射】</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-06-07T22:15:00+08:00"> 周四 07 六月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 基本内容</h1>
+<h3>1.1 概念</h3>
+<p>单例模式，是指在任何时候，该类只能被实例化一次，在任何时候，访问该类的对象，对象都是同一个。只要是程序员都会使用到，甚至都不能算是设计模式。但是在我们使用中也需要了解一下单例特性和使用场景</p>
+<h3>1.2 模式优缺点</h3>
+<p>单例模式有以下优点：</p>
+<blockquote>
+<p>使用单例模式可以严格的控制用户怎样以及如何访问它
+节约系统资源，提高系统的性能</p>
+</blockquote>
+<p>单例模式有以下缺点：</p>
+<blockquote>
+<p>不易扩展
+单例类职责过重，在一定程度上违背了“单一职责原则”
+如实例化对象长时间未使用，会GC回收，导致对象状态的丢失</p>
+</blockquote>
+<p>#2 单例模式分类</p>
+<h3>2.1 饿汉模式</h3>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SingletonEHan</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="nf">SingletonEHan</span><span class="o">()</span> <span class="o">{}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 1.单例模式的饿汉式</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">SingletonEHan</span> <span class="n">singletonEHan</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SingletonEHan</span><span class="o">();</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">SingletonEHan …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/design-pattern/singletion.html" rel="bookmark" title="Permalink to 设计模式之单例模式终极版【克隆-序列化-反射】">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/chuang-jian-xing.html">创建型</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/design-pattern/adapter.html" rel="bookmark" title="Permalink to 实际项目运用之Adapter模式（适配器模式）">实际项目运用之Adapter模式（适配器模式）</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-05-27T23:15:00+08:00"> 周日 27 五月 2018 </abbr>
@@ -197,96 +290,6 @@
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/design-pattern/decorator.html" rel="bookmark" title="Permalink to 实际项目运用之Decorator模式（装饰器模式）">实际项目运用之Decorator模式（装饰器模式）</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-03-28T11:22:00+08:00"> 周三 28 三月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h2>1 概述</h2>
-<p>在项目中，经常因一些新增需求，导致同一业务的变更，如果所在类继承关系如下：Parent、Child、Grandparent，那么要在Child类上增强些功能怎么办？给Child类增加方法？那会对Grandparent产生什么影响？该如何去处理？看完本文，你会找到你的答案。</p>
-<p>JavaIO中，像下面的嵌套语句很常见，为什么要怎样定义呢？理解装饰模式后，你会找到答案。</p>
-<div class="highlight"><pre><span></span>FilterInputStream filterInputStreasm = new BufferedInputStream(new FileInputStream(new File(&quot;/user/a&quot;)));
-</pre></div>
-
-
-<h3>1.1案例</h3>
-<p>例如下面一个功能需求，4s店的汽车销售向客户推销自家品牌的产品，我们用代码实现，关系如下：</p>
-<p><img alt="类图" src="https://upload-images.jianshu.io/upload_images/10175660-789e0242028d08b0.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p>具体代码：
-汽车销售类</p>
-<div class="highlight"><pre><span></span>public abstract class CarSale {
-
-    /**
-     * 推销车的详情
-     */
-    public abstract void displayCarInfo();
-
-    /**
-     * 客户签订购买合同
-     */
-    public abstract …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/design-pattern/decorator.html" rel="bookmark" title="Permalink to 实际项目运用之Decorator模式（装饰器模式）">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/jie-gou-xing.html">结构型</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/design-pattern/builder.html" rel="bookmark" title="Permalink to 设计模式之builder模式">设计模式之builder模式</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2017-12-19T22:15:00+08:00"> 周二 19 十二月 2017 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>建造者模式也叫生成器模式，和抽象工厂模式相似，也是一种构建复杂对象的模式。</p>
-<p><strong>建造者模式中的角色分类</strong>： 
- 抽象建造者Builder：接口类型，用于规范各个产品的组成部分； 
- 具体建造者ConcreteBuilder：实现Builder中的所有方法，返回一个产品实例； 
- 指导者Director：指挥建造者制造相应的产品 
- 产品Product：用户最终看到的复杂对象。</p>
-<p>假设我们有一个向客户发送新年祝福邮件的需求，而邮件内容可以是纯文档的，也可以是有动画的，也可以是有音频的，可以动态的添加个组件</p>
-<p>uml下图所示： 
-<img alt="建造者模式" src="http://upload-images.jianshu.io/upload_images/10175660-73b74bcbd9ee9ba9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p>如上图所示，邮箱有多个组件，包含收件人，发送人，内容，音乐等 
-通过具体的建造者添加不同的组件模版，最后通过指挥者去调用抽象建造者 
-来返回具体的email对象</p>
-<p>代码如下
-==================product======================</p>
-<div class="highlight"><pre><span></span><span class="nt">public</span> <span class="nt">interface</span> <span class="nt">Module</span> <span class="p">{</span>
-
-<span class="err">String</span> <span class="err">showInfo(String</span> <span class="err">info)</span><span class="p">;</span>
-
-<span class="p">}</span><span class="err">`</span>
-
-<span class="nt">public</span> <span class="nt">abstract</span> <span class="nt">class</span> <span class="nt">CommonModule</span> <span class="nt">implements</span> <span class="nt">Module</span> <span class="p">{</span>
-
-<span class="err">protected</span> <span class="err">String</span> <span class="err">moduleName</span><span class="p">;</span>
-
-<span class="err">protected</span> <span class="err">String</span> <span class="err">productionTime …</span></pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/design-pattern/builder.html" rel="bookmark" title="Permalink to 设计模式之builder模式">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/chuang-jian-xing.html">创建型</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -385,13 +388,13 @@
 	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
 	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
-	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
-	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
-	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
+	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
 </ul>
 
 

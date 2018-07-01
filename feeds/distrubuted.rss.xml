@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>南乡清水 - distrubuted</title><link>/</link><description></description><lastBuildDate>Wed, 20 Jun 2018 22:28:00 +0800</lastBuildDate><item><title>分布式全局序列ID方案之Flicker优化方案</title><link>/distrubuted/id-flicker.html</link><description>&lt;h1&gt;1 Flicker的解决方案&lt;/h1&gt;
+<rss version="2.0"><channel><title>南乡清水 - distrubuted</title><link>/</link><description></description><lastBuildDate>Sun, 24 Jun 2018 15:28:00 +0800</lastBuildDate><item><title>分布式全局序列ID方案之Redis优化方案</title><link>/distrubuted/id-redis.html</link><description>&lt;h1&gt;1 Redis的Flicker方案&lt;/h1&gt;
+&lt;p&gt;利用redis的lua脚本功能，在每个节点上通过lua脚本生成唯一ID，生成的ID为64位，具体如下：&lt;/p&gt;
+&lt;p&gt;使用41 bit来存放时间，精确到毫秒，可以使用到2039年
+使用12 bit来存放逻辑分片ID，最大分片ID是4095
+使用10 bit来存放自增长ID，则每个节点，每毫秒最多可生成1024个ID
+比如GTM时间 2018年6月24日11点23分 ，它的距1970年的毫秒数是 1529810591000，假定分片ID是60，自增长序列是20，则生成的ID是：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;6416490681073670164 = 1529810591000 &amp;lt;&amp;lt; 22 | 60 &amp;lt;&amp;lt; 10 | 20
+redis提供了TIME命令，取得redis服务器的秒值和微秒值
+毫秒值获取命令：EVAL &amp;quot;local current = redis.call(&amp;#39;TIME&amp;#39;) ;return a[1]*1000 + a[2]/1000&amp;quot; 0
+生成最终ID : current &amp;lt;&amp;lt; (12 …&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Sun, 24 Jun 2018 15:28:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-06-24:/distrubuted/id-redis.html</guid><category>分布式ID方案</category></item><item><title>分布式全局序列ID方案之Flicker优化方案</title><link>/distrubuted/id-flicker.html</link><description>&lt;h1&gt;1 Flicker的解决方案&lt;/h1&gt;
 &lt;p&gt;MySQL中id自增的特性，可以借此来生成全局的序列号，Flicker在解决全局ID生成方案里就采用了MySQL自增长ID的机制（auto_increment + replace into + MyISAM）。一个生成64位ID方案具体就是这样的： 
 先创建单独的数据库，然后创建一个表：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;CREATE TABLE borrow_order (

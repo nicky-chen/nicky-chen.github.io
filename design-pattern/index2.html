@@ -64,6 +64,96 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/design-pattern/decorator.html" rel="bookmark" title="Permalink to 实际项目运用之Decorator模式（装饰器模式）">实际项目运用之Decorator模式（装饰器模式）</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-03-28T11:22:00+08:00"> 周三 28 三月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h2>1 概述</h2>
+<p>在项目中，经常因一些新增需求，导致同一业务的变更，如果所在类继承关系如下：Parent、Child、Grandparent，那么要在Child类上增强些功能怎么办？给Child类增加方法？那会对Grandparent产生什么影响？该如何去处理？看完本文，你会找到你的答案。</p>
+<p>JavaIO中，像下面的嵌套语句很常见，为什么要怎样定义呢？理解装饰模式后，你会找到答案。</p>
+<div class="highlight"><pre><span></span>FilterInputStream filterInputStreasm = new BufferedInputStream(new FileInputStream(new File(&quot;/user/a&quot;)));
+</pre></div>
+
+
+<h3>1.1案例</h3>
+<p>例如下面一个功能需求，4s店的汽车销售向客户推销自家品牌的产品，我们用代码实现，关系如下：</p>
+<p><img alt="类图" src="https://upload-images.jianshu.io/upload_images/10175660-789e0242028d08b0.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>具体代码：
+汽车销售类</p>
+<div class="highlight"><pre><span></span>public abstract class CarSale {
+
+    /**
+     * 推销车的详情
+     */
+    public abstract void displayCarInfo();
+
+    /**
+     * 客户签订购买合同
+     */
+    public abstract …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/design-pattern/decorator.html" rel="bookmark" title="Permalink to 实际项目运用之Decorator模式（装饰器模式）">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/jie-gou-xing.html">结构型</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/design-pattern/builder.html" rel="bookmark" title="Permalink to 设计模式之builder模式">设计模式之builder模式</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2017-12-19T22:15:00+08:00"> 周二 19 十二月 2017 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>建造者模式也叫生成器模式，和抽象工厂模式相似，也是一种构建复杂对象的模式。</p>
+<p><strong>建造者模式中的角色分类</strong>： 
+ 抽象建造者Builder：接口类型，用于规范各个产品的组成部分； 
+ 具体建造者ConcreteBuilder：实现Builder中的所有方法，返回一个产品实例； 
+ 指导者Director：指挥建造者制造相应的产品 
+ 产品Product：用户最终看到的复杂对象。</p>
+<p>假设我们有一个向客户发送新年祝福邮件的需求，而邮件内容可以是纯文档的，也可以是有动画的，也可以是有音频的，可以动态的添加个组件</p>
+<p>uml下图所示： 
+<img alt="建造者模式" src="http://upload-images.jianshu.io/upload_images/10175660-73b74bcbd9ee9ba9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>如上图所示，邮箱有多个组件，包含收件人，发送人，内容，音乐等 
+通过具体的建造者添加不同的组件模版，最后通过指挥者去调用抽象建造者 
+来返回具体的email对象</p>
+<p>代码如下
+==================product======================</p>
+<div class="highlight"><pre><span></span><span class="nt">public</span> <span class="nt">interface</span> <span class="nt">Module</span> <span class="p">{</span>
+
+<span class="err">String</span> <span class="err">showInfo(String</span> <span class="err">info)</span><span class="p">;</span>
+
+<span class="p">}</span><span class="err">`</span>
+
+<span class="nt">public</span> <span class="nt">abstract</span> <span class="nt">class</span> <span class="nt">CommonModule</span> <span class="nt">implements</span> <span class="nt">Module</span> <span class="p">{</span>
+
+<span class="err">protected</span> <span class="err">String</span> <span class="err">moduleName</span><span class="p">;</span>
+
+<span class="err">protected</span> <span class="err">String</span> <span class="err">productionTime …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/design-pattern/builder.html" rel="bookmark" title="Permalink to 设计模式之builder模式">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/chuang-jian-xing.html">创建型</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/design-pattern/builder-factory.html" rel="bookmark" title="Permalink to 设计模式之factory模式">设计模式之factory模式</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2017-12-07T22:30:00+08:00"> 周四 07 十二月 2017 </abbr>
@@ -201,13 +291,13 @@
 	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
 	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
-	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
-	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
-	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
+	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
 </ul>
 
 
