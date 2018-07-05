@@ -2,10 +2,9 @@
 <html lang="zh">
 <head>
 
-        <title>南乡清水</title>
+        <title>南乡清水 - Articles by nicky_chin</title>
         <meta charset="utf-8" />
         <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
-        <link href="/feeds/distrubuted.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
 
 
         <!-- Mobile viewport optimized: j.mp/bplateviewport -->
@@ -55,7 +54,7 @@
             </div>
 
 <section id="content">
-<h2>Articles in the distrubuted category</h2>
+<h2>Articles by nicky_chin</h2>
 
 
    <div class="row">
@@ -64,31 +63,48 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/distrubuted/interface-idempotency.html" rel="bookmark" title="Permalink to 接口设计的幂等性考虑">接口设计的幂等性考虑</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="/concurrent/recursive-Lock.html" rel="bookmark" title="Permalink to 可重入锁">可重入锁</a></h2> </header>
                                 <footer class="post-info">
-                                    <abbr class="published" title="2018-03-26T18:49:00+08:00"> 周一 26 三月 2018 </abbr>
+                                    <abbr class="published" title="2017-11-03T21:22:00+08:00"> 周五 03 十一月 2017 </abbr>
                                     <address class="vcard author">By 
                                     <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
                                     </address>
                                 </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h2>分布式系统接口幂等性</h2>
-<h3>1.幂等性定义</h3>
-<h4>1.1 数学定义</h4>
-<blockquote>
-<p>在数学里，幂等有两种主要的定义：- 在某二元运算下，幂等元素是指被自己重复运算(或对于函数是为复合)的结果等于它自己的元素。例如，乘法下唯一两个幂等实数为0和1。即 s *s = s- 某一元运算为幂等的时，其作用在任一元素两次后会和其作用一次的结果相同。例如，高斯符号便是幂等的，即f(f(x)) = f(x)。</p>
-</blockquote>
-<h4>1.2 HTTP规范的定义</h4>
-<p>在HTTP/1.1规范中幂等性的定义是：</p>
-<blockquote>
-<p>A request method is considered "idempotent" if the intended effect on the server of multiple identical requests …</p></blockquote> </div><!-- /.entry-content -->
+                                <div class="entry-content"> <p>可重入锁，也叫做递归锁，指的是同一线程 外层函数获得锁之后 ，内层递归函数仍然有获取该锁的代码，但不受影响。比如ReentrantLock 和synchronized 都是 可重入锁</p>
+<p>直接放代码 </p>
+<div class="highlight"><pre><span></span>public class SubService {
 
-                                <div class="medium primary btn"><a href="/distrubuted/interface-idempotency.html" rel="bookmark" title="Permalink to 接口设计的幂等性考虑">Read more <i class="icon-arrow-right"></i></a></div>
+ReentrantLock lock = new ReentrantLock();
+
+public void subService1() {
+
+    lock.lock();
+
+    System.out.println(&quot;thread = &quot; + Thread.currentThread().getId() + &quot; --subService1&quot;);
+
+    subService2();
+
+    lock.unlock();
+
+}
+
+public synchronized void subService2() {
+
+    System.out.println(&quot;thread = &quot; + Thread.currentThread().getId() + &quot; --subService2&quot;);
+
+}
+
+}
+
+public class Service extends …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/concurrent/recursive-Lock.html" rel="bookmark" title="Permalink to 可重入锁">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/li-lun.html">理论</a>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
                                 </div>
 
 
@@ -147,7 +163,7 @@
              design-pattern
          </a>
      </li>
-     <li class="active" >
+     <li >
          <a href="/distrubuted/index.html">
              distrubuted
          </a>
@@ -225,8 +241,8 @@
 </div> </div><!-- /.row -->
 
 <p class="paginator">
-            <a href="/distrubuted/index.html"><i class="icon-arrow-left"></i></a>
-    Page 2 / 2
+            <a href="/author/nicky_chin7.html"><i class="icon-arrow-left"></i></a>
+    Page 8 / 8
 </p>
 </section><!-- /#content -->
 

@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>南乡清水</title><link>/</link><description></description><lastBuildDate>Fri, 29 Jun 2018 22:18:00 +0800</lastBuildDate><item><title>实际项目运用之Responsibility-Chain模式（责任链模式）</title><link>/design-pattern/responsibility-chain.html</link><description>&lt;h1&gt;1 模式概要&lt;/h1&gt;
+<rss version="2.0"><channel><title>南乡清水</title><link>/</link><description></description><lastBuildDate>Thu, 05 Jul 2018 19:22:00 +0800</lastBuildDate><item><title>框架基础之SPI机制</title><link>/java-base/spi-introduction.html</link><description>&lt;h1&gt;1 定义&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;SPI&lt;/strong&gt; 的全名为 &lt;em&gt;Service Provider Interface&lt;/em&gt; ，用于接口寻找服务实现类&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;实现方式&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;标准制定者制定接口
+不同厂商编写针对于该接口的实现类，并在jar的“classpath:META-INF/services/全接口名称”文件中指定相应的实现类全类名
+开发者直接引入相应的jar，就可以实现为接口自动寻找实现类的功能&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1&gt;2 案例实现&lt;/h1&gt;
+&lt;p&gt;比如我们经常看到的缓存类Cache,现在有非常多的缓存框架都会去实现这个接口&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;标准接口&lt;/em&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;interface&lt;/span&gt; &lt;span class="nc"&gt;Cache&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+    &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="nf"&gt;getName&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+
+    &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt; &lt;span class="nf"&gt;get&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Object&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Class&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;type&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+
+    &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;put&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Object&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Object&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+
+    &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;evict&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Object&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+
+    &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;clear&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;em&gt;厂商的具体接口实现 …&lt;/em&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Thu, 05 Jul 2018 19:22:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-07-05:/java-base/spi-introduction.html</guid><category>框架基础</category></item><item><title>实际项目运用之Responsibility-Chain模式（责任链模式）</title><link>/design-pattern/responsibility-chain.html</link><description>&lt;h1&gt;1 模式概要&lt;/h1&gt;
 &lt;h3&gt;1.1 简介&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;责任链模式为请求创建一个接收者对象链，每个接收者都包含对另一个接收者的引用，如果一个对象不能处理该请求，那么它会把请求传给下一个接收者，依此类推&lt;/li&gt;
@@ -28,7 +55,7 @@
 &lt;p&gt;比如:&lt;strong&gt;在application的底层创建对象,并将对象bind到特定的context中,对象的创建过程或者"查找"方式只有此底层模块支持,外部程序不可见.对于对象的使用者(调用者)只能通过JNDI的方式获取对象,对象使用者无法直接创建对象等&lt;/strong&gt;&lt;/p&gt;
 &lt;h1&gt;2 JNDI架构&lt;/h1&gt;
 &lt;p&gt;&lt;img alt="架构" src="https://upload-images.jianshu.io/upload_images/10175660-e3cc6625588ad25d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"&gt;&lt;/p&gt;
-&lt;p&gt;关于JNDI要注意的重要一点是，它提供了应用编程接口(application programming interface，API)和服务提供者接口(service provider interface，SPI)。这一点的真正含义是，要让应用与命名服务或目录服务交互，必须有这个服务的JNDI服务提供者，这正是JNDI SPI发挥作用的地方。服务提供者基本上是一组类，这些类为各种具体的命名和目录服务实现了JNDI接口 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Mon, 25 Jun 2018 20:01:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-06-25:/java-base/jndi-introdution.html</guid><category>基础</category></item><item><title>分布式全局序列ID方案之Redis优化方案</title><link>/distrubuted/id-redis.html</link><description>&lt;h1&gt;1 Redis的Flicker方案&lt;/h1&gt;
+&lt;p&gt;关于JNDI要注意的重要一点是，它提供了应用编程接口(application programming interface，API)和服务提供者接口(service provider interface，SPI)。这一点的真正含义是，要让应用与命名服务或目录服务交互，必须有这个服务的JNDI服务提供者，这正是JNDI SPI发挥作用的地方。服务提供者基本上是一组类，这些类为各种具体的命名和目录服务实现了JNDI接口 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Mon, 25 Jun 2018 20:01:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-06-25:/java-base/jndi-introdution.html</guid><category>框架基础</category></item><item><title>分布式全局序列ID方案之Redis优化方案</title><link>/distrubuted/id-redis.html</link><description>&lt;h1&gt;1 Redis的Flicker方案&lt;/h1&gt;
 &lt;p&gt;利用redis的lua脚本功能，在每个节点上通过lua脚本生成唯一ID，生成的ID为64位，具体如下：&lt;/p&gt;
 &lt;p&gt;使用41 bit来存放时间，精确到毫秒，可以使用到2039年
 使用12 bit来存放逻辑分片ID，最大分片ID是4095

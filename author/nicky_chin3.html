@@ -63,6 +63,54 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/externalizable-interface.html" rel="bookmark" title="Permalink to 自定义序列化之Externalizable接口">自定义序列化之Externalizable接口</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-23T22:36:00+08:00"> 周三 23 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p><strong>Externalizable简介</strong>
+Externalizable是一种优先级要高于 Serializable 的序列化机制接口，
+这个接口提供了writeExternal()和readExternal()方法用于指定序列化哪些属性。</p>
+<p><strong>Externalizable接口与Serializable接口区别</strong>
+<em> 1 Serializable序列化时不会调用默认的构造器，而Externalizable序列化时会调用默认构造器
+</em> 2 transient关键字对Externalizable无效</p>
+<p><strong>代码事例</strong></p>
+<p>公共抽象实体类AbstractDO</p>
+<div class="highlight"><pre><span></span>public abstract class AbstractDO implements Externalizable {
+
+    private static final long serialVersionUID = -1679770357930200297L;
+
+    private Long id;
+
+    private Date createTime;
+
+    private Date updateTime;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/externalizable-interface.html" rel="bookmark" title="Permalink to 自定义序列化之Externalizable接口">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/design-pattern/template.html" rel="bookmark" title="Permalink to 设计模式之Template模式（模版模式）">设计模式之Template模式（模版模式）</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-05-18T21:46:00+08:00"> 周五 18 五月 2018 </abbr>
@@ -210,59 +258,6 @@ java代码如下：</p>
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/mysql/SHOW-GLOBAL-STATUS.html" rel="bookmark" title="Permalink to 库级优化之SHOW GLOBAL STATUS">库级优化之SHOW GLOBAL STATUS</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-05-10T18:11:00+08:00"> 周四 10 五月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p><strong>慢查询</strong></p>
-<div class="highlight"><pre><span></span>//查询慢线程情况
-show global status like &#39;%slow%&#39;
-
-+---------------------+-------+     
-| Variable_name       | Value |     
-+---------------------+-------+     
-| Slow_launch_threads | 1     |     
-| Slow_queries        | 100   |     
-+---------------------+-------+   
-
-如果Slow_launch_threads值较大，说明有些东西正在延迟连接的新线程
-
-//查询慢查询日志是否开启
-show variables like &#39;%slow%&#39;
-
-+---------------------+--------------------------------------+
-| Variable_name       | Value                                |
-+---------------------+--------------------------------------+
-|log_slow_admin_statements|    ON                            |
-|log_slow_slave_statements|     OFF                          |
-| slow_launch_time    | 2                                    |
-| slow_query_log      | ON                                   |
-| slow_query_log_file |     /home/mysql/mysql/slow_query.log |
-+---------------------+--------------------------------------+
-
-log_slow_admin_statements表示是否将慢管理语句例如ANALYZE TABLE和ALTER TABLE等记入慢查询日志
- log_slow_slave_statements 表示是否管理分区慢查询记录，一般不会去选择分区，所以不考虑
-</pre></div>
-
-
-<p>配置中一定要开启慢查询，这对服务器性能损耗并不大，如上面的打印结果得知：超过2秒即为慢查询，一共有100条慢查询 。当然我们在后台也可以做sql拦截记录，定制化慢查询语句 …</p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/mysql/SHOW-GLOBAL-STATUS.html" rel="bookmark" title="Permalink to 库级优化之SHOW GLOBAL STATUS">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ku-ji-you-hua.html">库级优化</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -360,11 +355,12 @@ log_slow_admin_statements表示是否将慢管理语句例如ANALYZE TABLE和ALT
 	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
 	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
-	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
+	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
 	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
 	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
 	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
@@ -394,7 +390,7 @@ log_slow_admin_statements表示是否将慢管理语句例如ANALYZE TABLE和ALT
 
 <p class="paginator">
             <a href="/author/nicky_chin2.html"><i class="icon-arrow-left"></i></a>
-    Page 3 / 7
+    Page 3 / 8
         <a href="/author/nicky_chin4.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->

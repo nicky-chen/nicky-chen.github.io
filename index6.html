@@ -63,6 +63,44 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/concurrent/thread-jmm-happens-before.html" rel="bookmark" title="Permalink to java内存模型之[JMM][重排序][happens-before]">java内存模型之[JMM][重排序][happens-before]</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-04-03T22:11:00+08:00"> 周二 03 四月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1.并发编程模型的分类</h1>
+<p>在并发编程中，我们需要处理两个关键问题：线程之间如何通信及线程之间如何同
+步（这里的线程是指并发执行的活动实体）。通信是指线程之间以何种机制来交换
+信息。在命令式编程中，线程之间的通信机制有两种：<em>共享内存和消息传递</em>。
+在共享内存的并发模型里，线程之间共享程序的公共状态，线程之间通过写-读内
+存中的公共状态来隐式进行通信。在消息传递的并发模型里，线程之间没有公共状
+态，线程之间必须通过明确的发送消息来显式进行通信。
+同步是指程序用于控制不同线程之间操作发生相对顺序的机制。在共享内存并发模
+型里，同步是显式进行的。程序员必须显式指定某个方法或某段代码需要在线程之
+间互斥执行。在消息传递的并发模型里，由于消息的发送必须在消息的接收之前，
+因此同步是隐式进行的。
+Java 的并发采用的是共享内存模型，Java 线程之间的通信总是隐式进行，整个通
+信过程对程序员完全透明。如果编写多线程程序的 Java 程序员不理解隐式进行的
+线程之间通信的工作机制，很可能会遇到各种奇怪的内存可见性问题。</p>
+<h1>2.Java 内存模型的抽象</h1>
+<p>在java中，所有实例域、静态域和数组元素存储在堆内存中，堆内存在线程之间共
+享（本文使用“共享变量 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/concurrent/thread-jmm-happens-before.html" rel="bookmark" title="Permalink to java内存模型之[JMM][重排序][happens-before]">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/design-pattern/decorator.html" rel="bookmark" title="Permalink to 实际项目运用之Decorator模式（装饰器模式）">实际项目运用之Decorator模式（装饰器模式）</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-03-28T11:22:00+08:00"> 周三 28 三月 2018 </abbr>
@@ -196,45 +234,6 @@
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/java-base/introspector.html" rel="bookmark" title="Permalink to Java 内省(Introspector)">Java 内省(Introspector)</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-03-13T15:15:00+08:00"> 周二 13 三月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p><strong>内省(Introspector) 是Java 语言对 JavaBean 类属性、事件的一种缺省处理方法。</strong></p>
-<p>JavaBean是一种特殊的类，主要用于传递数据信息，这种类中的方法主要用于访问私有的字段，且方法名符合某种命名规则。如果在两个模块之间传递信息，可以将信息封装进JavaBean中，这种对象称为“值对象”(Value Object)，或“VO”。方法比较少。这些信息储存在类的私有变量中，通过set()、get()获得。</p>
-<p>例如类Use :</p>
-<div class="highlight"><pre><span></span>public class User {
-
-    private String name;
-
-    private String address;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/java-base/introspector.html" rel="bookmark" title="Permalink to Java 内省(Introspector)">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -332,11 +331,12 @@
 	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
 	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
-	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
+	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
 	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
 	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
 	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
@@ -366,7 +366,7 @@
 
 <p class="paginator">
             <a href="/index5.html"><i class="icon-arrow-left"></i></a>
-    Page 6 / 7
+    Page 6 / 8
         <a href="/index7.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->

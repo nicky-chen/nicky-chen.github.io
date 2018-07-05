@@ -63,6 +63,45 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/introspector.html" rel="bookmark" title="Permalink to Java 内省(Introspector)">Java 内省(Introspector)</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-03-13T15:15:00+08:00"> 周二 13 三月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p><strong>内省(Introspector) 是Java 语言对 JavaBean 类属性、事件的一种缺省处理方法。</strong></p>
+<p>JavaBean是一种特殊的类，主要用于传递数据信息，这种类中的方法主要用于访问私有的字段，且方法名符合某种命名规则。如果在两个模块之间传递信息，可以将信息封装进JavaBean中，这种对象称为“值对象”(Value Object)，或“VO”。方法比较少。这些信息储存在类的私有变量中，通过set()、get()获得。</p>
+<p>例如类Use :</p>
+<div class="highlight"><pre><span></span>public class User {
+
+    private String name;
+
+    private String address;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/introspector.html" rel="bookmark" title="Permalink to Java 内省(Introspector)">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/classloader/classloader-chapter01.html" rel="bookmark" title="Permalink to ClassLoader类加载分析（一）">ClassLoader类加载分析（一）</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-03-08T21:15:00+08:00"> 周四 08 三月 2018 </abbr>
@@ -216,54 +255,6 @@
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/concurrent/recursive-Lock.html" rel="bookmark" title="Permalink to 可重入锁">可重入锁</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2017-11-03T21:22:00+08:00"> 周五 03 十一月 2017 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>可重入锁，也叫做递归锁，指的是同一线程 外层函数获得锁之后 ，内层递归函数仍然有获取该锁的代码，但不受影响。比如ReentrantLock 和synchronized 都是 可重入锁</p>
-<p>直接放代码 </p>
-<div class="highlight"><pre><span></span>public class SubService {
-
-ReentrantLock lock = new ReentrantLock();
-
-public void subService1() {
-
-    lock.lock();
-
-    System.out.println(&quot;thread = &quot; + Thread.currentThread().getId() + &quot; --subService1&quot;);
-
-    subService2();
-
-    lock.unlock();
-
-}
-
-public synchronized void subService2() {
-
-    System.out.println(&quot;thread = &quot; + Thread.currentThread().getId() + &quot; --subService2&quot;);
-
-}
-
-}
-
-public class Service extends …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/concurrent/recursive-Lock.html" rel="bookmark" title="Permalink to 可重入锁">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -361,11 +352,12 @@ public class Service extends …</pre></div> </div><!-- /.entry-content -->
 	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
 	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
-	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
+	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
 	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
 	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
 	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
@@ -395,7 +387,8 @@ public class Service extends …</pre></div> </div><!-- /.entry-content -->
 
 <p class="paginator">
             <a href="/index6.html"><i class="icon-arrow-left"></i></a>
-    Page 7 / 7
+    Page 7 / 8
+        <a href="/index8.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->
 

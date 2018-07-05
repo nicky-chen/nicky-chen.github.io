@@ -63,6 +63,55 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/spi-introduction.html" rel="bookmark" title="Permalink to 框架基础之SPI机制">框架基础之SPI机制</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-07-05T19:22:00+08:00"> 周四 05 七月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 定义</h1>
+<p><strong>SPI</strong> 的全名为 <em>Service Provider Interface</em> ，用于接口寻找服务实现类</p>
+<p><strong>实现方式</strong></p>
+<blockquote>
+<p>标准制定者制定接口
+不同厂商编写针对于该接口的实现类，并在jar的“classpath:META-INF/services/全接口名称”文件中指定相应的实现类全类名
+开发者直接引入相应的jar，就可以实现为接口自动寻找实现类的功能</p>
+</blockquote>
+<h1>2 案例实现</h1>
+<p>比如我们经常看到的缓存类Cache,现在有非常多的缓存框架都会去实现这个接口</p>
+<p><em>标准接口</em></p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Cache</span> <span class="o">{</span>
+
+    <span class="n">String</span> <span class="nf">getName</span><span class="o">();</span>
+
+    <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="nf">get</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">type</span><span class="o">);</span>
+
+    <span class="kt">void</span> <span class="nf">put</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">);</span>
+
+    <span class="kt">void</span> <span class="nf">evict</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">);</span>
+
+    <span class="kt">void</span> <span class="nf">clear</span><span class="o">();</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<p><em>厂商的具体接口实现 …</em></p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/spi-introduction.html" rel="bookmark" title="Permalink to 框架基础之SPI机制">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/kuang-jia-ji-chu.html">框架基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/design-pattern/responsibility-chain.html" rel="bookmark" title="Permalink to 实际项目运用之Responsibility-Chain模式（责任链模式）">实际项目运用之Responsibility-Chain模式（责任链模式）</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-06-29T22:18:00+08:00"> 周五 29 六月 2018 </abbr>
@@ -129,7 +178,7 @@
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                            <a class="danger label" href="/tag/kuang-jia-ji-chu.html">框架基础</a>
                                 </div>
 
 
@@ -198,51 +247,6 @@ UNIQUE KEY stub (stub)
 <p>在我们的应用端需要做下面这两个操作 …</p> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/distrubuted/id-flicker.html" rel="bookmark" title="Permalink to 分布式全局序列ID方案之Flicker优化方案">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/distrubuted/id-snowflake.html" rel="bookmark" title="Permalink to 分布式全局序列ID方案之Snowflake算法">分布式全局序列ID方案之Snowflake算法</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-06-17T22:53:00+08:00"> 周日 17 六月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1 背景</h1>
-<p>在分布式项目中，在业务数据中需要生成一个全局唯一的序列号，比如：消息标识，订单标识，用户标识等等。同时对于id生成的要求如下：
-<em> 全局唯一
-</em> 趋势有序
-<em> 主键索引 方便排序
-</em> 高可用
-* 高并发</p>
-<h1>2 基础方案</h1>
-<h3>2.1 数据库主键自增</h3>
-<p>利用mysql的auto_increment特性</p>
-<blockquote>
-<p>优点：
-（1）能够保证唯一性 
-（2）能够保证递增性
-（3）步长固定</p>
-<p>缺点：
-（1）无法高可用：普通的一主多从+读写分离架构，自增ID写入请求，主库挂了就GG
-（2）无法高并发：写入是单点，数据库主库的写性能决定ID的生成性能上限，并且难以扩展</p>
-</blockquote>
-<h3>2.2 UUID</h3>
-<p>uuid算法是比较常用的算法，根据UUID的特性，可以产生一个唯一的字符串</p>
-<blockquote>
-<p>优点：
-（1）本地生成ID，无需远程服务调用 …</p></blockquote> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/distrubuted/id-snowflake.html" rel="bookmark" title="Permalink to 分布式全局序列ID方案之Snowflake算法">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
@@ -351,11 +355,12 @@ UNIQUE KEY stub (stub)
 	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
 	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
-	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
+	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
 	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
 	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
 	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
@@ -384,7 +389,7 @@ UNIQUE KEY stub (stub)
 </div> </div><!-- /.row -->
 
 <p class="paginator">
-    Page 1 / 7
+    Page 1 / 8
         <a href="/author/nicky_chin2.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->

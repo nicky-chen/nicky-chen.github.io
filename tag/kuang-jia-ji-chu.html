@@ -2,10 +2,9 @@
 <html lang="zh">
 <head>
 
-        <title>南乡清水</title>
+        <title>南乡清水 - 框架基础</title>
         <meta charset="utf-8" />
         <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
-        <link href="/feeds/java-base.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
 
 
         <!-- Mobile viewport optimized: j.mp/bplateviewport -->
@@ -55,7 +54,7 @@
             </div>
 
 <section id="content">
-<h2>Articles in the java-base category</h2>
+
 
 
    <div class="row">
@@ -140,129 +139,6 @@
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/java-base/fail-fast-safe.html" rel="bookmark" title="Permalink to Fail-Fast和Fail-Safe机制">Fail-Fast和Fail-Safe机制</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-06-02T19:01:00+08:00"> 周六 02 六月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1 Fail-Fast</h1>
-<h3>1.1 fail-fast定义</h3>
-<p>fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件
-例如：当某一个线程A通过iterator去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出ConcurrentModificationException异常，产生fail-fast事件</p>
-<h3>1.2 Iterator与fast-fail机制</h3>
-<p><strong>1.2.1 Iterator的好处</strong>
-java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。
-比如下面的 <em>ArrayList</em> 和  <em>ImmutableList</em> 遍历的例子：</p>
-<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IteratorTest</span> <span class="o">{</span>
-
-    <span class="kd">public</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="n">Lists</span><span class="o">.</span><span class="na">newArrayList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">11</span><span class="o">,</span> <span class="mi">18</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="mi">20</span><span class="o">,</span> <span class="mi">99</span><span class="o">);</span>
-
-    <span class="kd">public …</span></pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/java-base/fail-fast-safe.html" rel="bookmark" title="Permalink to Fail-Fast和Fail-Safe机制">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/java-base/externalizable-interface.html" rel="bookmark" title="Permalink to 自定义序列化之Externalizable接口">自定义序列化之Externalizable接口</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-05-23T22:36:00+08:00"> 周三 23 五月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p><strong>Externalizable简介</strong>
-Externalizable是一种优先级要高于 Serializable 的序列化机制接口，
-这个接口提供了writeExternal()和readExternal()方法用于指定序列化哪些属性。</p>
-<p><strong>Externalizable接口与Serializable接口区别</strong>
-<em> 1 Serializable序列化时不会调用默认的构造器，而Externalizable序列化时会调用默认构造器
-</em> 2 transient关键字对Externalizable无效</p>
-<p><strong>代码事例</strong></p>
-<p>公共抽象实体类AbstractDO</p>
-<div class="highlight"><pre><span></span>public abstract class AbstractDO implements Externalizable {
-
-    private static final long serialVersionUID = -1679770357930200297L;
-
-    private Long id;
-
-    private Date createTime;
-
-    private Date updateTime;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/java-base/externalizable-interface.html" rel="bookmark" title="Permalink to 自定义序列化之Externalizable接口">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/java-base/string-builder-question.html" rel="bookmark" title="Permalink to 字符串拼接的疑惑">字符串拼接的疑惑</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-04-21T15:34:00+08:00"> 周六 21 四月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>最近没事在玩ASM框架，于是乎想将业务代码中的PO对象中的toString方法 在编译期间，自动转换了基于StringBuilder 拼接的代码。发现了一个奇怪的问题：
-实体类如下</p>
-<div class="highlight"><pre><span></span>@Getter
-@Setter
-@EqualsAndHashCode(of = &quot;id&quot;)
-@ApiModel(&quot;活动&quot;)
-public class Banner implements Serializable{
-
-    private static final long serialVersionUID = 191609922585601269L;
-
-    @ApiModelProperty(value = &quot;ID&quot;, position = 1)
-    private Integer id;
-
-    @ApiModelProperty(value = &quot;显示次序&quot;, position = 2)
-    private Integer orderNo;
-
-    @ApiModelProperty(value = &quot;关联文件&quot;, position = 3)
-    private Integer fileId;
-
-    @ApiModelProperty …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/java-base/string-builder-question.html" rel="bookmark" title="Permalink to 字符串拼接的疑惑">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -321,7 +197,7 @@ public class Banner implements Serializable{
              distrubuted
          </a>
      </li>
-     <li class="active" >
+     <li >
          <a href="/java-base/index.html">
              java-base
          </a>
@@ -394,8 +270,7 @@ public class Banner implements Serializable{
 </div> </div><!-- /.row -->
 
 <p class="paginator">
-    Page 1 / 2
-        <a href="/java-base/index2.html"><i class="icon-arrow-right"></i></a>
+    Page 1 / 1
 </p>
 </section><!-- /#content -->
 
