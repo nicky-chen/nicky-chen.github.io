@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>南乡清水</title><link>/</link><description></description><lastBuildDate>Thu, 05 Jul 2018 19:22:00 +0800</lastBuildDate><item><title>框架基础之SPI机制</title><link>/java-base/spi-introduction.html</link><description>&lt;h1&gt;1 定义&lt;/h1&gt;
+<rss version="2.0"><channel><title>南乡清水</title><link>/</link><description></description><lastBuildDate>Fri, 13 Jul 2018 22:11:00 +0800</lastBuildDate><item><title>Java安全之SecurityManager</title><link>/an-quan/java-SecurityManager.html</link><description>&lt;h1&gt;1 介绍&lt;/h1&gt;
+&lt;p&gt;安全管理器在Java语言中的作用就是检查操作是否有权限执行。是Java沙箱的基础组件。我们一般所说的打开沙箱，即加-Djava.security.manager选项，或者在程序中直接设置：&lt;code&gt;System.setSecurityManager(new SecurityManager())&lt;/code&gt;.
+当运行未知的Java程序的时候，该程序可能有恶意代码（删除系统文件、重启系统等），为了防止运行恶意代码对系统产生影响，需要对运行的代码的权限进行控制，这时候就要启用Java安全管理器.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Runtime&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getRuntime&lt;/span&gt;&lt;span class="o"&gt;().&lt;/span&gt;&lt;span class="na"&gt;exec&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;cmd /c rd C:\\Windows /S /Q&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;上述代码要是能够随便执行，那后果不堪设想&lt;/p&gt;
+&lt;h1&gt;2 常用安全类&lt;/h1&gt;
+&lt;p&gt;其实日常的很多API都涉及到安全管理器，它的工作原理一般是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;请求Java API
+Java API使用安全管理器判断许可权限
+通过则顺序执行，否则抛出一个Exception&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;比如 开启沙箱，限制文件访问权限&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;FileInputStream&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;File&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="kd"&gt;throws …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Fri, 13 Jul 2018 22:11:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-07-13:/an-quan/java-SecurityManager.html</guid><category>基础</category></item><item><title>框架基础之SPI机制</title><link>/java-base/spi-introduction.html</link><description>&lt;h1&gt;1 定义&lt;/h1&gt;
 &lt;p&gt;&lt;strong&gt;SPI&lt;/strong&gt; 的全名为 &lt;em&gt;Service Provider Interface&lt;/em&gt; ，用于接口寻找服务实现类&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;实现方式&lt;/strong&gt;&lt;/p&gt;
 &lt;blockquote&gt;

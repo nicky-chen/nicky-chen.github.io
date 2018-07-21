@@ -45,6 +45,8 @@
                     <li
 ><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
                     <li
+><a href="/ji-zhu-tu-pu.html">技术图谱</a></li>
+                    <li
 ><a href="/guan-yu-wo.html">关于我</a></li>
                      <li><a href="/archives.html"><i class="active"></i>归档日志</a></li>
                     <form class="navbar-search pull-right" action="/search.html">
@@ -62,6 +64,34 @@
 
         <div class="eleven columns">
                  <ol id="post-list">
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/classloader/classloader-chapter02.html" rel="bookmark" title="Permalink to ClassLoader类加载分析（二）">ClassLoader类加载分析（二）</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-03-20T22:48:00+08:00"> 周二 20 三月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>一、JVM 提供的 Classloader</h1>
+<h2>1.1 BootstrapClassloader</h2>
+<p>引导类加载器，又称启动类加载器，是最顶层的类加载器，主要用来加载Java核心类，如rt.jar、resources.jar、charsets.jar等，Sun的JVM中，执行java的命令中使用<strong>-Xbootclasspath选项或使用- D选项</strong>指定sun.boot.class.path系统属性值可以指定附加的类，它不是 java.lang.ClassLoader的子类，而是由JVM自身实现的该类c 语言实现，Java程序访问不到该加载器。通过下面代码可以查看该加载器加载了哪些jar包</p>
+<div class="highlight"><pre><span></span><span class="nt">public</span> <span class="nt">class</span> <span class="nt">MainClass</span> <span class="p">{</span>
+
+    <span class="err">public</span> <span class="err">static</span> <span class="err">void</span> <span class="err">main(String</span><span class="cp">[]</span> <span class="err">args)</span> <span class="err">throws</span> <span class="err">ClassNotFoundException</span> <span class="err">{</span>
+        <span class="err">URL</span><span class="cp">[]</span> <span class="err">urls</span> <span class="err">=</span> <span class="err">sun.misc.Launcher.getBootstrapClassPath …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/classloader/classloader-chapter02.html" rel="bookmark" title="Permalink to ClassLoader类加载分析（二）">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/yuan-ma.html">源码</a>
+                                </div>
+
+
+
+                        </article></li>
                         <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/java-base/introspector.html" rel="bookmark" title="Permalink to Java 内省(Introspector)">Java 内省(Introspector)</a></h2> </header>
                                 <footer class="post-info">
@@ -219,42 +249,6 @@
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/concurrent/thread-communication.html" rel="bookmark" title="Permalink to 多线程之线程通信摘要">多线程之线程通信摘要</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2017-11-18T21:52:00+08:00"> 周六 18 十一月 2017 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>首先我们要知道进程之间的通讯方式有哪些？</p>
-<h1>管道( pipe )  #消息队列( message queue ) #共享内存( shared memory ) ：#套接字( socket ) 等等--</h1>
-<p>线程的通讯方式：</p>
-<p>1 wait/notify 机制</p>
-<p>wait()方法和notify()方法是Object类提供的方法，而在使用的条件就是当前线程必须有自己的监听器</p>
-<p>否则就是抛出异常，我们可以使用jvm提供的内置锁 synchronized 关键字来配合使用；注意如果有多个</p>
-<p>线程等待，当某一线程发起唤醒操作，会随机唤醒一个线程，而非所有线程，如果想唤醒所有线程，可以使用</p>
-<p>notifyAll()方法</p>
-<p>下面是 启动一个等待线程和一个通知线程的例子</p>
-<div class="highlight"><pre><span></span>public class MyThread1 extends Thread {  
-
-    private Object lock;  
-
-    public MyThread1(Object lock) {  
-        this.lock …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/concurrent/thread-communication.html" rel="bookmark" title="Permalink to 多线程之线程通信摘要">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -283,6 +277,8 @@
      <!---->
      <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
      <!---->
+     <!--<li><a href="/ji-zhu-tu-pu.html">技术图谱</a></li>-->
+     <!---->
      <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
      <!---->
      <!--<li class="divider-vertical"></li>-->
@@ -291,6 +287,11 @@
      <li >
          <a href="/algorithm/index.html">
              Algorithm
+         </a>
+     </li>
+     <li >
+         <a href="/an-quan/index.html">
+             安全
          </a>
      </li>
      <li >
@@ -330,6 +331,8 @@
 <!--<ul class="blank">-->
 	<!---->
 		<!--<li><a href="/algorithm/index.html">Algorithm</a></li>-->
+	<!---->
+		<!--<li><a href="/an-quan/index.html">安全</a></li>-->
 	<!---->
 		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
 	<!---->

@@ -45,6 +45,8 @@
                     <li
 ><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
                     <li
+><a href="/ji-zhu-tu-pu.html">技术图谱</a></li>
+                    <li
 ><a href="/guan-yu-wo.html">关于我</a></li>
                      <li><a href="/archives.html"><i class="active"></i>归档日志</a></li>
                     <form class="navbar-search pull-right" action="/search.html">
@@ -62,6 +64,44 @@
 
         <div class="eleven columns">
                  <ol id="post-list">
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/an-quan/java-SecurityManager.html" rel="bookmark" title="Permalink to Java安全之SecurityManager">Java安全之SecurityManager</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-07-13T22:11:00+08:00"> 周五 13 七月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 介绍</h1>
+<p>安全管理器在Java语言中的作用就是检查操作是否有权限执行。是Java沙箱的基础组件。我们一般所说的打开沙箱，即加-Djava.security.manager选项，或者在程序中直接设置：<code>System.setSecurityManager(new SecurityManager())</code>.
+当运行未知的Java程序的时候，该程序可能有恶意代码（删除系统文件、重启系统等），为了防止运行恶意代码对系统产生影响，需要对运行的代码的权限进行控制，这时候就要启用Java安全管理器.</p>
+<div class="highlight"><pre><span></span><span class="n">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="s">&quot;cmd /c rd C:\\Windows /S /Q&quot;</span><span class="o">)</span>
+</pre></div>
+
+
+<p>上述代码要是能够随便执行，那后果不堪设想</p>
+<h1>2 常用安全类</h1>
+<p>其实日常的很多API都涉及到安全管理器，它的工作原理一般是：</p>
+<blockquote>
+<p>请求Java API
+Java API使用安全管理器判断许可权限
+通过则顺序执行，否则抛出一个Exception</p>
+</blockquote>
+<p>比如 开启沙箱，限制文件访问权限</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="nf">FileInputStream</span><span class="o">(</span><span class="n">File</span> <span class="n">file</span><span class="o">)</span> <span class="kd">throws …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/an-quan/java-SecurityManager.html" rel="bookmark" title="Permalink to Java安全之SecurityManager">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
                         <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/java-base/fail-fast-safe.html" rel="bookmark" title="Permalink to Fail-Fast和Fail-Safe机制">Fail-Fast和Fail-Safe机制</a></h2> </header>
                                 <footer class="post-info">
@@ -221,38 +261,6 @@ Externalizable是一种优先级要高于 Serializable 的序列化机制接口�
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/mysql/high-event.html" rel="bookmark" title="Permalink to MYSQL高级特性之【Event事件】">MYSQL高级特性之【Event事件】</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-04-28T20:18:00+08:00"> 周六 28 四月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p><strong>一、基本概念</strong> mysql5.1版本开始引进event概念。event既“时间触发器”，与triggers的事件触发不同，event类似与linux crontab计划任务，用于时间触发。通过单独或调用存储过程使用，在某一特定的时间点，触发相关的SQL语句或存储过程。</p>
-<p><strong>二、适用范围</strong> 对于每隔一段时间就有固定需求的操作，如创建表，删除数据等操作，可以使用event来处理。</p>
-<p>例如：使用event在每月的1日凌晨1点自动创建下个月需要使用的三张表。</p>
-<p>每天清除数据表中的过期的记录。</p>
-<p><strong>三、使用权限</strong> 单独使用event调用SQL语句时，查看和创建需要用户具有event权限，调用该SQL语句时，需要用户具有执行该SQL的权限。Event权限的设置保存在mysql.user表和mysql.db表的Event_priv字段中。</p>
-<p>当event和procedure（存储过程）配合使用的时候，查看和创建存储过程需要用户具有create routine权限，调用存储过程执行时需要使用excute权限，存储过程调用具体的SQL语句时，需要用户具有执行该SQL的权限。
-查看EVENT命令有如下几种：</p>
-<blockquote>
-<p>（1）查询mysql.event表；
-（2）通过SHOW EVENTS命令；
-（3）通过SHOW FULL EVENTS命令 …</p></blockquote> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/mysql/high-event.html" rel="bookmark" title="Permalink to MYSQL高级特性之【Event事件】">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -281,6 +289,8 @@ Externalizable是一种优先级要高于 Serializable 的序列化机制接口�
      <!---->
      <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
      <!---->
+     <!--<li><a href="/ji-zhu-tu-pu.html">技术图谱</a></li>-->
+     <!---->
      <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
      <!---->
      <!--<li class="divider-vertical"></li>-->
@@ -289,6 +299,11 @@ Externalizable是一种优先级要高于 Serializable 的序列化机制接口�
      <li >
          <a href="/algorithm/index.html">
              Algorithm
+         </a>
+     </li>
+     <li >
+         <a href="/an-quan/index.html">
+             安全
          </a>
      </li>
      <li >
@@ -328,6 +343,8 @@ Externalizable是一种优先级要高于 Serializable 的序列化机制接口�
 <!--<ul class="blank">-->
 	<!---->
 		<!--<li><a href="/algorithm/index.html">Algorithm</a></li>-->
+	<!---->
+		<!--<li><a href="/an-quan/index.html">安全</a></li>-->
 	<!---->
 		<!--<li><a href="/classloader/index.html">classloader</a></li>-->
 	<!---->

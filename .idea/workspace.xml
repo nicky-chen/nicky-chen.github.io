@@ -2,12 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list id="b5937023-c407-40d8-b7aa-bcba4a685ed0" name="Default" comment="" />
-    <list default="true" id="119c48ed-5227-48e3-b916-4f239060df21" name="Revert: 加入相关文章和导航" comment="refactor(博客index): 页数调整&#10;&#10;新增两个模式和id方案 jndi&#10;&#10;BREAKING CHANGE: page修改&#10;&#10;Closes #001">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/author/nicky_chin8.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/index8.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/java-base/spi-introduction.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spi-introduction.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tag/kuang-jia-ji-chu.html" />
+    <list default="true" id="119c48ed-5227-48e3-b916-4f239060df21" name="Revert: 加入相关文章和导航" comment="feat(SPI机制文章):">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/an-quan/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/an-quan/java-SecurityManager.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/feeds/an-quan.rss.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ji-zhu-tu-pu.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/algorithm/btree-info.html" afterPath="$PROJECT_DIR$/algorithm/btree-info.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/algorithm/index.html" afterPath="$PROJECT_DIR$/algorithm/index.html" />
@@ -19,7 +18,9 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/author/nicky_chin5.html" afterPath="$PROJECT_DIR$/author/nicky_chin5.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/author/nicky_chin6.html" afterPath="$PROJECT_DIR$/author/nicky_chin6.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/author/nicky_chin7.html" afterPath="$PROJECT_DIR$/author/nicky_chin7.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/author/nicky_chin8.html" afterPath="$PROJECT_DIR$/author/nicky_chin8.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/authors.html" afterPath="$PROJECT_DIR$/authors.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/categories.html" afterPath="$PROJECT_DIR$/categories.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classloader/classloader-chapter01.html" afterPath="$PROJECT_DIR$/classloader/classloader-chapter01.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classloader/classloader-chapter02.html" afterPath="$PROJECT_DIR$/classloader/classloader-chapter02.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classloader/index.html" afterPath="$PROJECT_DIR$/classloader/index.html" />
@@ -50,7 +51,7 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/index2.html" afterPath="$PROJECT_DIR$/distrubuted/index2.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/interface-idempotency.html" afterPath="$PROJECT_DIR$/distrubuted/interface-idempotency.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/feeds/all.rss.xml" afterPath="$PROJECT_DIR$/feeds/all.rss.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/feeds/java-base.rss.xml" afterPath="$PROJECT_DIR$/feeds/java-base.rss.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/guan-yu-wo.html" afterPath="$PROJECT_DIR$/guan-yu-wo.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index2.html" afterPath="$PROJECT_DIR$/index2.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index3.html" afterPath="$PROJECT_DIR$/index3.html" />
@@ -58,6 +59,7 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index5.html" afterPath="$PROJECT_DIR$/index5.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index6.html" afterPath="$PROJECT_DIR$/index6.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index7.html" afterPath="$PROJECT_DIR$/index7.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index8.html" afterPath="$PROJECT_DIR$/index8.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/binary-operation.html" afterPath="$PROJECT_DIR$/java-base/binary-operation.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/exception-introduce.html" afterPath="$PROJECT_DIR$/java-base/exception-introduce.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/externalizable-interface.html" afterPath="$PROJECT_DIR$/java-base/externalizable-interface.html" />
@@ -66,7 +68,9 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/index2.html" afterPath="$PROJECT_DIR$/java-base/index2.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/introspector.html" afterPath="$PROJECT_DIR$/java-base/introspector.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/jndi-introdution.html" afterPath="$PROJECT_DIR$/java-base/jndi-introdution.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/spi-introduction.html" afterPath="$PROJECT_DIR$/java-base/spi-introduction.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/string-builder-question.html" afterPath="$PROJECT_DIR$/java-base/string-builder-question.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/kai-yuan-xiang-mu.html" afterPath="$PROJECT_DIR$/kai-yuan-xiang-mu.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mysql/SHOW-GLOBAL-STATUS.html" afterPath="$PROJECT_DIR$/mysql/SHOW-GLOBAL-STATUS.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mysql/design-rule.html" afterPath="$PROJECT_DIR$/mysql/design-rule.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mysql/high-event.html" afterPath="$PROJECT_DIR$/mysql/high-event.html" />
@@ -76,17 +80,21 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sitemap.xml" afterPath="$PROJECT_DIR$/sitemap.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/chuang-jian-xing.html" afterPath="$PROJECT_DIR$/tag/chuang-jian-xing.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/fen-bu-shi-idfang-an.html" afterPath="$PROJECT_DIR$/tag/fen-bu-shi-idfang-an.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/index.html" afterPath="$PROJECT_DIR$/tag/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/ji-chu.html" afterPath="$PROJECT_DIR$/tag/ji-chu.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/ji-chu2.html" afterPath="$PROJECT_DIR$/tag/ji-chu2.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/ji-chu3.html" afterPath="$PROJECT_DIR$/tag/ji-chu3.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/jie-gou-xing.html" afterPath="$PROJECT_DIR$/tag/jie-gou-xing.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/ku-ji-you-hua.html" afterPath="$PROJECT_DIR$/tag/ku-ji-you-hua.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/kuang-jia-ji-chu.html" afterPath="$PROJECT_DIR$/tag/kuang-jia-ji-chu.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/li-lun.html" afterPath="$PROJECT_DIR$/tag/li-lun.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/shu-ju-jie-gou.html" afterPath="$PROJECT_DIR$/tag/shu-ju-jie-gou.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/si-wei-dao-tu.html" afterPath="$PROJECT_DIR$/tag/si-wei-dao-tu.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/suo-you-hua.html" afterPath="$PROJECT_DIR$/tag/suo-you-hua.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/xing-wei-xing.html" afterPath="$PROJECT_DIR$/tag/xing-wei-xing.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/yuan-ma.html" afterPath="$PROJECT_DIR$/tag/yuan-ma.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/yue-du-shu-dan.html" afterPath="$PROJECT_DIR$/yue-du-shu-dan.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/zai-xian-gong-ju.html" afterPath="$PROJECT_DIR$/zai-xian-gong-ju.html" />
     </list>
     <ignored path=".idea/vcs.xml" />
     <ignored path=".idea/inspectionProfiles/profiles_settings.xml" />
@@ -110,12 +118,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <marker date="1530785830786" expanded="true" signature="85106:85148" ph="..." />
-                <marker date="1530785830786" expanded="true" signature="85106:85166" ph="..." />
-                <marker date="1530785830786" expanded="true" signature="85106:85179" ph="..." />
-                <marker date="1530785830786" expanded="true" signature="85106:85194" ph="..." />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -123,8 +126,8 @@
       <file leaf-file-name="sitemap.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sitemap.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="8" column="30" lean-forward="true" selection-start-line="8" selection-start-column="30" selection-end-line="8" selection-end-column="30" />
+            <state relative-caret-position="345">
+              <caret line="62" column="15" lean-forward="false" selection-start-line="62" selection-start-column="15" selection-end-line="62" selection-end-column="15" />
               <folding />
             </state>
           </provider>
@@ -137,6 +140,7 @@
       <find>&lt;loc&gt;https://github.com/nicky-chen/</find>
       <find>&lt;loc&gt;/</find>
       <find>favicon.ico</find>
+      <find>search</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -156,9 +160,9 @@
       <list>
         <option value="$PROJECT_DIR$/robot.txt" />
         <option value="$PROJECT_DIR$/robots.txt" />
-        <option value="$PROJECT_DIR$/sitemap.xml" />
         <option value="$PROJECT_DIR$/theme/gumby.css" />
         <option value="$PROJECT_DIR$/.idea/workspace.xml" />
+        <option value="$PROJECT_DIR$/sitemap.xml" />
       </list>
     </option>
   </component>
@@ -202,38 +206,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="nicky-chen.github.io" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="nicky-chen.github.io" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="theme" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="nicky-chen.github.io" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="nicky-chen.github.io" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="theme" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -252,12 +224,12 @@
     </option>
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\my_blog\output\nicky-chen.github.io\theme\images" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\my_blog\output\nicky-chen.github.io" />
       <recent name="E:\my_blog\output\nicky-chen.github.io\theme\js" />
-      <recent name="E:\my_blog\output\nicky-chen.github.io\theme\images" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\my_blog\output\nicky-chen.github.io\theme\images" />
     </key>
   </component>
@@ -635,23 +607,37 @@
       <option name="project" value="LOCAL" />
       <updated>1530421618208</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="feat(SPI机制文章):">
+      <created>1530785929471</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1530785929471</updated>
+    </task>
+    <task id="LOCAL-00029" summary="sitemap">
+      <created>1530786232453</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1530786232453</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1060" extended-state="0" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3090129" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32671675" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.49385476" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.9284916" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -719,7 +705,9 @@
     <MESSAGE value="sitemap更新" />
     <MESSAGE value="refactor(博客index): 页数调整&#10;&#10;新增两个模式和id方案 jndi&#10;&#10;BREAKING CHANGE: page修改&#10;&#10;Closes #001" />
     <MESSAGE value="fix(sitemap.xml): 站点地图更新&#10;&#10;格式问题" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix(sitemap.xml): 站点地图更新&#10;&#10;格式问题" />
+    <MESSAGE value="feat(SPI机制文章):" />
+    <MESSAGE value="sitemap" />
+    <option name="LAST_COMMIT_MESSAGE" value="sitemap" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -1058,19 +1046,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1530785830786" expanded="true" signature="85106:85148" ph="..." />
-            <marker date="1530785830786" expanded="true" signature="85106:85166" ph="..." />
-            <marker date="1530785830786" expanded="true" signature="85106:85179" ph="..." />
-            <marker date="1530785830786" expanded="true" signature="85106:85194" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sitemap.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="8" column="30" lean-forward="true" selection-start-line="8" selection-start-column="30" selection-end-line="8" selection-end-column="30" />
+        <state relative-caret-position="345">
+          <caret line="62" column="15" lean-forward="false" selection-start-line="62" selection-start-column="15" selection-end-line="62" selection-end-column="15" />
           <folding />
         </state>
       </provider>
