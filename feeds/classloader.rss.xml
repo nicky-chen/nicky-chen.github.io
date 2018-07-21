@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>南乡清水 - classloader</title><link>/</link><description></description><lastBuildDate>Tue, 20 Mar 2018 22:48:00 +0800</lastBuildDate><item><title>ClassLoader类加载分析（二）</title><link>/classloader/classloader-chapter02.html</link><description>&lt;h1&gt;一、JVM 提供的 Classloader&lt;/h1&gt;
+<rss version="2.0"><channel><title>南乡清水 - Classloader</title><link>/</link><description></description><lastBuildDate>Tue, 20 Mar 2018 22:48:00 +0800</lastBuildDate><item><title>ClassLoader类加载分析（二）</title><link>/classloader/classloader-chapter02.html</link><description>&lt;h1&gt;一、JVM 提供的 Classloader&lt;/h1&gt;
 &lt;h2&gt;1.1 BootstrapClassloader&lt;/h2&gt;
 &lt;p&gt;引导类加载器，又称启动类加载器，是最顶层的类加载器，主要用来加载Java核心类，如rt.jar、resources.jar、charsets.jar等，Sun的JVM中，执行java的命令中使用&lt;strong&gt;-Xbootclasspath选项或使用- D选项&lt;/strong&gt;指定sun.boot.class.path系统属性值可以指定附加的类，它不是 java.lang.ClassLoader的子类，而是由JVM自身实现的该类c 语言实现，Java程序访问不到该加载器。通过下面代码可以查看该加载器加载了哪些jar包&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;public&lt;/span&gt; &lt;span class="nt"&gt;class&lt;/span&gt; &lt;span class="nt"&gt;MainClass&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
