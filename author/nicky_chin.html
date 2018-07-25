@@ -65,6 +65,44 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/source-code/junit-code=analysis.html" rel="bookmark" title="Permalink to 初窥门径之JUnit源码分析">初窥门径之JUnit源码分析</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-07-16T21:58:00+08:00"> 周一 16 七月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 源码分析流程</h1>
+<p>对于阅读源码有兴趣的同学，可以按以下步骤进行：</p>
+<ol>
+<li>了解框架架构图</li>
+<li>了解各包包含功能点</li>
+<li>选择需要功能点入手</li>
+<li>了解 <strong>数据流和控制流</strong></li>
+<li>画 <strong>类图 和 时序图</strong></li>
+<li>复盘</li>
+</ol>
+<h1>2 Junit架构详解</h1>
+<h3>2.1 包功能概述</h3>
+<p>通过分析JUnit-3.8.1的源代码文件可以看到，JUnit的源码被分散在6个package中，这个6个package分别为： <em>junit.awtui</em> 、 <em>junit.swingui</em> 、 <em>junit.textui</em> 、 <em>junit.extensions</em> 、 <em>junit.framework</em> 、 <em>junit.runner</em>  具体的文件分布图如下：</p>
+<p><img alt="各包情况" src="https://upload-images.jianshu.io/upload_images/10175660-278a9ef83d38a42d.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>其中 junit.awtui 、 junit.swingui 、 junit.textui 这三个package是有关JUnit运行时的入口程序以及运行结果显示界面的
+junit.runner中则包含了支持单元测试运行的一些基础类以及自己的类加载器
+junit.framework 包含有编写一般JUnit单元测试类必须组件 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/source-code/junit-code=analysis.html" rel="bookmark" title="Permalink to 初窥门径之JUnit源码分析">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/junit.html">junit</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/security/java-SecurityManager.html" rel="bookmark" title="Permalink to Java安全之SecurityManager">Java安全之SecurityManager</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-07-13T22:11:00+08:00"> 周五 13 七月 2018 </abbr>
@@ -224,37 +262,6 @@ Java API使用安全管理器判断许可权限
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/distrubuted/id-redis.html" rel="bookmark" title="Permalink to 分布式全局序列ID方案之Redis优化方案">分布式全局序列ID方案之Redis优化方案</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-06-24T15:28:00+08:00"> 周日 24 六月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1 Redis的Flicker方案</h1>
-<p>利用redis的lua脚本功能，在每个节点上通过lua脚本生成唯一ID，生成的ID为64位，具体如下：</p>
-<p>使用41 bit来存放时间，精确到毫秒，可以使用到2039年
-使用12 bit来存放逻辑分片ID，最大分片ID是4095
-使用10 bit来存放自增长ID，则每个节点，每毫秒最多可生成1024个ID
-比如GTM时间 2018年6月24日11点23分 ，它的距1970年的毫秒数是 1529810591000，假定分片ID是60，自增长序列是20，则生成的ID是：</p>
-<div class="highlight"><pre><span></span>6416490681073670164 = 1529810591000 &lt;&lt; 22 | 60 &lt;&lt; 10 | 20
-redis提供了TIME命令，取得redis服务器的秒值和微秒值
-毫秒值获取命令：EVAL &quot;local current = redis.call(&#39;TIME&#39;) ;return a[1]*1000 + a[2]/1000&quot; 0
-生成最终ID : current &lt;&lt; (12 …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/distrubuted/id-redis.html" rel="bookmark" title="Permalink to 分布式全局序列ID方案之Redis优化方案">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -330,6 +337,11 @@ redis提供了TIME命令，取得redis服务器的秒值和微秒值
              Security
          </a>
      </li>
+     <li >
+         <a href="/source-code/index.html">
+             Source-code
+         </a>
+     </li>
   </ul>
 
 <!---->
@@ -352,6 +364,8 @@ redis提供了TIME命令，取得redis服务器的秒值和微秒值
 	<!---->
 		<!--<li><a href="/security/index.html">Security</a></li>-->
 	<!---->
+		<!--<li><a href="/source-code/index.html">Source-code</a></li>-->
+	<!---->
 <!--</ul>-->
 <!---->
 
@@ -362,13 +376,14 @@ redis提供了TIME命令，取得redis服务器的秒值和微秒值
 	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
 	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
-	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
-	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
+	    <li class="danger label" ><a href="/tag/junit.html">junit</a></li>
 	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
 </ul>
 

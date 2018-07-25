@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"><channel><title>南乡清水 - Source-code</title><link>/</link><description></description><lastBuildDate>Mon, 16 Jul 2018 21:58:00 +0800</lastBuildDate><item><title>初窥门径之JUnit源码分析</title><link>/source-code/junit-code=analysis.html</link><description>&lt;h1&gt;1 源码分析流程&lt;/h1&gt;
+&lt;p&gt;对于阅读源码有兴趣的同学，可以按以下步骤进行：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;了解框架架构图&lt;/li&gt;
+&lt;li&gt;了解各包包含功能点&lt;/li&gt;
+&lt;li&gt;选择需要功能点入手&lt;/li&gt;
+&lt;li&gt;了解 &lt;strong&gt;数据流和控制流&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;画 &lt;strong&gt;类图 和 时序图&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;复盘&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1&gt;2 Junit架构详解&lt;/h1&gt;
+&lt;h3&gt;2.1 包功能概述&lt;/h3&gt;
+&lt;p&gt;通过分析JUnit-3.8.1的源代码文件可以看到，JUnit的源码被分散在6个package中，这个6个package分别为： &lt;em&gt;junit.awtui&lt;/em&gt; 、 &lt;em&gt;junit.swingui&lt;/em&gt; 、 &lt;em&gt;junit.textui&lt;/em&gt; 、 &lt;em&gt;junit.extensions&lt;/em&gt; 、 &lt;em&gt;junit.framework&lt;/em&gt; 、 &lt;em&gt;junit.runner&lt;/em&gt;  具体的文件分布图如下：&lt;/p&gt;
+&lt;p&gt;&lt;img alt="各包情况" src="https://upload-images.jianshu.io/upload_images/10175660-278a9ef83d38a42d.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"&gt;&lt;/p&gt;
+&lt;p&gt;其中 junit.awtui 、 junit.swingui 、 junit.textui 这三个package是有关JUnit运行时的入口程序以及运行结果显示界面的
+junit.runner中则包含了支持单元测试运行的一些基础类以及自己的类加载器
+junit.framework 包含有编写一般JUnit单元测试类必须组件 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Mon, 16 Jul 2018 21:58:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-07-16:/source-code/junit-code=analysis.html</guid><category>junit</category></item></channel></rss>

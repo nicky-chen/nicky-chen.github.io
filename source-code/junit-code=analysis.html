@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>初窥门径之JUnit源码分析</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+        <link href="/feeds/source-code.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+        <link rel="shortcut icon" href="/theme/images/favicon.ico">
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+
+                <ul class="columns">
+                    <li><a href="/">首页</a></li>
+
+                    <li
+><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                    <li
+><a href="/zai-xian-gong-ju.html">在线工具</a></li>
+                    <li
+><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                    <li
+><a href="/ji-zhu-tu-pu.html">技术图谱</a></li>
+                    <li
+><a href="/guan-yu-wo.html">关于我</a></li>
+                     <li><a href="/archives.html"><i class="active"></i>归档日志</a></li>
+                    <form class="navbar-search pull-right" action="/search.html">
+                        <input type="text" class="search-query" placeholder="站内搜" name="q" id="s">
+                    </form>
+                </ul>
+            </div>
+
+
+<section id="content" class="body">
+
+   <div class="row">
+
+<div id="toc" class="threes columns" style="font-size: 65%">
+    <br>
+    <h4 style="font-size: 1rem">文章目录</h4>
+</div>        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/source-code/junit-code=analysis.html" rel="bookmark"
+                   title="Permalink to 初窥门径之JUnit源码分析">初窥门径之JUnit源码分析</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2018-07-16T21:58:00+08:00">
+                周一 16 七月 2018
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div id="contents" class="entry-content">
+              <h1>1 源码分析流程</h1>
+<p>对于阅读源码有兴趣的同学，可以按以下步骤进行：</p>
+<ol>
+<li>了解框架架构图</li>
+<li>了解各包包含功能点</li>
+<li>选择需要功能点入手</li>
+<li>了解 <strong>数据流和控制流</strong></li>
+<li>画 <strong>类图 和 时序图</strong></li>
+<li>复盘</li>
+</ol>
+<h1>2 Junit架构详解</h1>
+<h3>2.1 包功能概述</h3>
+<p>通过分析JUnit-3.8.1的源代码文件可以看到，JUnit的源码被分散在6个package中，这个6个package分别为： <em>junit.awtui</em> 、 <em>junit.swingui</em> 、 <em>junit.textui</em> 、 <em>junit.extensions</em> 、 <em>junit.framework</em> 、 <em>junit.runner</em>  具体的文件分布图如下：</p>
+<p><img alt="各包情况" src="https://upload-images.jianshu.io/upload_images/10175660-278a9ef83d38a42d.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>其中 junit.awtui 、 junit.swingui 、 junit.textui 这三个package是有关JUnit运行时的入口程序以及运行结果显示界面的
+junit.runner中则包含了支持单元测试运行的一些基础类以及自己的类加载器
+junit.framework 包含有编写一般JUnit单元测试类必须组件
+junit.extensions则是对framework包在功能上的一些必要功能点的扩展</p>
+<h3>2.2 类图</h3>
+<p><strong>junit.framework 类图</strong> </p>
+<p><img alt="famework" src="https://upload-images.jianshu.io/upload_images/10175660-987c87e79cd5bdf9.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><strong>junit.extensions 类图</strong> </p>
+<p><img alt="extension" src="https://upload-images.jianshu.io/upload_images/10175660-90287934613de21e.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><strong>junit.runner 类图</strong>
+<img alt="runner" src="https://upload-images.jianshu.io/upload_images/10175660-250a20e3ae367902.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h1>3 运行流程</h1>
+<p><strong>时序图</strong></p>
+<p><img alt="junit时序图.PNG" src="https://upload-images.jianshu.io/upload_images/10175660-c7138d22bd8bbd28.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>JUnit的完整生命周期分为3个阶段：<em>初始化阶段、运行阶段、 结果捕捉阶段</em></p>
+<p><strong>测试案例demo</strong></p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CalculatorTest</span> <span class="kd">extends</span> <span class="n">TestCase</span> <span class="o">{</span>
+
+
+    <span class="kd">private</span> <span class="n">Calculator</span> <span class="n">calculator</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[])</span> <span class="o">{</span>
+        <span class="n">TestRunner</span> <span class="n">aTestRunner</span><span class="o">=</span> <span class="k">new</span> <span class="n">TestRunner</span><span class="o">();</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">TestResult</span> <span class="n">r</span><span class="o">=</span> <span class="n">aTestRunner</span><span class="o">.</span><span class="na">start</span><span class="o">(</span><span class="k">new</span> <span class="n">String</span><span class="o">[]{</span><span class="s">&quot;CalculatorTest&quot;</span><span class="o">});</span>
+            <span class="k">if</span> <span class="o">(!</span><span class="n">r</span><span class="o">.</span><span class="na">wasSuccessful</span><span class="o">())</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(</span><span class="n">FAILURE_EXIT</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(</span><span class="n">SUCCESS_EXIT</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(</span><span class="n">EXCEPTION_EXIT</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setUp</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span>
+    <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;set up&quot;</span><span class="o">);</span>
+        <span class="c1">// 生成成员变量的实例</span>
+        <span class="n">calculator</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Calculator</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testAdd</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;testAdd&quot;</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
+        <span class="c1">// 判断方法的返回结果</span>
+        <span class="n">Assert</span><span class="o">.</span><span class="na">assertEquals</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="n">result</span><span class="o">);</span><span class="c1">// 第`一个参数是期望值，第二个参数是要验证的值</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testSubtract</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;testSubtract&quot;</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="na">subtract</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">);</span>
+        <span class="c1">// 判断方法的返回结果</span>
+        <span class="n">Assert</span><span class="o">.</span><span class="na">assertEquals</span><span class="o">(-</span><span class="mi">1</span><span class="o">,</span> <span class="n">result</span><span class="o">);</span><span class="c1">// 第一个参数是期望值，第二个参数是要验证的值</span>
+
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testMultiply</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;testMultiply&quot;</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="na">multiply</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">);</span>
+        <span class="c1">// 判断方法的返回结果</span>
+        <span class="n">Assert</span><span class="o">.</span><span class="na">assertEquals</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="n">result</span><span class="o">);</span><span class="c1">// 第一个参数是期望值，第二个参数是要验证的值</span>
+
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testDivide</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;testDivide&quot;</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="na">divide</span><span class="o">(</span><span class="mi">12</span><span class="o">,</span> <span class="mi">3</span><span class="o">);</span>
+        <span class="c1">// 判断方法的返回结果</span>
+        <span class="n">Assert</span><span class="o">.</span><span class="na">assertEquals</span><span class="o">(</span><span class="mi">4</span><span class="o">,</span> <span class="n">result</span><span class="o">);</span><span class="c1">// 第一个参数是期望值，第二个参数是要验证的值</span>
+
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<p><strong>1.初始化阶段</strong>：
+通过分析源码，可以看到JUnit的入口点在 <code>junit.textui.TestRunner 的 main</code> 方法，在这个方法中，首先创建一个 <em>TestRunner</em>  实例 aTestRunner ，然后 main 函数中主体工作函数为 <code>TestResult r = aTestRunner.start(args)</code>。此时 TestRunner 实例存在并开始工作。接下来进入 <code>start()</code> 方法中：</p>
+<div class="highlight"><pre><span></span> <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[])</span> <span class="o">{</span>
+        <span class="n">TestRunner</span> <span class="n">aTestRunner</span><span class="o">=</span> <span class="k">new</span> <span class="n">TestRunner</span><span class="o">();</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">TestResult</span> <span class="n">r</span><span class="o">=</span> <span class="n">aTestRunner</span><span class="o">.</span><span class="na">start</span><span class="o">(</span><span class="k">new</span> <span class="n">String</span><span class="o">[]{</span><span class="s">&quot;CalculatorTest&quot;</span><span class="o">});</span>
+            <span class="k">if</span> <span class="o">(!</span><span class="n">r</span><span class="o">.</span><span class="na">wasSuccessful</span><span class="o">())</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(</span><span class="n">FAILURE_EXIT</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(</span><span class="n">SUCCESS_EXIT</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(</span><span class="n">EXCEPTION_EXIT</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Starts a test run. Analyzes the command line arguments</span>
+<span class="cm">     * 启动一个测试运行，分析命令参数 并且执行所给的测试组件</span>
+<span class="cm">     * and runs the given test suite.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="cm">/*protected*/</span> <span class="n">TestResult</span> <span class="nf">start</span><span class="o">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[])</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">testCase</span><span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="kt">boolean</span> <span class="n">wait</span><span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="c1">//参数逻辑判断</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">args</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-wait&quot;</span><span class="o">))</span>
+                <span class="n">wait</span><span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-c&quot;</span><span class="o">))</span> 
+                <span class="n">testCase</span><span class="o">=</span> <span class="n">extractClassName</span><span class="o">(</span><span class="n">args</span><span class="o">[++</span><span class="n">i</span><span class="o">]);</span>
+            <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-v&quot;</span><span class="o">))</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;JUnit &quot;</span><span class="o">+</span><span class="n">Version</span><span class="o">.</span><span class="na">id</span><span class="o">()+</span><span class="s">&quot; by Kent Beck and Erich Gamma&quot;</span><span class="o">);</span>
+            <span class="k">else</span>
+                <span class="n">testCase</span><span class="o">=</span> <span class="n">args</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+        <span class="o">}</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">testCase</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;&quot;</span><span class="o">))</span> 
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">Exception</span><span class="o">(</span><span class="s">&quot;Usage: TestRunner [-wait] testCaseName, where name is the name of the TestCase class&quot;</span><span class="o">);</span>
+        <span class="c1">//获取测试组件</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">Test</span> <span class="n">suite</span><span class="o">=</span> <span class="n">getTest</span><span class="o">(</span><span class="n">testCase</span><span class="o">);</span> <span class="c1">//初始化 TestSuite</span>
+            <span class="k">return</span> <span class="n">doRun</span><span class="o">(</span><span class="n">suite</span><span class="o">,</span> <span class="n">wait</span><span class="o">);</span> <span class="c1">//运行测试组件</span>
+        <span class="o">}</span>
+        <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">Exception</span><span class="o">(</span><span class="s">&quot;Could not create and run test suite: &quot;</span><span class="o">+</span><span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>TestResult 用于展示最终结果，首先会进入 <code>start()</code> 方法 初始化一个TestSuite对象
+<em>Test suite= getTest(testCase)</em>;  该测试组件包含了多个 TestCase测试方法用例</p>
+<p><strong>进入getTest方法</strong></p>
+<div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm">     * Returns the Test corresponding to the given suite. This is</span>
+<span class="cm">     * 返回对应的测试组件，这是一个模版方法，子类重写两个方法</span>
+<span class="cm">     * a template method, subclasses override runFailed(), clearStatus().</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">Test</span> <span class="nf">getTest</span><span class="o">(</span><span class="n">String</span> <span class="n">suiteClassName</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">suiteClassName</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">clearStatus</span><span class="o">();</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">Class</span> <span class="n">testClass</span><span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="c1">//加载Class</span>
+            <span class="n">testClass</span><span class="o">=</span> <span class="n">loadSuiteClass</span><span class="o">(</span><span class="n">suiteClassName</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ClassNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">String</span> <span class="n">clazz</span><span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">();</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">clazz</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+                <span class="n">clazz</span><span class="o">=</span> <span class="n">suiteClassName</span><span class="o">;</span>
+            <span class="n">runFailed</span><span class="o">(</span><span class="s">&quot;Class not found \&quot;&quot;</span><span class="o">+</span><span class="n">clazz</span><span class="o">+</span><span class="s">&quot;\&quot;&quot;</span><span class="o">);</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">runFailed</span><span class="o">(</span><span class="s">&quot;Error: &quot;</span><span class="o">+</span><span class="n">e</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">Method</span> <span class="n">suiteMethod</span><span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span><span class="c1">//执行测试组件方法</span>
+            <span class="n">suiteMethod</span><span class="o">=</span> <span class="n">testClass</span><span class="o">.</span><span class="na">getMethod</span><span class="o">(</span><span class="n">SUITE_METHODNAME</span><span class="o">,</span> <span class="k">new</span> <span class="n">Class</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+        <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// try to extract a test suite automatically 如果没有对应的方法，则自动创建一个测试组件</span>
+            <span class="n">clearStatus</span><span class="o">();</span> <span class="c1">//清除状态信息</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">TestSuite</span><span class="o">(</span><span class="n">testClass</span><span class="o">);</span>  <span class="c1">//创建testsuite对象 包含需要测试方法集合的Vector</span>
+        <span class="o">}</span>
+</pre></div>
+
+
+<p><code>new TestSuite(testClass)</code>创建对象， 进入构造器主要是一些参数和方法的校验</p>
+<p>为每个测试方法创建 TestCase, 并存入 Vector fTests 向量集合中</p>
+<div class="highlight"><pre><span></span> <span class="kd">public</span> <span class="nf">TestSuite</span><span class="o">(</span><span class="kd">final</span> <span class="n">Class</span> <span class="n">theClass</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">fName</span><span class="o">=</span> <span class="n">theClass</span><span class="o">.</span><span class="na">getName</span><span class="o">();</span>
+        <span class="k">try</span> <span class="o">{</span><span class="c1">//判断是否有公共的带String参数的构造器或者无参构造器，如果没有打印错误信息</span>
+            <span class="n">getTestConstructor</span><span class="o">(</span><span class="n">theClass</span><span class="o">);</span> <span class="c1">// Avoid generating multiple error messages</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">NoSuchMethodException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">addTest</span><span class="o">(</span><span class="n">warning</span><span class="o">(</span><span class="s">&quot;Class &quot;</span><span class="o">+</span><span class="n">theClass</span><span class="o">.</span><span class="na">getName</span><span class="o">()+</span><span class="s">&quot; has no public constructor TestCase(String name) or TestCase()&quot;</span><span class="o">));</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">//判断类的修饰符是否是public的，如果不是打印错误信息</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">Modifier</span><span class="o">.</span><span class="na">isPublic</span><span class="o">(</span><span class="n">theClass</span><span class="o">.</span><span class="na">getModifiers</span><span class="o">()))</span> <span class="o">{</span>
+            <span class="n">addTest</span><span class="o">(</span><span class="n">warning</span><span class="o">(</span><span class="s">&quot;Class &quot;</span><span class="o">+</span><span class="n">theClass</span><span class="o">.</span><span class="na">getName</span><span class="o">()+</span><span class="s">&quot; is not public&quot;</span><span class="o">));</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="n">Class</span> <span class="n">superClass</span><span class="o">=</span> <span class="n">theClass</span><span class="o">;</span>
+        <span class="n">Vector</span> <span class="n">names</span><span class="o">=</span> <span class="k">new</span> <span class="n">Vector</span><span class="o">();</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">Test</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">isAssignableFrom</span><span class="o">(</span><span class="n">superClass</span><span class="o">))</span> <span class="o">{</span><span class="c1">//判断当前class是否实现或者继承了Test类</span>
+            <span class="n">Method</span><span class="o">[]</span> <span class="n">methods</span><span class="o">=</span> <span class="n">superClass</span><span class="o">.</span><span class="na">getDeclaredMethods</span><span class="o">();</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">methods</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span><span class="c1">//遍历继承TestCase方法的类中包含的test方法</span>
+                <span class="n">addTestMethod</span><span class="o">(</span><span class="n">methods</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="n">names</span><span class="o">,</span> <span class="n">theClass</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">superClass</span><span class="o">=</span> <span class="n">superClass</span><span class="o">.</span><span class="na">getSuperclass</span><span class="o">();</span> <span class="c1">//获取父类并重复上述操作</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">fTests</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+            <span class="n">addTest</span><span class="o">(</span><span class="n">warning</span><span class="o">(</span><span class="s">&quot;No tests found in &quot;</span><span class="o">+</span><span class="n">theClass</span><span class="o">.</span><span class="na">getName</span><span class="o">()));</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>关键性代码在 <code>addTestMethod(methods[i], names, theClass)</code></p>
+<p>最终添加进入 <em>fTests</em> 集合</p>
+<div class="highlight"><pre><span></span><span class="kd">private</span> <span class="kt">void</span> <span class="nf">addTestMethod</span><span class="o">(</span><span class="n">Method</span> <span class="n">m</span><span class="o">,</span> <span class="n">Vector</span> <span class="n">names</span><span class="o">,</span> <span class="n">Class</span> <span class="n">theClass</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">name</span><span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">getName</span><span class="o">();</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">names</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">name</span><span class="o">))</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(!</span> <span class="n">isPublicTestMethod</span><span class="o">(</span><span class="n">m</span><span class="o">))</span> <span class="o">{</span><span class="c1">//判断是否是无参数无返回值方法，是则加入到 names集合里</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">isTestMethod</span><span class="o">(</span><span class="n">m</span><span class="o">))</span>
+                <span class="n">addTest</span><span class="o">(</span><span class="n">warning</span><span class="o">(</span><span class="s">&quot;Test method isn&#39;t public: &quot;</span><span class="o">+</span><span class="n">m</span><span class="o">.</span><span class="na">getName</span><span class="o">()));</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">names</span><span class="o">.</span><span class="na">addElement</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="n">addTest</span><span class="o">(</span><span class="n">createTest</span><span class="o">(</span><span class="n">theClass</span><span class="o">,</span> <span class="n">name</span><span class="o">));</span><span class="c1">//为每个方法增加TestCase用例</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addTest</span><span class="o">(</span><span class="n">Test</span> <span class="n">test</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">fTests</span><span class="o">.</span><span class="na">addElement</span><span class="o">(</span><span class="n">test</span><span class="o">);</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p><strong>2.测试运行阶段</strong>：</p>
+<p>在 TestRunner 中的 <code>start()</code> 方法中可以看到开始调用 <code>doRun(</code>) 方法开始执行测试</p>
+<div class="highlight"><pre><span></span>    <span class="kd">public</span> <span class="n">TestResult</span> <span class="nf">doRun</span><span class="o">(</span><span class="n">Test</span> <span class="n">suite</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">wait</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">TestResult</span> <span class="n">result</span><span class="o">=</span> <span class="n">createTestResult</span><span class="o">();</span>
+        <span class="n">result</span><span class="o">.</span><span class="na">addListener</span><span class="o">(</span><span class="n">fPrinter</span><span class="o">);</span> <span class="c1">//增加一个TestRunner的打印监听器</span>
+        <span class="kt">long</span> <span class="n">startTime</span><span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+        <span class="n">suite</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
+        <span class="kt">long</span> <span class="n">endTime</span><span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+        <span class="kt">long</span> <span class="n">runTime</span><span class="o">=</span> <span class="n">endTime</span><span class="o">-</span><span class="n">startTime</span><span class="o">;</span>
+        <span class="n">fPrinter</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">result</span><span class="o">,</span> <span class="n">runTime</span><span class="o">);</span>
+
+        <span class="n">pause</span><span class="o">(</span><span class="n">wait</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>首先是利用 <code>createTestResult()</code>方法生成一个 TestResult 实例，然后将 junit.textui.TestRunner 的监听器 fPrinter 加入到result 的监听器列表中。其中， fPrinter 是 junit.textui.ResultPrinter 类的实例，该类提供了向控制台输出测试结果的一系列功能接口，输出的格式在类中定义。 ResultPrinter 类实现了 TestListener 接口，具体实现了<code>addError 、 addFailure 、 endTest 和 startTest</code>  四个重要的方法，这种设计体现了Observer设计模式。而将 ResultPrinter 对象加入到 TestResult 对象的监听器列表中，因此实质上 TestResult 对象可以有多个监听器显示测试结果。 </p>
+<p>接下来我们查看run方法，可以看到：</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="n">TestResult</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span> <span class="o">(</span><span class="n">Enumeration</span> <span class="n">e</span><span class="o">=</span> <span class="n">tests</span><span class="o">();</span> <span class="n">e</span><span class="o">.</span><span class="na">hasMoreElements</span><span class="o">();</span> <span class="o">)</span> <span class="o">{</span><span class="c1">//遍历测试方法</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">shouldStop</span><span class="o">()</span> <span class="o">)</span> <span class="c1">//是否停止继续运行</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="n">Test</span> <span class="n">test</span><span class="o">=</span> <span class="o">(</span><span class="n">Test</span><span class="o">)</span><span class="n">e</span><span class="o">.</span><span class="na">nextElement</span><span class="o">();</span>
+            <span class="n">runTest</span><span class="o">(</span><span class="n">test</span><span class="o">,</span> <span class="n">result</span><span class="o">);</span><span class="c1">//运行具体测试用例方法TestCase</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>运行具体测试用例方法TestCase,在<code>runTest(test, result)</code>方法中</p>
+<div class="highlight"><pre><span></span><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="kd">final</span> <span class="n">TestCase</span> <span class="n">test</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">startTest</span><span class="o">(</span><span class="n">test</span><span class="o">);</span>
+        <span class="n">Protectable</span> <span class="n">p</span><span class="o">=</span> <span class="k">new</span> <span class="n">Protectable</span><span class="o">()</span> <span class="o">{</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">protect</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
+                <span class="n">test</span><span class="o">.</span><span class="na">runBare</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">};</span>
+        <span class="n">runProtected</span><span class="o">(</span><span class="n">test</span><span class="o">,</span> <span class="n">p</span><span class="o">);</span><span class="c1">//执行test方法</span>
+
+        <span class="n">endTest</span><span class="o">(</span><span class="n">test</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">runBare</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
+        <span class="n">setUp</span><span class="o">();</span> <span class="c1">//运行setup</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">runTest</span><span class="o">();</span> <span class="c1">//运行具体测试方法</span>
+        <span class="o">}</span>
+        <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">tearDown</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>首先它会运行<code>setUp</code>方法，在我们的测试demo中会给<code>private Calculator calculator</code> 这个成员变量实例化， 然后 <code>runTest()</code> 具体跑一个方法 ，该方法首先会通过反射创建一个无参构造器，然后实例化对象，最后获取当前TestCase对象中的测试方法名去获取Method对象，然后<code>runMethod.invoke(this, new Class[0])</code>执行该方法，完成测试</p>
+<p><strong>3.测试结果捕捉阶段</strong>：</p>
+<p>运行已经完成，日志输出阶段</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">runProtected</span><span class="o">(</span><span class="kd">final</span> <span class="n">Test</span> <span class="n">test</span><span class="o">,</span> <span class="n">Protectable</span> <span class="n">p</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">p</span><span class="o">.</span><span class="na">protect</span><span class="o">();</span>
+        <span class="o">}</span> 
+        <span class="k">catch</span> <span class="o">(</span><span class="n">AssertionFailedError</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">addFailure</span><span class="o">(</span><span class="n">test</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span> <span class="c1">//如果计算结果和assert预期结果不一样，则出现这个错误</span>
+        <span class="o">}</span>
+        <span class="k">catch</span> <span class="o">(</span><span class="n">ThreadDeath</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> <span class="c1">// don&#39;t catch ThreadDeath by accident</span>
+            <span class="k">throw</span> <span class="n">e</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">addError</span><span class="o">(</span><span class="n">test</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>TestResult对象中有三个观察者对象</p>
+<blockquote>
+<p>protected Vector fFailures; //观察者 失败信息 TestFailure对象
+protected Vector fErrors; //观察者 错误信息 TestFailure 对象
+protected Vector fListeners;//观察者 监听器列表 TestListener</p>
+</blockquote>
+<p>如果测试结果与 Assert断言结果不一样，会进入<code>addFailure(test, e)</code>方法，其他未知异常会捕获进入<code>addError(test, e)</code>记录错误信息，然后存入 <em>fErrors</em> 向量集合中。最后通过 <em>ResultPrinter</em> 答应结果</p>
+<p>控制台最终打印结果</p>
+<div class="highlight"><pre><span></span><span class="o">.</span><span class="na">set</span> <span class="n">up</span>
+<span class="n">testAdd</span>
+<span class="mi">3</span>
+<span class="o">.</span><span class="na">set</span> <span class="n">up</span>
+<span class="n">testDivide</span>
+<span class="o">.</span><span class="na">set</span> <span class="n">up</span>
+<span class="n">testSubtract</span>
+<span class="o">.</span><span class="na">set</span> <span class="n">up</span>
+<span class="n">testMultiply</span>
+<span class="n">F</span>
+<span class="nl">Time:</span> <span class="mi">1</span><span class="o">,</span><span class="mf">507.526</span>
+<span class="n">There</span> <span class="n">was</span> <span class="mi">1</span> <span class="n">failure</span><span class="o">:</span>
+<span class="mi">1</span><span class="o">)</span> <span class="n">testMultiply</span><span class="o">(</span><span class="n">CalculatorTest</span><span class="o">)</span><span class="n">junit</span><span class="o">.</span><span class="na">framework</span><span class="o">.</span><span class="na">AssertionFailedError</span><span class="o">:</span> <span class="n">expected</span><span class="o">:&lt;</span><span class="mi">5</span><span class="o">&gt;</span> <span class="n">but</span> <span class="n">was</span><span class="o">:&lt;</span><span class="mi">6</span><span class="o">&gt;</span>
+    <span class="n">at</span> <span class="n">CalculatorTest</span><span class="o">.</span><span class="na">testMultiply</span><span class="o">(</span><span class="n">CalculatorTest</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">61</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">sun</span><span class="o">.</span><span class="na">reflect</span><span class="o">.</span><span class="na">NativeMethodAccessorImpl</span><span class="o">.</span><span class="na">invoke0</span><span class="o">(</span><span class="n">Native</span> <span class="n">Method</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">sun</span><span class="o">.</span><span class="na">reflect</span><span class="o">.</span><span class="na">NativeMethodAccessorImpl</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">NativeMethodAccessorImpl</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">62</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">sun</span><span class="o">.</span><span class="na">reflect</span><span class="o">.</span><span class="na">DelegatingMethodAccessorImpl</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">DelegatingMethodAccessorImpl</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">43</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">CalculatorTest</span><span class="o">.</span><span class="na">main</span><span class="o">(</span><span class="n">CalculatorTest</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="mi">23</span><span class="o">)</span>
+
+<span class="n">FAILURES</span><span class="o">!!!</span>
+<span class="n">Tests</span> <span class="n">run</span><span class="o">:</span> <span class="mi">4</span><span class="o">,</span>  <span class="n">Failures</span><span class="o">:</span> <span class="mi">1</span><span class="o">,</span>  <span class="n">Errors</span><span class="o">:</span> <span class="mi">0</span>
+</pre></div>
+
+
+<p>在执行完<code>testMultiply</code>方法后，因为断言的预期结果和实际结果不一致，所以首先会打印一个F表示有错误信息，当所有方法执行完，会执行<code>fPrinter.print(result, runTime)</code>方法: <strong>同步答应  耗时 异常信息 断言错误信息 统计结果</strong></p>
+<div class="highlight"><pre><span></span>    <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">print</span><span class="o">(</span><span class="n">TestResult</span> <span class="n">result</span><span class="o">,</span> <span class="kt">long</span> <span class="n">runTime</span><span class="o">)</span> <span class="o">{</span>
+       <span class="n">printHeader</span><span class="o">(</span><span class="n">runTime</span><span class="o">);</span>
+        <span class="n">printErrors</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
+        <span class="n">printFailures</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
+        <span class="n">printFooter</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<h1>4 总结</h1>
+<p>在这个源码框架中，你可以看到一些常见的设计模式，比如观察者模式，模版模式，装饰器模式，组合模式等等，通过<strong>类图和时序图</strong> 我们可以清楚明了的了解功能点的用途和具体实现原理，看源码需要懂得取舍，找到关键部分，精髓部分，才能事半功倍
+具体junit源码代码及关键注释请看<a href="https://github.com/nicky-chen/junit">GitHub</a></p>
+<h1>Refence</h1>
+<p><a href="https://www.ibm.com/developerworks/cn/java/j-lo-junit-src/">分析 JUnit 框架源代码</a></p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "source-code/junit-code=analysis.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns" style="font-size: 80%">
+
+
+    <nav class="widget">
+        <h4>个人链接</h4>
+        <ul class="blank">
+            <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">StackOverFlow</a></li>
+            <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+            <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+        </ul>
+    </nav>
+
+<h4>专题分类</h4>
+
+ <ul>
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/zai-xian-gong-ju.html">在线工具</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/ji-zhu-tu-pu.html">技术图谱</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+
+     <li >
+         <a href="/algorithm/index.html">
+             Algorithm
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             Classloader
+         </a>
+     </li>
+     <li >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+     <li >
+         <a href="/security/index.html">
+             Security
+         </a>
+     </li>
+     <li class="active" >
+         <a href="/source-code/index.html">
+             Source-code
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm/index.html">Algorithm</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">Classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+		<!--<li><a href="/security/index.html">Security</a></li>-->
+	<!---->
+		<!--<li><a href="/source-code/index.html">Source-code</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+<h4>标签</h4>
+	<ul class="blank">
+	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
+	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
+	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
+	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
+	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
+	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
+	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
+	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
+	    <li class="danger label" ><a href="/tag/junit.html">junit</a></li>
+	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
+</ul>
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+
+
+</div> </div><!-- /.row -->
+  <div class="pagination">★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆
+      <ul>
+        <li class="prev"><a href="/security/java-SecurityManager.html">Next →</a></li>
+        <li><a href="/archives.html">博客导航</a></li>
+        <li class="next"><a href="/">← 上一篇</a></li>
+      </ul>
+    </div>
+
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-119892182-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+  <script src="/theme/js/toc.js" type="text/javascript"></script>
+    <script>
+        (function () {
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+</body>
+</html>

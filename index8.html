@@ -65,6 +65,46 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/design-pattern/builder-factory.html" rel="bookmark" title="Permalink to 设计模式之factory模式">设计模式之factory模式</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2017-12-07T22:30:00+08:00"> 周四 07 十二月 2017 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p><strong>定义</strong>：工厂模式通俗意义上讲就是一个多产品的流程化工厂，每个工厂生产同一系列相关性的组件</p>
+<p><strong>分类</strong>：</p>
+<p>按工厂职能划分可以分为三类： 
+ 简单工厂模式（Simple Factory） 
+ 工厂方法模式（Factory Method） 
+ 抽象工厂方法（Abstract Factory）</p>
+<p>接下来我们直接通过<strong>uml</strong>图和具体的代码实现以上三类</p>
+<p>我们以汽车工厂生产汽车为例，本田工厂假设要生产CIVIC和CRV两种车型，那么我们该怎么去设计实现</p>
+<p><strong>1 简单工厂模式</strong></p>
+<p><img alt="简单工厂模式" src="http://upload-images.jianshu.io/upload_images/10175660-4012e2250133cb61?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>工厂产品线流程如上图所示：工厂生产汽车通过指定汽车的编号，我们就可以走指定的产品线；调用者只需要选择具体车型而不需要内部车是怎么制造出来的</p>
+<p>简单工厂模式主要包括三部分： 
+工厂角色：上图中的HONDAFactroy 生产车型用 
+抽象产品角色：上图中的HONDA和HONDACar 包含通用的属性和方法 
+具体产品角色：上图中的CIVIC和CRV，具体的车型包含各种参数</p>
+<p><strong>代码如下</strong></p>
+<div class="highlight"><pre><span></span><span class="cm">/** </span>
+<span class="cm">* @author nicky_chin [shuilianpiying@163.com] </span>
+<span class="cm">* @since –created on 2017/12/27 at 11 …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/design-pattern/builder-factory.html" rel="bookmark" title="Permalink to 设计模式之factory模式">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/chuang-jian-xing.html">创建型</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/concurrent/thread-communication.html" rel="bookmark" title="Permalink to 多线程之线程通信摘要">多线程之线程通信摘要</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2017-11-18T21:52:00+08:00"> 周六 18 十一月 2017 </abbr>
@@ -223,6 +263,11 @@ public class Service extends …</pre></div> </div><!-- /.entry-content -->
              Security
          </a>
      </li>
+     <li >
+         <a href="/source-code/index.html">
+             Source-code
+         </a>
+     </li>
   </ul>
 
 <!---->
@@ -245,6 +290,8 @@ public class Service extends …</pre></div> </div><!-- /.entry-content -->
 	<!---->
 		<!--<li><a href="/security/index.html">Security</a></li>-->
 	<!---->
+		<!--<li><a href="/source-code/index.html">Source-code</a></li>-->
+	<!---->
 <!--</ul>-->
 <!---->
 
@@ -255,13 +302,14 @@ public class Service extends …</pre></div> </div><!-- /.entry-content -->
 	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
 	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
-	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
-	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
+	    <li class="danger label" ><a href="/tag/junit.html">junit</a></li>
 	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
 </ul>
 

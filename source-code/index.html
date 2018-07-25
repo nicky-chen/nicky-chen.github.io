@@ -5,7 +5,7 @@
         <title>南乡清水</title>
         <meta charset="utf-8" />
         <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
-        <link href="/feeds/design-pattern.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
+        <link href="/feeds/source-code.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
 
 
         <!-- Mobile viewport optimized: j.mp/bplateviewport -->
@@ -57,7 +57,7 @@
             </div>
 
 <section id="content">
-<h2>Articles in the design-pattern category</h2>
+<h2>Articles in the Source-code category</h2>
 
 
    <div class="row">
@@ -66,130 +66,38 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/design-pattern/decorator.html" rel="bookmark" title="Permalink to 实际项目运用之Decorator模式（装饰器模式）">实际项目运用之Decorator模式（装饰器模式）</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="/source-code/junit-code=analysis.html" rel="bookmark" title="Permalink to 初窥门径之JUnit源码分析">初窥门径之JUnit源码分析</a></h2> </header>
                                 <footer class="post-info">
-                                    <abbr class="published" title="2018-03-28T11:22:00+08:00"> 周三 28 三月 2018 </abbr>
+                                    <abbr class="published" title="2018-07-16T21:58:00+08:00"> 周一 16 七月 2018 </abbr>
                                     <address class="vcard author">By 
                                     <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
                                     </address>
                                 </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h2>1 概述</h2>
-<p>在项目中，经常因一些新增需求，导致同一业务的变更，如果所在类继承关系如下：Parent、Child、Grandparent，那么要在Child类上增强些功能怎么办？给Child类增加方法？那会对Grandparent产生什么影响？该如何去处理？看完本文，你会找到你的答案。</p>
-<p>JavaIO中，像下面的嵌套语句很常见，为什么要怎样定义呢？理解装饰模式后，你会找到答案。</p>
-<div class="highlight"><pre><span></span>FilterInputStream filterInputStreasm = new BufferedInputStream(new FileInputStream(new File(&quot;/user/a&quot;)));
-</pre></div>
+                                <div class="entry-content"> <h1>1 源码分析流程</h1>
+<p>对于阅读源码有兴趣的同学，可以按以下步骤进行：</p>
+<ol>
+<li>了解框架架构图</li>
+<li>了解各包包含功能点</li>
+<li>选择需要功能点入手</li>
+<li>了解 <strong>数据流和控制流</strong></li>
+<li>画 <strong>类图 和 时序图</strong></li>
+<li>复盘</li>
+</ol>
+<h1>2 Junit架构详解</h1>
+<h3>2.1 包功能概述</h3>
+<p>通过分析JUnit-3.8.1的源代码文件可以看到，JUnit的源码被分散在6个package中，这个6个package分别为： <em>junit.awtui</em> 、 <em>junit.swingui</em> 、 <em>junit.textui</em> 、 <em>junit.extensions</em> 、 <em>junit.framework</em> 、 <em>junit.runner</em>  具体的文件分布图如下：</p>
+<p><img alt="各包情况" src="https://upload-images.jianshu.io/upload_images/10175660-278a9ef83d38a42d.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>其中 junit.awtui 、 junit.swingui 、 junit.textui 这三个package是有关JUnit运行时的入口程序以及运行结果显示界面的
+junit.runner中则包含了支持单元测试运行的一些基础类以及自己的类加载器
+junit.framework 包含有编写一般JUnit单元测试类必须组件 …</p> </div><!-- /.entry-content -->
 
-
-<h3>1.1案例</h3>
-<p>例如下面一个功能需求，4s店的汽车销售向客户推销自家品牌的产品，我们用代码实现，关系如下：</p>
-<p><img alt="类图" src="https://upload-images.jianshu.io/upload_images/10175660-789e0242028d08b0.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p>具体代码：
-汽车销售类</p>
-<div class="highlight"><pre><span></span>public abstract class CarSale {
-
-    /**
-     * 推销车的详情
-     */
-    public abstract void displayCarInfo();
-
-    /**
-     * 客户签订购买合同
-     */
-    public abstract …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/design-pattern/decorator.html" rel="bookmark" title="Permalink to 实际项目运用之Decorator模式（装饰器模式）">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="/source-code/junit-code=analysis.html" rel="bookmark" title="Permalink to 初窥门径之JUnit源码分析">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/jie-gou-xing.html">结构型</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/design-pattern/builder.html" rel="bookmark" title="Permalink to 设计模式之builder模式">设计模式之builder模式</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2017-12-19T22:15:00+08:00"> 周二 19 十二月 2017 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>建造者模式也叫生成器模式，和抽象工厂模式相似，也是一种构建复杂对象的模式。</p>
-<p><strong>建造者模式中的角色分类</strong>： 
- 抽象建造者Builder：接口类型，用于规范各个产品的组成部分； 
- 具体建造者ConcreteBuilder：实现Builder中的所有方法，返回一个产品实例； 
- 指导者Director：指挥建造者制造相应的产品 
- 产品Product：用户最终看到的复杂对象。</p>
-<p>假设我们有一个向客户发送新年祝福邮件的需求，而邮件内容可以是纯文档的，也可以是有动画的，也可以是有音频的，可以动态的添加个组件</p>
-<p>uml下图所示： 
-<img alt="建造者模式" src="http://upload-images.jianshu.io/upload_images/10175660-73b74bcbd9ee9ba9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p>如上图所示，邮箱有多个组件，包含收件人，发送人，内容，音乐等 
-通过具体的建造者添加不同的组件模版，最后通过指挥者去调用抽象建造者 
-来返回具体的email对象</p>
-<p>代码如下
-==================product======================</p>
-<div class="highlight"><pre><span></span><span class="nt">public</span> <span class="nt">interface</span> <span class="nt">Module</span> <span class="p">{</span>
-
-<span class="err">String</span> <span class="err">showInfo(String</span> <span class="err">info)</span><span class="p">;</span>
-
-<span class="p">}</span><span class="err">`</span>
-
-<span class="nt">public</span> <span class="nt">abstract</span> <span class="nt">class</span> <span class="nt">CommonModule</span> <span class="nt">implements</span> <span class="nt">Module</span> <span class="p">{</span>
-
-<span class="err">protected</span> <span class="err">String</span> <span class="err">moduleName</span><span class="p">;</span>
-
-<span class="err">protected</span> <span class="err">String</span> <span class="err">productionTime …</span></pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/design-pattern/builder.html" rel="bookmark" title="Permalink to 设计模式之builder模式">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/chuang-jian-xing.html">创建型</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/design-pattern/builder-factory.html" rel="bookmark" title="Permalink to 设计模式之factory模式">设计模式之factory模式</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2017-12-07T22:30:00+08:00"> 周四 07 十二月 2017 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p><strong>定义</strong>：工厂模式通俗意义上讲就是一个多产品的流程化工厂，每个工厂生产同一系列相关性的组件</p>
-<p><strong>分类</strong>：</p>
-<p>按工厂职能划分可以分为三类： 
- 简单工厂模式（Simple Factory） 
- 工厂方法模式（Factory Method） 
- 抽象工厂方法（Abstract Factory）</p>
-<p>接下来我们直接通过<strong>uml</strong>图和具体的代码实现以上三类</p>
-<p>我们以汽车工厂生产汽车为例，本田工厂假设要生产CIVIC和CRV两种车型，那么我们该怎么去设计实现</p>
-<p><strong>1 简单工厂模式</strong></p>
-<p><img alt="简单工厂模式" src="http://upload-images.jianshu.io/upload_images/10175660-4012e2250133cb61?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p>工厂产品线流程如上图所示：工厂生产汽车通过指定汽车的编号，我们就可以走指定的产品线；调用者只需要选择具体车型而不需要内部车是怎么制造出来的</p>
-<p>简单工厂模式主要包括三部分： 
-工厂角色：上图中的HONDAFactroy 生产车型用 
-抽象产品角色：上图中的HONDA和HONDACar 包含通用的属性和方法 
-具体产品角色：上图中的CIVIC和CRV，具体的车型包含各种参数</p>
-<p><strong>代码如下</strong></p>
-<div class="highlight"><pre><span></span><span class="cm">/** </span>
-<span class="cm">* @author nicky_chin [shuilianpiying@163.com] </span>
-<span class="cm">* @since –created on 2017/12/27 at 11 …</span></pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/design-pattern/builder-factory.html" rel="bookmark" title="Permalink to 设计模式之factory模式">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/chuang-jian-xing.html">创建型</a>
+                                            <a class="danger label" href="/tag/junit.html">junit</a>
                                 </div>
 
 
@@ -245,7 +153,7 @@
              concurrent
          </a>
      </li>
-     <li class="active" >
+     <li >
          <a href="/design-pattern/index.html">
              design-pattern
          </a>
@@ -270,7 +178,7 @@
              Security
          </a>
      </li>
-     <li >
+     <li class="active" >
          <a href="/source-code/index.html">
              Source-code
          </a>
@@ -343,8 +251,7 @@
 </div> </div><!-- /.row -->
 
 <p class="paginator">
-            <a href="/design-pattern/index.html"><i class="icon-arrow-left"></i></a>
-    Page 2 / 2
+    Page 1 / 1
 </p>
 </section><!-- /#content -->
 

@@ -65,6 +65,47 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/string-builder-question.html" rel="bookmark" title="Permalink to 字符串拼接的疑惑">字符串拼接的疑惑</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-04-21T15:34:00+08:00"> 周六 21 四月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>最近没事在玩ASM框架，于是乎想将业务代码中的PO对象中的toString方法 在编译期间，自动转换了基于StringBuilder 拼接的代码。发现了一个奇怪的问题：
+实体类如下</p>
+<div class="highlight"><pre><span></span>@Getter
+@Setter
+@EqualsAndHashCode(of = &quot;id&quot;)
+@ApiModel(&quot;活动&quot;)
+public class Banner implements Serializable{
+
+    private static final long serialVersionUID = 191609922585601269L;
+
+    @ApiModelProperty(value = &quot;ID&quot;, position = 1)
+    private Integer id;
+
+    @ApiModelProperty(value = &quot;显示次序&quot;, position = 2)
+    private Integer orderNo;
+
+    @ApiModelProperty(value = &quot;关联文件&quot;, position = 3)
+    private Integer fileId;
+
+    @ApiModelProperty …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/string-builder-question.html" rel="bookmark" title="Permalink to 字符串拼接的疑惑">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/java-base/exception-introduce.html" rel="bookmark" title="Permalink to Java异常处理-原理及优化建议">Java异常处理-原理及优化建议</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-04-17T19:00:00+08:00"> 周二 17 四月 2018 </abbr>
@@ -205,37 +246,6 @@ Java 的并发采用的是共享内存模型，Java 线程之间的通信总是�
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/java-base/binary-operation.html" rel="bookmark" title="Permalink to java中位运算技巧">java中位运算技巧</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-03-21T22:17:00+08:00"> 周三 21 三月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>位运算符主要针对二进制，它包括了：“与”、“非”、“或”、“异或”。</p>
-<h2>运算符 含义 描述</h2>
-<p>【&amp;】 按位与 如果两个相应的二进制位都为1，则该位的结果值为1，否则为0
-【|】按位或 两个相应的二进制位中只要有一个为1，该位的结果值为1
-【^】 按位异或 若参加运算的两个二进制位值相同则为0，否则为1
-【~】 取反 ~是一元运算符，用来对一个二进制数按位取反，即将0变1，将1变0
-【&lt;&lt;】 左移 用来将一个数的各二进制位全部左移N位，右补0
-【&gt;&gt;】右移 将一个数的各二进制位右移N位，移到右端的低位被舍弃，对于无符号数，高位补0</p>
-<h4>1、“按位与”运算符（&amp;）</h4>
-<p>按位与是指：参加运算的两个数据，按二进制位进行“与”运算。如果两个相应的二进制位都为１，则该位的结果值为1；否则为0。内存储存数据的基本单位是字节（Byte），一个字节由8个位（bit)所组成。位是用以描述电脑数据量的最小单位。二进制系统中 …</p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/java-base/binary-operation.html" rel="bookmark" title="Permalink to java中位运算技巧">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -311,6 +321,11 @@ Java 的并发采用的是共享内存模型，Java 线程之间的通信总是�
              Security
          </a>
      </li>
+     <li >
+         <a href="/source-code/index.html">
+             Source-code
+         </a>
+     </li>
   </ul>
 
 <!---->
@@ -333,6 +348,8 @@ Java 的并发采用的是共享内存模型，Java 线程之间的通信总是�
 	<!---->
 		<!--<li><a href="/security/index.html">Security</a></li>-->
 	<!---->
+		<!--<li><a href="/source-code/index.html">Source-code</a></li>-->
+	<!---->
 <!--</ul>-->
 <!---->
 
@@ -343,13 +360,14 @@ Java 的并发采用的是共享内存模型，Java 线程之间的通信总是�
 	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
 	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
-	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
-	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
+	    <li class="danger label" ><a href="/tag/junit.html">junit</a></li>
 	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
 </ul>
 
