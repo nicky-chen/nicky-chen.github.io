@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>实际项目运用之State模式（状态模式）</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+        <link href="/feeds/design-pattern.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+        <link rel="shortcut icon" href="/theme/images/favicon.ico">
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+
+                <ul class="columns">
+                    <li><a href="/">首页</a></li>
+
+                    <li
+><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                    <li
+><a href="/zai-xian-gong-ju.html">在线工具</a></li>
+                    <li
+><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                    <li
+><a href="/ji-zhu-tu-pu.html">技术图谱</a></li>
+                    <li
+><a href="/guan-yu-wo.html">关于我</a></li>
+                     <li><a href="/archives.html"><i class="active"></i>归档日志</a></li>
+                    <form class="navbar-search pull-right" action="/search.html">
+                        <input type="text" class="search-query" placeholder="站内搜" name="q" id="s">
+                    </form>
+                </ul>
+            </div>
+
+
+<section id="content" class="body">
+
+   <div class="row">
+
+<div id="toc" class="threes columns" style="font-size: 65%">
+    <br>
+    <h4 style="font-size: 1rem">文章目录</h4>
+</div>        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/design-pattern/state-machine.html" rel="bookmark"
+                   title="Permalink to 实际项目运用之State模式（状态模式）">实际项目运用之State模式（状态模式）</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2018-07-19T22:18:00+08:00">
+                周四 19 七月 2018
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div id="contents" class="entry-content">
+              <h1>1  模式简介</h1>
+<p><strong>定义：</strong>
+状态模式允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类。这个模式将状态封装成独立的类，并将动作委托到代表当前状态的类的对象</p>
+<p><strong>状态模式的优点：</strong></p>
+<blockquote>
+<p>封装了转换规则
+枚举可能的状态，在枚举状态之前需要确定状态种类
+将所有与某个状态有关的行为放到一个类中，可方便增加新的状态
+允许状态转换逻辑与状态对象合成一体，而非复杂条件语句块
+可以让多个环境对象共享一个状态对象，从而减少系统中对象的个数</p>
+</blockquote>
+<p><strong>状态模式的缺点：</strong></p>
+<blockquote>
+<p>增加系统类和对象的个数
+结构与实现都较为复杂，如果使用不当将导致程序结构和代码的混乱
+对"开闭原则"的支持不太好，增加新状态类需在状态类上增加行为方法</p>
+</blockquote>
+<p><strong>状态模式的适用场景：</strong>
+ 1. 对象的行为依赖于它的状态，并且可以在运行时根据状态改变行为。
+ 2. 代码中包含大量与对象状态有关的if/else语句
+ 3. 接口幂等要求</p>
+<p><strong>状态模式和策略模式：</strong>
+相同点是它们都需要根据需求选择相应的状态或策略
+不同点是状态模式是在一个类中通过不同的动作切换不同的状态，而策略模式是为一个类选择某个策略，即状态模式中的Context是和多个状态关联的，而策略模式中的Context只和一个策略关联</p>
+<p><strong>状态模式角色介绍：</strong>
+<img alt="状态模式类图" src="https://upload-images.jianshu.io/upload_images/10175660-113c92a20076e368.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>（1）Context类，依赖倒置原则，通过适配器模式维护状态类
+（2）State：抽象状态类或状态接口，用以抽象封装行为
+（3）ConcreteState类：具体状态类，实现了State中的抽象方法</p>
+<hr>
+<h1>2 实际运用</h1>
+<p>借贷平台的订单，有<em>审核-发布-抢单 等等</em> 步骤，随着操作的不同，会改变订单的状态，通常通过if/else判断订单的状态，从而实现不同的逻辑，伪代码如下：</p>
+<div class="highlight"><pre><span></span>if(审核){
+   //审核逻辑
+}elseif(发布){
+   //发布逻辑
+}elseif(接单){
+   //接单逻辑
+}
+</pre></div>
+
+
+<p>上述解决方案缺点非常明显：这类代码难以应对变化，在添加一种状态时，我们需要手动添加if/else，在添加一种功能时，要对所有的状态进行判断。因此代码会变得越来越臃肿，并且一旦没有处理某个状态，便会发生极其严重的BUG，难以维护</p>
+<h3>2.1 状态模式应用</h3>
+<p>状态模式本质上是一种基于状态和事件的 <em>状态机</em> ,下面是订单流程的状态图</p>
+<p><img alt="订单流程" src="https://upload-images.jianshu.io/upload_images/10175660-b6ccaa815dbe7c7b.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>通过状态图，我们再设计一张横纵坐标关系表来比较，图如下：</p>
+<p><img alt="关系表" src="https://upload-images.jianshu.io/upload_images/10175660-bb5334e225393713.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>通过上述表 我们可以细化为一个二维数组，来表示状态与事件直接的关系：</p>
+<p><img alt="二维数组" src="https://upload-images.jianshu.io/upload_images/10175660-39476dcf8ce242e4.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h3>2.2 代码实现</h3>
+<p>我们通过状态的各种图例分析来用代码实现逻辑</p>
+<p><strong>状态枚举类</strong></p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">enum</span> <span class="n">StateEnum</span> <span class="o">{</span>
+
+    <span class="c1">//订单生成</span>
+    <span class="n">GENERATE</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="s">&quot;GENERATE&quot;</span><span class="o">),</span>
+
+    <span class="c1">//已审核</span>
+    <span class="n">REVIEWED</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="s">&quot;REVIEWED&quot;</span><span class="o">),</span>
+
+    <span class="c1">//已发布</span>
+    <span class="n">PUBLISHED</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">&quot;PUBLISHED&quot;</span><span class="o">),</span>
+
+    <span class="c1">//待付款</span>
+    <span class="n">NOT_PAY</span><span class="o">(</span><span class="mi">4</span><span class="o">,</span> <span class="s">&quot;NOT_PAY&quot;</span><span class="o">),</span>
+
+    <span class="c1">//已付款</span>
+    <span class="n">PAID</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="s">&quot;PAID&quot;</span><span class="o">),</span>
+
+    <span class="c1">//已完结</span>
+    <span class="n">FEED_BACKED</span><span class="o">(</span><span class="mi">6</span><span class="o">,</span> <span class="s">&quot;FEED_BACKED&quot;</span><span class="o">);</span>
+
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">key</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">value</span><span class="o">;</span>
+
+    <span class="n">StateEnum</span><span class="o">(</span><span class="kt">int</span> <span class="n">key</span><span class="o">,</span> <span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">key</span> <span class="o">=</span> <span class="n">key</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getKey</span><span class="o">()</span> <span class="o">{</span><span class="k">return</span> <span class="n">key</span><span class="o">;}</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getValue</span><span class="o">()</span> <span class="o">{</span><span class="k">return</span> <span class="n">value</span><span class="o">;}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<p><strong>状态接口</strong></p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">State</span> <span class="o">{</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 电审</span>
+<span class="cm">     */</span>
+    <span class="kt">void</span> <span class="nf">checkEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">);</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 电审失败</span>
+<span class="cm">     */</span>
+    <span class="kt">void</span> <span class="nf">checkFailEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">);</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 定价发布</span>
+<span class="cm">     */</span>
+    <span class="kt">void</span> <span class="nf">makePriceEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">);</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 接单</span>
+<span class="cm">     */</span>
+    <span class="kt">void</span> <span class="nf">acceptOrderEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">);</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 无人接单失效</span>
+<span class="cm">     */</span>
+    <span class="kt">void</span> <span class="nf">notPeopleAcceptEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">);</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 付款</span>
+<span class="cm">     */</span>
+    <span class="kt">void</span> <span class="nf">payOrderEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">);</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 接单有人支付失效</span>
+<span class="cm">     */</span>
+    <span class="kt">void</span> <span class="nf">orderFailureEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">);</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 反馈</span>
+<span class="cm">     */</span>
+    <span class="kt">void</span> <span class="nf">feedBackEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">);</span>
+
+
+    <span class="n">String</span> <span class="nf">getCurrentState</span><span class="o">();</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<p><strong>抽象状态类</strong></p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">AbstractState</span> <span class="kd">implements</span> <span class="n">State</span> <span class="o">{</span>
+
+    <span class="kd">protected</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">RuntimeException</span> <span class="n">EXCEPTION</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="o">(</span><span class="s">&quot;操作流程不允许&quot;</span><span class="o">);</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">checkEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="n">EXCEPTION</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">checkFailEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="n">EXCEPTION</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">makePriceEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="n">EXCEPTION</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">acceptOrderEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="n">EXCEPTION</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">notPeopleAcceptEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="n">EXCEPTION</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">payOrderEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="n">EXCEPTION</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">orderFailureEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="n">EXCEPTION</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">feedBackEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="n">EXCEPTION</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p><strong>具体状态类</strong></p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FeedBackState</span> <span class="kd">extends</span> <span class="n">AbstractState</span><span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getCurrentState</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">StateEnum</span><span class="o">.</span><span class="na">FEED_BACKED</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">GenerateState</span> <span class="kd">extends</span> <span class="n">AbstractState</span> <span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">checkEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">setState</span><span class="o">(</span><span class="k">new</span> <span class="n">ReviewState</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">checkFailEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">setState</span><span class="o">(</span><span class="k">new</span> <span class="n">FeedBackState</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getCurrentState</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">StateEnum</span><span class="o">.</span><span class="na">GENERATE</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">NotPayState</span> <span class="kd">extends</span> <span class="n">AbstractState</span><span class="o">{</span>
+
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">payOrderEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">setState</span><span class="o">(</span><span class="k">new</span> <span class="n">PaidState</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">feedBackEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">setState</span><span class="o">(</span><span class="k">new</span> <span class="n">FeedBackState</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getCurrentState</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">StateEnum</span><span class="o">.</span><span class="na">NOT_PAY</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PaidState</span> <span class="kd">extends</span> <span class="n">AbstractState</span> <span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">feedBackEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">setState</span><span class="o">(</span><span class="k">new</span> <span class="n">FeedBackState</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getCurrentState</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">StateEnum</span><span class="o">.</span><span class="na">PAID</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PublishState</span> <span class="kd">extends</span> <span class="n">AbstractState</span> <span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">acceptOrderEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">setState</span><span class="o">(</span><span class="k">new</span> <span class="n">NotPayState</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">notPeopleAcceptEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">setState</span><span class="o">(</span><span class="k">new</span> <span class="n">FeedBackState</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getCurrentState</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">StateEnum</span><span class="o">.</span><span class="na">PUBLISHED</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ReviewState</span> <span class="kd">extends</span> <span class="n">AbstractState</span> <span class="o">{</span>
+
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">makePriceEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">setState</span><span class="o">(</span><span class="k">new</span> <span class="n">PublishState</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getCurrentState</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">StateEnum</span><span class="o">.</span><span class="na">REVIEWED</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<p><strong>环境上下文</strong></p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Context</span> <span class="kd">extends</span> <span class="n">AbstractState</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">State</span> <span class="n">state</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">checkEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">state</span><span class="o">.</span><span class="na">checkEvent</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+        <span class="n">getCurrentState</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">checkFailEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">state</span><span class="o">.</span><span class="na">checkFailEvent</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+        <span class="n">getCurrentState</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">makePriceEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">state</span><span class="o">.</span><span class="na">makePriceEvent</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+        <span class="n">getCurrentState</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">acceptOrderEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">state</span><span class="o">.</span><span class="na">acceptOrderEvent</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+        <span class="n">getCurrentState</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">notPeopleAcceptEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">state</span><span class="o">.</span><span class="na">notPeopleAcceptEvent</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+        <span class="n">getCurrentState</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">payOrderEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">state</span><span class="o">.</span><span class="na">payOrderEvent</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+        <span class="n">getCurrentState</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">orderFailureEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">state</span><span class="o">.</span><span class="na">orderFailureEvent</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+        <span class="n">getCurrentState</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">feedBackEvent</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">state</span><span class="o">.</span><span class="na">feedBackEvent</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+        <span class="n">getCurrentState</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">State</span> <span class="nf">getState</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">state</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setState</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">state</span> <span class="o">=</span> <span class="n">state</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getCurrentState</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;当前状态 : &quot;</span> <span class="o">+</span> <span class="n">state</span><span class="o">.</span><span class="na">getCurrentState</span><span class="o">());</span>
+        <span class="k">return</span> <span class="n">state</span><span class="o">.</span><span class="na">getCurrentState</span><span class="o">();</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>客户端调用</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Context</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Context</span><span class="o">();</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">setState</span><span class="o">(</span><span class="k">new</span> <span class="n">PublishState</span><span class="o">());</span>
+        <span class="c1">//publish --&gt; not pay</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">acceptOrderEvent</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+        <span class="c1">//not pay --&gt; paid</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">payOrderEvent</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+        <span class="c1">// 失败</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">checkFailEvent</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<p>控制台打印如下:</p>
+<div class="highlight"><pre><span></span>当前状态 : NOT_PAY
+当前状态 : PAID
+Exception in thread &quot;main&quot; java.lang.RuntimeException: 操作流程不允许
+    at com.nicky.state.AbstractState.&lt;clinit&gt;(AbstractState.java:9)
+    at com.nicky.state.Client.main(Client.java:10)
+</pre></div>
+
+
+<p>订单状态从发布状态到 <em>已接单 -已付款</em> 状态后，不能进行<strong>电审失败事件</strong>的操作，因为代码中如果某个行为不会触发状态的变化，会抛出一个 <code>RuntimeException</code> 异常，所以直接抛出异常</p>
+<p>上述是实际项目中使用状态模式代码的简化版，之后我们用<strong>Spring StateMachine</strong> 让状态机结构更加层次化，可以帮助开发者简化状态机的开发过程</p>
+<h1>3 Spring状态机优化</h1>
+<p>创建一个Spring Boot的基础工程，并在pom.xml中加入<code>spring-statemachine-core</code>的依赖，具体如下：</p>
+<div class="highlight"><pre><span></span><span class="nt">&lt;dependency&gt;</span>
+        <span class="nt">&lt;groupId&gt;</span>org.springframework.statemachine<span class="nt">&lt;/groupId&gt;</span>
+        <span class="nt">&lt;artifactId&gt;</span>spring-statemachine-core<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;version&gt;</span>1.2.0.RELEASE<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+</pre></div>
+
+
+<p>定义一个状态枚举</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">enum</span> <span class="n">OrderStatusEnum</span> <span class="o">{</span>
+
+    <span class="c1">//订单生成</span>
+    <span class="n">GENERATE</span><span class="o">,</span>
+
+    <span class="c1">//已审核</span>
+    <span class="n">REVIEWED</span><span class="o">,</span>
+
+    <span class="c1">//已发布</span>
+    <span class="n">PUBLISHED</span><span class="o">,</span>
+
+    <span class="c1">//待付款</span>
+    <span class="n">NOT_PAY</span><span class="o">,</span>
+
+    <span class="c1">//已付款</span>
+    <span class="n">PAID</span><span class="o">,</span>
+
+    <span class="c1">//已完结</span>
+    <span class="n">FEED_BACKED</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">EnumMap</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="nf">getMap</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">EnumMap</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">EnumMap</span><span class="o">&lt;&gt;(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">Arrays</span><span class="o">.</span><span class="na">stream</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">values</span><span class="o">()).</span><span class="na">forEach</span><span class="o">(</span><span class="n">x</span> <span class="o">-&gt;</span> <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">x</span><span class="o">.</span><span class="na">name</span><span class="o">()));</span>
+        <span class="k">return</span> <span class="n">map</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>定义事件枚举</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">enum</span> <span class="n">OrderEventEnum</span> <span class="o">{</span>
+    <span class="cm">/**</span>
+<span class="cm">     * 电审</span>
+<span class="cm">     */</span>
+    <span class="n">CHECK</span><span class="o">,</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 电审失败:</span>
+<span class="cm">     */</span>
+    <span class="n">CHECK_FAIL</span><span class="o">,</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 定价发布</span>
+<span class="cm">     */</span>
+    <span class="n">MAKE_PRICE</span><span class="o">,</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 接单</span>
+<span class="cm">     */</span>
+    <span class="n">ACCEPT_ORDER</span><span class="o">,</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 无人接单失效</span>
+<span class="cm">     */</span>
+    <span class="n">NOT_PEOPLE_ACCEPT</span><span class="o">,</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 付款</span>
+<span class="cm">     */</span>
+    <span class="n">PAY_ORDER</span><span class="o">,</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 接单有人支付失效</span>
+<span class="cm">     */</span>
+    <span class="n">ORDER_FAILURE</span><span class="o">,</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 反馈</span>
+<span class="cm">     */</span>
+    <span class="n">FEED_BACK</span><span class="o">;</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<p>创建状态机配置类：</p>
+<div class="highlight"><pre><span></span><span class="nd">@Configuration</span>
+<span class="nd">@EnableStateMachine</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">StateMachineConfig</span> <span class="kd">extends</span> <span class="n">EnumStateMachineConfigurerAdapter</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="o">{</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 我们需要初始化状态机的状态。其中，initial(OrderStatusEnum.UNCONNECTED) 定义了初始状态是未连接状态</span>
+<span class="cm">     * 。states(EnumSet.allOf(OrderStatusEnum.class)) 定义了状态机中存在的所有状态。</span>
+<span class="cm">     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">configure</span><span class="o">(</span><span class="n">StateMachineStateConfigurer</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">states</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">states</span><span class="o">.</span><span class="na">withStates</span><span class="o">()</span>
+                <span class="c1">// 定义初始状态</span>
+                <span class="o">.</span><span class="na">initial</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">GENERATE</span><span class="o">)</span>
+                <span class="c1">// 定义状态机状态</span>
+                <span class="o">.</span><span class="na">states</span><span class="o">(</span><span class="n">EnumSet</span><span class="o">.</span><span class="na">allOf</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">class</span><span class="o">));</span>
+    <span class="o">}</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * 我们需要初始化当前状态机有哪些状态事件。其中， source 指定原始状态，target 指定目标状态，event 指定触发事件。</span>
+<span class="cm">     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">configure</span><span class="o">(</span><span class="n">StateMachineTransitionConfigurer</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">transitions</span><span class="o">)</span>
+            <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+
+        <span class="n">transitions</span><span class="o">.</span><span class="na">withExternal</span><span class="o">()</span>
+                <span class="c1">// 1.电审事件</span>
+                <span class="c1">// 订单生成 -&gt; 已审核</span>
+                <span class="o">.</span><span class="na">source</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">GENERATE</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">target</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">REVIEWED</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">event</span><span class="o">(</span><span class="n">OrderEventEnum</span><span class="o">.</span><span class="na">CHECK</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">and</span><span class="o">()</span>
+                <span class="c1">// 订单生成 -&gt; 已完结</span>
+                <span class="o">.</span><span class="na">withExternal</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">source</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">GENERATE</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">target</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">FEED_BACKED</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">event</span><span class="o">(</span><span class="n">OrderEventEnum</span><span class="o">.</span><span class="na">CHECK_FAIL</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">and</span><span class="o">()</span>
+
+                <span class="c1">// 2.定价发布事件</span>
+                <span class="c1">// 已审核 -&gt; 已发布</span>
+                <span class="o">.</span><span class="na">withExternal</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">source</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">REVIEWED</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">target</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">PUBLISHED</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">event</span><span class="o">(</span><span class="n">OrderEventEnum</span><span class="o">.</span><span class="na">MAKE_PRICE</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">and</span><span class="o">()</span>
+
+                <span class="c1">// 3.接单事件</span>
+                <span class="o">.</span><span class="na">withExternal</span><span class="o">()</span>
+                <span class="c1">// 已发布 -&gt; 待付款</span>
+                <span class="o">.</span><span class="na">source</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">PUBLISHED</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">target</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">NOT_PAY</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">event</span><span class="o">(</span><span class="n">OrderEventEnum</span><span class="o">.</span><span class="na">ACCEPT_ORDER</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">and</span><span class="o">()</span>
+                <span class="c1">// 已发布 -&gt; 已完结 2小时失效事件</span>
+                <span class="o">.</span><span class="na">withExternal</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">source</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">PUBLISHED</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">target</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">FEED_BACKED</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">event</span><span class="o">(</span><span class="n">OrderEventEnum</span><span class="o">.</span><span class="na">NOT_PEOPLE_ACCEPT</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">and</span><span class="o">()</span>
+
+                <span class="c1">// 4.付款事件</span>
+                <span class="c1">// 待付款 -&gt; 已付款</span>
+                <span class="o">.</span><span class="na">withExternal</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">source</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">NOT_PAY</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">target</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">PAID</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">event</span><span class="o">(</span><span class="n">OrderEventEnum</span><span class="o">.</span><span class="na">PAY_ORDER</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">and</span><span class="o">()</span>
+
+                <span class="c1">// 5.付款失效事件</span>
+                <span class="c1">// 待付款 -&gt; 已完结</span>
+                <span class="o">.</span><span class="na">withExternal</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">source</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">NOT_PAY</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">target</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">FEED_BACKED</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">event</span><span class="o">(</span><span class="n">OrderEventEnum</span><span class="o">.</span><span class="na">ORDER_FAILURE</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">and</span><span class="o">()</span>
+
+                <span class="c1">//6.反馈事件</span>
+                <span class="c1">// 已付款 -&gt; 已完结</span>
+                <span class="o">.</span><span class="na">withExternal</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">source</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">PAID</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">target</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">FEED_BACKED</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">event</span><span class="o">(</span><span class="n">OrderEventEnum</span><span class="o">.</span><span class="na">FEED_BACK</span><span class="o">);</span>
+
+    <span class="o">}</span>
+
+
+    <span class="c1">//    @Override</span>
+<span class="c1">//    public void configure(StateMachineConfigurationConfigurer&lt;OrderStatusEnum, OrderEventEnum&gt; config)</span>
+<span class="c1">//            throws Exception {</span>
+<span class="c1">//        config.withConfiguration()</span>
+<span class="c1">//                .listener(listener());    // 指定状态机的处理监听器</span>
+<span class="c1">//    }</span>
+
+<span class="c1">//    @Bean</span>
+<span class="c1">//    public StateMachineListener&lt;OrderStatusEnum, OrderEventEnum&gt; listener() {</span>
+<span class="c1">//        return new StateMachineListenerAdapter&lt;OrderStatusEnum, OrderEventEnum&gt;() {</span>
+<span class="c1">//</span>
+<span class="c1">//            @Override</span>
+<span class="c1">//            public void transition(Transition&lt;OrderStatusEnum, OrderEventEnum&gt; transition) {</span>
+<span class="c1">//                if(transition.getTarget().getId() == OrderStatusEnum.PUBLISHED) {</span>
+<span class="c1">//                    //todo</span>
+<span class="c1">//                    return;</span>
+<span class="c1">//                }</span>
+<span class="c1">//            }</span>
+<span class="c1">//</span>
+<span class="c1">//        };</span>
+<span class="c1">//    }</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<p>上述配置类中，我们通过重写<code>configure(StateMachineStateConfigurer&lt;States, Events&gt; states)方法</code>用来初始化当前状态机拥有哪些状态，其中，<code>initial(RegStatusEnum.GENERATE)</code>定义了初始状态为订单生成状态。<code>states(EnumSet.allOf(RegStatusEnum.class))</code>定义了状态机中存在的所有状态。</p>
+<p>而<code>configure(StateMachineTransitionConfigurer&lt;States, Events&gt; transitions)方法</code>是用来初始化当前状态机有哪些状态迁移动作，其中命名中我们很容易理解每一个迁移动作，都有来源状态  <em>source</em> ，目标状态 <em>target</em> 以及触发事件 <em>event</em></p>
+<p>状态监听器配置</p>
+<div class="highlight"><pre><span></span><span class="nd">@WithStateMachine</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">StateMachineEventConfig</span> <span class="o">{</span>
+
+   <span class="c1">// Spring StateMachine 提供了注解配置实现方式，所有 StateMachineListener</span>
+    <span class="c1">// 接口中定义的事件都能通过注解的方式来进行配置实现。这里以连接事件为案例，</span>
+    <span class="c1">// @OnTransition 中 source 指定原始状态，target 指定目标状态，当事件触发时将会被监听到从而调用 connect() 方法。</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="n">getClass</span><span class="o">());</span>
+
+
+    <span class="nd">@OnTransition</span><span class="o">(</span><span class="n">source</span> <span class="o">=</span> <span class="s">&quot;GENERATE&quot;</span><span class="o">,</span> <span class="n">target</span> <span class="o">=</span> <span class="s">&quot;REVIEWED&quot;</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">checkEvent</span><span class="o">(){</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&quot;---------电审事件---------&quot;</span><span class="o">);</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;订单生成 ------&gt; 已审核&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@OnTransition</span><span class="o">(</span><span class="n">source</span> <span class="o">=</span> <span class="s">&quot;GENERATE&quot;</span><span class="o">,</span> <span class="n">target</span> <span class="o">=</span> <span class="s">&quot;FEED_BACKED&quot;</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">checkFailEvent</span><span class="o">(){</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&quot;---------电审失败---------&quot;</span><span class="o">);</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;订单生成 ------&gt; 已完结&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@OnTransition</span><span class="o">(</span><span class="n">source</span> <span class="o">=</span> <span class="s">&quot;REVIEWED&quot;</span><span class="o">,</span> <span class="n">target</span> <span class="o">=</span> <span class="s">&quot;PUBLISHED&quot;</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">makePriceEvent</span><span class="o">(){</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&quot;--------定价发布----------&quot;</span><span class="o">);</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;已审核 -------&gt; 已发布&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+
+    <span class="nd">@OnTransition</span><span class="o">(</span><span class="n">source</span> <span class="o">=</span> <span class="s">&quot;PUBLISHED&quot;</span><span class="o">,</span> <span class="n">target</span> <span class="o">=</span> <span class="s">&quot;NOT_PAY&quot;</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">acceptOrderEvent</span><span class="o">(){</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&quot;--------接单时间----------&quot;</span><span class="o">);</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;已发布 ------&gt; 待付款&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@OnTransition</span><span class="o">(</span><span class="n">source</span> <span class="o">=</span> <span class="s">&quot;PUBLISHED&quot;</span><span class="o">,</span> <span class="n">target</span> <span class="o">=</span> <span class="s">&quot;FEED_BACKED&quot;</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">notPeopleAcceptEvent</span><span class="o">(){</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&quot;---------无人接单失效---------&quot;</span><span class="o">);</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;已发布 -------&gt; 已完结&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@OnTransition</span><span class="o">(</span><span class="n">source</span> <span class="o">=</span> <span class="s">&quot;NOT_PAY&quot;</span><span class="o">,</span> <span class="n">target</span> <span class="o">=</span> <span class="s">&quot;PAID&quot;</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">payOrderEvent</span><span class="o">(){</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&quot;--------付款事件----------&quot;</span><span class="o">);</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;待付款 --------&gt; 已付款&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@OnTransition</span><span class="o">(</span><span class="n">source</span> <span class="o">=</span> <span class="s">&quot;NOT_PAY&quot;</span><span class="o">,</span> <span class="n">target</span> <span class="o">=</span> <span class="s">&quot;FEED_BACKED&quot;</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">orderFailureEvent</span><span class="o">(){</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&quot;--------接单有人支付失效----------&quot;</span><span class="o">);</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;待付款 ------&gt; 已完结&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@OnTransition</span><span class="o">(</span><span class="n">source</span> <span class="o">=</span> <span class="s">&quot;PAID&quot;</span><span class="o">,</span> <span class="n">target</span> <span class="o">=</span> <span class="s">&quot;FEED_BACKED&quot;</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">feedBackEvent</span><span class="o">(){</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&quot;--------反馈事件----------&quot;</span><span class="o">);</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;已付款 -------&gt; 已完结&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<p><em>Spring StateMachine</em> 提供了注解配置实现方式，所有 <code>StateMachineListener</code> 接口中定义的事件都能通过注解的方式来进行配置实现。<strong>@OnTransition</strong> 中 source 指定原始状态，target 指定目标状态，当事件触发时会调用相应的方法</p>
+<p>状态机句柄</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">PersistStateMachineHandler</span> <span class="kd">extends</span> <span class="n">LifecycleObjectSupport</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">StateMachine</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">stateMachine</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">PersistingStateChangeInterceptor</span> <span class="n">interceptor</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PersistingStateChangeInterceptor</span><span class="o">();</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">CompositePersistStateChangeListener</span> <span class="n">listeners</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CompositePersistStateChangeListener</span><span class="o">();</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * 实例化一个新的持久化状态机Handler</span>
+<span class="cm">     * @param stateMachine 状态机实例</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="nf">PersistStateMachineHandler</span><span class="o">(</span><span class="n">StateMachine</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">stateMachine</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Assert</span><span class="o">.</span><span class="na">notNull</span><span class="o">(</span><span class="n">stateMachine</span><span class="o">,</span> <span class="s">&quot;State machine must be set&quot;</span><span class="o">);</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">stateMachine</span> <span class="o">=</span> <span class="n">stateMachine</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onInit</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">stateMachine</span><span class="o">.</span><span class="na">getStateMachineAccessor</span><span class="o">().</span><span class="na">doWithAllRegions</span><span class="o">(</span><span class="n">function</span> <span class="o">-&gt;</span> <span class="n">function</span><span class="o">.</span><span class="na">addStateMachineInterceptor</span><span class="o">(</span><span class="n">interceptor</span><span class="o">));</span>
+    <span class="o">}</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * 处理entity的事件</span>
+<span class="cm">     * @return 如果事件被接受处理，返回true</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">handleEventWithState</span><span class="o">(</span><span class="n">Message</span><span class="o">&lt;</span><span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">event</span><span class="o">,</span> <span class="n">OrderStatusEnum</span> <span class="n">state</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">stateMachine</span><span class="o">.</span><span class="na">stop</span><span class="o">();</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">StateMachineAccess</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;&gt;</span> <span class="n">withAllRegions</span> <span class="o">=</span> <span class="n">stateMachine</span><span class="o">.</span><span class="na">getStateMachineAccessor</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">withAllRegions</span><span class="o">();</span>
+        <span class="k">for</span> <span class="o">(</span><span class="n">StateMachineAccess</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">a</span> <span class="o">:</span> <span class="n">withAllRegions</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">a</span><span class="o">.</span><span class="na">resetStateMachine</span><span class="o">(</span><span class="k">new</span> <span class="n">DefaultStateMachineContext</span><span class="o">&lt;&gt;(</span><span class="n">state</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="kc">null</span><span class="o">));</span>
+        <span class="o">}</span>
+        <span class="n">stateMachine</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="k">return</span> <span class="n">stateMachine</span><span class="o">.</span><span class="na">sendEvent</span><span class="o">(</span><span class="n">event</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 添加listener</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param listener the listener</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addPersistStateChangeListener</span><span class="o">(</span><span class="n">PersistStateChangeListener</span> <span class="n">listener</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">listeners</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="n">listener</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">class</span> <span class="nc">PersistingStateChangeInterceptor</span> <span class="kd">extends</span> <span class="n">StateMachineInterceptorAdapter</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="o">{</span>
+
+        <span class="c1">// 状态预处理的拦截器方法</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">preStateChange</span><span class="o">(</span><span class="n">State</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">state</span><span class="o">,</span> <span class="n">Message</span><span class="o">&lt;</span><span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">message</span><span class="o">,</span>
+                                   <span class="n">Transition</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">transition</span><span class="o">,</span> <span class="n">StateMachine</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">stateMachine</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">listeners</span><span class="o">.</span><span class="na">onPersist</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">message</span><span class="o">,</span> <span class="n">transition</span><span class="o">,</span> <span class="n">stateMachine</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">class</span> <span class="nc">CompositePersistStateChangeListener</span> <span class="kd">extends</span> <span class="n">AbstractCompositeListener</span><span class="o">&lt;</span><span class="n">PersistStateChangeListener</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="n">PersistStateChangeListener</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onPersist</span><span class="o">(</span><span class="n">State</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">state</span><span class="o">,</span> <span class="n">Message</span><span class="o">&lt;</span><span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">message</span><span class="o">,</span>
+                              <span class="n">Transition</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">transition</span><span class="o">,</span> <span class="n">StateMachine</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">stateMachine</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">for</span> <span class="o">(</span><span class="n">Iterator</span><span class="o">&lt;</span><span class="n">PersistStateChangeListener</span><span class="o">&gt;</span> <span class="n">iterator</span> <span class="o">=</span> <span class="n">getListeners</span><span class="o">().</span><span class="na">reverse</span><span class="o">();</span> <span class="n">iterator</span><span class="o">.</span><span class="na">hasNext</span><span class="o">();</span> <span class="o">)</span> <span class="o">{</span>
+                <span class="n">PersistStateChangeListener</span> <span class="n">listener</span> <span class="o">=</span> <span class="n">iterator</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+                <span class="n">listener</span><span class="o">.</span><span class="na">onPersist</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">message</span><span class="o">,</span> <span class="n">transition</span><span class="o">,</span> <span class="n">stateMachine</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>事件监听器接口</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">PersistStateChangeListener</span> <span class="o">{</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * 当状态被持久化，调用此方法</span>
+<span class="cm">         * @param stateMachine 状态机实例</span>
+<span class="cm">         */</span>
+        <span class="kt">void</span> <span class="nf">onPersist</span><span class="o">(</span><span class="n">State</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">state</span><span class="o">,</span> <span class="n">Message</span><span class="o">&lt;</span><span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">message</span><span class="o">,</span>
+                <span class="n">Transition</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">transition</span><span class="o">,</span> <span class="n">StateMachine</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span><span class="n">stateMachine</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="nd">@Configuration</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">OrderPersistHandlerConfig</span> <span class="o">{</span>
+
+
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">StateMachine</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">orderStateMachine</span><span class="o">;</span>
+
+    <span class="nd">@Bean</span>
+    <span class="kd">public</span> <span class="n">PersistStateMachineHandler</span> <span class="nf">persistStateMachineHandler</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">PersistStateMachineHandler</span><span class="o">(</span><span class="n">orderStateMachine</span><span class="o">);</span>
+    <span class="o">}</span>
+
+
+<span class="o">}</span>
+</pre></div>
+
+
+<p>具体监听器   </p>
+<div class="highlight"><pre><span></span><span class="nd">@Component</span><span class="o">(</span><span class="s">&quot;orderPersistStateChangeListener&quot;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">OrderPersistStateChangeListener</span> <span class="kd">implements</span> <span class="n">PersistStateChangeListener</span> <span class="o">{</span>
+
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">UserDao</span> <span class="n">userDao</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onPersist</span><span class="o">(</span><span class="n">State</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">state</span><span class="o">,</span> <span class="n">Message</span><span class="o">&lt;</span><span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">message</span><span class="o">,</span>
+            <span class="n">Transition</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">transition</span><span class="o">,</span>
+            <span class="n">StateMachine</span><span class="o">&lt;</span><span class="n">OrderStatusEnum</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">&gt;</span> <span class="n">stateMachine</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">message</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">message</span><span class="o">.</span><span class="na">getHeaders</span><span class="o">().</span><span class="na">containsKey</span><span class="o">(</span><span class="s">&quot;order&quot;</span><span class="o">))</span> <span class="o">{</span>
+            <span class="n">Integer</span> <span class="n">order</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="na">getHeaders</span><span class="o">().</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;order&quot;</span><span class="o">,</span> <span class="n">Integer</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+            <span class="n">User</span> <span class="n">user</span> <span class="o">=</span> <span class="n">userDao</span><span class="o">.</span><span class="na">getById</span><span class="o">(</span><span class="n">order</span><span class="o">);</span>
+            <span class="n">OrderStatusEnum</span> <span class="n">status</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="na">getId</span><span class="o">();</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;处理订单&quot;</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">state</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>业务层</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserServiceImpl</span> <span class="kd">implements</span> <span class="n">UserService</span> <span class="o">{</span>
+
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">UserDao</span> <span class="n">userDao</span><span class="o">;</span>
+
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">OrderRepo</span> <span class="n">repo</span><span class="o">;</span>
+
+    <span class="nd">@Resource</span><span class="o">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;orderPersistStateChangeListener&quot;</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="n">OrderPersistStateChangeListener</span> <span class="n">orderPersistStateChangeListener</span><span class="o">;</span>
+
+    <span class="nd">@Resource</span><span class="o">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;persistStateMachineHandler&quot;</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="n">PersistStateMachineHandler</span> <span class="n">persistStateMachineHandler</span><span class="o">;</span>
+
+
+    <span class="nd">@PostConstruct</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">initialize</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">persistStateMachineHandler</span><span class="o">.</span><span class="na">addPersistStateChangeListener</span><span class="o">(</span><span class="n">orderPersistStateChangeListener</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">User</span><span class="o">&gt;</span> <span class="nf">likeName</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">UserNotFoundException</span> <span class="o">{</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">name</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">name</span><span class="o">.</span><span class="na">trim</span><span class="o">().</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">UserNotFoundException</span><span class="o">(</span><span class="s">&quot;姓名不能为空&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">User</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="n">userDao</span><span class="o">.</span><span class="na">likeName</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+
+        <span class="k">if</span><span class="o">(</span><span class="n">CollectionUtils</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">list</span><span class="o">)){</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">RepositoryException</span><span class="o">(</span><span class="s">&quot;未找到数据&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="n">list</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Transactional</span><span class="o">(</span><span class="n">readOnly</span><span class="o">=</span><span class="kc">false</span><span class="o">)</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">change</span><span class="o">(</span><span class="kt">int</span> <span class="n">order</span><span class="o">,</span> <span class="n">OrderEventEnum</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Order</span> <span class="n">o</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="na">findByOrderId</span><span class="o">(</span><span class="n">order</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Order</span><span class="o">();</span>
+            <span class="n">o</span><span class="o">.</span><span class="na">setOrderId</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+            <span class="n">o</span><span class="o">.</span><span class="na">setStatus</span><span class="o">(</span><span class="n">OrderStatusEnum</span><span class="o">.</span><span class="na">GENERATE</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">persistStateMachineHandler</span><span class="o">.</span><span class="na">handleEventWithState</span><span class="o">(</span><span class="n">MessageBuilder</span>
+                <span class="o">.</span><span class="na">withPayload</span><span class="o">(</span><span class="n">event</span><span class="o">).</span><span class="na">setHeader</span><span class="o">(</span><span class="s">&quot;order&quot;</span><span class="o">,</span> <span class="n">order</span><span class="o">).</span><span class="na">build</span><span class="o">(),</span> <span class="n">o</span><span class="o">.</span><span class="na">getStatus</span><span class="o">());</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<p>controller层</p>
+<div class="highlight"><pre><span></span>  <span class="cm">/**</span>
+<span class="cm">     * 状态流转</span>
+<span class="cm">     */</span>
+    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;/order/{orderId}&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="o">{</span><span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">})</span>
+    <span class="nd">@ResponseBody</span>
+    <span class="kd">public</span> <span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Boolean</span><span class="o">&gt;</span> <span class="nf">processOrderState</span><span class="o">(</span>
+            <span class="nd">@PathVariable</span><span class="o">(</span><span class="s">&quot;orderId&quot;</span><span class="o">)</span> <span class="n">Integer</span> <span class="n">orderId</span><span class="o">,</span>
+            <span class="nd">@RequestParam</span><span class="o">(</span><span class="s">&quot;event&quot;</span><span class="o">)</span> <span class="n">String</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Boolean</span> <span class="n">result</span> <span class="o">=</span> <span class="n">userService</span><span class="o">.</span><span class="na">change</span><span class="o">(</span><span class="n">orderId</span><span class="o">,</span> <span class="n">OrderEventEnum</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">event</span><span class="o">));</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">ResponseEntity</span><span class="o">&lt;&gt;(</span><span class="n">result</span><span class="o">,</span> <span class="n">HttpStatus</span><span class="o">.</span><span class="na">OK</span><span class="o">);</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>我们通过订单id 和 需要触发的事件 去执行相应的逻辑，如果状态变更对应的事件不符合逻辑，则返回false。</p>
+<p>当然如果你前端传入的参数很多的情况下，可以传入对象，可以在<code>MessageBuilder
+                .withPayload(event).setHeader（）方法</code>中将具体的参数带入，之后就可以数据库的操作了。这里还要考虑并发的场景，所以查询订单建议使用乐观锁，这样做才能保证并发下的接口幂等问题</p>
+<p>总而言之，Spring StateMachine 让状态机结构更加层次化，只需四个步骤：
+<em> 第一步，定义状态枚举
+</em> 第二步，定义事件枚举
+<em> 第三步，定义状态机配置，设置初始状态，以及状态与事件之间对应关系
+</em> 第四步，定义状态监听器，当状态变更时，触发方法</p>
+<h1>Reference</h1>
+<p><a href="http://blog.didispace.com/spring-statemachine/">使用Spring StateMachine框架实现状态机</a></p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "design-pattern/state-machine.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns" style="font-size: 80%">
+
+
+    <nav class="widget">
+        <h4>个人链接</h4>
+        <ul class="blank">
+            <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">StackOverFlow</a></li>
+            <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+            <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+        </ul>
+    </nav>
+
+<h4>专题分类</h4>
+
+ <ul>
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/zai-xian-gong-ju.html">在线工具</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/ji-zhu-tu-pu.html">技术图谱</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+
+     <li >
+         <a href="/algorithm/index.html">
+             Algorithm
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             Classloader
+         </a>
+     </li>
+     <li >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li class="active" >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+     <li >
+         <a href="/security/index.html">
+             Security
+         </a>
+     </li>
+     <li >
+         <a href="/source-code/index.html">
+             Source-code
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm/index.html">Algorithm</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">Classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+		<!--<li><a href="/security/index.html">Security</a></li>-->
+	<!---->
+		<!--<li><a href="/source-code/index.html">Source-code</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+<h4>标签</h4>
+	<ul class="blank">
+	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
+	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
+	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
+	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
+	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
+	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
+	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
+	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
+	    <li class="danger label" ><a href="/tag/junit.html">junit</a></li>
+	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
+</ul>
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+
+
+</div> </div><!-- /.row -->
+  <div class="pagination">★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆
+      <ul>
+        <li class="prev"><a href="/source-code/junit-code=analysis.html">Next →</a></li>
+        <li><a href="/archives.html">博客导航</a></li>
+        <li class="next"><a href="/">← 上一篇</a></li>
+      </ul>
+    </div>
+
+    <h4>相关文章推荐</h4>
+    <ul>
+        <li><a href="/design-pattern/responsibility-chain.html">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
+        <li><a href="/design-pattern/template.html">设计模式之Template模式（模版模式）</a></li>
+        <li><a href="/design-pattern/strategy.html">实际项目运用之Strategy模式（策略模式）</a></li>
+    </ul>
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-119892182-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+  <script src="/theme/js/toc.js" type="text/javascript"></script>
+    <script>
+        (function () {
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+</body>
+</html>

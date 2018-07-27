@@ -65,6 +65,36 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/distrubuted/cap-base-flp.html" rel="bookmark" title="Permalink to 分布式之【CAP理论、BASE理论 、FLP不可能定理】">分布式之【CAP理论、BASE理论 、FLP不可能定理】</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-04-25T18:43:00+08:00"> 周三 25 四月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1.分布式系统的CAP理论</h1>
+<h2>1.1 CAP理论概述</h2>
+<p>2000年7月，加州大学伯克利分校的Eric Brewer教授在ACM PODC会议上提出CAP猜想。2年后，麻省理工学院的Seth Gilbert和Nancy Lynch从理论上证明了CAP。之后，CAP理论正式成为分布式计算领域的公认定理。</p>
+<p>一个分布式系统最多只能同时满足一致性（Consistency）、可用性（Availability）和分区容错性（Partition tolerance）这三项中的两项。</p>
+<p><img alt="cap" src="https://upload-images.jianshu.io/upload_images/10175660-8db37e21ea4984f9.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h2>1.2 CAP的定义</h2>
+<h3>1.2.1 Consistency 一致性</h3>
+<p>一致性指“<code>all nodes see the same data at the same time</code>”，即更新操作成功并返回客户端完成后，所有节点在同一时间的数据完全一致。分布式的一致性</p>
+<p>对于一致性，可以分为从客户端和服务端两个不同的视角。从客户端来看，一致性主要指的是多并发访问时更新过的数据如何获取的问题。从服务端来看 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/distrubuted/cap-base-flp.html" rel="bookmark" title="Permalink to 分布式之【CAP理论、BASE理论 、FLP不可能定理】">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/li-lun.html">理论</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/java-base/string-builder-question.html" rel="bookmark" title="Permalink to 字符串拼接的疑惑">字符串拼接的疑惑</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-04-21T15:34:00+08:00"> 周六 21 四月 2018 </abbr>
@@ -215,37 +245,6 @@ Java 的并发采用的是共享内存模型，Java 线程之间的通信总是�
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/distrubuted/interface-idempotency.html" rel="bookmark" title="Permalink to 接口设计的幂等性考虑">接口设计的幂等性考虑</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-03-26T18:49:00+08:00"> 周一 26 三月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h2>分布式系统接口幂等性</h2>
-<h3>1.幂等性定义</h3>
-<h4>1.1 数学定义</h4>
-<blockquote>
-<p>在数学里，幂等有两种主要的定义：- 在某二元运算下，幂等元素是指被自己重复运算(或对于函数是为复合)的结果等于它自己的元素。例如，乘法下唯一两个幂等实数为0和1。即 s *s = s- 某一元运算为幂等的时，其作用在任一元素两次后会和其作用一次的结果相同。例如，高斯符号便是幂等的，即f(f(x)) = f(x)。</p>
-</blockquote>
-<h4>1.2 HTTP规范的定义</h4>
-<p>在HTTP/1.1规范中幂等性的定义是：</p>
-<blockquote>
-<p>A request method is considered "idempotent" if the intended effect on the server of multiple identical requests …</p></blockquote> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/distrubuted/interface-idempotency.html" rel="bookmark" title="Permalink to 接口设计的幂等性考虑">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/li-lun.html">理论</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -359,12 +358,12 @@ Java 的并发采用的是共享内存模型，Java 线程之间的通信总是�
 	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
 	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
+	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
 	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
 	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
-	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
 	    <li class="danger label" ><a href="/tag/junit.html">junit</a></li>

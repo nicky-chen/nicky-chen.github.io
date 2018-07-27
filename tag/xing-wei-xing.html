@@ -65,6 +65,56 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/design-pattern/state-machine.html" rel="bookmark" title="Permalink to 实际项目运用之State模式（状态模式）">实际项目运用之State模式（状态模式）</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-07-19T22:18:00+08:00"> 周四 19 七月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1  模式简介</h1>
+<p><strong>定义：</strong>
+状态模式允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类。这个模式将状态封装成独立的类，并将动作委托到代表当前状态的类的对象</p>
+<p><strong>状态模式的优点：</strong></p>
+<blockquote>
+<p>封装了转换规则
+枚举可能的状态，在枚举状态之前需要确定状态种类
+将所有与某个状态有关的行为放到一个类中，可方便增加新的状态
+允许状态转换逻辑与状态对象合成一体，而非复杂条件语句块
+可以让多个环境对象共享一个状态对象，从而减少系统中对象的个数</p>
+</blockquote>
+<p><strong>状态模式的缺点：</strong></p>
+<blockquote>
+<p>增加系统类和对象的个数
+结构与实现都较为复杂，如果使用不当将导致程序结构和代码的混乱
+对"开闭原则"的支持不太好，增加新状态类需在状态类上增加行为方法</p>
+</blockquote>
+<p><strong>状态模式的适用场景：</strong>
+ 1. 对象的行为依赖于它的状态，并且可以在运行时根据状态改变行为。
+ 2. 代码中包含大量与对象状态有关的if/else语句
+ 3. 接口幂等要求</p>
+<p><strong>状态模式和策略模式：</strong>
+相同点是它们都需要根据需求选择相应的状态或策略
+不同点是状态模式是在一个类中通过不同的动作切换不同的状态，而策略模式是为一个类选择某个策略，即状态模式中的Context是和多个状态关联的，而策略模式中的Context只和一个策略关联</p>
+<p><strong>状态模式角色介绍：</strong>
+<img alt="状态模式类图" src="https://upload-images.jianshu.io/upload_images/10175660-113c92a20076e368.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>（1）Context类，依赖倒置原则，通过适配器模式维护状态类
+（2）State：抽象状态类或状态接口，用以抽象封装行为
+（3 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/design-pattern/state-machine.html" rel="bookmark" title="Permalink to 实际项目运用之State模式（状态模式）">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/xing-wei-xing.html">行为型</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/design-pattern/responsibility-chain.html" rel="bookmark" title="Permalink to 实际项目运用之Responsibility-Chain模式（责任链模式）">实际项目运用之Responsibility-Chain模式（责任链模式）</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-06-29T22:18:00+08:00"> 周五 29 六月 2018 </abbr>
@@ -305,12 +355,12 @@
 	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
 	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
+	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
 	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
 	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
-	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
 	    <li class="danger label" ><a href="/tag/junit.html">junit</a></li>

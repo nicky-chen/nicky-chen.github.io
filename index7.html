@@ -65,6 +65,37 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/distrubuted/interface-idempotency.html" rel="bookmark" title="Permalink to 接口设计的幂等性考虑">接口设计的幂等性考虑</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-03-26T18:49:00+08:00"> 周一 26 三月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h2>分布式系统接口幂等性</h2>
+<h3>1.幂等性定义</h3>
+<h4>1.1 数学定义</h4>
+<blockquote>
+<p>在数学里，幂等有两种主要的定义：- 在某二元运算下，幂等元素是指被自己重复运算(或对于函数是为复合)的结果等于它自己的元素。例如，乘法下唯一两个幂等实数为0和1。即 s *s = s- 某一元运算为幂等的时，其作用在任一元素两次后会和其作用一次的结果相同。例如，高斯符号便是幂等的，即f(f(x)) = f(x)。</p>
+</blockquote>
+<h4>1.2 HTTP规范的定义</h4>
+<p>在HTTP/1.1规范中幂等性的定义是：</p>
+<blockquote>
+<p>A request method is considered "idempotent" if the intended effect on the server of multiple identical requests …</p></blockquote> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/distrubuted/interface-idempotency.html" rel="bookmark" title="Permalink to 接口设计的幂等性考虑">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/li-lun.html">理论</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/java-base/binary-operation.html" rel="bookmark" title="Permalink to java中位运算技巧">java中位运算技巧</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-03-21T22:17:00+08:00"> 周三 21 三月 2018 </abbr>
@@ -194,52 +225,6 @@
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/design-pattern/builder.html" rel="bookmark" title="Permalink to 设计模式之builder模式">设计模式之builder模式</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2017-12-19T22:15:00+08:00"> 周二 19 十二月 2017 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>建造者模式也叫生成器模式，和抽象工厂模式相似，也是一种构建复杂对象的模式。</p>
-<p><strong>建造者模式中的角色分类</strong>： 
- 抽象建造者Builder：接口类型，用于规范各个产品的组成部分； 
- 具体建造者ConcreteBuilder：实现Builder中的所有方法，返回一个产品实例； 
- 指导者Director：指挥建造者制造相应的产品 
- 产品Product：用户最终看到的复杂对象。</p>
-<p>假设我们有一个向客户发送新年祝福邮件的需求，而邮件内容可以是纯文档的，也可以是有动画的，也可以是有音频的，可以动态的添加个组件</p>
-<p>uml下图所示： 
-<img alt="建造者模式" src="http://upload-images.jianshu.io/upload_images/10175660-73b74bcbd9ee9ba9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p>如上图所示，邮箱有多个组件，包含收件人，发送人，内容，音乐等 
-通过具体的建造者添加不同的组件模版，最后通过指挥者去调用抽象建造者 
-来返回具体的email对象</p>
-<p>代码如下
-==================product======================</p>
-<div class="highlight"><pre><span></span><span class="nt">public</span> <span class="nt">interface</span> <span class="nt">Module</span> <span class="p">{</span>
-
-<span class="err">String</span> <span class="err">showInfo(String</span> <span class="err">info)</span><span class="p">;</span>
-
-<span class="p">}</span><span class="err">`</span>
-
-<span class="nt">public</span> <span class="nt">abstract</span> <span class="nt">class</span> <span class="nt">CommonModule</span> <span class="nt">implements</span> <span class="nt">Module</span> <span class="p">{</span>
-
-<span class="err">protected</span> <span class="err">String</span> <span class="err">moduleName</span><span class="p">;</span>
-
-<span class="err">protected</span> <span class="err">String</span> <span class="err">productionTime …</span></pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/design-pattern/builder.html" rel="bookmark" title="Permalink to 设计模式之builder模式">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/chuang-jian-xing.html">创建型</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -353,12 +338,12 @@
 	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
 	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
+	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
 	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
 	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
-	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
 	    <li class="danger label" ><a href="/tag/junit.html">junit</a></li>

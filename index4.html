@@ -65,6 +65,41 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/algorithm/btree-info.html" rel="bookmark" title="Permalink to 数据结构之BTree和B+Tree(多路平衡查找树 )">数据结构之BTree和B+Tree(多路平衡查找树 )</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-17T19:39:00+08:00"> 周四 17 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 背景</h1>
+<p>B-Tree是为磁盘等外存储设备设计的一种平衡查找树。因此在讲B-Tree之前先了解下磁盘的相关知识。系统从磁盘读取数据到内存时是以磁盘块（block）为基本单位的，位于同一个磁盘块中的数据会被一次性读取出来，而不是需要什么取什么。
+InnoDB存储引擎中有页（Page）的概念，页是其磁盘管理的最小单位。InnoDB存储引擎中默认每个页的大小为16KB，可通过参数innodb_page_size将页的大小设置为4K、8K、16K，在MySQL中可通过如下命令查看页的大小：</p>
+<div class="highlight"><pre><span></span>mysql&gt; show variables like &#39;innodb_page_size&#39;;
+</pre></div>
+
+
+<p>而系统一个磁盘块的存储空间往往没有这么大，因此InnoDB每次申请磁盘空间时都会是若干地址连续磁盘块来达到页的大小16KB。InnoDB在把磁盘数据读入到磁盘时会以页为基本单位，在查询数据时如果一个页中的每条数据都能有助于定位数据记录的位置，这将会减少磁盘I/O次数，提高查询效率。</p>
+<h1>2 定义与特性</h1>
+<p><strong>B-Tree</strong>
+B-Tree结构的数据可以让系统高效的找到数据所在的磁盘块。为了描述B-Tree，首先定义一条记录为一个二元组[key, data] ，key为记录的键值(关键字)，对应表中的主键值，data为一行记录中除主键外的数据。对于不同的记录，key值互不相同。</p>
+<div class="highlight"><pre><span></span>一棵m阶的B-Tree有如下特性： 
+1. 每个节点最多有m个孩子。 
+2. 除了根节点和叶子节点外，其它每个节点至少有Ceil …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/algorithm/btree-info.html" rel="bookmark" title="Permalink to 数据结构之BTree和B+Tree(多路平衡查找树 )">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/shu-ju-jie-gou.html">数据结构</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/concurrent/synchronized-principle.html" rel="bookmark" title="Permalink to synchronized实现原理及锁优化">synchronized实现原理及锁优化</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-05-14T19:16:00+08:00"> 周一 14 五月 2018 </abbr>
@@ -224,37 +259,6 @@ set GLOBAL sort_buffer_size = 720000
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/mysql/design-rule.html" rel="bookmark" title="Permalink to 数据库设计三范式和反范式">数据库设计三范式和反范式</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-05-07T19:38:00+08:00"> 周一 07 五月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>数据库范式</h1>
-<p><strong>范式的级别</strong>
-      设计关系数据库时，遵从不同的规范要求，设计出合理的关系型数据库，这些不同的规范要求被称为不同的范式，各种范式呈递次规范，越高的范式数据库冗余越小。
-      目前关系数据库有六种范式：<strong><em>第一范式（1NF）、第二范式（2NF）、第三范式（3NF）、巴斯-科德范式（BCNF）、第四范式(4NF）和第五范式（5NF，又称完美范式）。</em></strong>
-      范式越高，冗余最低，一般到三范式，再往上，表越多，可能导致查询效率下降。所以有时为了提高运行效率，可以让数据冗余(反三范式，一般某个数据经常被访问时，比如数据表里存放了语文数学英语成绩，但是如果在某个时间经常要得到它的总分，每次都要进行计算会降低性能，可以加上总分这个冗余字段)。
-      后面的范式是在满足前面范式的基础上，比如满足第二范式的一定满足第一范式。
-<strong>第一范式（1NF）：确保每一列的原子性</strong>
-如果每一列都是不可再分的最小数据单元，则满足第一范式。
-<img alt="第一范式" src="https://upload-images.jianshu.io/upload_images/10175660-7f1d5f71d9be0501.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p>但是具体地址到底要不要拆分 还要看具体情形，比如看看将来会不会按国家或者省市进行分类汇总或者排序，如果需要，最好就拆，如果不需要而仅仅起字符串的作用，可以不拆 …</p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/mysql/design-rule.html" rel="bookmark" title="Permalink to 数据库设计三范式和反范式">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -368,12 +372,12 @@ set GLOBAL sort_buffer_size = 720000
 	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
 	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
+	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
 	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
 	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
-	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
 	    <li class="danger label" ><a href="/tag/junit.html">junit</a></li>

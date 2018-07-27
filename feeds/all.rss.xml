@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>南乡清水</title><link>/</link><description></description><lastBuildDate>Mon, 16 Jul 2018 21:58:00 +0800</lastBuildDate><item><title>初窥门径之JUnit源码分析</title><link>/source-code/junit-code=analysis.html</link><description>&lt;h1&gt;1 源码分析流程&lt;/h1&gt;
+<rss version="2.0"><channel><title>南乡清水</title><link>/</link><description></description><lastBuildDate>Thu, 19 Jul 2018 22:18:00 +0800</lastBuildDate><item><title>实际项目运用之State模式（状态模式）</title><link>/design-pattern/state-machine.html</link><description>&lt;h1&gt;1  模式简介&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;定义：&lt;/strong&gt;
+状态模式允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类。这个模式将状态封装成独立的类，并将动作委托到代表当前状态的类的对象&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;状态模式的优点：&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;封装了转换规则
+枚举可能的状态，在枚举状态之前需要确定状态种类
+将所有与某个状态有关的行为放到一个类中，可方便增加新的状态
+允许状态转换逻辑与状态对象合成一体，而非复杂条件语句块
+可以让多个环境对象共享一个状态对象，从而减少系统中对象的个数&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;状态模式的缺点：&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;增加系统类和对象的个数
+结构与实现都较为复杂，如果使用不当将导致程序结构和代码的混乱
+对"开闭原则"的支持不太好，增加新状态类需在状态类上增加行为方法&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;状态模式的适用场景：&lt;/strong&gt;
+ 1. 对象的行为依赖于它的状态，并且可以在运行时根据状态改变行为。
+ 2. 代码中包含大量与对象状态有关的if/else语句
+ 3. 接口幂等要求&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;状态模式和策略模式：&lt;/strong&gt;
+相同点是它们都需要根据需求选择相应的状态或策略
+不同点是状态模式是在一个类中通过不同的动作切换不同的状态，而策略模式是为一个类选择某个策略，即状态模式中的Context是和多个状态关联的，而策略模式中的Context只和一个策略关联&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;状态模式角色介绍：&lt;/strong&gt;
+&lt;img alt="状态模式类图" src="https://upload-images.jianshu.io/upload_images/10175660-113c92a20076e368.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"&gt;&lt;/p&gt;
+&lt;p&gt;（1）Context类，依赖倒置原则，通过适配器模式维护状态类
+（2）State：抽象状态类或状态接口，用以抽象封装行为
+（3 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Thu, 19 Jul 2018 22:18:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-07-19:/design-pattern/state-machine.html</guid><category>行为型</category></item><item><title>初窥门径之JUnit源码分析</title><link>/source-code/junit-code=analysis.html</link><description>&lt;h1&gt;1 源码分析流程&lt;/h1&gt;
 &lt;p&gt;对于阅读源码有兴趣的同学，可以按以下步骤进行：&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;了解框架架构图&lt;/li&gt;
