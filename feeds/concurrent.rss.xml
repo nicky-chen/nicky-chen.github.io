@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>南乡清水 - concurrent</title><link>/</link><description></description><lastBuildDate>Mon, 14 May 2018 19:16:00 +0800</lastBuildDate><item><title>synchronized实现原理及锁优化</title><link>/concurrent/synchronized-principle.html</link><description>&lt;h1&gt;1.引言&lt;/h1&gt;
+<rss version="2.0"><channel><title>南乡清水 - concurrent</title><link>/</link><description></description><lastBuildDate>Sat, 04 Aug 2018 22:52:00 +0800</lastBuildDate><item><title>并发基础之AQS同步器（二）</title><link>/concurrent/aqs-chapter02.html</link><description>&lt;p&gt;在AQS同步器组件原理分析前，我们需要了解同步队列这个概念，了解同步队列中节点的入队和出队的流程，CHL同步队列的由来，可以参考我之前的文章：
+&lt;a href="https://www.jianshu.com/p/afce44b21d77"&gt;并发基础之AQS同步器（一）&lt;/a&gt;&lt;/p&gt;
+&lt;h1&gt;1 同步队列&lt;/h1&gt;
+&lt;p&gt;同步器依赖内部的同步队列（一个FIFO双向队列）来完成同步状态的管理，当前线程获取同步状态失败时，同步器会将当前线程以及等待状态等信息构造成为一个节点（Node）并将其加入同步队列，同时会阻塞当前线程，当同步状态释放时，会把首节点中的线程唤醒，使其再次尝试获取同步状态&lt;/p&gt;
+&lt;p&gt;FIFO队列&lt;code&gt;Node&lt;/code&gt;对象的具体实现如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kd"&gt;final&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Node&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kd"&gt;final&lt;/span&gt; &lt;span class="n"&gt;Node&lt;/span&gt; &lt;span class="n"&gt;SHARED&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Node&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+        &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kd"&gt;final&lt;/span&gt; &lt;span class="n"&gt;Node&lt;/span&gt; &lt;span class="n"&gt;EXCLUSIVE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+        &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kd"&gt;final&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;CANCELLED&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;  &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+        &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kd"&gt;final&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;SIGNAL&lt;/span&gt;    &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+        &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kd"&gt;final …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Sat, 04 Aug 2018 22:52:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-08-04:/concurrent/aqs-chapter02.html</guid><category>多线程</category></item><item><title>并发基础之AQS同步器（一）</title><link>/concurrent/aqs-chapter01.html</link><description>&lt;h1&gt;1 AQS同步器&lt;/h1&gt;
+&lt;p&gt;队列同步器&lt;strong&gt;AbstractQueuedSynchronizer&lt;/strong&gt;，是用来构建锁或者其他同步组件的基础框架，它使用了一个int成员变量表示同步状态，通过内置的FIFO队列来完成资源获取线程的排队工作，并发包的作者（Doug Lea）期望它能够成为实现大部分同步需求的基础。&lt;/p&gt;
+&lt;p&gt;同步器的主要使用方式是继承，子类通过继承同步器并实现它的抽象方法来管理同步状态，在抽象方法的实现过程中免不了要对同步状态进行更改，这时就需要使用同步器提供的3个方法&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;getState()
+setState(int newState)
+compareAndSetState(int expect,int update)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;来进行操作，因为它们能够保证状态的改变是安全的。这样就可以方便实现不同类型的同步组件（&lt;code&gt;ReentrantLock、ReentrantReadWriteLock和CountDownLatch&lt;/code&gt;等）&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;核心操作方式：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;场景1：阻塞直到获取指定资源数&lt;/p&gt;
+&lt;p&gt;场景2：可中断限时等待直到获取指定资源数&lt;/p&gt;
+&lt;p&gt;场景3：直接尝试获取指定资源数&lt;/p&gt;
+&lt;p&gt;场景4：释放指定资源数&lt;/p&gt;
+&lt;p&gt;上述四个步骤又都可以分为 &lt;em&gt;共享（share）操作和独占（exclusive）&lt;/em&gt; 操作两种，如果AQS设计的足够好，则所有的容器类只需要控制资源数目、获取的资源量和释放的资源量即可&lt;/p&gt;
+&lt;p&gt;下图（独占和共享的方法调用 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Tue, 31 Jul 2018 21:52:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-07-31:/concurrent/aqs-chapter01.html</guid><category>多线程</category></item><item><title>synchronized实现原理及锁优化</title><link>/concurrent/synchronized-principle.html</link><description>&lt;h1&gt;1.引言&lt;/h1&gt;
 &lt;p&gt;并发编程中synchronized是重量级锁，但随着JVM1.6对synchronized进行优化后，有些情况下它并不那么重，本文介绍了Java SE1.6中为了减少获得锁和释放锁带来的性能消耗而引入的偏向锁和轻量级锁，以及锁的存储结构和升级过程。&lt;/p&gt;
 &lt;h1&gt;2.术语定义&lt;/h1&gt;
 &lt;p&gt;&lt;strong&gt;CAS(Compare and Swap):&lt;/strong&gt;  比较并交换。用于在硬件层面上提供原子性操作。在 Intel 处理器中，比较并交换通过指令cmpxchg实现。比较是否和给定的数值一致，如果一致则修改，不一致则不修改。&lt;/p&gt;

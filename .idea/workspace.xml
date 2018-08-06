@@ -2,8 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list id="b5937023-c407-40d8-b7aa-bcba4a685ed0" name="Default" comment="" />
-    <list default="true" id="119c48ed-5227-48e3-b916-4f239060df21" name="Revert: 加入相关文章和导航" comment="junit源码分析">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/design-pattern/state-machine.html" />
+    <list default="true" id="119c48ed-5227-48e3-b916-4f239060df21" name="Revert: 加入相关文章和导航" comment="状态模式">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/author/nicky_chin9.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cache-redis/cache-redis-slowlog.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cache-redis/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cache/cache-redis-slowlog.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cache/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/concurrent/aqs-chapter01.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/concurrent/aqs-chapter02.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/index9.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tag/duo-xian-cheng.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tag/redis.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/algorithm/btree-info.html" afterPath="$PROJECT_DIR$/algorithm/btree-info.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/algorithm/index.html" afterPath="$PROJECT_DIR$/algorithm/index.html" />
@@ -17,6 +26,7 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/author/nicky_chin7.html" afterPath="$PROJECT_DIR$/author/nicky_chin7.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/author/nicky_chin8.html" afterPath="$PROJECT_DIR$/author/nicky_chin8.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/authors.html" afterPath="$PROJECT_DIR$/authors.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/categories.html" afterPath="$PROJECT_DIR$/categories.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classloader/classloader-chapter01.html" afterPath="$PROJECT_DIR$/classloader/classloader-chapter01.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classloader/classloader-chapter02.html" afterPath="$PROJECT_DIR$/classloader/classloader-chapter02.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classloader/index.html" afterPath="$PROJECT_DIR$/classloader/index.html" />
@@ -36,6 +46,7 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/index2.html" afterPath="$PROJECT_DIR$/design-pattern/index2.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/responsibility-chain.html" afterPath="$PROJECT_DIR$/design-pattern/responsibility-chain.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/singletion.html" afterPath="$PROJECT_DIR$/design-pattern/singletion.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/state-machine.html" afterPath="$PROJECT_DIR$/design-pattern/state-machine.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/strategy.html" afterPath="$PROJECT_DIR$/design-pattern/strategy.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/template.html" afterPath="$PROJECT_DIR$/design-pattern/template.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/cap-base-flp.html" afterPath="$PROJECT_DIR$/distrubuted/cap-base-flp.html" />
@@ -47,7 +58,7 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/index2.html" afterPath="$PROJECT_DIR$/distrubuted/index2.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/interface-idempotency.html" afterPath="$PROJECT_DIR$/distrubuted/interface-idempotency.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/feeds/all.rss.xml" afterPath="$PROJECT_DIR$/feeds/all.rss.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/feeds/design-pattern.rss.xml" afterPath="$PROJECT_DIR$/feeds/design-pattern.rss.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/feeds/concurrent.rss.xml" afterPath="$PROJECT_DIR$/feeds/concurrent.rss.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index2.html" afterPath="$PROJECT_DIR$/index2.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index3.html" afterPath="$PROJECT_DIR$/index3.html" />
@@ -92,7 +103,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/suo-you-hua.html" afterPath="$PROJECT_DIR$/tag/suo-you-hua.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/xing-wei-xing.html" afterPath="$PROJECT_DIR$/tag/xing-wei-xing.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/yuan-ma.html" afterPath="$PROJECT_DIR$/tag/yuan-ma.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/zai-xian-gong-ju.html" afterPath="$PROJECT_DIR$/zai-xian-gong-ju.html" />
     </list>
     <ignored path=".idea/vcs.xml" />
     <ignored path=".idea/inspectionProfiles/profiles_settings.xml" />
@@ -222,12 +232,12 @@
     </option>
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\my_blog\output\nicky-chen.github.io\theme\images" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\my_blog\output\nicky-chen.github.io" />
       <recent name="E:\my_blog\output\nicky-chen.github.io\theme\js" />
-      <recent name="E:\my_blog\output\nicky-chen.github.io\theme\images" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\my_blog\output\nicky-chen.github.io\theme\images" />
     </key>
   </component>
@@ -682,23 +692,37 @@
       <option name="project" value="LOCAL" />
       <updated>1532484119603</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="状态模式">
+      <created>1532654185230</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1532654185230</updated>
+    </task>
+    <task id="LOCAL-00040" summary="更新sitemap">
+      <created>1532654600105</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1532654600105</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1060" extended-state="0" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34603006" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35085836" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.8044693" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -743,8 +767,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="在线工具修改" />
-    <MESSAGE value="百度验证" />
     <MESSAGE value="去百度" />
     <MESSAGE value="robots" />
     <MESSAGE value="bing登录" />
@@ -768,7 +790,9 @@
     <MESSAGE value="sitemap" />
     <MESSAGE value="junit源码分析" />
     <MESSAGE value="更新网站地图" />
-    <option name="LAST_COMMIT_MESSAGE" value="更新网站地图" />
+    <MESSAGE value="状态模式" />
+    <MESSAGE value="更新sitemap" />
+    <option name="LAST_COMMIT_MESSAGE" value="更新sitemap" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">

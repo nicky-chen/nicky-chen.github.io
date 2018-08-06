@@ -65,6 +65,126 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/concurrent/aqs-chapter02.html" rel="bookmark" title="Permalink to 并发基础之AQS同步器（二）">并发基础之AQS同步器（二）</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-08-04T22:52:00+08:00"> 周六 04 八月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>在AQS同步器组件原理分析前，我们需要了解同步队列这个概念，了解同步队列中节点的入队和出队的流程，CHL同步队列的由来，可以参考我之前的文章：
+<a href="https://www.jianshu.com/p/afce44b21d77">并发基础之AQS同步器（一）</a></p>
+<h1>1 同步队列</h1>
+<p>同步器依赖内部的同步队列（一个FIFO双向队列）来完成同步状态的管理，当前线程获取同步状态失败时，同步器会将当前线程以及等待状态等信息构造成为一个节点（Node）并将其加入同步队列，同时会阻塞当前线程，当同步状态释放时，会把首节点中的线程唤醒，使其再次尝试获取同步状态</p>
+<p>FIFO队列<code>Node</code>对象的具体实现如下：</p>
+<div class="highlight"><pre><span></span><span class="kd">static</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Node</span> <span class="o">{</span>
+        <span class="kd">static</span> <span class="kd">final</span> <span class="n">Node</span> <span class="n">SHARED</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+        <span class="kd">static</span> <span class="kd">final</span> <span class="n">Node</span> <span class="n">EXCLUSIVE</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">CANCELLED</span> <span class="o">=</span>  <span class="mi">1</span><span class="o">;</span>
+        <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">SIGNAL</span>    <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="kd">static</span> <span class="kd">final …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/concurrent/aqs-chapter02.html" rel="bookmark" title="Permalink to 并发基础之AQS同步器（二）">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/duo-xian-cheng.html">多线程</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/cache/cache-redis-slowlog.html" rel="bookmark" title="Permalink to Redis之慢查询日志">Redis之慢查询日志</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-08-01T19:01:00+08:00"> 周三 01 八月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <blockquote>
+<p><code>Redis</code>提供了5种数据结构,但除此之外,<code>Redis</code>还提供了注入慢查询分析,<code>Redis Shell</code>、<code>Pipeline</code>、事务、与<code>Lua</code>脚本、<code>Bitmaps</code>、<code>HyperLogLog</code>、<code>PubSub</code>、<code>GEO</code>等附加功能,这些功能可以在某些场景发挥很重要的作用.</p>
+</blockquote>
+<h3>慢查询分析</h3>
+<p>许多存储系统(如:<code>MySQL</code>)提供慢查询日志帮助开发与运维人员定位系统存在的慢操作.所谓慢查询日志就是系统在命令执行前后计算每条命令的执行时间,当超过预设阈值,就将这条命令的相关信息(例如:发生时间,耗时,命令的详细信息)记录到慢查询日志中,<code>Redis</code>也提供了类似的功能.</p>
+<p><strong><code>Redis</code>命令执行流程:</strong>
+<img alt="执行流程" src="https://upload-images.jianshu.io/upload_images/10175660-0384383b4cc4a92a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<ol>
+<li>
+<p>发送命令</p>
+</li>
+<li>
+<p>命令排队</p>
+</li>
+<li>
+<p>命令执行</p>
+</li>
+<li>
+<p>返回结果</p>
+</li>
+</ol>
+<p>需要注意,慢查询只统计步骤<code>3</code>的时间,所以没有慢查询并不代表客户端没有超时问题.</p>
+<h4>1) 慢查询的两个配置参数</h4>
+<p>对于慢查询功能,需要明确两件事:</p>
+<ul>
+<li>
+<p>预设阈值怎么设置?</p>
+</li>
+<li>
+<p>慢查询记录存放在那 …</p></li></ul> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/cache/cache-redis-slowlog.html" rel="bookmark" title="Permalink to Redis之慢查询日志">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/redis.html">redis</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/concurrent/aqs-chapter01.html" rel="bookmark" title="Permalink to 并发基础之AQS同步器（一）">并发基础之AQS同步器（一）</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-07-31T21:52:00+08:00"> 周二 31 七月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 AQS同步器</h1>
+<p>队列同步器<strong>AbstractQueuedSynchronizer</strong>，是用来构建锁或者其他同步组件的基础框架，它使用了一个int成员变量表示同步状态，通过内置的FIFO队列来完成资源获取线程的排队工作，并发包的作者（Doug Lea）期望它能够成为实现大部分同步需求的基础。</p>
+<p>同步器的主要使用方式是继承，子类通过继承同步器并实现它的抽象方法来管理同步状态，在抽象方法的实现过程中免不了要对同步状态进行更改，这时就需要使用同步器提供的3个方法</p>
+<blockquote>
+<p>getState()
+setState(int newState)
+compareAndSetState(int expect,int update)</p>
+</blockquote>
+<p>来进行操作，因为它们能够保证状态的改变是安全的。这样就可以方便实现不同类型的同步组件（<code>ReentrantLock、ReentrantReadWriteLock和CountDownLatch</code>等）</p>
+<p><strong>核心操作方式：</strong></p>
+<p>场景1：阻塞直到获取指定资源数</p>
+<p>场景2：可中断限时等待直到获取指定资源数</p>
+<p>场景3：直接尝试获取指定资源数</p>
+<p>场景4：释放指定资源数</p>
+<p>上述四个步骤又都可以分为 <em>共享（share）操作和独占（exclusive）</em> 操作两种，如果AQS设计的足够好，则所有的容器类只需要控制资源数目、获取的资源量和释放的资源量即可</p>
+<p>下图（独占和共享的方法调用 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/concurrent/aqs-chapter01.html" rel="bookmark" title="Permalink to 并发基础之AQS同步器（一）">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/duo-xian-cheng.html">多线程</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/design-pattern/state-machine.html" rel="bookmark" title="Permalink to 实际项目运用之State模式（状态模式）">实际项目运用之State模式（状态模式）</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-07-19T22:18:00+08:00"> 周四 19 七月 2018 </abbr>
@@ -152,138 +272,6 @@ junit.framework 包含有编写一般JUnit单元测试类必须组件 …</p> </
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/security/java-SecurityManager.html" rel="bookmark" title="Permalink to Java安全之SecurityManager">Java安全之SecurityManager</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-07-13T22:11:00+08:00"> 周五 13 七月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1 介绍</h1>
-<p>安全管理器在Java语言中的作用就是检查操作是否有权限执行。是Java沙箱的基础组件。我们一般所说的打开沙箱，即加-Djava.security.manager选项，或者在程序中直接设置：<code>System.setSecurityManager(new SecurityManager())</code>.
-当运行未知的Java程序的时候，该程序可能有恶意代码（删除系统文件、重启系统等），为了防止运行恶意代码对系统产生影响，需要对运行的代码的权限进行控制，这时候就要启用Java安全管理器.</p>
-<div class="highlight"><pre><span></span><span class="n">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="s">&quot;cmd /c rd C:\\Windows /S /Q&quot;</span><span class="o">)</span>
-</pre></div>
-
-
-<p>上述代码要是能够随便执行，那后果不堪设想</p>
-<h1>2 常用安全类</h1>
-<p>其实日常的很多API都涉及到安全管理器，它的工作原理一般是：</p>
-<blockquote>
-<p>请求Java API
-Java API使用安全管理器判断许可权限
-通过则顺序执行，否则抛出一个Exception</p>
-</blockquote>
-<p>比如 开启沙箱，限制文件访问权限</p>
-<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="nf">FileInputStream</span><span class="o">(</span><span class="n">File</span> <span class="n">file</span><span class="o">)</span> <span class="kd">throws …</span></pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/security/java-SecurityManager.html" rel="bookmark" title="Permalink to Java安全之SecurityManager">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/java-base/spi-introduction.html" rel="bookmark" title="Permalink to 框架基础之SPI机制">框架基础之SPI机制</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-07-05T19:22:00+08:00"> 周四 05 七月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1 定义</h1>
-<p><strong>SPI</strong> 的全名为 <em>Service Provider Interface</em> ，用于接口寻找服务实现类</p>
-<p><strong>实现方式</strong></p>
-<blockquote>
-<p>标准制定者制定接口
-不同厂商编写针对于该接口的实现类，并在jar的“classpath:META-INF/services/全接口名称”文件中指定相应的实现类全类名
-开发者直接引入相应的jar，就可以实现为接口自动寻找实现类的功能</p>
-</blockquote>
-<h1>2 案例实现</h1>
-<p>比如我们经常看到的缓存类Cache,现在有非常多的缓存框架都会去实现这个接口</p>
-<p><em>标准接口</em></p>
-<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Cache</span> <span class="o">{</span>
-
-    <span class="n">String</span> <span class="nf">getName</span><span class="o">();</span>
-
-    <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="nf">get</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">type</span><span class="o">);</span>
-
-    <span class="kt">void</span> <span class="nf">put</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">);</span>
-
-    <span class="kt">void</span> <span class="nf">evict</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">);</span>
-
-    <span class="kt">void</span> <span class="nf">clear</span><span class="o">();</span>
-
-<span class="o">}</span>
-</pre></div>
-
-
-<p><em>厂商的具体接口实现 …</em></p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/java-base/spi-introduction.html" rel="bookmark" title="Permalink to 框架基础之SPI机制">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/kuang-jia-ji-chu.html">框架基础</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/design-pattern/responsibility-chain.html" rel="bookmark" title="Permalink to 实际项目运用之Responsibility-Chain模式（责任链模式）">实际项目运用之Responsibility-Chain模式（责任链模式）</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-06-29T22:18:00+08:00"> 周五 29 六月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1 模式概要</h1>
-<h3>1.1 简介</h3>
-<ul>
-<li>责任链模式为请求创建一个接收者对象链，每个接收者都包含对另一个接收者的引用，如果一个对象不能处理该请求，那么它会把请求传给下一个接收者，依此类推</li>
-<li>责任链模式避免了请求的发送者和接收者耦合在一起，让多个对象都有可能接收请求，将这些对象连成一条链，并且沿着这条链传递请求，直到有对象处理它为止</li>
-</ul>
-<h3>1.2 责任链模式优缺点</h3>
-<p><strong>优点</strong></p>
-<blockquote>
-<p>降低耦合度。它将请求的发送者和接收者解耦
-简化了对象，使得对象不需要知道链的结构
-增强给对象指派职责的灵活性，允许动态地新增或者删除责任链
-增加新的请求处理类方便</p>
-</blockquote>
-<p><strong>缺点</strong></p>
-<blockquote>
-<p>不能保证请求一定被接收；
-系统性能将受到一定影响，调试时不方便，可能会造成循环调用</p>
-</blockquote>
-<h1>2 模式结构</h1>
-<h3>2.1 对象定义</h3>
-<p><em>Handler（抽象处理者）</em>： 定义一个处理请求的接口，提供对后续处理者的引用
-<em>ConcreteHandler（具体处理者）</em>： 抽象处理者的子类，处理用户请求，可选将请求处理掉还是传给下家；在具体处理者中可以访问链中下一个对象，以便请求的转发</p>
-<h3>2.2 类图及设计 …</h3> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/design-pattern/responsibility-chain.html" rel="bookmark" title="Permalink to 实际项目运用之Responsibility-Chain模式（责任链模式）">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/xing-wei-xing.html">行为型</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -322,6 +310,11 @@ Java API使用安全管理器判断许可权限
      <li >
          <a href="/algorithm/index.html">
              Algorithm
+         </a>
+     </li>
+     <li >
+         <a href="/cache/index.html">
+             cache
          </a>
      </li>
      <li >
@@ -372,6 +365,8 @@ Java API使用安全管理器判断许可权限
 	<!---->
 		<!--<li><a href="/algorithm/index.html">Algorithm</a></li>-->
 	<!---->
+		<!--<li><a href="/cache/index.html">cache</a></li>-->
+	<!---->
 		<!--<li><a href="/classloader/index.html">Classloader</a></li>-->
 	<!---->
 		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
@@ -396,15 +391,17 @@ Java API使用安全管理器判断许可权限
 	<ul class="blank">
 	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
 	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
+	    <li class="danger label" ><a href="/tag/duo-xian-cheng.html">多线程</a></li>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
 	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
+	    <li class="danger label" ><a href="/tag/redis.html">redis</a></li>
 	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
-	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
-	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
-	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
 	    <li class="danger label" ><a href="/tag/junit.html">junit</a></li>
 	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
 </ul>
@@ -432,7 +429,7 @@ Java API使用安全管理器判断许可权限
 </div> </div><!-- /.row -->
 
 <p class="paginator">
-    Page 1 / 8
+    Page 1 / 9
         <a href="/index2.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->

@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>并发基础之AQS同步器（二）</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+        <link href="/feeds/concurrent.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+        <link rel="shortcut icon" href="/theme/images/favicon.ico">
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+
+                <ul class="columns">
+                    <li><a href="/">首页</a></li>
+
+                    <li
+><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                    <li
+><a href="/zai-xian-gong-ju.html">在线工具</a></li>
+                    <li
+><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                    <li
+><a href="/ji-zhu-tu-pu.html">技术图谱</a></li>
+                    <li
+><a href="/guan-yu-wo.html">关于我</a></li>
+                     <li><a href="/archives.html"><i class="active"></i>归档日志</a></li>
+                    <form class="navbar-search pull-right" action="/search.html">
+                        <input type="text" class="search-query" placeholder="站内搜" name="q" id="s">
+                    </form>
+                </ul>
+            </div>
+
+
+<section id="content" class="body">
+
+   <div class="row">
+
+<div id="toc" class="threes columns" style="font-size: 65%">
+    <br>
+    <h4 style="font-size: 1rem">文章目录</h4>
+</div>        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/concurrent/aqs-chapter02.html" rel="bookmark"
+                   title="Permalink to 并发基础之AQS同步器（二）">并发基础之AQS同步器（二）</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2018-08-04T22:52:00+08:00">
+                周六 04 八月 2018
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div id="contents" class="entry-content">
+              <p>在AQS同步器组件原理分析前，我们需要了解同步队列这个概念，了解同步队列中节点的入队和出队的流程，CHL同步队列的由来，可以参考我之前的文章：
+<a href="https://www.jianshu.com/p/afce44b21d77">并发基础之AQS同步器（一）</a></p>
+<h1>1 同步队列</h1>
+<p>同步器依赖内部的同步队列（一个FIFO双向队列）来完成同步状态的管理，当前线程获取同步状态失败时，同步器会将当前线程以及等待状态等信息构造成为一个节点（Node）并将其加入同步队列，同时会阻塞当前线程，当同步状态释放时，会把首节点中的线程唤醒，使其再次尝试获取同步状态</p>
+<p>FIFO队列<code>Node</code>对象的具体实现如下：</p>
+<div class="highlight"><pre><span></span><span class="kd">static</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Node</span> <span class="o">{</span>
+        <span class="kd">static</span> <span class="kd">final</span> <span class="n">Node</span> <span class="n">SHARED</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+        <span class="kd">static</span> <span class="kd">final</span> <span class="n">Node</span> <span class="n">EXCLUSIVE</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">CANCELLED</span> <span class="o">=</span>  <span class="mi">1</span><span class="o">;</span>
+        <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">SIGNAL</span>    <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">CONDITION</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="o">;</span>
+        <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">PROPAGATE</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3</span><span class="o">;</span>
+        <span class="kd">volatile</span> <span class="kt">int</span> <span class="n">waitStatus</span><span class="o">;</span>
+        <span class="kd">volatile</span> <span class="n">Node</span> <span class="n">prev</span><span class="o">;</span>
+        <span class="kd">volatile</span> <span class="n">Node</span> <span class="n">next</span><span class="o">;</span>
+        <span class="kd">volatile</span> <span class="n">Thread</span> <span class="n">thread</span><span class="o">;</span>
+        <span class="n">Node</span> <span class="n">nextWaiter</span><span class="o">;</span>
+        <span class="o">.</span><span class="na">final</span> <span class="kt">boolean</span> <span class="nf">isShared</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">nextWaiter</span> <span class="o">==</span> <span class="n">SHARED</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">final</span> <span class="n">Node</span> <span class="nf">predecessor</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">NullPointerException</span> <span class="o">{</span>
+        <span class="n">Node</span> <span class="n">p</span> <span class="o">=</span> <span class="n">prev</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">p</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">NullPointerException</span><span class="o">();</span>
+        <span class="k">else</span>
+            <span class="k">return</span> <span class="n">p</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="n">Node</span><span class="o">()</span> <span class="o">{</span>
+    <span class="o">}</span>
+
+    <span class="n">Node</span><span class="o">(</span><span class="n">Thread</span> <span class="n">thread</span><span class="o">,</span> <span class="n">Node</span> <span class="n">mode</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">nextWaiter</span> <span class="o">=</span> <span class="n">mode</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">thread</span> <span class="o">=</span> <span class="n">thread</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="n">Node</span><span class="o">(</span><span class="n">Thread</span> <span class="n">thread</span><span class="o">,</span> <span class="kt">int</span> <span class="n">waitStatus</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">waitStatus</span> <span class="o">=</span> <span class="n">waitStatus</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">thread</span> <span class="o">=</span> <span class="n">thread</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p><strong>节点属性类型与名称以及描述</strong></p>
+<p><img alt="属性名称" src="https://upload-images.jianshu.io/upload_images/10175660-50eaea466097ee17.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<blockquote>
+<p>volatile int waitStatus;
+        volatile Node prev;
+        volatile Node next;
+        volatile Thread thread;</p>
+</blockquote>
+<p>上述的几个属性都使用了volatile语义，是为了保证内存的可见性，在配合<strong>CAS</strong>的使用过程中，能够获取到该属性的变化，可以说 volatile + CAS 组合是实现同步器的基础</p>
+<p>同步队列结构图如下：</p>
+<p><img alt="同步队列" src="https://upload-images.jianshu.io/upload_images/10175660-4458697e9594185c.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>同步器包含了两个节点类型的引用，一个指向头节点，而另一个指向尾节点。</p>
+<p>当一个线程成功地获取了同步状态（或者锁），其他线程将无法获取到同步状态，转而被构造成为节点并加入到同步队列中，而这个加入队列的过程必须要保证线程安全，因此同步器提供了一个基于CAS的设置尾节点的方法：<code>compareAndSetTail(Node expect,Nodeupdate)</code>，它需要传递当前线程“认为”的尾节点和当前节点，只有设置成功后，当前节点才正式与之前的尾节点建立关联。</p>
+<h3>1.1 入队操作</h3>
+<p><img alt="入队操作" src="https://upload-images.jianshu.io/upload_images/10175660-e883018e54906887.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h3>1.2 获取同步状态</h3>
+<p><img alt="设置首节点" src="https://upload-images.jianshu.io/upload_images/10175660-f95a12ea2655d585.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>同步队列遵循FIFO，首节点是获取同步状态成功的节点，首节点的线程在释放同步状态时，将会唤醒后继节点，而后继节点将会在获取同步状态成功时将自己设置为首节点由于只有一个线程能够成功获取到同步状态，因此设置头节点的方法并不需要使用CAS来保证,后面代码中会具体分析</p>
+<h1>2 独占锁实现</h1>
+<h3>2.1 同步状态获取</h3>
+<p>同步器锁获取方法在<code>acquire</code>方法中,代码如下：</p>
+<div class="highlight"><pre><span></span><span class="c1">//同步状态获取、节点构造、加入同步队列以及在同步队列中自旋</span>
+    <span class="kd">public</span> <span class="kd">final</span> <span class="kt">void</span> <span class="nf">acquire</span><span class="o">(</span><span class="kt">int</span> <span class="n">arg</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">tryAcquire</span><span class="o">(</span><span class="n">arg</span><span class="o">)</span> <span class="o">&amp;&amp;</span>
+            <span class="n">acquireQueued</span><span class="o">(</span><span class="n">addWaiter</span><span class="o">(</span><span class="n">Node</span><span class="o">.</span><span class="na">EXCLUSIVE</span><span class="o">),</span> <span class="n">arg</span><span class="o">))</span>
+            <span class="n">selfInterrupt</span><span class="o">();</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>其主要逻辑是：
+<em> 1 首先调用自定义的<code>tryAcquire(int arg)</code>方法，获取同步状态
+</em> 2 如果同步状态获取失败，则构造同步节点,并通过<code>addWaiter(Node node)</code>方法将该节点加入到同步队列的尾部
+* 3 调用<code>acquireQueued(Node node,int arg)</code>方法，使得该节点以“死循环”的方式自旋获取同步状态。如果获取不到则阻塞节点中的线程，<em>而被阻塞线程的唤醒主要依靠前驱节点的出队或阻塞线程被中断来实现</em></p>
+<p>自定义实现的<code>tryAcquire(int arg)</code>方法如下</p>
+<div class="highlight"><pre><span></span>  <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">tryAcquire</span><span class="o">(</span><span class="kt">int</span> <span class="n">acquires</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">compareAndSetState</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">setExclusiveOwnerThread</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">());</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+</pre></div>
+
+
+<p>通过CAS来获取同步状态，如果获取成功，则将<code>state</code>的的状态标记为1，并且将AQS对象中的独占拥有线程属性<code>exclusiveOwnerThread</code>的引用指向当前线程。如果获取失败，则直接返回false</p>
+<p>如果获取锁失败，节点的构造以及加入同步队列，方法如下</p>
+<div class="highlight"><pre><span></span>  <span class="kd">private</span> <span class="n">Node</span> <span class="nf">addWaiter</span><span class="o">(</span><span class="n">Node</span> <span class="n">mode</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">//构建同步队列节点</span>
+        <span class="n">Node</span> <span class="n">node</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">(),</span> <span class="n">mode</span><span class="o">);</span>
+        <span class="c1">// Try the fast path of enq; backup to full enq on failure</span>
+        <span class="n">Node</span> <span class="n">pred</span> <span class="o">=</span> <span class="n">tail</span><span class="o">;</span>
+      <span class="c1">//如果当前同步队列尾节点不为空，即有等待状态的节点</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">pred</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">node</span><span class="o">.</span><span class="na">prev</span> <span class="o">=</span> <span class="n">pred</span><span class="o">;</span> <span class="c1">//将当前要加入节点的前驱节点指向同步队列的尾节点</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">compareAndSetTail</span><span class="o">(</span><span class="n">pred</span><span class="o">,</span> <span class="n">node</span><span class="o">))</span> <span class="o">{</span><span class="c1">//通过cas尝试将当前节点加入到同步队列尾部</span>
+                <span class="n">pred</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">node</span><span class="o">;</span>  <span class="c1">//cas成功 则将同步队列的后继节点指向当前加入同步节点</span>
+                <span class="k">return</span> <span class="n">node</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="c1">//如果加入同步队列失败等其他状况，则如果 enq方法</span>
+        <span class="n">enq</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">node</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="kd">private</span> <span class="n">Node</span> <span class="nf">enq</span><span class="o">(</span><span class="kd">final</span> <span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">//死循环自旋的方式将同步节点加入到同步队列操作</span>
+        <span class="k">for</span> <span class="o">(;;)</span> <span class="o">{</span>
+            <span class="n">Node</span> <span class="n">t</span> <span class="o">=</span> <span class="n">tail</span><span class="o">;</span>
+    <span class="c1">//如果同步队列队尾为空，则初始化同步队列</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">t</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span> <span class="c1">// Must initialize</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">compareAndSetHead</span><span class="o">(</span><span class="k">new</span> <span class="n">Node</span><span class="o">()))</span>
+                    <span class="n">tail</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>  <span class="c1">//对头队尾都是同一对象，int waitStatus的等待状态为0</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="c1">//如果同步队列不为空，则cas将当前节点加入到同步器队尾</span>
+                <span class="n">node</span><span class="o">.</span><span class="na">prev</span> <span class="o">=</span> <span class="n">t</span><span class="o">;</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">compareAndSetTail</span><span class="o">(</span><span class="n">t</span><span class="o">,</span> <span class="n">node</span><span class="o">))</span> <span class="o">{</span>
+                    <span class="n">t</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">node</span><span class="o">;</span>
+                    <span class="k">return</span> <span class="n">t</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>上述代码通过使用<code>compareAndSetTail(Node expect,Node update)</code>方法来确保节点能够被线程安全添加。</p>
+<p>如果使用普通的LinkedList来维护节点之间的关系，多个线程由于调用<code>tryAcquire(int arg)</code>方法获取同步状态失败而并发地被添加到LinkedList时，LinkedList将难以保证Node的正确添加，最终的结果可能是节点的数量有偏差，而且顺序也是混乱的。</p>
+<p>在<code>enq(final Node node)</code>方法中，同步器通过“死循环”来保证节点的正确添加，在“死循环”中只有通过CAS将节点设置成为尾节点之后，当前线程才能从该方法返回，否则，当前线程不断地尝试设置。</p>
+<p><strong>同步队列中获取同步状态过程</strong></p>
+<p>节点进入同步队列之后，就进入了一个自旋的过程，当条件满足，获取到了同步状态，就可以从这个自旋过程中退出，否则依旧留在这个自旋过程中 
+ <em>（并会阻塞节点的线程）</em>  </p>
+<p>具体方法如下:</p>
+<div class="highlight"><pre><span></span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="nf">acquireQueued</span><span class="o">(</span><span class="kd">final</span> <span class="n">Node</span> <span class="n">node</span><span class="o">,</span> <span class="kt">int</span> <span class="n">arg</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">boolean</span> <span class="n">failed</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="kt">boolean</span> <span class="n">interrupted</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="c1">//自旋获取同步状态</span>
+            <span class="k">for</span> <span class="o">(;;)</span> <span class="o">{</span>
+    <span class="c1">//获取当前自旋节点的前驱节点</span>
+                <span class="kd">final</span> <span class="n">Node</span> <span class="n">p</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">predecessor</span><span class="o">();</span>
+    <span class="c1">//如果前驱节点是同步队列的头节点，则尝试获取同步状态</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">p</span> <span class="o">==</span> <span class="n">head</span> <span class="o">&amp;&amp;</span> <span class="n">tryAcquire</span><span class="o">(</span><span class="n">arg</span><span class="o">))</span> <span class="o">{</span>
+                    <span class="n">setHead</span><span class="o">(</span><span class="n">node</span><span class="o">);</span> <span class="c1">//获取同步状态成功，将头节点设置为当前节点，并将node.pre设置为null</span>
+                    <span class="n">p</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span> <span class="c1">// help GC</span>
+                    <span class="n">failed</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+                    <span class="k">return</span> <span class="n">interrupted</span><span class="o">;</span>
+                <span class="o">}</span>
+    <span class="c1">//获取锁失败后是否需要阻塞线程，需要则修改线程状态</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">shouldParkAfterFailedAcquire</span><span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">node</span><span class="o">)</span> <span class="o">&amp;&amp;</span>
+                    <span class="n">parkAndCheckInterrupt</span><span class="o">())</span>
+                    <span class="n">interrupted</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+        <span class="c1">//如果当前节点中断，则取消获取同步状态，并将waitStatus 设置为Node.CANCELLED </span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">failed</span><span class="o">)</span>
+                <span class="n">cancelAcquire</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="c1">//该方法主要通过前驱节点判断当前线程是否应该被阻塞</span>
+ <span class="kd">private</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">shouldParkAfterFailedAcquire</span><span class="o">(</span><span class="n">Node</span> <span class="n">pred</span><span class="o">,</span> <span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">//获取前驱节点的等待状态</span>
+        <span class="kt">int</span> <span class="n">ws</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="na">waitStatus</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">ws</span> <span class="o">==</span> <span class="n">Node</span><span class="o">.</span><span class="na">SIGNAL</span><span class="o">)</span>
+            <span class="cm">/*</span>
+<span class="cm">             * 如果状态是signal,表示线程处于blocked状态，返回true</span>
+<span class="cm">             */</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">ws</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+           <span class="c1">//前驱节点状态 &gt; 0 ，则为Cancelled,表明该节点已经超时或被中断，需要从同步队列中跳过</span>
+            <span class="k">do</span> <span class="o">{</span><span class="c1">//循环跳过逻辑</span>
+                <span class="n">node</span><span class="o">.</span><span class="na">prev</span> <span class="o">=</span> <span class="n">pred</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="na">prev</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">while</span> <span class="o">(</span><span class="n">pred</span><span class="o">.</span><span class="na">waitStatus</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">);</span>
+            <span class="n">pred</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">node</span><span class="o">;</span> <span class="c1">//找到waitStatus&lt;=0的节点与node节点前后链接</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+    <span class="c1">//如果前驱节点状态为Condition、propagate （0， -3）,则表明节点需要signal状态，而不是阻塞，</span>
+    <span class="c1">//则重试CAS操作确认该节点在阻塞前未获取到同步状态</span>
+            <span class="n">compareAndSetWaitStatus</span><span class="o">(</span><span class="n">pred</span><span class="o">,</span> <span class="n">ws</span><span class="o">,</span> <span class="n">Node</span><span class="o">.</span><span class="na">SIGNAL</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>在<code>acquireQueued(final Node node,int arg)</code>方法中，当前线程在“死循环”中尝试获取同步状态，而只有前驱节点是头节点才能够尝试获取同步状态，这是为什么？原因有两个，如下。
+<em> 1 头节点是成功获取到同步状态的节点，而头节点的线程释放了之后，将会唤醒其后继节点，后继节点的线程被唤醒后需要检查自己的前驱节点是否是头节点。
+</em> 2 维护同步队列的FIFO原则。该方法中，节点自旋获取同步状态的行为如图所示:</p>
+<p><img alt="同步状态" src="https://upload-images.jianshu.io/upload_images/10175660-9435ca33949683ec.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>独占式同步状态获取流程，<code>acquire(int arg)</code>方法调用流程，如图：</p>
+<p><img alt="独占式获取锁流程" src="https://upload-images.jianshu.io/upload_images/10175660-4e42520e216e4c64.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>前驱节点为头节点且能够获取同步状态的判断条件和线程进入等待状态是获取同步状态的自旋过程。当同步状态获取成功之后，当前线程从<code>acquire(int arg)</code>方法返回，如果对于锁这种并发组件而言，代表着当前线程获取了锁。</p>
+<h3>2.2 同步状态释放</h3>
+<p>当前线程获取同步状态并执行了相应逻辑之后，就需要释放同步状态，使得后续节点能够继续获取同步状态。通过调用同步器的<code>release(int arg)</code>方法可以释放同步状态，该方法在释放了同步状态之后，会唤醒其后继节点（进而使后继节点重新尝试获取同步状态）。该方法如下:</p>
+<div class="highlight"><pre><span></span> <span class="kd">public</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="nf">release</span><span class="o">(</span><span class="kt">int</span> <span class="n">arg</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">tryRelease</span><span class="o">(</span><span class="n">arg</span><span class="o">))</span> <span class="o">{</span>
+            <span class="n">Node</span> <span class="n">h</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">h</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">h</span><span class="o">.</span><span class="na">waitStatus</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span>
+                <span class="n">unparkSuccessor</span><span class="o">(</span><span class="n">h</span><span class="o">);</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+
+     <span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">tryRelease</span><span class="o">(</span><span class="kt">int</span> <span class="n">releases</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">getState</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalMonitorStateException</span><span class="o">();</span>
+            <span class="n">setExclusiveOwnerThread</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+            <span class="n">setState</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+
+<span class="c1">//唤醒后继节点</span>
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">unparkSuccessor</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//当前节点状态</span>
+        <span class="kt">int</span> <span class="n">ws</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">waitStatus</span><span class="o">;</span>
+        <span class="c1">//当前状态 &lt; 0 则设置为 0</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">ws</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+            <span class="n">compareAndSetWaitStatus</span><span class="o">(</span><span class="n">node</span><span class="o">,</span> <span class="n">ws</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+
+        <span class="c1">//当前节点的后继节点</span>
+        <span class="n">Node</span> <span class="n">s</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="c1">//后继节点为null或者其状态 &gt; 0 (超时或者被中断了)</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">s</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">s</span><span class="o">.</span><span class="na">waitStatus</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="c1">//从tail节点来找可用节点</span>
+            <span class="k">for</span> <span class="o">(</span><span class="n">Node</span> <span class="n">t</span> <span class="o">=</span> <span class="n">tail</span><span class="o">;</span> <span class="n">t</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">t</span> <span class="o">!=</span> <span class="n">node</span><span class="o">;</span> <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="na">prev</span><span class="o">)</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">t</span><span class="o">.</span><span class="na">waitStatus</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">)</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">//唤醒后继节点</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">s</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+            <span class="n">LockSupport</span><span class="o">.</span><span class="na">unpark</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">thread</span><span class="o">);</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>通过自定义的<code>tryRelease(int releases)</code>方法，当<strong>state</strong>变成0的时候表示释放成功，同时唤醒通过<code>unparkSuccessor(Node node)</code> 方法唤醒后继节点</p>
+<h3>2.3 独占式获取响应中断</h3>
+<p>AQS提供了<code>acquire(int arg)</code>方法以独占式获取同步状态，但是该方法对中断不响应，对线程进行中断操作后，该线程会依然位于CLH同步队列中等待着获取同步状态。为了响应中断，AQS提供了<code>acquireInterruptibly(int arg)</code>方法，该方法在等待获取同步状态时，如果当前线程被中断了，会立刻响应中断抛出异常InterruptedException。</p>
+<div class="highlight"><pre><span></span>  <span class="kd">public</span> <span class="kd">final</span> <span class="kt">void</span> <span class="nf">acquireInterruptibly</span><span class="o">(</span><span class="kt">int</span> <span class="n">arg</span><span class="o">)</span>
+            <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">interrupted</span><span class="o">())</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">InterruptedException</span><span class="o">();</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">tryAcquire</span><span class="o">(</span><span class="n">arg</span><span class="o">))</span>
+            <span class="n">doAcquireInterruptibly</span><span class="o">(</span><span class="n">arg</span><span class="o">);</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p><strong>private void doAcquireInterruptibly(int arg)</strong>方法和<strong>final boolean acquireQueued(final Node node, int arg)</strong>方法基本类似,所以这部分分析省略</p>
+<h3>2.4 独占式超时获取</h3>
+<p><code>tryAcquireNanos(int arg,long nanos)</code>该方法为<code>acquireInterruptibly</code>方法的进一步增强，它除了响应中断外，还有超时控制。即如果当前线程没有在指定时间内获取同步状态，则会返回false，否则返回true。针对超时获取，主要需要计算出需要睡眠的时间间隔_nanosTimeout_  , 方法如下：</p>
+<div class="highlight"><pre><span></span>  <span class="kd">public</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="nf">tryAcquireNanos</span><span class="o">(</span><span class="kt">int</span> <span class="n">arg</span><span class="o">,</span> <span class="kt">long</span> <span class="n">nanosTimeout</span><span class="o">)</span>
+            <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">interrupted</span><span class="o">())</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">InterruptedException</span><span class="o">();</span>
+        <span class="k">return</span> <span class="n">tryAcquire</span><span class="o">(</span><span class="n">arg</span><span class="o">)</span> <span class="o">||</span>
+            <span class="n">doAcquireNanos</span><span class="o">(</span><span class="n">arg</span><span class="o">,</span> <span class="n">nanosTimeout</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">//获取超时逻辑</span>
+ <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">doAcquireNanos</span><span class="o">(</span><span class="kt">int</span> <span class="n">arg</span><span class="o">,</span> <span class="kt">long</span> <span class="n">nanosTimeout</span><span class="o">)</span>
+            <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">nanosTimeout</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="n">L</span><span class="o">)</span> <span class="c1">//参数校验</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="c1">//  获取超时的纳秒值</span>
+        <span class="kd">final</span> <span class="kt">long</span> <span class="n">deadline</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">()</span> <span class="o">+</span> <span class="n">nanosTimeout</span><span class="o">;</span>
+        <span class="kd">final</span> <span class="n">Node</span> <span class="n">node</span> <span class="o">=</span> <span class="n">addWaiter</span><span class="o">(</span><span class="n">Node</span><span class="o">.</span><span class="na">EXCLUSIVE</span><span class="o">);</span><span class="c1">//构造节点</span>
+        <span class="kt">boolean</span> <span class="n">failed</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span><span class="c1">//自旋获取同步状态</span>
+            <span class="k">for</span> <span class="o">(;;)</span> <span class="o">{</span>
+                <span class="kd">final</span> <span class="n">Node</span> <span class="n">p</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">predecessor</span><span class="o">();</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">p</span> <span class="o">==</span> <span class="n">head</span> <span class="o">&amp;&amp;</span> <span class="n">tryAcquire</span><span class="o">(</span><span class="n">arg</span><span class="o">))</span> <span class="o">{</span>
+                    <span class="n">setHead</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+                    <span class="n">p</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span> <span class="c1">// help GC</span>
+                    <span class="n">failed</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+                    <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+                <span class="o">}</span>
+    <span class="c1">//在正常获取同步状态的逻辑上加入超时校验</span>
+                <span class="n">nanosTimeout</span> <span class="o">=</span> <span class="n">deadline</span> <span class="o">-</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">nanosTimeout</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="n">L</span><span class="o">)</span>
+                    <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">shouldParkAfterFailedAcquire</span><span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">node</span><span class="o">)</span> <span class="o">&amp;&amp;</span>
+                    <span class="n">nanosTimeout</span> <span class="o">&gt;</span> <span class="n">spinForTimeoutThreshold</span><span class="o">)</span>
+                    <span class="n">LockSupport</span><span class="o">.</span><span class="na">parkNanos</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">nanosTimeout</span><span class="o">);</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">interrupted</span><span class="o">())</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="n">InterruptedException</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">failed</span><span class="o">)</span>
+                <span class="n">cancelAcquire</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>方法在自旋过程中，当节点的前驱节点为头节点时尝试获取同步状态，如果获取成功则从该方法返回，这个过程和独占式同步获取的过程类似。</p>
+<p>但是在同步状态获取失败的处理上有所不同。如果当前线程获取同步状态失败，则判断是否超时（nanosTimeout小于等于0表示已经超时），如果没有超时，重新计算超时间隔nanosTimeout，然后使当前线程等待nanosTimeout纳秒（当已到设置的超时时间，该线程会从<code>LockSupport.parkNanos(Objectblocker,long nanos)</code>方法返回）。</p>
+<p>如果nanosTimeout小于等于<strong>spinForTimeoutThreshold（1000纳秒）</strong>时，将不会使该线程进行超时等待，而是进入快速的自旋过程。原因在于，非常短的超时等待无法做到十分精确，如果这时再进行超时等待，相反会让nanosTimeout的超时从整体上表现得反而不精确。因此，在超时非常短的场景下，同步器会进入无条件的快速自旋。</p>
+<p><strong>独占式超时获取同步状态流程如图</strong></p>
+<p><img alt="超时流程图" src="https://upload-images.jianshu.io/upload_images/10175660-6ee22896a8f7079b.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h1>3 共享锁实现</h1>
+<p>共享式获取与独占式获取最主要的区别在于同一时刻能否有多个线程同时获取到同步状态。</p>
+<h3>3.1 共享式同步状态获取</h3>
+<p>AQS提供<code>acquireShared(int arg)</code>方法共享式获取同步状态：</p>
+<div class="highlight"><pre><span></span> <span class="kd">public</span> <span class="kd">final</span> <span class="kt">void</span> <span class="nf">acquireShared</span><span class="o">(</span><span class="kt">int</span> <span class="n">arg</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">tryAcquireShared</span><span class="o">(</span><span class="n">arg</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+    <span class="c1">//获取失败，自旋获取同步状态</span>
+            <span class="n">doAcquireShared</span><span class="o">(</span><span class="n">arg</span><span class="o">);</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>首先判断自定义的<code>tryAcquireShared(arg)</code>是否获取到同步状态，如果获取失败，则进入<code>doAcquireShared(arg)</code>方法</p>
+<div class="highlight"><pre><span></span> <span class="kd">private</span> <span class="kt">void</span> <span class="nf">doAcquireShared</span><span class="o">(</span><span class="kt">int</span> <span class="n">arg</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">//构造共享节点</span>
+        <span class="kd">final</span> <span class="n">Node</span> <span class="n">node</span> <span class="o">=</span> <span class="n">addWaiter</span><span class="o">(</span><span class="n">Node</span><span class="o">.</span><span class="na">SHARED</span><span class="o">);</span>
+        <span class="kt">boolean</span> <span class="n">failed</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="kt">boolean</span> <span class="n">interrupted</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="c1">//自旋方式获取同步状态</span>
+            <span class="k">for</span> <span class="o">(;;)</span> <span class="o">{</span>
+    <span class="c1">// 获取节点的前驱节点</span>
+                <span class="kd">final</span> <span class="n">Node</span> <span class="n">p</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">predecessor</span><span class="o">();</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">p</span> <span class="o">==</span> <span class="n">head</span><span class="o">)</span> <span class="o">{</span><span class="c1">//如果前驱节点是同步队列头节点则尝试获取同步状态</span>
+                    <span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="n">tryAcquireShared</span><span class="o">(</span><span class="n">arg</span><span class="o">);</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="n">r</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span><span class="c1">//获取同步状态成功</span>
+                        <span class="n">setHeadAndPropagate</span><span class="o">(</span><span class="n">node</span><span class="o">,</span> <span class="n">r</span><span class="o">);</span> <span class="c1">//同步队列头设置为当前节点</span>
+                        <span class="n">p</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span> <span class="c1">// help GC</span>
+                        <span class="k">if</span> <span class="o">(</span><span class="n">interrupted</span><span class="o">)</span>
+                            <span class="n">selfInterrupt</span><span class="o">();</span>
+                        <span class="n">failed</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+                        <span class="k">return</span><span class="o">;</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+    <span class="c1">//获取失败后是否需要阻塞线程</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">shouldParkAfterFailedAcquire</span><span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">node</span><span class="o">)</span> <span class="o">&amp;&amp;</span>
+                    <span class="n">parkAndCheckInterrupt</span><span class="o">())</span>
+                    <span class="n">interrupted</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">failed</span><span class="o">)</span> <span class="c1">//如果当前节点中断异常则从同步队列中移除</span>
+                <span class="n">cancelAcquire</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>在<code>acquireShared(int arg)</code>方法中，同步器调用<code>tryAcquireShared(int arg)</code>方法尝试获取同步状态，tryAcquireShared(int arg)方法返回值为int类型，当返回值大于等于0时，表示能够获取到同步状态。</p>
+<p>因此，在共享式获取的自旋过程中，成功获取到同步状态并退出自旋的条件就是<code>tryAcquireShared(int arg)</code>方法返回值大于等于0。可以看到，在<code>doAcquireShared(int arg)</code>方法的自旋过程中，如果当前节点的前驱为头节点时，尝试获取同步状态，如果返回值大于等于0，表示该次获取同步状态成功并从自旋过程中退出。</p>
+<h3>3.2 共享式同步状态释放</h3>
+<p>获取同步状态后，需要调用<code>release(int arg)</code>方法释放同步状态，方法如下：</p>
+<div class="highlight"><pre><span></span> <span class="kd">public</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="nf">releaseShared</span><span class="o">(</span><span class="kt">int</span> <span class="n">arg</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">tryReleaseShared</span><span class="o">(</span><span class="n">arg</span><span class="o">))</span> <span class="o">{</span><span class="c1">//自定义ryReleaseShared方法中释放同步状态成功</span>
+            <span class="n">doReleaseShared</span><span class="o">();</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">doReleaseShared</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">for</span> <span class="o">(;;)</span> <span class="o">{</span>
+            <span class="n">Node</span> <span class="n">h</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">h</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">h</span> <span class="o">!=</span> <span class="n">tail</span><span class="o">)</span> <span class="o">{</span>
+                <span class="kt">int</span> <span class="n">ws</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="na">waitStatus</span><span class="o">;</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">ws</span> <span class="o">==</span> <span class="n">Node</span><span class="o">.</span><span class="na">SIGNAL</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="k">if</span> <span class="o">(!</span><span class="n">compareAndSetWaitStatus</span><span class="o">(</span><span class="n">h</span><span class="o">,</span> <span class="n">Node</span><span class="o">.</span><span class="na">SIGNAL</span><span class="o">,</span> <span class="mi">0</span><span class="o">))</span>
+                        <span class="k">continue</span><span class="o">;</span>            <span class="c1">// loop to recheck cases</span>
+                    <span class="n">unparkSuccessor</span><span class="o">(</span><span class="n">h</span><span class="o">);</span> <span class="c1">//设置状态成功唤醒后继节点</span>
+                <span class="o">}</span>
+                <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">ws</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span>
+                         <span class="o">!</span><span class="n">compareAndSetWaitStatus</span><span class="o">(</span><span class="n">h</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">Node</span><span class="o">.</span><span class="na">PROPAGATE</span><span class="o">))</span>
+                    <span class="k">continue</span><span class="o">;</span>                <span class="c1">// loop on failed CAS</span>
+            <span class="o">}</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">h</span> <span class="o">==</span> <span class="n">head</span><span class="o">)</span>                   <span class="c1">// loop if head changed</span>
+                <span class="k">break</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>该方法在释放同步状态之后，将会唤醒后续处于等待状态的节点。对于能够支持多个线程同时访问的并发组件（比如Semaphore），它和独占式主要区别在于<code>tryReleaseShared(int arg)</code>方法必须确保同步状态（或者资源数）线程安全释放，一般是通过循环和CAS来保证的，因为释放同步状态的操作会同时来自多个线程。</p>
+<h3>3.3 中断和超时</h3>
+<p>超时中断的方法和独占锁的方法类似，省略</p>
+<h1>Reference</h1>
+<p>java并发编程艺术</p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "concurrent/aqs-chapter02.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns" style="font-size: 80%">
+
+
+    <nav class="widget">
+        <h4>个人链接</h4>
+        <ul class="blank">
+            <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">StackOverFlow</a></li>
+            <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+            <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+        </ul>
+    </nav>
+
+<h4>专题分类</h4>
+
+ <ul>
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/zai-xian-gong-ju.html">在线工具</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/ji-zhu-tu-pu.html">技术图谱</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+
+     <li >
+         <a href="/algorithm/index.html">
+             Algorithm
+         </a>
+     </li>
+     <li >
+         <a href="/cache/index.html">
+             cache
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             Classloader
+         </a>
+     </li>
+     <li class="active" >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+     <li >
+         <a href="/security/index.html">
+             Security
+         </a>
+     </li>
+     <li >
+         <a href="/source-code/index.html">
+             Source-code
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm/index.html">Algorithm</a></li>-->
+	<!---->
+		<!--<li><a href="/cache/index.html">cache</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">Classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+		<!--<li><a href="/security/index.html">Security</a></li>-->
+	<!---->
+		<!--<li><a href="/source-code/index.html">Source-code</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+<h4>标签</h4>
+	<ul class="blank">
+	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
+	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
+	    <li class="danger label" ><a href="/tag/duo-xian-cheng.html">多线程</a></li>
+	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
+	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
+	    <li class="danger label" ><a href="/tag/redis.html">redis</a></li>
+	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
+	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
+	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
+	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
+	    <li class="danger label" ><a href="/tag/junit.html">junit</a></li>
+	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
+</ul>
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+
+
+</div> </div><!-- /.row -->
+  <div class="pagination">★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆
+      <ul>
+        <li class="prev"><a href="/cache/cache-redis-slowlog.html">Next →</a></li>
+        <li><a href="/archives.html">博客导航</a></li>
+        <li class="next"><a href="/">← 上一篇</a></li>
+      </ul>
+    </div>
+
+    <h4>相关文章推荐</h4>
+    <ul>
+        <li><a href="/concurrent/aqs-chapter01.html">并发基础之AQS同步器（一）</a></li>
+    </ul>
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-119892182-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+  <script src="/theme/js/toc.js" type="text/javascript"></script>
+    <script>
+        (function () {
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+</body>
+</html>
