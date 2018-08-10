@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>Redis注意事项及常见优化</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+        <link href="/feeds/cache.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+        <link rel="shortcut icon" href="/theme/images/favicon.ico">
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+
+                <ul class="columns">
+                    <li><a href="/">首页</a></li>
+
+                    <li
+><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                    <li
+><a href="/zai-xian-gong-ju.html">在线工具</a></li>
+                    <li
+><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                    <li
+><a href="/ji-zhu-tu-pu.html">技术图谱</a></li>
+                    <li
+><a href="/guan-yu-wo.html">关于我</a></li>
+                     <li><a href="/archives.html"><i class="active"></i>归档日志</a></li>
+                    <form class="navbar-search pull-right" action="/search.html">
+                        <input type="text" class="search-query" placeholder="站内搜" name="q" id="s">
+                    </form>
+                </ul>
+            </div>
+
+
+<section id="content" class="body">
+
+   <div class="row">
+
+<div id="toc" class="threes columns" style="font-size: 65%">
+    <br>
+    <h4 style="font-size: 1rem">文章目录</h4>
+</div>        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/cache/cache-redis-optimize.html" rel="bookmark"
+                   title="Permalink to Redis注意事项及常见优化">Redis注意事项及常见优化</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2018-08-07T19:01:00+08:00">
+                周二 07 八月 2018
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div id="contents" class="entry-content">
+              <h1>1 键值设计</h1>
+<h4>1.1  key名设计</h4>
+<ul>
+<li>(1)【建议】: 可读性和可管理性</li>
+</ul>
+<p>以业务名(或数据库名)为前缀(防止key冲突)，用冒号分隔，比如业务名:表名:id</p>
+<div class="highlight"><pre><span></span><span class="n">roborder</span><span class="o">:</span><span class="n">user</span><span class="o">:</span><span class="mi">1</span><span class="o">:</span><span class="n">amount</span>
+</pre></div>
+
+
+<ul>
+<li>(2)【建议】：简洁性</li>
+</ul>
+<p>保证语义的前提下，控制key的长度，当key较多时，内存占用也不容忽视，例如：</p>
+<div class="highlight"><pre><span></span>user<span class="p">:{</span>uid<span class="p">}:</span><span class="l">friends:messages:</span><span class="p">{</span>mid<span class="p">}</span>
+<span class="err">简化为</span> u<span class="p">:{</span>uid<span class="p">}:</span><span class="l">fr:m:</span><span class="p">{</span>mid<span class="p">}</span><span class="err">。</span>
+</pre></div>
+
+
+<ul>
+<li>(3)【强制】：不要包含特殊字符</li>
+</ul>
+<p>反例：包含空格、换行、单双引号以及其他转义字符</p>
+<h4>1.2 value设计</h4>
+<ul>
+<li>(1)【强制】：拒绝bigkey(防止网卡流量、慢查询)</li>
+</ul>
+<p>string类型控制在10KB以内，hash、list、set、zset元素个数不要超过5000。</p>
+<p>反例：一个包含200万个元素的list。</p>
+<p>非字符串的bigkey，不要使用del删除，使用<strong>hscan、sscan、zscan方式渐进式删除</strong>，同时要注意防止bigkey过期时间自动删除问题(例如一个200万的zset设置1小时过期，会触发del操作，造成阻塞，而且该操作不会不出现在慢查询中(latency可查))</p>
+<ul>
+<li>(2)【推荐】：选择适合的数据类型。</li>
+</ul>
+<p>例如：实体类型(要合理控制和使用数据结构内存<em>编码优化配置</em>,例如ziplist，但也要注意节省内存和性能之间的平衡)</p>
+<p>反例：</p>
+<div class="highlight"><pre><span></span>set user:1:name tom
+set user:1:age 19
+set user:1:favor football
+</pre></div>
+
+
+<p>正例:</p>
+<div class="highlight"><pre><span></span>hmset user:1 name tom age 19 favor football
+</pre></div>
+
+
+<ul>
+<li>(3)【推荐】：控制key的生命周期，redis不是垃圾桶。</li>
+</ul>
+<p>建议使用expire设置过期时间(条件允许可以打散过期时间，防止集中过期)，不过期的数据重点关注idletime。同时设置时间的时候注意原子性操作，否则可能出现死锁情况</p>
+<ul>
+<li>(4)【推荐】hash，set，zset，list 存储过多的元素优化
+可以将这些元素分拆，通过hash取模的方式
+正常存取流程是 hget(hashKey, field) ; hset(hashKey, field, value)
+现在，固定一个桶的数量，比如 100， 每次存取的时候，先在本地计算field的hash值，模除 100， 确定了该field落在哪个key上。</li>
+</ul>
+<div class="highlight"><pre><span></span>newHashKey  =  hashKey + hash(field) % 10000;   
+hset (newHashKey, field, value) ;  
+hget(newHashKey, field)
+</pre></div>
+
+
+<p>set, zset, list 也可以类似上述做法,如果对于顺序有严格要求的则不试用</p>
+<h1>2 命令使用注意点</h1>
+<p>1.【推荐】 O(N)命令关注N的数量
+例如hgetall、lrange、smembers、zrange、sinter等并非不能使用，但是需要明确N的值。有遍历的需求可以使用hscan、sscan、zscan代替。
+Redis的命令时间复杂度可以看这里<a href="http://doc.redisfans.com/">Redis复杂度O(N)</a></p>
+<p>2.【推荐】：禁用命令
+禁止线上使用keys、flushall、flushdb等，通过redis的rename机制禁掉命令，或者使用scan的方式渐进式处理。</p>
+<p>3.【推荐】合理使用select
+redis的多数据库较弱，使用数字进行区分，很多客户端支持较差，同时多业务用多数据库实际还是单线程处理，会有干扰。</p>
+<p>4.【推荐】使用批量操作提高效率
+原生命令：例如mget、mset。
+非原生命令：可以使用pipeline提高效率，可以减少网络耗时
+但要注意控制一次批量操作的元素个数(例如500以内，实际也和元素字节数有关)。</p>
+<p>注意两者不同：</p>
+<blockquote>
+<ol>
+<li>原生是原子操作，pipeline是非原子操作。在集群环境下如果key不在同一个slot上，那么mget、mset等操作为非原子性操作。</li>
+<li>pipeline可以打包不同的命令，原生做不到</li>
+<li>pipeline需要客户端和服务端同时支持。</li>
+</ol>
+</blockquote>
+<p>5.【建议】Redis事务功能较弱，不建议过多使用
+Redis的事务功能较弱(不支持回滚)，而且集群版本(自研和官方)要求一次事务操作的key必须在一个slot上(可以使用 <em>hashtag</em> 功能解决)
+<strong>hashtag的解决方案</strong>：可以使用twitter的 <a href="https://github.com/twitter/twemproxy/blob/master/notes/recommendation.md#hash-tags">twemproxy</a></p>
+<p>6.【建议】Redis集群版本在使用Lua上有特殊要求：
+1.所有key都应该由 KEYS 数组来传递，redis.call/pcall 里面调用的redis命令，key的位置，必须是KEYS array, 否则直接返回error，
+<code>-ERR bad lua script for redis cluster, all the keys that the script uses should be passed using the KEYS array</code>
+2.所有key，必须在1个slot上，否则直接返回error, <code>-ERR eval/evalsha command keys must in same slot</code>
+ 使用可以参考：<a href="https://blog.csdn.net/mushuntaosama/article/details/78788254">阿里云redis集群使用lua脚本</a></p>
+<p>7.【建议】必要情况下使用monitor命令时，要注意不要长时间使用,否则内出会飙高</p>
+<h1>3 配置属性优化</h1>
+<p><em>maxclients</em>
+限制同时连接的客户数量。当连接数超过这个值时， redis 将不再接收其他连接请求，客户端尝试连接时将收到 error 信息。特殊值"0"表示没有限制。</p>
+<p><em>timeout</em>
+设置客户端连接时的超时时间，单位为秒。当客户端在这段时间内没有发出任何指令，那么关闭该连接，默认为0则表示没有超时时间，如果设定了超时时间，需要注意客户端redis连接池的timeout问题</p>
+<p><em>client-output-buffer-limit</em></p>
+<div class="highlight"><pre><span></span>config set client-output-buffer-limit ‘slave 256mb 64mb 60’
+</pre></div>
+
+
+<p>这里对是客服端是slave的做限制
+256mb 是一个硬性限制，当output-buffer的大小大于256mb之后就会断开连接。64mb 60 是一个软限制，当output-buffer的大小大于64mb并且超过了60秒的时候就会断开连接，所以当预估有bigkeys的时候需要进行调试</p>
+<p><em>lua-time-limit</em>
+限制脚本的最长运行时间，默认为5秒钟。当脚本运行时间超过这一限制后，Redis将开始接受其他命令但不会执行（以确保脚本的原子性，因为此时脚本并没有被终止），而是会返回“BUSY”错误，避免redis阻塞情况</p>
+<p><em>memory-policy</em>
+ 查询内存溢出策略   默认策略是volatile-lru，即超过最大内存后，在过期键中使用lru算法进行key的剔除，保证不过期数据不被删除，但是可能会出现OOM问题。</p>
+<blockquote>
+<p>maxmemory-policy 六种方式
+1、volatile-lru：只对设置了过期时间的key进行LRU（默认值） 
+2、allkeys-lru ： 删除lru算法的key <br>
+3、volatile-random：随机删除即将过期key <br>
+4、allkeys-random：随机删除 <br>
+5、volatile-ttl ： 删除即将过期的 <br>
+6、noeviction ： 永不过期，返回错误</p>
+</blockquote>
+<h1>4 集群批量操作优化</h1>
+<p>首先要知道一个概念叫<strong>缓存无底洞问题</strong>，该问题由 facebook 的工作人员提出的， facebook 在 2010 年左右，memcached 节点就已经达3000 个，缓存数千 G 内容。他们发现了一个问题---memcached 连接频率，效率下降了，于是加 memcached 节点，添加了后，发现因为连接频率导致的问题，仍然存在，并没有好转，称之为”无底洞现象”。</p>
+<p>为什么会出现这个现象，请对比下面两张图片，图一是多IO版本，也就是说当存在的节点异常多的时候，IO的代价已经超过数据传输，上文提到的facebook的节点已经超过3000个，在这种情况下再增加节点已经没法再提高效率了。</p>
+<p>图一 多IO版本</p>
+<p><img alt="io" src="https://upload-images.jianshu.io/upload_images/10175660-5da6a936ae9d9912.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>图二 单IO版本</p>
+<p><img alt="io2" src="https://upload-images.jianshu.io/upload_images/10175660-c0052c9662a37a60.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>redis引入cluster模式后，批量获取操作mget也面临同样的问题。redis是传统的key-value的存储模式，RedisCluster将数据按key哈希到16384个slot上，每个redis node负责一部分的slot。mget需要执行的操作就是从redis node获取所有的key-value值，然后进行merge然后返回。</p>
+<p>其实IO的优化思路都比较通用，无非就是提高命令本身效率，串行改并行，单个转批量。摘录一段网上的IO优化思路总结：</p>
+<blockquote>
+<p>(1) 命令本身的效率：例如sql优化，命令优化
+(2) 网络次数：减少通信次数
+(3) 降低接入成本:长连/连接池,NIO等
+(4) IO访问合并:O(n)到O(1)过程:批量接口(mget)</p>
+</blockquote>
+<p><strong>具体方案</strong></p>
+<p>①串行命令：由于n个key是比较均匀地分布在Redis Cluster的各个节点上，因此无法使用mget命令一次性获取，所以通常来讲要获取n个key的值，最简单的方法就是逐次执行n个get命令，这种操作时间复杂度较高，它的操作时间=n次网络时间+n次命令时间，网络次数是n。很显然这种方案不是最优的，但是实现起来比较简单。</p>
+<div class="highlight"><pre><span></span><span class="n">List</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="nf">serialMGet</span> <span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">keys</span><span class="o">)</span> <span class="o">{</span> 
+<span class="c1">//结果集</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">values</span> <span class="o">-</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
+<span class="c1">//n次串行get</span>
+<span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">key</span> <span class="o">:</span> <span class="n">keys</span><span class="o">)</span> <span class="o">{</span>
+<span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">jediscluster</span><span class="o">.</span><span class="na">get</span> <span class="o">(</span><span class="n">key</span><span class="o">);</span><span class="n">values</span><span class="o">.</span><span class="na">add</span> <span class="o">(</span><span class="n">value</span><span class="o">);</span>
+<span class="o">}</span> 
+<span class="k">return</span> <span class="n">values</span><span class="o">;</span>
+</pre></div>
+
+
+<p>②串行IO：Redis Cluster使用CRC16算法计算出散列值，再取对16383的余数就可以算出slot值，同时Smart客户端会保存slot和节点的对应关系，有了这两个数据就可以将属于同一个节点的key进行归档，得到每个节点的key子列表，之后对每个节点执行mget或者Pipeline操作，它的操作时间=node次网络时间+n次命令时间，网络次数是node的个数，整个过程如下图所示，很明显这种方案比第一种要好很多，但是如果节点数太多，还是有一定的性能问题。</p>
+<div class="highlight"><pre><span></span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="nf">serialIOMget</span> <span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">keys</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="c1">//结果集</span>
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">keyValueMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="c1">//属于各个节点的key列表,JedisPool要提供基于ip和port的hashcode方法</span>
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">JedisPool</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">nodeKeyListMap</span><span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="c1">//遍历所有的key</span>
+        <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">key</span> <span class="o">:</span> <span class="n">keys</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">//使用CRC16本地计算每个key的slot</span>
+            <span class="kt">int</span> <span class="n">slot</span> <span class="o">=</span> <span class="n">JedisClusterCRC16</span><span class="o">.</span><span class="na">getSlot</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+            <span class="c1">//通过iediscluster本地slot-&gt;node映射获取slot对应的node</span>
+            <span class="n">JedisPool</span> <span class="n">jedisPool</span> <span class="o">=</span> <span class="n">jedisCluster</span><span class="o">.</span><span class="na">getConnectionHandler</span><span class="o">().</span><span class="na">getJedisPoolFromSlot</span><span class="o">(</span><span class="n">slot</span><span class="o">);</span>
+            <span class="c1">//归档</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">nodeKeyListMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">jedisPool</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">nodeKeyListMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">jedisPool</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
+                <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+                <span class="n">nodeKeyListMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">jedisPool</span><span class="o">,</span> <span class="n">list</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="c1">//从每个节点上批量获取,这里使用mget也可以使用pipeline</span>
+        <span class="k">for</span> <span class="o">(</span><span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">JedisPool</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">nodeKeyListMap</span><span class="o">.</span><span class="na">entrySet</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">JedisPool</span> <span class="n">jedisPool</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">();</span>
+            <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">nodeKeyList</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+            <span class="c1">//列表变为数组</span>
+            <span class="n">String</span><span class="o">[]</span> <span class="n">nodeKeyArray</span> <span class="o">=</span> <span class="n">nodeKeyList</span><span class="o">.</span><span class="na">toArray</span><span class="o">(</span><span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="n">nodeKeyList</span><span class="o">.</span><span class="na">size</span><span class="o">()]);</span>
+            <span class="c1">//批量获取,可以使用mget或者Pipeline</span>
+            <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">nodeValueList</span> <span class="o">=</span> <span class="n">jedisPool</span><span class="o">.</span><span class="na">getResource</span><span class="o">().</span><span class="na">mget</span><span class="o">(</span><span class="n">nodeKeyArray</span><span class="o">);</span>
+            <span class="c1">//归档</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nodeKeyList</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="n">keyValueMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">nodeKeyList</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">),</span> <span class="n">nodeValueList</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">));</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">keyValueMap</span><span class="o">;</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p><img alt="串行.png" src="https://upload-images.jianshu.io/upload_images/10175660-cd1258366d6c78d4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>③并行IO：此方案是将方案2中的最后一步改为多线程执行，网络次数虽然还是节点个数，但由于使用多线程网络时间变为O（1），这种方案会增加编程的复杂度。</p>
+<p><img alt="并行IO" src="https://upload-images.jianshu.io/upload_images/10175660-f14efa451ea6ec86.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>④hash_tag实现：Redis Cluster的hash_tag功能，它可以将多个key强制分配到一个节点上，它的操作时间=1次网络时间+n次命令时间。</p>
+<p><strong>四种方案对比</strong>
+<img alt="四种批量操作解决方案对比" src="https://upload-images.jianshu.io/upload_images/10175660-dd499734f74226d5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h1>其他工具及优化</h1>
+<ul>
+<li><strong>数据同步</strong></li>
+</ul>
+<p>redis间数据同步可以使用：redis-port</p>
+<ul>
+<li><strong>big key搜索</strong></li>
+</ul>
+<p><a href="https://yq.aliyun.com/articles/117042">redis大key搜索工具</a></p>
+<ul>
+<li><strong>热点key寻找</strong>(内部实现使用monitor，所以建议短时间使用)</li>
+</ul>
+<p><a href="https://github.com/facebookarchive/redis-faina">facebook的redis-faina</a></p>
+<ul>
+<li><strong>其他</strong></li>
+</ul>
+<p><a href="https://yq.aliyun.com/articles/236384">Jedis常见异常汇总</a>
+<a href="https://yq.aliyun.com/articles/236383">JedisPool资源池优化</a></p>
+<h1>Reference</h1>
+<p>数据库技术丛书 REDIS开发与运维
+<a href="https://yq.aliyun.com/articles/531067">阿里云Redis开发规范</a></p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "cache/cache-redis-optimize.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns" style="font-size: 80%">
+
+
+    <nav class="widget">
+        <h4>个人链接</h4>
+        <ul class="blank">
+            <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">StackOverFlow</a></li>
+            <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+            <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+        </ul>
+    </nav>
+
+<h4>专题分类</h4>
+
+ <ul>
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/zai-xian-gong-ju.html">在线工具</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/ji-zhu-tu-pu.html">技术图谱</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+
+     <li >
+         <a href="/algorithm/index.html">
+             Algorithm
+         </a>
+     </li>
+     <li class="active" >
+         <a href="/cache/index.html">
+             cache
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             Classloader
+         </a>
+     </li>
+     <li >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+     <li >
+         <a href="/security/index.html">
+             Security
+         </a>
+     </li>
+     <li >
+         <a href="/source-code/index.html">
+             Source-code
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm/index.html">Algorithm</a></li>-->
+	<!---->
+		<!--<li><a href="/cache/index.html">cache</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">Classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+		<!--<li><a href="/security/index.html">Security</a></li>-->
+	<!---->
+		<!--<li><a href="/source-code/index.html">Source-code</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+<h4>标签</h4>
+	<ul class="blank">
+	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
+	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
+	    <li class="danger label" ><a href="/tag/duo-xian-cheng.html">多线程</a></li>
+	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
+	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
+	    <li class="danger label" ><a href="/tag/redis.html">redis</a></li>
+	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
+	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
+	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
+	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
+	    <li class="danger label" ><a href="/tag/junit.html">junit</a></li>
+	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
+</ul>
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+
+
+</div> </div><!-- /.row -->
+  <div class="pagination">★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆
+      <ul>
+        <li class="prev"><a href="/concurrent/aqs-chapter02.html">Next →</a></li>
+        <li><a href="/archives.html">博客导航</a></li>
+        <li class="next"><a href="/concurrent/aqs-condition.html">← Previous</a></li>
+      </ul>
+    </div>
+
+    <h4>相关文章推荐</h4>
+    <ul>
+        <li><a href="/cache/cache-redis-slowlog.html">Redis之慢查询日志</a></li>
+    </ul>
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-119892182-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+  <script src="/theme/js/toc.js" type="text/javascript"></script>
+    <script>
+        (function () {
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+</body>
+</html>
