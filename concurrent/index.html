@@ -66,6 +66,50 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/concurrent/aqs-condition.html" rel="bookmark" title="Permalink to 并发基础之Condition(等待队列)">并发基础之Condition(等待队列)</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-08-09T22:32:00+08:00"> 周四 09 八月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 定义</h1>
+<p><strong>Condition</strong>是在AQS中配合使用的<code>wait/nofity</code>线程通信协调工具类，我们可以称之为<strong>等待队列</strong></p>
+<p>Condition定义了等待/通知两种类型的方法，当前线程调用这些方法时，需要提前获取到Condition对象关联的锁。Condition对象是调用Lock对象的<code>newCondition()方法</code>创建出来的，换句话说，Condition是依赖Lock对象。</p>
+<p><em>Condition与Object中监视器方法不同点</em></p>
+<blockquote>
+<p>condition可以有多个等待队列 monitor只有一个队列在对象头中
+condition的等待可以自定义超时时间
+conditon的signal 是唤醒等待队列头部的线程节点， Object的notify是随机唤醒
+condition对象的属性对开发者透明</p>
+</blockquote>
+<h1>2 Condition使用</h1>
+<p><strong>demo代码如下</strong></p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyService</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">Lock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantLock</span><span class="o">();</span>
+
+    <span class="kd">private</span> <span class="n">Condition</span> <span class="n">condition</span> <span class="o">=</span> <span class="n">lock</span><span class="o">.</span><span class="na">newCondition</span><span class="o">();</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">await</span><span class="o">()</span> <span class="o">{</span>
+
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+            <span class="n">System …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/concurrent/aqs-condition.html" rel="bookmark" title="Permalink to 并发基础之Condition(等待队列)">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/duo-xian-cheng.html">多线程</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/concurrent/aqs-chapter02.html" rel="bookmark" title="Permalink to 并发基础之AQS同步器（二）">并发基础之AQS同步器（二）</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-08-04T22:52:00+08:00"> 周六 04 八月 2018 </abbr>
@@ -199,52 +243,6 @@ java代码如下：</p>
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
                                             <a class="danger label" href="/tag/si-wei-dao-tu.html">思维导图</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/concurrent/volatile-feature.html" rel="bookmark" title="Permalink to volatile关键字原理实现及应用">volatile关键字原理实现及应用</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-05-04T22:46:00+08:00"> 周五 04 五月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1.并发编程中的三个概念</h1>
-<p>在并发编程中, 需要了解线程的三个概念：原子性，可见性，有序性：</p>
-<p><strong>1.1.原子性</strong></p>
-<blockquote>
-<p>原子性：即一个操作或者多个操作 要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。</p>
-</blockquote>
-<p>一个很经典的例子就是银行账户转账问题：</p>
-<div class="highlight"><pre><span></span>比如从账户A向账户B转1000元，那么必然包括2个操作：从账户A减去1000元，往账户B加上1000元。
-
-试想一下，如果这2个操作不具备原子性，会造成什么样的后果。假如从账户A减去1000元之后，操作突然中止。然后又从B取出了500元，取出500元之后，
-再执行 往账户B加上1000元 的操作。这样就会导致账户A虽然减去了1000元，但是账户B没有收到这个转过来的1000元。
-
-所以这2个操作必须要具备原子性才能保证不出现一些意外的问题。
-</pre></div>
-
-
-<p>同样地反映到并发编程中会出现什么结果呢？</p>
-<p>举个最简单的例子，大家想一下假如为一个32位的变量赋值过程不具备原子性的话，会发生什么后果？</p>
-<div class="highlight"><pre><span></span>i = 9;
-</pre></div>
-
-
-<p>假若一个线程执行到这个语句时，我暂且假设为一个32位的变量赋值包括两个过程：为低16位赋值，为高16位赋值。
-那么就可能发生一种情况：当将低16位数值写入之后，突然被中断，而此时又有一个线程去读取i的值，那么读取到的就是错误的数据。</p>
-<p><strong>1.2.可见性 …</strong></p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/concurrent/volatile-feature.html" rel="bookmark" title="Permalink to volatile关键字原理实现及应用">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
                                 </div>
 
 

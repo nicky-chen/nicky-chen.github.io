@@ -66,6 +66,53 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/cache/cache-redis-optimize.html" rel="bookmark" title="Permalink to Redis注意事项及常见优化">Redis注意事项及常见优化</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-08-07T19:01:00+08:00"> 周二 07 八月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 键值设计</h1>
+<h4>1.1  key名设计</h4>
+<ul>
+<li>(1)【建议】: 可读性和可管理性</li>
+</ul>
+<p>以业务名(或数据库名)为前缀(防止key冲突)，用冒号分隔，比如业务名:表名:id</p>
+<div class="highlight"><pre><span></span><span class="n">roborder</span><span class="o">:</span><span class="n">user</span><span class="o">:</span><span class="mi">1</span><span class="o">:</span><span class="n">amount</span>
+</pre></div>
+
+
+<ul>
+<li>(2)【建议】：简洁性</li>
+</ul>
+<p>保证语义的前提下，控制key的长度，当key较多时，内存占用也不容忽视，例如：</p>
+<div class="highlight"><pre><span></span>user<span class="p">:{</span>uid<span class="p">}:</span><span class="l">friends:messages:</span><span class="p">{</span>mid<span class="p">}</span>
+<span class="err">简化为</span> u<span class="p">:{</span>uid<span class="p">}:</span><span class="l">fr:m:</span><span class="p">{</span>mid<span class="p">}</span><span class="err">。</span>
+</pre></div>
+
+
+<ul>
+<li>(3)【强制】：不要包含特殊字符</li>
+</ul>
+<p>反例：包含空格、换行、单双引号以及其他转义字符</p>
+<h4>1.2 value设计</h4>
+<ul>
+<li>(1 …</li></ul> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/cache/cache-redis-optimize.html" rel="bookmark" title="Permalink to Redis注意事项及常见优化">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/redis.html">redis</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/cache/cache-redis-slowlog.html" rel="bookmark" title="Permalink to Redis之慢查询日志">Redis之慢查询日志</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-08-01T19:01:00+08:00"> 周三 01 八月 2018 </abbr>

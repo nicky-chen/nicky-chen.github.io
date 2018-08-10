@@ -1,5 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>南乡清水</title><link>/</link><description></description><lastBuildDate>Sat, 04 Aug 2018 22:52:00 +0800</lastBuildDate><item><title>并发基础之AQS同步器（二）</title><link>/concurrent/aqs-chapter02.html</link><description>&lt;p&gt;在AQS同步器组件原理分析前，我们需要了解同步队列这个概念，了解同步队列中节点的入队和出队的流程，CHL同步队列的由来，可以参考我之前的文章：
+<rss version="2.0"><channel><title>南乡清水</title><link>/</link><description></description><lastBuildDate>Thu, 09 Aug 2018 22:32:00 +0800</lastBuildDate><item><title>并发基础之Condition(等待队列)</title><link>/concurrent/aqs-condition.html</link><description>&lt;h1&gt;1 定义&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;Condition&lt;/strong&gt;是在AQS中配合使用的&lt;code&gt;wait/nofity&lt;/code&gt;线程通信协调工具类，我们可以称之为&lt;strong&gt;等待队列&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Condition定义了等待/通知两种类型的方法，当前线程调用这些方法时，需要提前获取到Condition对象关联的锁。Condition对象是调用Lock对象的&lt;code&gt;newCondition()方法&lt;/code&gt;创建出来的，换句话说，Condition是依赖Lock对象。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Condition与Object中监视器方法不同点&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;condition可以有多个等待队列 monitor只有一个队列在对象头中
+condition的等待可以自定义超时时间
+conditon的signal 是唤醒等待队列头部的线程节点， Object的notify是随机唤醒
+condition对象的属性对开发者透明&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1&gt;2 Condition使用&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;demo代码如下&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyService&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+    &lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="n"&gt;Lock&lt;/span&gt; &lt;span class="n"&gt;lock&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;ReentrantLock&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+
+    &lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="n"&gt;Condition&lt;/span&gt; &lt;span class="n"&gt;condition&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;newCondition&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;await&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+        &lt;span class="k"&gt;try&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;lock&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+            &lt;span class="n"&gt;System …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Thu, 09 Aug 2018 22:32:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-08-09:/concurrent/aqs-condition.html</guid><category>多线程</category></item><item><title>Redis注意事项及常见优化</title><link>/cache/cache-redis-optimize.html</link><description>&lt;h1&gt;1 键值设计&lt;/h1&gt;
+&lt;h4&gt;1.1  key名设计&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;(1)【建议】: 可读性和可管理性&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以业务名(或数据库名)为前缀(防止key冲突)，用冒号分隔，比如业务名:表名:id&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;roborder&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;amount&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;(2)【建议】：简洁性&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;保证语义的前提下，控制key的长度，当key较多时，内存占用也不容忽视，例如：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;user&lt;span class="p"&gt;:{&lt;/span&gt;uid&lt;span class="p"&gt;}:&lt;/span&gt;&lt;span class="l"&gt;friends:messages:&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;mid&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="err"&gt;简化为&lt;/span&gt; u&lt;span class="p"&gt;:{&lt;/span&gt;uid&lt;span class="p"&gt;}:&lt;/span&gt;&lt;span class="l"&gt;fr:m:&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;mid&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="err"&gt;。&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;(3)【强制】：不要包含特殊字符&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;反例：包含空格、换行、单双引号以及其他转义字符&lt;/p&gt;
+&lt;h4&gt;1.2 value设计&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;(1 …&lt;/li&gt;&lt;/ul&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Tue, 07 Aug 2018 19:01:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-08-07:/cache/cache-redis-optimize.html</guid><category>redis</category></item><item><title>并发基础之AQS同步器（二）</title><link>/concurrent/aqs-chapter02.html</link><description>&lt;p&gt;在AQS同步器组件原理分析前，我们需要了解同步队列这个概念，了解同步队列中节点的入队和出队的流程，CHL同步队列的由来，可以参考我之前的文章：
 &lt;a href="https://www.jianshu.com/p/afce44b21d77"&gt;并发基础之AQS同步器（一）&lt;/a&gt;&lt;/p&gt;
 &lt;h1&gt;1 同步队列&lt;/h1&gt;
 &lt;p&gt;同步器依赖内部的同步队列（一个FIFO双向队列）来完成同步状态的管理，当前线程获取同步状态失败时，同步器会将当前线程以及等待状态等信息构造成为一个节点（Node）并将其加入同步队列，同时会阻塞当前线程，当同步状态释放时，会把首节点中的线程唤醒，使其再次尝试获取同步状态&lt;/p&gt;

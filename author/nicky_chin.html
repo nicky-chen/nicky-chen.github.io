@@ -65,6 +65,97 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/concurrent/aqs-condition.html" rel="bookmark" title="Permalink to 并发基础之Condition(等待队列)">并发基础之Condition(等待队列)</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-08-09T22:32:00+08:00"> 周四 09 八月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 定义</h1>
+<p><strong>Condition</strong>是在AQS中配合使用的<code>wait/nofity</code>线程通信协调工具类，我们可以称之为<strong>等待队列</strong></p>
+<p>Condition定义了等待/通知两种类型的方法，当前线程调用这些方法时，需要提前获取到Condition对象关联的锁。Condition对象是调用Lock对象的<code>newCondition()方法</code>创建出来的，换句话说，Condition是依赖Lock对象。</p>
+<p><em>Condition与Object中监视器方法不同点</em></p>
+<blockquote>
+<p>condition可以有多个等待队列 monitor只有一个队列在对象头中
+condition的等待可以自定义超时时间
+conditon的signal 是唤醒等待队列头部的线程节点， Object的notify是随机唤醒
+condition对象的属性对开发者透明</p>
+</blockquote>
+<h1>2 Condition使用</h1>
+<p><strong>demo代码如下</strong></p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyService</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">Lock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantLock</span><span class="o">();</span>
+
+    <span class="kd">private</span> <span class="n">Condition</span> <span class="n">condition</span> <span class="o">=</span> <span class="n">lock</span><span class="o">.</span><span class="na">newCondition</span><span class="o">();</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">await</span><span class="o">()</span> <span class="o">{</span>
+
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+            <span class="n">System …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/concurrent/aqs-condition.html" rel="bookmark" title="Permalink to 并发基础之Condition(等待队列)">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/duo-xian-cheng.html">多线程</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/cache/cache-redis-optimize.html" rel="bookmark" title="Permalink to Redis注意事项及常见优化">Redis注意事项及常见优化</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-08-07T19:01:00+08:00"> 周二 07 八月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 键值设计</h1>
+<h4>1.1  key名设计</h4>
+<ul>
+<li>(1)【建议】: 可读性和可管理性</li>
+</ul>
+<p>以业务名(或数据库名)为前缀(防止key冲突)，用冒号分隔，比如业务名:表名:id</p>
+<div class="highlight"><pre><span></span><span class="n">roborder</span><span class="o">:</span><span class="n">user</span><span class="o">:</span><span class="mi">1</span><span class="o">:</span><span class="n">amount</span>
+</pre></div>
+
+
+<ul>
+<li>(2)【建议】：简洁性</li>
+</ul>
+<p>保证语义的前提下，控制key的长度，当key较多时，内存占用也不容忽视，例如：</p>
+<div class="highlight"><pre><span></span>user<span class="p">:{</span>uid<span class="p">}:</span><span class="l">friends:messages:</span><span class="p">{</span>mid<span class="p">}</span>
+<span class="err">简化为</span> u<span class="p">:{</span>uid<span class="p">}:</span><span class="l">fr:m:</span><span class="p">{</span>mid<span class="p">}</span><span class="err">。</span>
+</pre></div>
+
+
+<ul>
+<li>(3)【强制】：不要包含特殊字符</li>
+</ul>
+<p>反例：包含空格、换行、单双引号以及其他转义字符</p>
+<h4>1.2 value设计</h4>
+<ul>
+<li>(1 …</li></ul> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/cache/cache-redis-optimize.html" rel="bookmark" title="Permalink to Redis注意事项及常见优化">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/redis.html">redis</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/concurrent/aqs-chapter02.html" rel="bookmark" title="Permalink to 并发基础之AQS同步器（二）">并发基础之AQS同步器（二）</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-08-04T22:52:00+08:00"> 周六 04 八月 2018 </abbr>
@@ -179,94 +270,6 @@ compareAndSetState(int expect,int update)</p>
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
                                             <a class="danger label" href="/tag/duo-xian-cheng.html">多线程</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/design-pattern/state-machine.html" rel="bookmark" title="Permalink to 实际项目运用之State模式（状态模式）">实际项目运用之State模式（状态模式）</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-07-19T22:18:00+08:00"> 周四 19 七月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1  模式简介</h1>
-<p><strong>定义：</strong>
-状态模式允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类。这个模式将状态封装成独立的类，并将动作委托到代表当前状态的类的对象</p>
-<p><strong>状态模式的优点：</strong></p>
-<blockquote>
-<p>封装了转换规则
-枚举可能的状态，在枚举状态之前需要确定状态种类
-将所有与某个状态有关的行为放到一个类中，可方便增加新的状态
-允许状态转换逻辑与状态对象合成一体，而非复杂条件语句块
-可以让多个环境对象共享一个状态对象，从而减少系统中对象的个数</p>
-</blockquote>
-<p><strong>状态模式的缺点：</strong></p>
-<blockquote>
-<p>增加系统类和对象的个数
-结构与实现都较为复杂，如果使用不当将导致程序结构和代码的混乱
-对"开闭原则"的支持不太好，增加新状态类需在状态类上增加行为方法</p>
-</blockquote>
-<p><strong>状态模式的适用场景：</strong>
- 1. 对象的行为依赖于它的状态，并且可以在运行时根据状态改变行为。
- 2. 代码中包含大量与对象状态有关的if/else语句
- 3. 接口幂等要求</p>
-<p><strong>状态模式和策略模式：</strong>
-相同点是它们都需要根据需求选择相应的状态或策略
-不同点是状态模式是在一个类中通过不同的动作切换不同的状态，而策略模式是为一个类选择某个策略，即状态模式中的Context是和多个状态关联的，而策略模式中的Context只和一个策略关联</p>
-<p><strong>状态模式角色介绍：</strong>
-<img alt="状态模式类图" src="https://upload-images.jianshu.io/upload_images/10175660-113c92a20076e368.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p>（1）Context类，依赖倒置原则，通过适配器模式维护状态类
-（2）State：抽象状态类或状态接口，用以抽象封装行为
-（3 …</p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/design-pattern/state-machine.html" rel="bookmark" title="Permalink to 实际项目运用之State模式（状态模式）">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/xing-wei-xing.html">行为型</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/source-code/junit-code=analysis.html" rel="bookmark" title="Permalink to 初窥门径之JUnit源码分析">初窥门径之JUnit源码分析</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-07-16T21:58:00+08:00"> 周一 16 七月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1 源码分析流程</h1>
-<p>对于阅读源码有兴趣的同学，可以按以下步骤进行：</p>
-<ol>
-<li>了解框架架构图</li>
-<li>了解各包包含功能点</li>
-<li>选择需要功能点入手</li>
-<li>了解 <strong>数据流和控制流</strong></li>
-<li>画 <strong>类图 和 时序图</strong></li>
-<li>复盘</li>
-</ol>
-<h1>2 Junit架构详解</h1>
-<h3>2.1 包功能概述</h3>
-<p>通过分析JUnit-3.8.1的源代码文件可以看到，JUnit的源码被分散在6个package中，这个6个package分别为： <em>junit.awtui</em> 、 <em>junit.swingui</em> 、 <em>junit.textui</em> 、 <em>junit.extensions</em> 、 <em>junit.framework</em> 、 <em>junit.runner</em>  具体的文件分布图如下：</p>
-<p><img alt="各包情况" src="https://upload-images.jianshu.io/upload_images/10175660-278a9ef83d38a42d.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p>其中 junit.awtui 、 junit.swingui 、 junit.textui 这三个package是有关JUnit运行时的入口程序以及运行结果显示界面的
-junit.runner中则包含了支持单元测试运行的一些基础类以及自己的类加载器
-junit.framework 包含有编写一般JUnit单元测试类必须组件 …</p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/source-code/junit-code=analysis.html" rel="bookmark" title="Permalink to 初窥门径之JUnit源码分析">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/junit.html">junit</a>
                                 </div>
 
 

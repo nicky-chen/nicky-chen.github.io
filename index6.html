@@ -65,6 +65,77 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/mysql/design-rule.html" rel="bookmark" title="Permalink to 数据库设计三范式和反范式">数据库设计三范式和反范式</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-07T19:38:00+08:00"> 周一 07 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>数据库范式</h1>
+<p><strong>范式的级别</strong>
+      设计关系数据库时，遵从不同的规范要求，设计出合理的关系型数据库，这些不同的规范要求被称为不同的范式，各种范式呈递次规范，越高的范式数据库冗余越小。
+      目前关系数据库有六种范式：<strong><em>第一范式（1NF）、第二范式（2NF）、第三范式（3NF）、巴斯-科德范式（BCNF）、第四范式(4NF）和第五范式（5NF，又称完美范式）。</em></strong>
+      范式越高，冗余最低，一般到三范式，再往上，表越多，可能导致查询效率下降。所以有时为了提高运行效率，可以让数据冗余(反三范式，一般某个数据经常被访问时，比如数据表里存放了语文数学英语成绩，但是如果在某个时间经常要得到它的总分，每次都要进行计算会降低性能，可以加上总分这个冗余字段)。
+      后面的范式是在满足前面范式的基础上，比如满足第二范式的一定满足第一范式。
+<strong>第一范式（1NF）：确保每一列的原子性</strong>
+如果每一列都是不可再分的最小数据单元，则满足第一范式。
+<img alt="第一范式" src="https://upload-images.jianshu.io/upload_images/10175660-7f1d5f71d9be0501.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>但是具体地址到底要不要拆分 还要看具体情形，比如看看将来会不会按国家或者省市进行分类汇总或者排序，如果需要，最好就拆，如果不需要而仅仅起字符串的作用，可以不拆 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/mysql/design-rule.html" rel="bookmark" title="Permalink to 数据库设计三范式和反范式">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/design-pattern/strategy.html" rel="bookmark" title="Permalink to 实际项目运用之Strategy模式（策略模式）">实际项目运用之Strategy模式（策略模式）</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-06T17:20:00+08:00"> 周日 06 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1. 策略模式概要</h1>
+<p>策略模式是对算法的包装，是把使用算法的责任和算法本身分割开来，委派给不同的对象管理。策略模式通常把一个系列的算法包装到一系列的策略类里面，作为一个抽象策略类的子类。用一句话来说，就是：“准备一组算法，并将每一个算法封装起来，使得它们可以互换”。
+下面就以一个示意性的实现讲解策略模式实例的结构。
+<img alt="策略模式" src="https://upload-images.jianshu.io/upload_images/10175660-2d9b5e02ce921d8e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>这个模式涉及到三个角色：</p>
+<p>● <strong>环境(Context)角色：</strong>持有一个Strategy的引用。</p>
+<p>● <strong>抽象策略(Strategy)角色：</strong>这是一个抽象角色，通常由一个接口或抽象类实现。此角色给出所有的具体策略类所需的接口。</p>
+<p>● <strong>具体策略(ConcreteStrategy)角色：</strong>包装了相关的算法或行为。</p>
+<h3>1.1 案例代码</h3>
+<p>策略模式上下文</p>
+<div class="highlight"><pre><span></span>public class Context {
+    //持有一个具体策略的对象
+    private Strategy strategy;
+    /**
+     * 构造函数，传入一个具体策略对象
+     * @param strategy    具体策略对象
+     */
+    public Context(Strategy strategy){
+        this.strategy …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/design-pattern/strategy.html" rel="bookmark" title="Permalink to 实际项目运用之Strategy模式（策略模式）">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/xing-wei-xing.html">行为型</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/concurrent/volatile-feature.html" rel="bookmark" title="Permalink to volatile关键字原理实现及应用">volatile关键字原理实现及应用</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-05-04T22:46:00+08:00"> 周五 04 五月 2018 </abbr>
@@ -171,77 +242,6 @@
 <p>其中in表示输入参数，out表示输出参数，inout表示既可以输入也可以输出 …</p> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/mysql/process-fun.html" rel="bookmark" title="Permalink to MYSQL高级特性之【存储过程与函数】">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/distrubuted/cap-base-flp.html" rel="bookmark" title="Permalink to 分布式之【CAP理论、BASE理论 、FLP不可能定理】">分布式之【CAP理论、BASE理论 、FLP不可能定理】</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-04-25T18:43:00+08:00"> 周三 25 四月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1.分布式系统的CAP理论</h1>
-<h2>1.1 CAP理论概述</h2>
-<p>2000年7月，加州大学伯克利分校的Eric Brewer教授在ACM PODC会议上提出CAP猜想。2年后，麻省理工学院的Seth Gilbert和Nancy Lynch从理论上证明了CAP。之后，CAP理论正式成为分布式计算领域的公认定理。</p>
-<p>一个分布式系统最多只能同时满足一致性（Consistency）、可用性（Availability）和分区容错性（Partition tolerance）这三项中的两项。</p>
-<p><img alt="cap" src="https://upload-images.jianshu.io/upload_images/10175660-8db37e21ea4984f9.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<h2>1.2 CAP的定义</h2>
-<h3>1.2.1 Consistency 一致性</h3>
-<p>一致性指“<code>all nodes see the same data at the same time</code>”，即更新操作成功并返回客户端完成后，所有节点在同一时间的数据完全一致。分布式的一致性</p>
-<p>对于一致性，可以分为从客户端和服务端两个不同的视角。从客户端来看，一致性主要指的是多并发访问时更新过的数据如何获取的问题。从服务端来看 …</p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/distrubuted/cap-base-flp.html" rel="bookmark" title="Permalink to 分布式之【CAP理论、BASE理论 、FLP不可能定理】">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/li-lun.html">理论</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/java-base/string-builder-question.html" rel="bookmark" title="Permalink to 字符串拼接的疑惑">字符串拼接的疑惑</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-04-21T15:34:00+08:00"> 周六 21 四月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>最近没事在玩ASM框架，于是乎想将业务代码中的PO对象中的toString方法 在编译期间，自动转换了基于StringBuilder 拼接的代码。发现了一个奇怪的问题：
-实体类如下</p>
-<div class="highlight"><pre><span></span>@Getter
-@Setter
-@EqualsAndHashCode(of = &quot;id&quot;)
-@ApiModel(&quot;活动&quot;)
-public class Banner implements Serializable{
-
-    private static final long serialVersionUID = 191609922585601269L;
-
-    @ApiModelProperty(value = &quot;ID&quot;, position = 1)
-    private Integer id;
-
-    @ApiModelProperty(value = &quot;显示次序&quot;, position = 2)
-    private Integer orderNo;
-
-    @ApiModelProperty(value = &quot;关联文件&quot;, position = 3)
-    private Integer fileId;
-
-    @ApiModelProperty …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/java-base/string-builder-question.html" rel="bookmark" title="Permalink to 字符串拼接的疑惑">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 

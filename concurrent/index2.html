@@ -66,6 +66,52 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/concurrent/volatile-feature.html" rel="bookmark" title="Permalink to volatile关键字原理实现及应用">volatile关键字原理实现及应用</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-04T22:46:00+08:00"> 周五 04 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1.并发编程中的三个概念</h1>
+<p>在并发编程中, 需要了解线程的三个概念：原子性，可见性，有序性：</p>
+<p><strong>1.1.原子性</strong></p>
+<blockquote>
+<p>原子性：即一个操作或者多个操作 要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。</p>
+</blockquote>
+<p>一个很经典的例子就是银行账户转账问题：</p>
+<div class="highlight"><pre><span></span>比如从账户A向账户B转1000元，那么必然包括2个操作：从账户A减去1000元，往账户B加上1000元。
+
+试想一下，如果这2个操作不具备原子性，会造成什么样的后果。假如从账户A减去1000元之后，操作突然中止。然后又从B取出了500元，取出500元之后，
+再执行 往账户B加上1000元 的操作。这样就会导致账户A虽然减去了1000元，但是账户B没有收到这个转过来的1000元。
+
+所以这2个操作必须要具备原子性才能保证不出现一些意外的问题。
+</pre></div>
+
+
+<p>同样地反映到并发编程中会出现什么结果呢？</p>
+<p>举个最简单的例子，大家想一下假如为一个32位的变量赋值过程不具备原子性的话，会发生什么后果？</p>
+<div class="highlight"><pre><span></span>i = 9;
+</pre></div>
+
+
+<p>假若一个线程执行到这个语句时，我暂且假设为一个32位的变量赋值包括两个过程：为低16位赋值，为高16位赋值。
+那么就可能发生一种情况：当将低16位数值写入之后，突然被中断，而此时又有一个线程去读取i的值，那么读取到的就是错误的数据。</p>
+<p><strong>1.2.可见性 …</strong></p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/concurrent/volatile-feature.html" rel="bookmark" title="Permalink to volatile关键字原理实现及应用">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/concurrent/thread-jmm-happens-before.html" rel="bookmark" title="Permalink to java内存模型之[JMM][重排序][happens-before]">java内存模型之[JMM][重排序][happens-before]</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-04-03T22:11:00+08:00"> 周二 03 四月 2018 </abbr>

@@ -65,6 +65,65 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/jndi-introdution.html" rel="bookmark" title="Permalink to JNDI知识摘要">JNDI知识摘要</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-06-25T20:01:00+08:00"> 周一 25 六月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1  什么是JNDI？</h1>
+<p>JNDI(Java Naming and Directory Interface,Java命名和目录接口)是SUN公司提供的一种标准的Java命名系统接口，JNDI提供统一的客户端API，通过不同的访问提供者接口JNDI服务供应接口(SPI)的实现，由管理者将JNDI API映射为特定的命名服务和目录系统，使得Java应用程序可以和这些命名服务和目录服务之间进行交互</p>
+<p>通过JNDI可以实现对象的创建与托管,和对象的使用过程完全解耦</p>
+<p>比如:<strong>在application的底层创建对象,并将对象bind到特定的context中,对象的创建过程或者"查找"方式只有此底层模块支持,外部程序不可见.对于对象的使用者(调用者)只能通过JNDI的方式获取对象,对象使用者无法直接创建对象等</strong></p>
+<h1>2 JNDI架构</h1>
+<p><img alt="架构" src="https://upload-images.jianshu.io/upload_images/10175660-e3cc6625588ad25d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>关于JNDI要注意的重要一点是，它提供了应用编程接口(application programming interface，API)和服务提供者接口(service provider interface，SPI)。这一点的真正含义是，要让应用与命名服务或目录服务交互，必须有这个服务的JNDI服务提供者，这正是JNDI SPI发挥作用的地方。服务提供者基本上是一组类，这些类为各种具体的命名和目录服务实现了JNDI接口 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/jndi-introdution.html" rel="bookmark" title="Permalink to JNDI知识摘要">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/kuang-jia-ji-chu.html">框架基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/distrubuted/id-redis.html" rel="bookmark" title="Permalink to 分布式全局序列ID方案之Redis优化方案">分布式全局序列ID方案之Redis优化方案</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-06-24T15:28:00+08:00"> 周日 24 六月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 Redis的Flicker方案</h1>
+<p>利用redis的lua脚本功能，在每个节点上通过lua脚本生成唯一ID，生成的ID为64位，具体如下：</p>
+<p>使用41 bit来存放时间，精确到毫秒，可以使用到2039年
+使用12 bit来存放逻辑分片ID，最大分片ID是4095
+使用10 bit来存放自增长ID，则每个节点，每毫秒最多可生成1024个ID
+比如GTM时间 2018年6月24日11点23分 ，它的距1970年的毫秒数是 1529810591000，假定分片ID是60，自增长序列是20，则生成的ID是：</p>
+<div class="highlight"><pre><span></span>6416490681073670164 = 1529810591000 &lt;&lt; 22 | 60 &lt;&lt; 10 | 20
+redis提供了TIME命令，取得redis服务器的秒值和微秒值
+毫秒值获取命令：EVAL &quot;local current = redis.call(&#39;TIME&#39;) ;return a[1]*1000 + a[2]/1000&quot; 0
+生成最终ID : current &lt;&lt; (12 …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/distrubuted/id-redis.html" rel="bookmark" title="Permalink to 分布式全局序列ID方案之Redis优化方案">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/distrubuted/id-flicker.html" rel="bookmark" title="Permalink to 分布式全局序列ID方案之Flicker优化方案">分布式全局序列ID方案之Flicker优化方案</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-06-20T22:28:00+08:00"> 周三 20 六月 2018 </abbr>
@@ -169,88 +228,6 @@ UNIQUE KEY stub (stub)
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
                                             <a class="danger label" href="/tag/si-wei-dao-tu.html">思维导图</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/design-pattern/singletion.html" rel="bookmark" title="Permalink to 设计模式之单例模式终极版【克隆-序列化-反射】">设计模式之单例模式终极版【克隆-序列化-反射】</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-06-07T22:15:00+08:00"> 周四 07 六月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1 基本内容</h1>
-<h3>1.1 概念</h3>
-<p>单例模式，是指在任何时候，该类只能被实例化一次，在任何时候，访问该类的对象，对象都是同一个。只要是程序员都会使用到，甚至都不能算是设计模式。但是在我们使用中也需要了解一下单例特性和使用场景</p>
-<h3>1.2 模式优缺点</h3>
-<p>单例模式有以下优点：</p>
-<blockquote>
-<p>使用单例模式可以严格的控制用户怎样以及如何访问它
-节约系统资源，提高系统的性能</p>
-</blockquote>
-<p>单例模式有以下缺点：</p>
-<blockquote>
-<p>不易扩展
-单例类职责过重，在一定程度上违背了“单一职责原则”
-如实例化对象长时间未使用，会GC回收，导致对象状态的丢失</p>
-</blockquote>
-<p>#2 单例模式分类</p>
-<h3>2.1 饿汉模式</h3>
-<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SingletonEHan</span> <span class="o">{</span>
-
-    <span class="kd">private</span> <span class="nf">SingletonEHan</span><span class="o">()</span> <span class="o">{}</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * 1.单例模式的饿汉式</span>
-<span class="cm">     */</span>
-    <span class="kd">private</span> <span class="kd">static</span> <span class="n">SingletonEHan</span> <span class="n">singletonEHan</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SingletonEHan</span><span class="o">();</span>
-
-    <span class="kd">public</span> <span class="kd">static</span> <span class="n">SingletonEHan …</span></pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/design-pattern/singletion.html" rel="bookmark" title="Permalink to 设计模式之单例模式终极版【克隆-序列化-反射】">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/chuang-jian-xing.html">创建型</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/java-base/fail-fast-safe.html" rel="bookmark" title="Permalink to Fail-Fast和Fail-Safe机制">Fail-Fast和Fail-Safe机制</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-06-02T19:01:00+08:00"> 周六 02 六月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1 Fail-Fast</h1>
-<h3>1.1 fail-fast定义</h3>
-<p>fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件
-例如：当某一个线程A通过iterator去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出ConcurrentModificationException异常，产生fail-fast事件</p>
-<h3>1.2 Iterator与fast-fail机制</h3>
-<p><strong>1.2.1 Iterator的好处</strong>
-java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。
-比如下面的 <em>ArrayList</em> 和  <em>ImmutableList</em> 遍历的例子：</p>
-<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IteratorTest</span> <span class="o">{</span>
-
-    <span class="kd">public</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="n">Lists</span><span class="o">.</span><span class="na">newArrayList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">11</span><span class="o">,</span> <span class="mi">18</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="mi">20</span><span class="o">,</span> <span class="mi">99</span><span class="o">);</span>
-
-    <span class="kd">public …</span></pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/java-base/fail-fast-safe.html" rel="bookmark" title="Permalink to Fail-Fast和Fail-Safe机制">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
                                 </div>
 
 

@@ -65,6 +65,50 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/concurrent/aqs-condition.html" rel="bookmark" title="Permalink to 并发基础之Condition(等待队列)">并发基础之Condition(等待队列)</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-08-09T22:32:00+08:00"> 周四 09 八月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 定义</h1>
+<p><strong>Condition</strong>是在AQS中配合使用的<code>wait/nofity</code>线程通信协调工具类，我们可以称之为<strong>等待队列</strong></p>
+<p>Condition定义了等待/通知两种类型的方法，当前线程调用这些方法时，需要提前获取到Condition对象关联的锁。Condition对象是调用Lock对象的<code>newCondition()方法</code>创建出来的，换句话说，Condition是依赖Lock对象。</p>
+<p><em>Condition与Object中监视器方法不同点</em></p>
+<blockquote>
+<p>condition可以有多个等待队列 monitor只有一个队列在对象头中
+condition的等待可以自定义超时时间
+conditon的signal 是唤醒等待队列头部的线程节点， Object的notify是随机唤醒
+condition对象的属性对开发者透明</p>
+</blockquote>
+<h1>2 Condition使用</h1>
+<p><strong>demo代码如下</strong></p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyService</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">Lock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantLock</span><span class="o">();</span>
+
+    <span class="kd">private</span> <span class="n">Condition</span> <span class="n">condition</span> <span class="o">=</span> <span class="n">lock</span><span class="o">.</span><span class="na">newCondition</span><span class="o">();</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">await</span><span class="o">()</span> <span class="o">{</span>
+
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+            <span class="n">System …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/concurrent/aqs-condition.html" rel="bookmark" title="Permalink to 并发基础之Condition(等待队列)">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/duo-xian-cheng.html">多线程</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/concurrent/aqs-chapter02.html" rel="bookmark" title="Permalink to 并发基础之AQS同步器（二）">并发基础之AQS同步器（二）</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-08-04T22:52:00+08:00"> 周六 04 八月 2018 </abbr>

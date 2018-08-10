@@ -65,6 +65,88 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/design-pattern/singletion.html" rel="bookmark" title="Permalink to 设计模式之单例模式终极版【克隆-序列化-反射】">设计模式之单例模式终极版【克隆-序列化-反射】</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-06-07T22:15:00+08:00"> 周四 07 六月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 基本内容</h1>
+<h3>1.1 概念</h3>
+<p>单例模式，是指在任何时候，该类只能被实例化一次，在任何时候，访问该类的对象，对象都是同一个。只要是程序员都会使用到，甚至都不能算是设计模式。但是在我们使用中也需要了解一下单例特性和使用场景</p>
+<h3>1.2 模式优缺点</h3>
+<p>单例模式有以下优点：</p>
+<blockquote>
+<p>使用单例模式可以严格的控制用户怎样以及如何访问它
+节约系统资源，提高系统的性能</p>
+</blockquote>
+<p>单例模式有以下缺点：</p>
+<blockquote>
+<p>不易扩展
+单例类职责过重，在一定程度上违背了“单一职责原则”
+如实例化对象长时间未使用，会GC回收，导致对象状态的丢失</p>
+</blockquote>
+<p>#2 单例模式分类</p>
+<h3>2.1 饿汉模式</h3>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SingletonEHan</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="nf">SingletonEHan</span><span class="o">()</span> <span class="o">{}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 1.单例模式的饿汉式</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">SingletonEHan</span> <span class="n">singletonEHan</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SingletonEHan</span><span class="o">();</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">SingletonEHan …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/design-pattern/singletion.html" rel="bookmark" title="Permalink to 设计模式之单例模式终极版【克隆-序列化-反射】">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/chuang-jian-xing.html">创建型</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/fail-fast-safe.html" rel="bookmark" title="Permalink to Fail-Fast和Fail-Safe机制">Fail-Fast和Fail-Safe机制</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-06-02T19:01:00+08:00"> 周六 02 六月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 Fail-Fast</h1>
+<h3>1.1 fail-fast定义</h3>
+<p>fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件
+例如：当某一个线程A通过iterator去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出ConcurrentModificationException异常，产生fail-fast事件</p>
+<h3>1.2 Iterator与fast-fail机制</h3>
+<p><strong>1.2.1 Iterator的好处</strong>
+java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。
+比如下面的 <em>ArrayList</em> 和  <em>ImmutableList</em> 遍历的例子：</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IteratorTest</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="n">Lists</span><span class="o">.</span><span class="na">newArrayList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">11</span><span class="o">,</span> <span class="mi">18</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="mi">20</span><span class="o">,</span> <span class="mi">99</span><span class="o">);</span>
+
+    <span class="kd">public …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/fail-fast-safe.html" rel="bookmark" title="Permalink to Fail-Fast和Fail-Safe机制">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/design-pattern/adapter.html" rel="bookmark" title="Permalink to 实际项目运用之Adapter模式（适配器模式）">实际项目运用之Adapter模式（适配器模式）</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-05-27T23:15:00+08:00"> 周日 27 五月 2018 </abbr>
@@ -201,82 +283,6 @@ Externalizable是一种优先级要高于 Serializable 的序列化机制接口�
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
                                             <a class="danger label" href="/tag/xing-wei-xing.html">行为型</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/algorithm/btree-info.html" rel="bookmark" title="Permalink to 数据结构之BTree和B+Tree(多路平衡查找树 )">数据结构之BTree和B+Tree(多路平衡查找树 )</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-05-17T19:39:00+08:00"> 周四 17 五月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1 背景</h1>
-<p>B-Tree是为磁盘等外存储设备设计的一种平衡查找树。因此在讲B-Tree之前先了解下磁盘的相关知识。系统从磁盘读取数据到内存时是以磁盘块（block）为基本单位的，位于同一个磁盘块中的数据会被一次性读取出来，而不是需要什么取什么。
-InnoDB存储引擎中有页（Page）的概念，页是其磁盘管理的最小单位。InnoDB存储引擎中默认每个页的大小为16KB，可通过参数innodb_page_size将页的大小设置为4K、8K、16K，在MySQL中可通过如下命令查看页的大小：</p>
-<div class="highlight"><pre><span></span>mysql&gt; show variables like &#39;innodb_page_size&#39;;
-</pre></div>
-
-
-<p>而系统一个磁盘块的存储空间往往没有这么大，因此InnoDB每次申请磁盘空间时都会是若干地址连续磁盘块来达到页的大小16KB。InnoDB在把磁盘数据读入到磁盘时会以页为基本单位，在查询数据时如果一个页中的每条数据都能有助于定位数据记录的位置，这将会减少磁盘I/O次数，提高查询效率。</p>
-<h1>2 定义与特性</h1>
-<p><strong>B-Tree</strong>
-B-Tree结构的数据可以让系统高效的找到数据所在的磁盘块。为了描述B-Tree，首先定义一条记录为一个二元组[key, data] ，key为记录的键值(关键字)，对应表中的主键值，data为一行记录中除主键外的数据。对于不同的记录，key值互不相同。</p>
-<div class="highlight"><pre><span></span>一棵m阶的B-Tree有如下特性： 
-1. 每个节点最多有m个孩子。 
-2. 除了根节点和叶子节点外，其它每个节点至少有Ceil …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/algorithm/btree-info.html" rel="bookmark" title="Permalink to 数据结构之BTree和B+Tree(多路平衡查找树 )">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/shu-ju-jie-gou.html">数据结构</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/concurrent/synchronized-principle.html" rel="bookmark" title="Permalink to synchronized实现原理及锁优化">synchronized实现原理及锁优化</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-05-14T19:16:00+08:00"> 周一 14 五月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1.引言</h1>
-<p>并发编程中synchronized是重量级锁，但随着JVM1.6对synchronized进行优化后，有些情况下它并不那么重，本文介绍了Java SE1.6中为了减少获得锁和释放锁带来的性能消耗而引入的偏向锁和轻量级锁，以及锁的存储结构和升级过程。</p>
-<h1>2.术语定义</h1>
-<p><strong>CAS(Compare and Swap):</strong>  比较并交换。用于在硬件层面上提供原子性操作。在 Intel 处理器中，比较并交换通过指令cmpxchg实现。比较是否和给定的数值一致，如果一致则修改，不一致则不修改。</p>
-<h1>3.同步的基础</h1>
-<p>Java中的每一个对象都可以作为锁。
-对于同步方法，锁是当前实例对象。
-对于静态同步方法，锁是当前对象的Class对象。
-对于同步方法块，锁是synchonized括号里配置的对象。</p>
-<p>我们通过java代码和字节码分析下
-java代码如下：</p>
-<div class="highlight"><pre><span></span>public class SyncTest {
-
-    private static double a = 1;
-
-    public synchronized void plusNumber() {
-        a++;
-    }
-
-    public …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/concurrent/synchronized-principle.html" rel="bookmark" title="Permalink to synchronized实现原理及锁优化">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/suo-you-hua.html">锁优化</a>
                                 </div>
 
 
