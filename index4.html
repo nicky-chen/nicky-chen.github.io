@@ -65,6 +65,73 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/distrubuted/id-snowflake.html" rel="bookmark" title="Permalink to 分布式全局序列ID方案之Snowflake算法">分布式全局序列ID方案之Snowflake算法</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-06-17T22:53:00+08:00"> 周日 17 六月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 背景</h1>
+<p>在分布式项目中，在业务数据中需要生成一个全局唯一的序列号，比如：消息标识，订单标识，用户标识等等。同时对于id生成的要求如下：
+<em> 全局唯一
+</em> 趋势有序
+<em> 主键索引 方便排序
+</em> 高可用
+* 高并发</p>
+<h1>2 基础方案</h1>
+<h3>2.1 数据库主键自增</h3>
+<p>利用mysql的auto_increment特性</p>
+<blockquote>
+<p>优点：
+（1）能够保证唯一性 
+（2）能够保证递增性
+（3）步长固定</p>
+<p>缺点：
+（1）无法高可用：普通的一主多从+读写分离架构，自增ID写入请求，主库挂了就GG
+（2）无法高并发：写入是单点，数据库主库的写性能决定ID的生成性能上限，并且难以扩展</p>
+</blockquote>
+<h3>2.2 UUID</h3>
+<p>uuid算法是比较常用的算法，根据UUID的特性，可以产生一个唯一的字符串</p>
+<blockquote>
+<p>优点：
+（1）本地生成ID，无需远程服务调用 …</p></blockquote> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/distrubuted/id-snowflake.html" rel="bookmark" title="Permalink to 分布式全局序列ID方案之Snowflake算法">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/distrubuted/distrubuted-knowledge.html" rel="bookmark" title="Permalink to 分布式项目知识要点">分布式项目知识要点</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-06-13T21:58:00+08:00"> 周三 13 六月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p><img alt="分布式专题" src="https://upload-images.jianshu.io/upload_images/10175660-e6939718f6890048.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/distrubuted/distrubuted-knowledge.html" rel="bookmark" title="Permalink to 分布式项目知识要点">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/si-wei-dao-tu.html">思维导图</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/design-pattern/singletion.html" rel="bookmark" title="Permalink to 设计模式之单例模式终极版【克隆-序列化-反射】">设计模式之单例模式终极版【克隆-序列化-反射】</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-06-07T22:15:00+08:00"> 周四 07 六月 2018 </abbr>
@@ -197,97 +264,6 @@ java源码中迭代器模式主要用于集合的迭代，只要实现了Collect
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/java-base/externalizable-interface.html" rel="bookmark" title="Permalink to 自定义序列化之Externalizable接口">自定义序列化之Externalizable接口</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-05-23T22:36:00+08:00"> 周三 23 五月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p><strong>Externalizable简介</strong>
-Externalizable是一种优先级要高于 Serializable 的序列化机制接口，
-这个接口提供了writeExternal()和readExternal()方法用于指定序列化哪些属性。</p>
-<p><strong>Externalizable接口与Serializable接口区别</strong>
-<em> 1 Serializable序列化时不会调用默认的构造器，而Externalizable序列化时会调用默认构造器
-</em> 2 transient关键字对Externalizable无效</p>
-<p><strong>代码事例</strong></p>
-<p>公共抽象实体类AbstractDO</p>
-<div class="highlight"><pre><span></span>public abstract class AbstractDO implements Externalizable {
-
-    private static final long serialVersionUID = -1679770357930200297L;
-
-    private Long id;
-
-    private Date createTime;
-
-    private Date updateTime;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/java-base/externalizable-interface.html" rel="bookmark" title="Permalink to 自定义序列化之Externalizable接口">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/design-pattern/template.html" rel="bookmark" title="Permalink to 设计模式之Template模式（模版模式）">设计模式之Template模式（模版模式）</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-05-18T21:46:00+08:00"> 周五 18 五月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1 模式简介</h1>
-<p><strong>1.1 模版方法模式的定义：</strong>
-模版方法模式在一个方法中定义一个算法的骨架，而将一些步骤延迟到子类中。模版方法使得子类可以在不改变算法结构的情况下，重新定义算法中的某些步骤。</p>
-<p><strong>1.2 结构</strong>
-<img alt="模版方法" src="https://upload-images.jianshu.io/upload_images/10175660-4b852101cc35ec28.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p><strong>1.3 模式的组成</strong></p>
-<p><strong><em>抽象类（AbstractClass）:</em></strong> 定义抽象的原语操作（primitive operation） ，具体的子类将重定义它们以实现一个算法， 实现一个模板方法,定义一个算法的骨架。该模板方法不仅调用原语操作，也调用定义。
-<strong><em>具体子类 （ConcreteClass）:</em></strong> 实现原语操作以完成算法中与特定子类相关的步骤。</p>
-<p><strong>1.4 优缺点</strong></p>
-<blockquote>
-<p>模版方法模式的优点：
-   封装不变部分，扩展可变部分；
-   提取公共代码，便于维护；
-   行为由父类控制，子类实现。</p>
-<p>模版方法模式的缺点：
-   每一个不同的实现都需要一个子类来实现，导致类个数增加，使系统更加庞大</p>
-<p>模版方法模式的适用场景：
-   当类中有多个子类共有的方法
-   当有重要的、复杂的方法时，可以考虑作为模板方法</p>
-</blockquote>
-<h1>2 案例</h1>
-<p>抽象类 …</p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/design-pattern/template.html" rel="bookmark" title="Permalink to 设计模式之Template模式（模版模式）">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/xing-wei-xing.html">行为型</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -373,6 +349,11 @@ Externalizable是一种优先级要高于 Serializable 的序列化机制接口�
              Source-code
          </a>
      </li>
+     <li >
+         <a href="/spring/index.html">
+             spring
+         </a>
+     </li>
   </ul>
 
 <!---->
@@ -399,6 +380,8 @@ Externalizable是一种优先级要高于 Serializable 的序列化机制接口�
 	<!---->
 		<!--<li><a href="/source-code/index.html">Source-code</a></li>-->
 	<!---->
+		<!--<li><a href="/spring/index.html">spring</a></li>-->
+	<!---->
 <!--</ul>-->
 <!---->
 
@@ -411,13 +394,14 @@ Externalizable是一种优先级要高于 Serializable 的序列化机制接口�
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
 	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/redis.html">redis</a></li>
-	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
-	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
 	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
+	    <li class="danger label" ><a href="/tag/spring-base.html">spring-base</a></li>
 	    <li class="danger label" ><a href="/tag/junit.html">junit</a></li>
 	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
 </ul>
@@ -446,7 +430,7 @@ Externalizable是一种优先级要高于 Serializable 的序列化机制接口�
 
 <p class="paginator">
             <a href="/index3.html"><i class="icon-arrow-left"></i></a>
-    Page 4 / 9
+    Page 4 / 10
         <a href="/index5.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->

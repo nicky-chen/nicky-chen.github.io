@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list id="b5937023-c407-40d8-b7aa-bcba4a685ed0" name="Default" comment="" />
-    <list default="true" id="119c48ed-5227-48e3-b916-4f239060df21" name="Revert: 加入相关文章和导航" comment="同步器分析 redis慢查询">
+    <list default="true" id="119c48ed-5227-48e3-b916-4f239060df21" name="Revert: 加入相关文章和导航" comment="并发基础之Condition(等待队列)&#10;redis常规优化">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/algorithm/btree-info.html" afterPath="$PROJECT_DIR$/algorithm/btree-info.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/algorithm/index.html" afterPath="$PROJECT_DIR$/algorithm/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/archives.html" afterPath="$PROJECT_DIR$/archives.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/author/nicky_chin.html" afterPath="$PROJECT_DIR$/author/nicky_chin.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/author/nicky_chin2.html" afterPath="$PROJECT_DIR$/author/nicky_chin2.html" />
@@ -15,29 +17,44 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/author/nicky_chin8.html" afterPath="$PROJECT_DIR$/author/nicky_chin8.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/author/nicky_chin9.html" afterPath="$PROJECT_DIR$/author/nicky_chin9.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/authors.html" afterPath="$PROJECT_DIR$/authors.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cache/cache-redis-optimize.html" afterPath="$PROJECT_DIR$/cache/cache-redis-optimize.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cache/cache-redis-slowlog.html" afterPath="$PROJECT_DIR$/cache/cache-redis-slowlog.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cache/index.html" afterPath="$PROJECT_DIR$/cache/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/categories.html" afterPath="$PROJECT_DIR$/categories.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classloader/classloader-chapter01.html" afterPath="$PROJECT_DIR$/classloader/classloader-chapter01.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classloader/classloader-chapter02.html" afterPath="$PROJECT_DIR$/classloader/classloader-chapter02.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classloader/index.html" afterPath="$PROJECT_DIR$/classloader/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/aqs-chapter01.html" afterPath="$PROJECT_DIR$/concurrent/aqs-chapter01.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/aqs-chapter02.html" afterPath="$PROJECT_DIR$/concurrent/aqs-chapter02.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/aqs-condition.html" afterPath="$PROJECT_DIR$/concurrent/aqs-condition.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/index.html" afterPath="$PROJECT_DIR$/concurrent/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/index2.html" afterPath="$PROJECT_DIR$/concurrent/index2.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/juc-tree-info.html" afterPath="$PROJECT_DIR$/concurrent/juc-tree-info.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/recursive-Lock.html" afterPath="$PROJECT_DIR$/concurrent/recursive-Lock.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/synchronized-principle.html" afterPath="$PROJECT_DIR$/concurrent/synchronized-principle.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/thread-communication.html" afterPath="$PROJECT_DIR$/concurrent/thread-communication.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/thread-jmm-happens-before.html" afterPath="$PROJECT_DIR$/concurrent/thread-jmm-happens-before.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/concurrent/volatile-feature.html" afterPath="$PROJECT_DIR$/concurrent/volatile-feature.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/adapter.html" afterPath="$PROJECT_DIR$/design-pattern/adapter.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/builder-factory.html" afterPath="$PROJECT_DIR$/design-pattern/builder-factory.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/builder.html" afterPath="$PROJECT_DIR$/design-pattern/builder.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/decorator.html" afterPath="$PROJECT_DIR$/design-pattern/decorator.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/index.html" afterPath="$PROJECT_DIR$/design-pattern/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/index2.html" afterPath="$PROJECT_DIR$/design-pattern/index2.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/responsibility-chain.html" afterPath="$PROJECT_DIR$/design-pattern/responsibility-chain.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/singletion.html" afterPath="$PROJECT_DIR$/design-pattern/singletion.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/state-machine.html" afterPath="$PROJECT_DIR$/design-pattern/state-machine.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/strategy.html" afterPath="$PROJECT_DIR$/design-pattern/strategy.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design-pattern/template.html" afterPath="$PROJECT_DIR$/design-pattern/template.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/cap-base-flp.html" afterPath="$PROJECT_DIR$/distrubuted/cap-base-flp.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/distrubuted-knowledge.html" afterPath="$PROJECT_DIR$/distrubuted/distrubuted-knowledge.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/id-flicker.html" afterPath="$PROJECT_DIR$/distrubuted/id-flicker.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/id-redis.html" afterPath="$PROJECT_DIR$/distrubuted/id-redis.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/id-snowflake.html" afterPath="$PROJECT_DIR$/distrubuted/id-snowflake.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/index.html" afterPath="$PROJECT_DIR$/distrubuted/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/index2.html" afterPath="$PROJECT_DIR$/distrubuted/index2.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/distrubuted/interface-idempotency.html" afterPath="$PROJECT_DIR$/distrubuted/interface-idempotency.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/feeds/all.rss.xml" afterPath="$PROJECT_DIR$/feeds/all.rss.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/feeds/concurrent.rss.xml" afterPath="$PROJECT_DIR$/feeds/concurrent.rss.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index2.html" afterPath="$PROJECT_DIR$/index2.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index3.html" afterPath="$PROJECT_DIR$/index3.html" />
@@ -51,15 +68,40 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/exception-introduce.html" afterPath="$PROJECT_DIR$/java-base/exception-introduce.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/externalizable-interface.html" afterPath="$PROJECT_DIR$/java-base/externalizable-interface.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/fail-fast-safe.html" afterPath="$PROJECT_DIR$/java-base/fail-fast-safe.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/index.html" afterPath="$PROJECT_DIR$/java-base/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/index2.html" afterPath="$PROJECT_DIR$/java-base/index2.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/introspector.html" afterPath="$PROJECT_DIR$/java-base/introspector.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/jndi-introdution.html" afterPath="$PROJECT_DIR$/java-base/jndi-introdution.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/spi-introduction.html" afterPath="$PROJECT_DIR$/java-base/spi-introduction.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-base/string-builder-question.html" afterPath="$PROJECT_DIR$/java-base/string-builder-question.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mysql/SHOW-GLOBAL-STATUS.html" afterPath="$PROJECT_DIR$/mysql/SHOW-GLOBAL-STATUS.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mysql/design-rule.html" afterPath="$PROJECT_DIR$/mysql/design-rule.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mysql/high-event.html" afterPath="$PROJECT_DIR$/mysql/high-event.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mysql/index.html" afterPath="$PROJECT_DIR$/mysql/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mysql/optimize-picture.html" afterPath="$PROJECT_DIR$/mysql/optimize-picture.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mysql/process-fun.html" afterPath="$PROJECT_DIR$/mysql/process-fun.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/security/index.html" afterPath="$PROJECT_DIR$/security/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/security/java-SecurityManager.html" afterPath="$PROJECT_DIR$/security/java-SecurityManager.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sitemap.xml" afterPath="$PROJECT_DIR$/sitemap.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source-code/index.html" afterPath="$PROJECT_DIR$/source-code/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source-code/junit-code=analysis.html" afterPath="$PROJECT_DIR$/source-code/junit-code=analysis.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/chuang-jian-xing.html" afterPath="$PROJECT_DIR$/tag/chuang-jian-xing.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/duo-xian-cheng.html" afterPath="$PROJECT_DIR$/tag/duo-xian-cheng.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/fen-bu-shi-idfang-an.html" afterPath="$PROJECT_DIR$/tag/fen-bu-shi-idfang-an.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/ji-chu.html" afterPath="$PROJECT_DIR$/tag/ji-chu.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/ji-chu2.html" afterPath="$PROJECT_DIR$/tag/ji-chu2.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/ji-chu3.html" afterPath="$PROJECT_DIR$/tag/ji-chu3.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/jie-gou-xing.html" afterPath="$PROJECT_DIR$/tag/jie-gou-xing.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/junit.html" afterPath="$PROJECT_DIR$/tag/junit.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/ku-ji-you-hua.html" afterPath="$PROJECT_DIR$/tag/ku-ji-you-hua.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/kuang-jia-ji-chu.html" afterPath="$PROJECT_DIR$/tag/kuang-jia-ji-chu.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/li-lun.html" afterPath="$PROJECT_DIR$/tag/li-lun.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/redis.html" afterPath="$PROJECT_DIR$/tag/redis.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/shu-ju-jie-gou.html" afterPath="$PROJECT_DIR$/tag/shu-ju-jie-gou.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/si-wei-dao-tu.html" afterPath="$PROJECT_DIR$/tag/si-wei-dao-tu.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/suo-you-hua.html" afterPath="$PROJECT_DIR$/tag/suo-you-hua.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/xing-wei-xing.html" afterPath="$PROJECT_DIR$/tag/xing-wei-xing.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tag/yuan-ma.html" afterPath="$PROJECT_DIR$/tag/yuan-ma.html" />
     </list>
     <ignored path=".idea/vcs.xml" />
     <ignored path=".idea/inspectionProfiles/profiles_settings.xml" />
@@ -158,7 +200,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -173,7 +215,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -189,12 +231,12 @@
     </option>
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\my_blog\output\nicky-chen.github.io\theme\images" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\my_blog\output\nicky-chen.github.io" />
       <recent name="E:\my_blog\output\nicky-chen.github.io\theme\js" />
-      <recent name="E:\my_blog\output\nicky-chen.github.io\theme\images" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\my_blog\output\nicky-chen.github.io\theme\images" />
     </key>
   </component>
@@ -677,23 +719,44 @@
       <option name="project" value="LOCAL" />
       <updated>1533524013242</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="并发基础之Condition(等待队列)&#10;redis常规优化">
+      <created>1533868650707</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1533868650707</updated>
+    </task>
+    <task id="LOCAL-00044" summary="并发基础之Condition(等待队列)&#10;redis常规优化">
+      <created>1533869204124</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1533869204124</updated>
+    </task>
+    <task id="LOCAL-00045" summary="站点地图修改">
+      <created>1533869621312</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1533869621312</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1060" extended-state="0" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36051503" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37124464" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.89273745" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.86815643" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -738,8 +801,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="bing登录" />
-    <MESSAGE value="360验证" />
     <MESSAGE value="网站图标" />
     <MESSAGE value="加入百度自动推送" />
     <MESSAGE value="加入相关文章和导航" />
@@ -763,7 +824,9 @@
     <MESSAGE value="更新sitemap" />
     <MESSAGE value="同步器分析 redis慢查询" />
     <MESSAGE value="提交sitemap" />
-    <option name="LAST_COMMIT_MESSAGE" value="提交sitemap" />
+    <MESSAGE value="并发基础之Condition(等待队列)&#10;redis常规优化" />
+    <MESSAGE value="站点地图修改" />
+    <option name="LAST_COMMIT_MESSAGE" value="站点地图修改" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">

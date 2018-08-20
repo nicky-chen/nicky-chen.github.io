@@ -65,6 +65,78 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/mysql/high-event.html" rel="bookmark" title="Permalink to MYSQL高级特性之【Event事件】">MYSQL高级特性之【Event事件】</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-04-28T20:18:00+08:00"> 周六 28 四月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p><strong>一、基本概念</strong> mysql5.1版本开始引进event概念。event既“时间触发器”，与triggers的事件触发不同，event类似与linux crontab计划任务，用于时间触发。通过单独或调用存储过程使用，在某一特定的时间点，触发相关的SQL语句或存储过程。</p>
+<p><strong>二、适用范围</strong> 对于每隔一段时间就有固定需求的操作，如创建表，删除数据等操作，可以使用event来处理。</p>
+<p>例如：使用event在每月的1日凌晨1点自动创建下个月需要使用的三张表。</p>
+<p>每天清除数据表中的过期的记录。</p>
+<p><strong>三、使用权限</strong> 单独使用event调用SQL语句时，查看和创建需要用户具有event权限，调用该SQL语句时，需要用户具有执行该SQL的权限。Event权限的设置保存在mysql.user表和mysql.db表的Event_priv字段中。</p>
+<p>当event和procedure（存储过程）配合使用的时候，查看和创建存储过程需要用户具有create routine权限，调用存储过程执行时需要使用excute权限，存储过程调用具体的SQL语句时，需要用户具有执行该SQL的权限。
+查看EVENT命令有如下几种：</p>
+<blockquote>
+<p>（1）查询mysql.event表；
+（2）通过SHOW EVENTS命令；
+（3）通过SHOW FULL EVENTS命令 …</p></blockquote> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/mysql/high-event.html" rel="bookmark" title="Permalink to MYSQL高级特性之【Event事件】">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/mysql/process-fun.html" rel="bookmark" title="Permalink to MYSQL高级特性之【存储过程与函数】">MYSQL高级特性之【存储过程与函数】</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-04-27T22:30:00+08:00"> 周五 27 四月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>一、定义</h1>
+<p>存储程序可以分为存储过程和函数。</p>
+<h2>1.1 存储过程的定义</h2>
+<p><strong>存储过程（Stored Procedure）</strong>是一组为了完成特定功能的SQL语句集。存储过程在数据库中经过第一次编译后再次调用不需要再次编译，用户通过指定存储过程的名字并给出参数（如果该存储过程带有参数）来执行它。</p>
+<h2>1.2 函数的定义</h2>
+<p>存储函数（简称<strong>函数</strong>）在本质上与存储过程没有区别。</p>
+<p>只是函数有如：只能返回一个变量的限制，而存储过程可以返回多个。函数是可以嵌入在SQL中使用，可以在select中调用，而存储过程不行。</p>
+<h1>二、创建存储过程和函数</h1>
+<p>存储过程和函数的创建过程很相似。</p>
+<h2>2.1 创建存储过程</h2>
+<p>语法</p>
+<blockquote>
+<p>CREATE PROCEDURE sp_name ([ proc_parameter ]) [ characteristics..] routine_body </p>
+</blockquote>
+<p>proc_parameter指定存储过程的参数列表，列表形式如下：</p>
+<blockquote>
+<p>[IN|OUT|INOUT] param_name type</p>
+</blockquote>
+<p>其中in表示输入参数，out表示输出参数，inout表示既可以输入也可以输出 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/mysql/process-fun.html" rel="bookmark" title="Permalink to MYSQL高级特性之【存储过程与函数】">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/distrubuted/cap-base-flp.html" rel="bookmark" title="Permalink to 分布式之【CAP理论、BASE理论 、FLP不可能定理】">分布式之【CAP理论、BASE理论 、FLP不可能定理】</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-04-25T18:43:00+08:00"> 周三 25 四月 2018 </abbr>
@@ -163,88 +235,6 @@ public class Banner implements Serializable{
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/concurrent/thread-jmm-happens-before.html" rel="bookmark" title="Permalink to java内存模型之[JMM][重排序][happens-before]">java内存模型之[JMM][重排序][happens-before]</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-04-03T22:11:00+08:00"> 周二 03 四月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1.并发编程模型的分类</h1>
-<p>在并发编程中，我们需要处理两个关键问题：线程之间如何通信及线程之间如何同
-步（这里的线程是指并发执行的活动实体）。通信是指线程之间以何种机制来交换
-信息。在命令式编程中，线程之间的通信机制有两种：<em>共享内存和消息传递</em>。
-在共享内存的并发模型里，线程之间共享程序的公共状态，线程之间通过写-读内
-存中的公共状态来隐式进行通信。在消息传递的并发模型里，线程之间没有公共状
-态，线程之间必须通过明确的发送消息来显式进行通信。
-同步是指程序用于控制不同线程之间操作发生相对顺序的机制。在共享内存并发模
-型里，同步是显式进行的。程序员必须显式指定某个方法或某段代码需要在线程之
-间互斥执行。在消息传递的并发模型里，由于消息的发送必须在消息的接收之前，
-因此同步是隐式进行的。
-Java 的并发采用的是共享内存模型，Java 线程之间的通信总是隐式进行，整个通
-信过程对程序员完全透明。如果编写多线程程序的 Java 程序员不理解隐式进行的
-线程之间通信的工作机制，很可能会遇到各种奇怪的内存可见性问题。</p>
-<h1>2.Java 内存模型的抽象</h1>
-<p>在java中，所有实例域、静态域和数组元素存储在堆内存中，堆内存在线程之间共
-享（本文使用“共享变量 …</p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/concurrent/thread-jmm-happens-before.html" rel="bookmark" title="Permalink to java内存模型之[JMM][重排序][happens-before]">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/design-pattern/decorator.html" rel="bookmark" title="Permalink to 实际项目运用之Decorator模式（装饰器模式）">实际项目运用之Decorator模式（装饰器模式）</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-03-28T11:22:00+08:00"> 周三 28 三月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h2>1 概述</h2>
-<p>在项目中，经常因一些新增需求，导致同一业务的变更，如果所在类继承关系如下：Parent、Child、Grandparent，那么要在Child类上增强些功能怎么办？给Child类增加方法？那会对Grandparent产生什么影响？该如何去处理？看完本文，你会找到你的答案。</p>
-<p>JavaIO中，像下面的嵌套语句很常见，为什么要怎样定义呢？理解装饰模式后，你会找到答案。</p>
-<div class="highlight"><pre><span></span>FilterInputStream filterInputStreasm = new BufferedInputStream(new FileInputStream(new File(&quot;/user/a&quot;)));
-</pre></div>
-
-
-<h3>1.1案例</h3>
-<p>例如下面一个功能需求，4s店的汽车销售向客户推销自家品牌的产品，我们用代码实现，关系如下：</p>
-<p><img alt="类图" src="https://upload-images.jianshu.io/upload_images/10175660-789e0242028d08b0.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p>具体代码：
-汽车销售类</p>
-<div class="highlight"><pre><span></span>public abstract class CarSale {
-
-    /**
-     * 推销车的详情
-     */
-    public abstract void displayCarInfo();
-
-    /**
-     * 客户签订购买合同
-     */
-    public abstract …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/design-pattern/decorator.html" rel="bookmark" title="Permalink to 实际项目运用之Decorator模式（装饰器模式）">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/jie-gou-xing.html">结构型</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -330,6 +320,11 @@ Java 的并发采用的是共享内存模型，Java 线程之间的通信总是�
              Source-code
          </a>
      </li>
+     <li >
+         <a href="/spring/index.html">
+             spring
+         </a>
+     </li>
   </ul>
 
 <!---->
@@ -356,6 +351,8 @@ Java 的并发采用的是共享内存模型，Java 线程之间的通信总是�
 	<!---->
 		<!--<li><a href="/source-code/index.html">Source-code</a></li>-->
 	<!---->
+		<!--<li><a href="/spring/index.html">spring</a></li>-->
+	<!---->
 <!--</ul>-->
 <!---->
 
@@ -368,13 +365,14 @@ Java 的并发采用的是共享内存模型，Java 线程之间的通信总是�
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
 	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/redis.html">redis</a></li>
-	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
-	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
 	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
+	    <li class="danger label" ><a href="/tag/spring-base.html">spring-base</a></li>
 	    <li class="danger label" ><a href="/tag/junit.html">junit</a></li>
 	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
 </ul>
@@ -403,7 +401,7 @@ Java 的并发采用的是共享内存模型，Java 线程之间的通信总是�
 
 <p class="paginator">
             <a href="/index6.html"><i class="icon-arrow-left"></i></a>
-    Page 7 / 9
+    Page 7 / 10
         <a href="/index8.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->

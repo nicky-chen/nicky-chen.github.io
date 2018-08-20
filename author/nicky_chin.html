@@ -65,6 +65,80 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/spring/spring-bean-IOC.html" rel="bookmark" title="Permalink to Spring之动手实现IOC功能">Spring之动手实现IOC功能</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-08-16T20:31:00+08:00"> 周四 16 八月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 背景</h1>
+<p>我们经常在使用Spring生态中的组件，我们在潜移默化的DI和IOC的思想下，来创建和使用Bean对象，使用过 <em>@Component @ComponentScan @Autowired @Bean @Configuration</em> 等等的注解，所以了解Spring容器是如何创建和管理Bean,是我们必需掌握的技能。
+下面我们通过手写DI和IOC的方式来加深对Spring的理解。</p>
+<h1>2 依赖注入</h1>
+<p>DI，<strong>Dependency Injection</strong>，即依赖注入。具体含义表示组件之间的依赖关系由容器在应用系统运行期来决定，也就是由容器动态地将某种依赖关系的目标对象实例注入到应用系统中的各个关联的组件之中。对象只提供普通的方法让容器去决定依赖关系。</p>
+<p><strong>Spring中创建Bean的方式有三种：</strong></p>
+<blockquote>
+<p>通过XML显式配置
+通过Java显式配置 (利用 @Configuration @Bean)
+隐式进行bean搜索并自动装配 （利用基于@Component 元注解的方式）</p>
+</blockquote>
+<p>通过上面叙述我们知道，创建bean其实大致可以分为两种，一种是基于XML,另一种是基于注解的方式。</p>
+<h4>2.1 XML方式</h4>
+<p>user.xml</p>
+<div class="highlight"><pre><span></span><span class="o">&lt;?</span><span class="n">xml</span> <span class="n">version</span><span class="o">=</span><span class="s">&quot;1.0&quot;</span> <span class="n">encoding</span><span class="o">=</span><span class="s">&quot;UTF-8&quot;</span><span class="o">?&gt;</span>
+<span class="o">&lt;</span><span class="n">beans …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/spring/spring-bean-IOC.html" rel="bookmark" title="Permalink to Spring之动手实现IOC功能">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/spring-base.html">spring-base</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/spring/spring-bean-lifecycle.html" rel="bookmark" title="Permalink to Spring之Bean加载-解析-生命周期">Spring之Bean加载-解析-生命周期</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-08-12T19:31:00+08:00"> 周日 12 八月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 概要</h1>
+<p>使用Spring框架，我们需要了解Bean的创建加载过程，需要熟悉Bean是如何获取和使用的。
+下面我们通过分析下Spring加载XML文件的过程来分析Bean的数据流。
+当前调试的Spring 版本是最新的  <em>4.1.0 release</em>  版本</p>
+<p><strong>调试代码主入口</strong></p>
+<div class="highlight"><pre><span></span> <span class="n">ApplicationContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClassPathXmlApplicationContext</span><span class="o">(</span><span class="s">&quot;consumer.xml&quot;</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Consumer Started&quot;</span><span class="o">);</span>
+        <span class="n">ConsumerBean</span> <span class="n">bean</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getBean</span><span class="o">(</span><span class="n">ConsumerBean</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">String</span> <span class="n">secretKey</span> <span class="o">=</span> <span class="n">bean</span><span class="o">.</span><span class="na">getProperties</span><span class="o">().</span><span class="na">getProperty</span><span class="o">(</span><span class="s">&quot;SecretKey&quot;</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">secretKey</span><span class="o">);</span>
+</pre></div>
+
+
+<h1>2 解析过程</h1>
+<p>创建 <strong>ClassPathXmlApplicationContext</strong>对象，会调用<code>refresh()</code>方法</p>
+<div class="highlight"><pre><span></span><span class="kd">public …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/spring/spring-bean-lifecycle.html" rel="bookmark" title="Permalink to Spring之Bean加载-解析-生命周期">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/spring-base.html">spring-base</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/concurrent/aqs-condition.html" rel="bookmark" title="Permalink to 并发基础之Condition(等待队列)">并发基础之Condition(等待队列)</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-08-09T22:32:00+08:00"> 周四 09 八月 2018 </abbr>
@@ -187,94 +261,6 @@ condition对象的属性对开发者透明</p>
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/cache/cache-redis-slowlog.html" rel="bookmark" title="Permalink to Redis之慢查询日志">Redis之慢查询日志</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-08-01T19:01:00+08:00"> 周三 01 八月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <blockquote>
-<p><code>Redis</code>提供了5种数据结构,但除此之外,<code>Redis</code>还提供了注入慢查询分析,<code>Redis Shell</code>、<code>Pipeline</code>、事务、与<code>Lua</code>脚本、<code>Bitmaps</code>、<code>HyperLogLog</code>、<code>PubSub</code>、<code>GEO</code>等附加功能,这些功能可以在某些场景发挥很重要的作用.</p>
-</blockquote>
-<h3>慢查询分析</h3>
-<p>许多存储系统(如:<code>MySQL</code>)提供慢查询日志帮助开发与运维人员定位系统存在的慢操作.所谓慢查询日志就是系统在命令执行前后计算每条命令的执行时间,当超过预设阈值,就将这条命令的相关信息(例如:发生时间,耗时,命令的详细信息)记录到慢查询日志中,<code>Redis</code>也提供了类似的功能.</p>
-<p><strong><code>Redis</code>命令执行流程:</strong>
-<img alt="执行流程" src="https://upload-images.jianshu.io/upload_images/10175660-0384383b4cc4a92a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<ol>
-<li>
-<p>发送命令</p>
-</li>
-<li>
-<p>命令排队</p>
-</li>
-<li>
-<p>命令执行</p>
-</li>
-<li>
-<p>返回结果</p>
-</li>
-</ol>
-<p>需要注意,慢查询只统计步骤<code>3</code>的时间,所以没有慢查询并不代表客户端没有超时问题.</p>
-<h4>1) 慢查询的两个配置参数</h4>
-<p>对于慢查询功能,需要明确两件事:</p>
-<ul>
-<li>
-<p>预设阈值怎么设置?</p>
-</li>
-<li>
-<p>慢查询记录存放在那 …</p></li></ul> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/cache/cache-redis-slowlog.html" rel="bookmark" title="Permalink to Redis之慢查询日志">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/redis.html">redis</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/concurrent/aqs-chapter01.html" rel="bookmark" title="Permalink to 并发基础之AQS同步器（一）">并发基础之AQS同步器（一）</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-07-31T21:52:00+08:00"> 周二 31 七月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1 AQS同步器</h1>
-<p>队列同步器<strong>AbstractQueuedSynchronizer</strong>，是用来构建锁或者其他同步组件的基础框架，它使用了一个int成员变量表示同步状态，通过内置的FIFO队列来完成资源获取线程的排队工作，并发包的作者（Doug Lea）期望它能够成为实现大部分同步需求的基础。</p>
-<p>同步器的主要使用方式是继承，子类通过继承同步器并实现它的抽象方法来管理同步状态，在抽象方法的实现过程中免不了要对同步状态进行更改，这时就需要使用同步器提供的3个方法</p>
-<blockquote>
-<p>getState()
-setState(int newState)
-compareAndSetState(int expect,int update)</p>
-</blockquote>
-<p>来进行操作，因为它们能够保证状态的改变是安全的。这样就可以方便实现不同类型的同步组件（<code>ReentrantLock、ReentrantReadWriteLock和CountDownLatch</code>等）</p>
-<p><strong>核心操作方式：</strong></p>
-<p>场景1：阻塞直到获取指定资源数</p>
-<p>场景2：可中断限时等待直到获取指定资源数</p>
-<p>场景3：直接尝试获取指定资源数</p>
-<p>场景4：释放指定资源数</p>
-<p>上述四个步骤又都可以分为 <em>共享（share）操作和独占（exclusive）</em> 操作两种，如果AQS设计的足够好，则所有的容器类只需要控制资源数目、获取的资源量和释放的资源量即可</p>
-<p>下图（独占和共享的方法调用 …</p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/concurrent/aqs-chapter01.html" rel="bookmark" title="Permalink to 并发基础之AQS同步器（一）">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/duo-xian-cheng.html">多线程</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -360,6 +346,11 @@ compareAndSetState(int expect,int update)</p>
              Source-code
          </a>
      </li>
+     <li >
+         <a href="/spring/index.html">
+             spring
+         </a>
+     </li>
   </ul>
 
 <!---->
@@ -386,6 +377,8 @@ compareAndSetState(int expect,int update)</p>
 	<!---->
 		<!--<li><a href="/source-code/index.html">Source-code</a></li>-->
 	<!---->
+		<!--<li><a href="/spring/index.html">spring</a></li>-->
+	<!---->
 <!--</ul>-->
 <!---->
 
@@ -398,13 +391,14 @@ compareAndSetState(int expect,int update)</p>
 	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
 	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
 	    <li class="danger label" ><a href="/tag/redis.html">redis</a></li>
-	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
 	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
 	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
 	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
-	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
 	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
 	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
+	    <li class="danger label" ><a href="/tag/spring-base.html">spring-base</a></li>
 	    <li class="danger label" ><a href="/tag/junit.html">junit</a></li>
 	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
 </ul>
@@ -432,7 +426,7 @@ compareAndSetState(int expect,int update)</p>
 </div> </div><!-- /.row -->
 
 <p class="paginator">
-    Page 1 / 9
+    Page 1 / 10
         <a href="/author/nicky_chin2.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->
