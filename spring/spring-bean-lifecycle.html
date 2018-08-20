@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>Spring之Bean加载-解析-生命周期</title>
+        <meta charset="utf-8" />
+        <link href="/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 RSS Feed" />
+        <link href="/feeds/spring.rss.xml" type="application/rss+xml" rel="alternate" title="南乡清水 Categories RSS Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+        <link rel="shortcut icon" href="/theme/images/favicon.ico">
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">南乡清水 <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+
+                <ul class="columns">
+                    <li><a href="/">首页</a></li>
+
+                    <li
+><a href="/yue-du-shu-dan.html">阅读书单</a></li>
+                    <li
+><a href="/zai-xian-gong-ju.html">在线工具</a></li>
+                    <li
+><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>
+                    <li
+><a href="/ji-zhu-tu-pu.html">技术图谱</a></li>
+                    <li
+><a href="/guan-yu-wo.html">关于我</a></li>
+                     <li><a href="/archives.html"><i class="active"></i>归档日志</a></li>
+                    <form class="navbar-search pull-right" action="/search.html">
+                        <input type="text" class="search-query" placeholder="站内搜" name="q" id="s">
+                    </form>
+                </ul>
+            </div>
+
+
+<section id="content" class="body">
+
+   <div class="row">
+
+<div id="toc" class="threes columns" style="font-size: 65%">
+    <br>
+    <h4 style="font-size: 1rem">文章目录</h4>
+</div>        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/spring/spring-bean-lifecycle.html" rel="bookmark"
+                   title="Permalink to Spring之Bean加载-解析-生命周期">Spring之Bean加载-解析-生命周期</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2018-08-12T19:31:00+08:00">
+                周日 12 八月 2018
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div id="contents" class="entry-content">
+              <h1>1 概要</h1>
+<p>使用Spring框架，我们需要了解Bean的创建加载过程，需要熟悉Bean是如何获取和使用的。
+下面我们通过分析下Spring加载XML文件的过程来分析Bean的数据流。
+当前调试的Spring 版本是最新的  <em>4.1.0 release</em>  版本</p>
+<p><strong>调试代码主入口</strong></p>
+<div class="highlight"><pre><span></span> <span class="n">ApplicationContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClassPathXmlApplicationContext</span><span class="o">(</span><span class="s">&quot;consumer.xml&quot;</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Consumer Started&quot;</span><span class="o">);</span>
+        <span class="n">ConsumerBean</span> <span class="n">bean</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getBean</span><span class="o">(</span><span class="n">ConsumerBean</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">String</span> <span class="n">secretKey</span> <span class="o">=</span> <span class="n">bean</span><span class="o">.</span><span class="na">getProperties</span><span class="o">().</span><span class="na">getProperty</span><span class="o">(</span><span class="s">&quot;SecretKey&quot;</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">secretKey</span><span class="o">);</span>
+</pre></div>
+
+
+<h1>2 解析过程</h1>
+<p>创建 <strong>ClassPathXmlApplicationContext</strong>对象，会调用<code>refresh()</code>方法</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">refresh</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">BeansException</span><span class="o">,</span> <span class="n">IllegalStateException</span> <span class="o">{</span>
+        <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">startupShutdownMonitor</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// Prepare this context for refreshing.</span>
+            <span class="n">prepareRefresh</span><span class="o">();</span>
+
+            <span class="c1">// 获取xml文件的信息，存储在beanFactory对象中</span>
+            <span class="n">ConfigurableListableBeanFactory</span> <span class="n">beanFactory</span> <span class="o">=</span> <span class="n">obtainFreshBeanFactory</span><span class="o">();</span>
+
+        <span class="o">.................</span><span class="na">省略中间代码</span>
+
+                <span class="c1">// 注册bean信息</span>
+                <span class="n">invokeBeanFactoryPostProcessors</span><span class="o">(</span><span class="n">beanFactory</span><span class="o">);</span>
+                <span class="c1">// 实例化bean</span>
+                <span class="n">finishBeanFactoryInitialization</span><span class="o">(</span><span class="n">beanFactory</span><span class="o">);</span>
+
+                <span class="c1">// Last step: publish corresponding event.</span>
+                <span class="n">finishRefresh</span><span class="o">();</span>
+            <span class="o">}</span>
+</pre></div>
+
+
+<p>之后会进入<strong>AbstractApplicationContext</strong>对象，处理如下方法：</p>
+<div class="highlight"><pre><span></span><span class="kd">protected</span> <span class="n">ConfigurableListableBeanFactory</span> <span class="nf">obtainFreshBeanFactory</span><span class="o">()</span> <span class="o">{</span>
+<span class="c1">//初始化DefaultListableBeanFactory对象和DefaultSingletonBeanRegistry对象</span>
+        <span class="n">refreshBeanFactory</span><span class="o">();</span> 
+
+        <span class="n">ConfigurableListableBeanFactory</span> <span class="n">beanFactory</span> <span class="o">=</span> <span class="n">getBeanFactory</span><span class="o">();</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">logger</span><span class="o">.</span><span class="na">isDebugEnabled</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">logger</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&quot;Bean factory for &quot;</span> <span class="o">+</span> <span class="n">getDisplayName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;: &quot;</span> <span class="o">+</span> <span class="n">beanFactory</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">beanFactory</span><span class="o">;</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>接下来的数据调用链：
+<strong>getBeanFactory() --&gt; loadBeanDefinitions(beanFactory)</strong></p>
+<div class="highlight"><pre><span></span><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">loadBeanDefinitions</span><span class="o">(</span><span class="n">DefaultListableBeanFactory</span> <span class="n">beanFactory</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">BeansException</span><span class="o">,</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="c1">//创建XmlBeanDefinitionReader对象用于解析xml</span>
+        <span class="n">XmlBeanDefinitionReader</span> <span class="n">beanDefinitionReader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">XmlBeanDefinitionReader</span><span class="o">(</span><span class="n">beanFactory</span><span class="o">);</span>
+
+        <span class="c1">// Configure the bean definition reader with this context&#39;s</span>
+        <span class="c1">// resource loading environment.</span>
+        <span class="n">beanDefinitionReader</span><span class="o">.</span><span class="na">setEnvironment</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getEnvironment</span><span class="o">());</span>
+        <span class="n">beanDefinitionReader</span><span class="o">.</span><span class="na">setResourceLoader</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+        <span class="n">beanDefinitionReader</span><span class="o">.</span><span class="na">setEntityResolver</span><span class="o">(</span><span class="k">new</span> <span class="n">ResourceEntityResolver</span><span class="o">(</span><span class="k">this</span><span class="o">));</span>
+
+        <span class="c1">// Allow a subclass to provide custom initialization of the reader,</span>
+        <span class="c1">// then proceed with actually loading the bean definitions.</span>
+        <span class="n">initBeanDefinitionReader</span><span class="o">(</span><span class="n">beanDefinitionReader</span><span class="o">);</span>
+<span class="c1">//载入xml信息</span>
+        <span class="n">loadBeanDefinitions</span><span class="o">(</span><span class="n">beanDefinitionReader</span><span class="o">);</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>最终会进入<code>loadBeanDefinitions()</code>方法，来载入xml</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">int</span> <span class="nf">loadBeanDefinitions</span><span class="o">(</span><span class="n">EncodedResource</span> <span class="n">encodedResource</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">BeanDefinitionStoreException</span> <span class="o">{</span>
+        <span class="n">Assert</span><span class="o">.</span><span class="na">notNull</span><span class="o">(</span><span class="n">encodedResource</span><span class="o">,</span> <span class="s">&quot;EncodedResource must not be null&quot;</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">logger</span><span class="o">.</span><span class="na">isInfoEnabled</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;Loading XML bean definitions from &quot;</span> <span class="o">+</span> <span class="n">encodedResource</span><span class="o">.</span><span class="na">getResource</span><span class="o">());</span>
+        <span class="o">}</span>
+
+        <span class="n">Set</span><span class="o">&lt;</span><span class="n">EncodedResource</span><span class="o">&gt;</span> <span class="n">currentResources</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">resourcesCurrentlyBeingLoaded</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">currentResources</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">currentResources</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">EncodedResource</span><span class="o">&gt;(</span><span class="mi">4</span><span class="o">);</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">resourcesCurrentlyBeingLoaded</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">currentResources</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">currentResources</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">encodedResource</span><span class="o">))</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">BeanDefinitionStoreException</span><span class="o">(</span>
+                    <span class="s">&quot;Detected cyclic loading of &quot;</span> <span class="o">+</span> <span class="n">encodedResource</span> <span class="o">+</span> <span class="s">&quot; - check your import definitions!&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">InputStream</span> <span class="n">inputStream</span> <span class="o">=</span> <span class="n">encodedResource</span><span class="o">.</span><span class="na">getResource</span><span class="o">().</span><span class="na">getInputStream</span><span class="o">();</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">InputSource</span> <span class="n">inputSource</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InputSource</span><span class="o">(</span><span class="n">inputStream</span><span class="o">);</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">encodedResource</span><span class="o">.</span><span class="na">getEncoding</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">inputSource</span><span class="o">.</span><span class="na">setEncoding</span><span class="o">(</span><span class="n">encodedResource</span><span class="o">.</span><span class="na">getEncoding</span><span class="o">());</span>
+                <span class="o">}</span>
+                <span class="k">return</span> <span class="n">doLoadBeanDefinitions</span><span class="o">(</span><span class="n">inputSource</span><span class="o">,</span> <span class="n">encodedResource</span><span class="o">.</span><span class="na">getResource</span><span class="o">());</span>
+            <span class="o">}</span>
+            <span class="k">finally</span> <span class="o">{</span>
+                <span class="n">inputStream</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">BeanDefinitionStoreException</span><span class="o">(</span>
+                    <span class="s">&quot;IOException parsing XML document from &quot;</span> <span class="o">+</span> <span class="n">encodedResource</span><span class="o">.</span><span class="na">getResource</span><span class="o">(),</span> <span class="n">ex</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">currentResources</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">encodedResource</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">currentResources</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">resourcesCurrentlyBeingLoaded</span><span class="o">.</span><span class="na">remove</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<blockquote>
+<p>使用EncodeResource封装资源文件。如指定编码则使用指定编码读取资源
+判断该资源是否已经加载过
+构造InputStream实例,然后调用 doLoadBeanDefinitions() 方法</p>
+</blockquote>
+<p>解析XML文件内容，得到一个Document对象</p>
+<div class="highlight"><pre><span></span><span class="kd">protected</span> <span class="kt">int</span> <span class="nf">doLoadBeanDefinitions</span><span class="o">(</span><span class="n">InputSource</span> <span class="n">inputSource</span><span class="o">,</span> <span class="n">Resource</span> <span class="n">resource</span><span class="o">)</span>
+            <span class="kd">throws</span> <span class="n">BeanDefinitionStoreException</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+    <span class="c1">//通过dom框架解析成Document对象</span>
+            <span class="n">Document</span> <span class="n">doc</span> <span class="o">=</span> <span class="n">doLoadDocument</span><span class="o">(</span><span class="n">inputSource</span><span class="o">,</span> <span class="n">resource</span><span class="o">);</span>
+<span class="c1">//缓存每个bean的信息</span>
+            <span class="k">return</span> <span class="n">registerBeanDefinitions</span><span class="o">(</span><span class="n">doc</span><span class="o">,</span> <span class="n">resource</span><span class="o">);</span>
+        <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<p>封装成BeanDefinition对象过程</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">int</span> <span class="nf">registerBeanDefinitions</span><span class="o">(</span><span class="n">Document</span> <span class="n">doc</span><span class="o">,</span> <span class="n">Resource</span> <span class="n">resource</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">BeanDefinitionStoreException</span> <span class="o">{</span>
+        <span class="n">BeanDefinitionDocumentReader</span> <span class="n">documentReader</span> <span class="o">=</span> <span class="n">createBeanDefinitionDocumentReader</span><span class="o">();</span>
+        <span class="n">documentReader</span><span class="o">.</span><span class="na">setEnvironment</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getEnvironment</span><span class="o">());</span>
+        <span class="kt">int</span> <span class="n">countBefore</span> <span class="o">=</span> <span class="n">getRegistry</span><span class="o">().</span><span class="na">getBeanDefinitionCount</span><span class="o">();</span>
+        <span class="n">documentReader</span><span class="o">.</span><span class="na">registerBeanDefinitions</span><span class="o">(</span><span class="n">doc</span><span class="o">,</span> <span class="n">createReaderContext</span><span class="o">(</span><span class="n">resource</span><span class="o">));</span>
+        <span class="k">return</span> <span class="n">getRegistry</span><span class="o">().</span><span class="na">getBeanDefinitionCount</span><span class="o">()</span> <span class="o">-</span> <span class="n">countBefore</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerBeanDefinitions</span><span class="o">(</span><span class="n">Document</span> <span class="n">doc</span><span class="o">,</span> <span class="n">XmlReaderContext</span> <span class="n">readerContext</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">readerContext</span> <span class="o">=</span> <span class="n">readerContext</span><span class="o">;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&quot;Loading bean definitions&quot;</span><span class="o">);</span>
+<span class="c1">//获取bean标签元素</span>
+        <span class="n">Element</span> <span class="n">root</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="na">getDocumentElement</span><span class="o">();</span>
+        <span class="n">doRegisterBeanDefinitions</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>最终处理的方法</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerBeanDefinition</span><span class="o">(</span><span class="n">String</span> <span class="n">beanName</span><span class="o">,</span> <span class="n">BeanDefinition</span> <span class="n">beanDefinition</span><span class="o">)</span>
+            <span class="kd">throws</span> <span class="n">BeanDefinitionStoreException</span> <span class="o">{</span>
+
+    <span class="o">........</span><span class="na">省略</span>
+        <span class="n">BeanDefinition</span> <span class="n">oldBeanDefinition</span><span class="o">;</span>
+
+        <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionMap</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">oldBeanDefinition</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">oldBeanDefinition</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(!</span><span class="k">this</span><span class="o">.</span><span class="na">allowBeanDefinitionOverriding</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="n">BeanDefinitionStoreException</span><span class="o">(</span><span class="n">beanDefinition</span><span class="o">.</span><span class="na">getResourceDescription</span><span class="o">(),</span> <span class="n">beanName</span><span class="o">,</span>
+                            <span class="s">&quot;Cannot register bean definition [&quot;</span> <span class="o">+</span> <span class="n">beanDefinition</span> <span class="o">+</span> <span class="s">&quot;] for bean &#39;&quot;</span> <span class="o">+</span> <span class="n">beanName</span> <span class="o">+</span>
+                            <span class="s">&quot;&#39;: There is already [&quot;</span> <span class="o">+</span> <span class="n">oldBeanDefinition</span> <span class="o">+</span> <span class="s">&quot;] bound.&quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+                <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">oldBeanDefinition</span><span class="o">.</span><span class="na">getRole</span><span class="o">()</span> <span class="o">&lt;</span> <span class="n">beanDefinition</span><span class="o">.</span><span class="na">getRole</span><span class="o">())</span> <span class="o">{</span>
+                    <span class="c1">// e.g. was ROLE_APPLICATION, now overriding with ROLE_SUPPORT or ROLE_INFRASTRUCTURE</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">logger</span><span class="o">.</span><span class="na">isWarnEnabled</span><span class="o">())</span> <span class="o">{</span>
+                        <span class="k">this</span><span class="o">.</span><span class="na">logger</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&quot;Overriding user-defined bean definition for bean &#39;&quot;</span> <span class="o">+</span> <span class="n">beanName</span> <span class="o">+</span>
+                                <span class="s">&quot; with a framework-generated bean definition &#39;: replacing [&quot;</span> <span class="o">+</span>
+                                <span class="n">oldBeanDefinition</span> <span class="o">+</span> <span class="s">&quot;] with [&quot;</span> <span class="o">+</span> <span class="n">beanDefinition</span> <span class="o">+</span> <span class="s">&quot;]&quot;</span><span class="o">);</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+                <span class="k">else</span> <span class="o">{</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">logger</span><span class="o">.</span><span class="na">isInfoEnabled</span><span class="o">())</span> <span class="o">{</span>
+                        <span class="k">this</span><span class="o">.</span><span class="na">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;Overriding bean definition for bean &#39;&quot;</span> <span class="o">+</span> <span class="n">beanName</span> <span class="o">+</span>
+                                <span class="s">&quot;&#39;: replacing [&quot;</span> <span class="o">+</span> <span class="n">oldBeanDefinition</span> <span class="o">+</span> <span class="s">&quot;] with [&quot;</span> <span class="o">+</span> <span class="n">beanDefinition</span> <span class="o">+</span> <span class="s">&quot;]&quot;</span><span class="o">);</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="k">else</span> <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionNames</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">frozenBeanDefinitionNames</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">beanName</span><span class="o">,</span> <span class="n">beanDefinition</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">oldBeanDefinition</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">containsSingleton</span><span class="o">(</span><span class="n">beanName</span><span class="o">))</span> <span class="o">{</span>
+            <span class="n">resetBeanDefinition</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>最后xml的的信息会存入<strong>DefaultListableBeanFactory</strong>的<code>private final Map&lt;String, BeanDefinition&gt; beanDefinitionMap</code>对象中</p>
+<p>在执行<code>invokeBeanFactoryPostProcessors(beanFactory)</code>方法和<code>finishBeanFactoryInitialization(beanFactory)</code>方法的时候，会将beanDefinitionMap中的信息实例化具体bean对象，其主要过程如下：</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">preInstantiateSingletons</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">BeansException</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">logger</span><span class="o">.</span><span class="na">isDebugEnabled</span><span class="o">())</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">logger</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&quot;Pre-instantiating singletons in &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">beanNames</span><span class="o">;</span>
+        <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionMap</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// Iterate over a copy to allow for init methods which in turn register new bean definitions.</span>
+            <span class="c1">// While this may not be part of the regular factory bootstrap, it does otherwise work fine.</span>
+            <span class="n">beanNames</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;(</span><span class="k">this</span><span class="o">.</span><span class="na">beanDefinitionNames</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="c1">// Trigger initialization of all non-lazy singleton beans...</span>
+        <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">beanName</span> <span class="o">:</span> <span class="n">beanNames</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">RootBeanDefinition</span> <span class="n">bd</span> <span class="o">=</span> <span class="n">getMergedLocalBeanDefinition</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(!</span><span class="n">bd</span><span class="o">.</span><span class="na">isAbstract</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">bd</span><span class="o">.</span><span class="na">isSingleton</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">bd</span><span class="o">.</span><span class="na">isLazyInit</span><span class="o">())</span> <span class="o">{</span>
+        <span class="o">............................</span>
+                <span class="o">}</span>
+                <span class="k">else</span> <span class="o">{</span>
+                    <span class="n">getBean</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+</pre></div>
+
+
+<p>缓存Bean的过程</p>
+<div class="highlight"><pre><span></span>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">addSingleton</span><span class="o">(</span><span class="n">String</span> <span class="n">beanName</span><span class="o">,</span> <span class="n">Object</span> <span class="n">singletonObject</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">singletonObjects</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">singletonObjects</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">beanName</span><span class="o">,</span> <span class="o">(</span><span class="n">singletonObject</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="n">singletonObject</span> <span class="o">:</span> <span class="n">NULL_OBJECT</span><span class="o">));</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">singletonFactories</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">earlySingletonObjects</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">registeredSingletons</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>在 DefaultSingletonBeanRegistry中<code>private final Map&lt;String, Object&gt; singletonObjects</code>属性中缓存bean对象</p>
+<h1>3 获取Bean</h1>
+<p>方法调用链如下：
+<strong>getBeanFactory().getBean(requiredType)   --&gt;   doGetBean(name, requiredType, args, false)    --&gt;   Object sharedInstance = getSingleton(beanName)</strong></p>
+<div class="highlight"><pre><span></span><span class="kd">protected</span> <span class="n">Object</span> <span class="nf">getSingleton</span><span class="o">(</span><span class="n">String</span> <span class="n">beanName</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">allowEarlyReference</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Object</span> <span class="n">singletonObject</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">singletonObjects</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">singletonObject</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">isSingletonCurrentlyInCreation</span><span class="o">(</span><span class="n">beanName</span><span class="o">))</span> <span class="o">{</span>
+            <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">singletonObjects</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">singletonObject</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">earlySingletonObjects</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">singletonObject</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">allowEarlyReference</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">ObjectFactory</span><span class="o">&lt;?&gt;</span> <span class="n">singletonFactory</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">singletonFactories</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="n">singletonFactory</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">singletonObject</span> <span class="o">=</span> <span class="n">singletonFactory</span><span class="o">.</span><span class="na">getObject</span><span class="o">();</span>
+                        <span class="k">this</span><span class="o">.</span><span class="na">earlySingletonObjects</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">beanName</span><span class="o">,</span> <span class="n">singletonObject</span><span class="o">);</span>
+                        <span class="k">this</span><span class="o">.</span><span class="na">singletonFactories</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">beanName</span><span class="o">);</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="o">(</span><span class="n">singletonObject</span> <span class="o">!=</span> <span class="n">NULL_OBJECT</span> <span class="o">?</span> <span class="n">singletonObject</span> <span class="o">:</span> <span class="kc">null</span><span class="o">);</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>获取bean方法就很明显了，默认的单例对象，会在singletonObjects中获取</p>
+<h1>4 Bean生命周期</h1>
+<p>Spring Bean 的生命周期状态图如下：
+<img alt="生命周期" src="https://upload-images.jianshu.io/upload_images/10175660-ab40e888600f671b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h3>4.1 BeanNameAware</h3>
+<p>Spring Bean存活于容器之中，如果需要知道Bean的beanName，即可让该bean的类实现BeanNameAware接口</p>
+<div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">UserBean</span> <span class="kd">implements</span> <span class="n">BeanNameAware</span><span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setBeanName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">name</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>consumer.xml中注入bean</p>
+<div class="highlight"><pre><span></span><span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;aaa&quot;</span> <span class="na">class=</span><span class="s">&quot;com.aliyun.openservices.spring.example.normal.UserBean&quot;</span> <span class="nt">&gt;</span>
+    <span class="nt">&lt;/bean&gt;</span>
+</pre></div>
+
+
+<p>运行代码</p>
+<div class="highlight"><pre><span></span><span class="n">ApplicationContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClassPathXmlApplicationContext</span><span class="o">(</span><span class="s">&quot;consumer.xml&quot;</span><span class="o">);</span>
+        <span class="n">UserBean</span> <span class="n">userBean</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getBean</span><span class="o">(</span><span class="n">UserBean</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">userBean</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+</pre></div>
+
+
+<p>这样控制台就能打印出结果，获取到UserBean的beanName是  <strong>aaa</strong></p>
+<h3>4.2 ApplicationContextAware</h3>
+<p>该接口用于获取ApplicationContext的上下文，获取spring的一些信息</p>
+<div class="highlight"><pre><span></span><span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SpringBootTestAware</span> <span class="kd">implements</span> <span class="n">ApplicationContextAware</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">ApplicationContext</span> <span class="n">applicationContext</span> <span class="o">;</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setApplicationContext</span><span class="o">(</span><span class="n">ApplicationContext</span> <span class="n">applicationContext</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">BeansException</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">applicationContext</span> <span class="o">=</span> <span class="n">applicationContext</span> <span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>这样我们就可以拿到ApplicationContext的对象做一些处理</p>
+<h3>4.3 InitializingBean</h3>
+<p>如果希望在bean的属性被创建后，做些额外处理，则可以考虑让这个bean实现InitializingBean接口。InitializingBean接口中的方法<code>afterPropertiesSet()</code>可以实现所需要的工作</p>
+<p>在bean的声明周期中，<code>afterPropertiesSet()</code>方法的调用介于<code>postProcessBeforeInitialization()</code>方法和<code>postProcessAfterInitialization()</code>方法之间。</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">AbstractFdxProcessor</span> <span class="kd">implements</span> <span class="n">FdxProcessor</span><span class="o">,</span> <span class="n">InitializingBean</span><span class="o">,</span> <span class="n">BeanNameAware</span><span class="cm">/*, BeanPostProcessor*/</span> <span class="o">{</span>
+
+    <span class="c1">//实现 BeanNameAware 接口，为了获得每个processor 在 Spring context 中的 beanName</span>
+    <span class="c1">//实现 InitializingBean 接口(Spring 提供的一些生命周期接口中的一个),在 Spring 完成该Bean初始化之后，将 beanName 注册到注册中心去</span>
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">FdxProcessorRegistry</span> <span class="n">fdxProcessorRegistry</span><span class="o">;</span>
+
+    <span class="kd">protected</span> <span class="n">String</span> <span class="n">beanName</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setBeanName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">beanName</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">protected</span> <span class="kd">abstract</span> <span class="n">FdxProcessorRegistry</span><span class="o">.</span><span class="na">FdxKeyPair</span> <span class="nf">getKeyPair</span><span class="o">();</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">afterPropertiesSet</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">fdxProcessorRegistry</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">getKeyPair</span><span class="o">(),</span> <span class="n">beanName</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+
+<span class="nd">@Service</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">XxxFdxProcessorImpl</span> <span class="kd">extends</span> <span class="n">AbstractFdxProcessor</span><span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">process</span><span class="o">(</span><span class="n">FdxDto</span><span class="o">&lt;?&gt;</span> <span class="n">fdxDto</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//do business</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="n">FdxProcessorRegistry</span><span class="o">.</span><span class="na">FdxKeyPair</span> <span class="nf">getKeyPair</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">FdxProcessorRegistry</span><span class="o">.</span><span class="na">FdxKeyPair</span><span class="o">(</span><span class="s">&quot;XXX&quot;</span><span class="o">,</span><span class="s">&quot;XXX&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>实际业务中，可以根据不同的beanName做缓存，然后路由到不同的业务，很适合if比较多的语句</p>
+<h3>4.4 自定义初始化和销毁方法</h3>
+<div class="highlight"><pre><span></span><span class="nd">@Component</span>
+<span class="kd">class</span> <span class="nc">StartAndDestroyBean</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kd">static</span> <span class="n">Logger</span> <span class="n">LOGGER</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="n">StartAndDestroyBean</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+    <span class="nd">@PostConstruct</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">(){</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&quot;init-method start&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="nd">@PreDestroy</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">destroy</span><span class="o">(){</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&quot;destroy-method start&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3>4.5 BeanPostProcessor</h3>
+<p>BeanPostProcessor接口则可以提供全局的、定制多个bean的初始化过程。BeanPostProcessor接口有两个方法：<code>postProcessBeforeInitialization()</code>方法在bean的属性值设置之前执行；<code>postProcessAfterInitialization()</code>方法在bean的属性值设置之后执行。</p>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">AbstractFdxProcessor</span> <span class="kd">implements</span> <span class="n">FdxProcessor</span><span class="o">,</span> <span class="n">BeanPostProcessor</span> <span class="o">{</span>
+
+    <span class="c1">//实现 BeanNameAware 接口，为了获得每个processor 在 Spring context 中的 beanName</span>
+    <span class="c1">//实现 InitializingBean 接口(Spring 提供的一些生命周期接口中的一个),在 Spring 完成该Bean初始化之后，将 beanName 注册到注册中心去</span>
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">FdxProcessorRegistry</span> <span class="n">fdxProcessorRegistry</span><span class="o">;</span>
+
+    <span class="kd">protected</span> <span class="n">String</span> <span class="n">beanName</span><span class="o">;</span>
+
+    <span class="kd">protected</span> <span class="kd">abstract</span> <span class="n">FdxProcessorRegistry</span><span class="o">.</span><span class="na">FdxKeyPair</span> <span class="nf">getKeyPair</span><span class="o">();</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">postProcessAfterInitialization</span><span class="o">(</span><span class="n">Object</span> <span class="n">bean</span><span class="o">,</span> <span class="n">String</span> <span class="n">beanName</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">BeansException</span> <span class="o">{</span>
+        <span class="n">FdxCategory</span> <span class="n">fdxCategory</span> <span class="o">=</span> <span class="n">bean</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getAnnotation</span><span class="o">(</span><span class="n">FdxCategory</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="c1">//通过 fdxCategory 拿到 category, 作为 key 和 beanName 一起进入注册中心完成注册</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">postProcessBeforeInitialization</span><span class="o">(</span><span class="n">Object</span> <span class="n">bean</span><span class="o">,</span> <span class="n">String</span> <span class="n">beanName</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">BeansException</span><span class="o">{</span>
+        <span class="k">return</span> <span class="n">bean</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>可以过滤出固定的bean做一些处理</p>
+<h3>4.6 DisposableBean</h3>
+<p>实现该对象，需要重写销毁方法</p>
+<div class="highlight"><pre><span></span><span class="nd">@Service</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SpringBootTest</span> <span class="kd">implements</span> <span class="n">DisposableBean</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kd">static</span> <span class="n">Logger</span> <span class="n">LOGGER</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="n">SpringBootTest</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">destroy</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;destroy-method&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>该方法会在自定义销毁方法前调用</p>
+<h1>Reference</h1>
+<p><a href="https://link.jianshu.com/?t=http://www.javabeat.net/life-cycle-management-of-a-spring-bean/">Life Cycle Management of a Spring Bean</a></p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "spring/spring-bean-lifecycle.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns" style="font-size: 80%">
+
+
+    <nav class="widget">
+        <h4>个人链接</h4>
+        <ul class="blank">
+            <li><a href="https://stackoverflow.com/users/7444060/nicky-chen">StackOverFlow</a></li>
+            <li><a href="https://github.com/nicky-chen">个人GitHub</a></li>
+            <li><a href="https://www.jianshu.com/u/c44ed4847c3d">简书博客</a></li>
+        </ul>
+    </nav>
+
+<h4>专题分类</h4>
+
+ <ul>
+     <!---->
+     <!---->
+     <!---->
+     <!--<li><a href="/yue-du-shu-dan.html">阅读书单</a></li>-->
+     <!---->
+     <!--<li><a href="/zai-xian-gong-ju.html">在线工具</a></li>-->
+     <!---->
+     <!--<li><a href="/kai-yuan-xiang-mu.html">开源项目</a></li>-->
+     <!---->
+     <!--<li><a href="/ji-zhu-tu-pu.html">技术图谱</a></li>-->
+     <!---->
+     <!--<li><a href="/guan-yu-wo.html">关于我</a></li>-->
+     <!---->
+     <!--<li class="divider-vertical"></li>-->
+     <!---->
+
+     <li >
+         <a href="/algorithm/index.html">
+             Algorithm
+         </a>
+     </li>
+     <li >
+         <a href="/cache/index.html">
+             cache
+         </a>
+     </li>
+     <li >
+         <a href="/classloader/index.html">
+             Classloader
+         </a>
+     </li>
+     <li >
+         <a href="/concurrent/index.html">
+             concurrent
+         </a>
+     </li>
+     <li >
+         <a href="/design-pattern/index.html">
+             design-pattern
+         </a>
+     </li>
+     <li >
+         <a href="/distrubuted/index.html">
+             distrubuted
+         </a>
+     </li>
+     <li >
+         <a href="/java-base/index.html">
+             java-base
+         </a>
+     </li>
+     <li >
+         <a href="/mysql/index.html">
+             MySql
+         </a>
+     </li>
+     <li >
+         <a href="/security/index.html">
+             Security
+         </a>
+     </li>
+     <li >
+         <a href="/source-code/index.html">
+             Source-code
+         </a>
+     </li>
+     <li class="active" >
+         <a href="/spring/index.html">
+             spring
+         </a>
+     </li>
+  </ul>
+
+<!---->
+<!--<h4>Categories</h4>-->
+<!--<ul class="blank">-->
+	<!---->
+		<!--<li><a href="/algorithm/index.html">Algorithm</a></li>-->
+	<!---->
+		<!--<li><a href="/cache/index.html">cache</a></li>-->
+	<!---->
+		<!--<li><a href="/classloader/index.html">Classloader</a></li>-->
+	<!---->
+		<!--<li><a href="/concurrent/index.html">concurrent</a></li>-->
+	<!---->
+		<!--<li><a href="/design-pattern/index.html">design-pattern</a></li>-->
+	<!---->
+		<!--<li><a href="/distrubuted/index.html">distrubuted</a></li>-->
+	<!---->
+		<!--<li><a href="/java-base/index.html">java-base</a></li>-->
+	<!---->
+		<!--<li><a href="/mysql/index.html">MySql</a></li>-->
+	<!---->
+		<!--<li><a href="/security/index.html">Security</a></li>-->
+	<!---->
+		<!--<li><a href="/source-code/index.html">Source-code</a></li>-->
+	<!---->
+		<!--<li><a href="/spring/index.html">spring</a></li>-->
+	<!---->
+<!--</ul>-->
+<!---->
+
+
+<h4>标签</h4>
+	<ul class="blank">
+	    <li class="danger label" ><a href="/tag/li-lun.html">理论</a></li>
+	    <li class="danger label" ><a href="/tag/chuang-jian-xing.html">创建型</a></li>
+	    <li class="danger label" ><a href="/tag/duo-xian-cheng.html">多线程</a></li>
+	    <li class="danger label" ><a href="/tag/ku-ji-you-hua.html">库级优化</a></li>
+	    <li class="danger label" ><a href="/tag/shu-ju-jie-gou.html">数据结构</a></li>
+	    <li class="danger label" ><a href="/tag/redis.html">redis</a></li>
+	    <li class="danger label" ><a href="/tag/xing-wei-xing.html">行为型</a></li>
+	    <li class="danger label" ><a href="/tag/suo-you-hua.html">锁优化</a></li>
+	    <li class="danger label" ><a href="/tag/yuan-ma.html">源码</a></li>
+	    <li class="danger label" ><a href="/tag/si-wei-dao-tu.html">思维导图</a></li>
+	    <li class="danger label" ><a href="/tag/kuang-jia-ji-chu.html">框架基础</a></li>
+	    <li class="danger label" ><a href="/tag/ji-chu.html">基础</a></li>
+	    <li class="danger label" ><a href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a></li>
+	    <li class="danger label" ><a href="/tag/spring-base.html">spring-base</a></li>
+	    <li class="danger label" ><a href="/tag/junit.html">junit</a></li>
+	    <li class="danger label" ><a href="/tag/jie-gou-xing.html">结构型</a></li>
+</ul>
+
+
+
+<!---->
+<!--<nav class="widget">-->
+  <!--<h4>Social</h4>-->
+  <!--<ul class="blank">-->
+  <!---->
+    <!--<li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>-->
+  <!---->
+    <!--<li><a href="http://www.spring4all.com/">Spring中文社区</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/alibaba">alibaba开源项目</a></li>-->
+  <!---->
+    <!--<li><a href="https://github.com/google">google开源项目</a></li>-->
+  <!---->
+  <!--</ul>-->
+<!--</nav>-->
+<!---->
+
+
+</div> </div><!-- /.row -->
+  <div class="pagination">★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆★✪☆
+      <ul>
+        <li class="prev"><a href="/concurrent/aqs-condition.html">Next →</a></li>
+        <li><a href="/archives.html">博客导航</a></li>
+        <li class="next"><a href="/spring/spring-bean-IOC.html">← Previous</a></li>
+      </ul>
+    </div>
+
+    <h4>相关文章推荐</h4>
+    <ul>
+        <li><a href="/spring/spring-bean-IOC.html">Spring之动手实现IOC功能</a></li>
+    </ul>
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+
+
+                   <address id="about" class="vcard body">
+                       <br>
+                       <nav class="widget">
+                           <h4>推荐博客</h4>
+                           <ul class="blank">
+                               <li><a href="http://jm.taobao.org/">阿里中间件团队博客</a></li>
+                               <li><a href="http://www.spring4all.com/">Spring中文社区</a></li>
+                               <li><a href="https://github.com/alibaba">alibaba开源项目</a></li>
+                               <li><a href="https://github.com/google">google开源项目</a></li>
+                           </ul>
+                       </nav>
+                       <br/>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-119892182-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<script type="text/javascript">
+    var disqus_shortname = 'nicky-chen';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+  <script src="/theme/js/toc.js" type="text/javascript"></script>
+    <script>
+        (function () {
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+</body>
+</html>

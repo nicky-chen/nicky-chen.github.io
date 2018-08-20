@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"><channel><title>南乡清水 - spring</title><link>/</link><description></description><lastBuildDate>Thu, 16 Aug 2018 20:31:00 +0800</lastBuildDate><item><title>Spring之动手实现IOC功能</title><link>/spring/spring-bean-IOC.html</link><description>&lt;h1&gt;1 背景&lt;/h1&gt;
+&lt;p&gt;我们经常在使用Spring生态中的组件，我们在潜移默化的DI和IOC的思想下，来创建和使用Bean对象，使用过 &lt;em&gt;@Component @ComponentScan @Autowired @Bean @Configuration&lt;/em&gt; 等等的注解，所以了解Spring容器是如何创建和管理Bean,是我们必需掌握的技能。
+下面我们通过手写DI和IOC的方式来加深对Spring的理解。&lt;/p&gt;
+&lt;h1&gt;2 依赖注入&lt;/h1&gt;
+&lt;p&gt;DI，&lt;strong&gt;Dependency Injection&lt;/strong&gt;，即依赖注入。具体含义表示组件之间的依赖关系由容器在应用系统运行期来决定，也就是由容器动态地将某种依赖关系的目标对象实例注入到应用系统中的各个关联的组件之中。对象只提供普通的方法让容器去决定依赖关系。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Spring中创建Bean的方式有三种：&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;通过XML显式配置
+通过Java显式配置 (利用 @Configuration @Bean)
+隐式进行bean搜索并自动装配 （利用基于@Component 元注解的方式）&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;通过上面叙述我们知道，创建bean其实大致可以分为两种，一种是基于XML,另一种是基于注解的方式。&lt;/p&gt;
+&lt;h4&gt;2.1 XML方式&lt;/h4&gt;
+&lt;p&gt;user.xml&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;?&lt;/span&gt;&lt;span class="n"&gt;xml&lt;/span&gt; &lt;span class="n"&gt;version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;1.0&amp;quot;&lt;/span&gt; &lt;span class="n"&gt;encoding&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;UTF-8&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;?&amp;gt;&lt;/span&gt;
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;beans …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Thu, 16 Aug 2018 20:31:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-08-16:/spring/spring-bean-IOC.html</guid><category>spring-base</category></item><item><title>Spring之Bean加载-解析-生命周期</title><link>/spring/spring-bean-lifecycle.html</link><description>&lt;h1&gt;1 概要&lt;/h1&gt;
+&lt;p&gt;使用Spring框架，我们需要了解Bean的创建加载过程，需要熟悉Bean是如何获取和使用的。
+下面我们通过分析下Spring加载XML文件的过程来分析Bean的数据流。
+当前调试的Spring 版本是最新的  &lt;em&gt;4.1.0 release&lt;/em&gt;  版本&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;调试代码主入口&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt; &lt;span class="n"&gt;ApplicationContext&lt;/span&gt; &lt;span class="n"&gt;context&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;ClassPathXmlApplicationContext&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;consumer.xml&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Consumer Started&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;ConsumerBean&lt;/span&gt; &lt;span class="n"&gt;bean&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getBean&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ConsumerBean&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;secretKey&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bean&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getProperties&lt;/span&gt;&lt;span class="o"&gt;().&lt;/span&gt;&lt;span class="na"&gt;getProperty&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;SecretKey&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;secretKey&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;2 解析过程&lt;/h1&gt;
+&lt;p&gt;创建 &lt;strong&gt;ClassPathXmlApplicationContext&lt;/strong&gt;对象，会调用&lt;code&gt;refresh()&lt;/code&gt;方法&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;public …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Sun, 12 Aug 2018 19:31:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-08-12:/spring/spring-bean-lifecycle.html</guid><category>spring-base</category></item></channel></rss>
