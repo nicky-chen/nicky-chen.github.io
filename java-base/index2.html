@@ -66,6 +66,47 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/string-builder-question.html" rel="bookmark" title="Permalink to 字符串拼接的疑惑">字符串拼接的疑惑</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-04-21T15:34:00+08:00"> 周六 21 四月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>最近没事在玩ASM框架，于是乎想将业务代码中的PO对象中的toString方法 在编译期间，自动转换了基于StringBuilder 拼接的代码。发现了一个奇怪的问题：
+实体类如下</p>
+<div class="highlight"><pre><span></span>@Getter
+@Setter
+@EqualsAndHashCode(of = &quot;id&quot;)
+@ApiModel(&quot;活动&quot;)
+public class Banner implements Serializable{
+
+    private static final long serialVersionUID = 191609922585601269L;
+
+    @ApiModelProperty(value = &quot;ID&quot;, position = 1)
+    private Integer id;
+
+    @ApiModelProperty(value = &quot;显示次序&quot;, position = 2)
+    private Integer orderNo;
+
+    @ApiModelProperty(value = &quot;关联文件&quot;, position = 3)
+    private Integer fileId;
+
+    @ApiModelProperty …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/string-builder-question.html" rel="bookmark" title="Permalink to 字符串拼接的疑惑">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/java-base/exception-introduce.html" rel="bookmark" title="Permalink to Java异常处理-原理及优化建议">Java异常处理-原理及优化建议</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-04-17T19:00:00+08:00"> 周二 17 四月 2018 </abbr>

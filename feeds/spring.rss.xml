@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>南乡清水 - spring</title><link>/</link><description></description><lastBuildDate>Thu, 16 Aug 2018 20:31:00 +0800</lastBuildDate><item><title>Spring之动手实现IOC功能</title><link>/spring/spring-bean-IOC.html</link><description>&lt;h1&gt;1 背景&lt;/h1&gt;
+<rss version="2.0"><channel><title>南乡清水 - spring</title><link>/</link><description></description><lastBuildDate>Sat, 25 Aug 2018 20:31:00 +0800</lastBuildDate><item><title>Spring之动手实现SpringMVC功能</title><link>/spring/spring-springMvc.html</link><description>&lt;h1&gt;1 简介&lt;/h1&gt;
+&lt;p&gt;SpringMVC大家应该耳熟能详，只要是做Java网站开发的小伙伴，都会使用的框架。SpringMVC以 &lt;em&gt;DispatcherServlet&lt;/em&gt; 为核心，负责协调和组织不同组件以完成请求处理并返回响应的工作，实现了MVC模式。接下来我们从 该框架的流程 来整理设计思路，最后自己实现一个mvc框架.&lt;/p&gt;
+&lt;h1&gt;2 SpringMVC运行流程&lt;/h1&gt;
+&lt;p&gt;springmvc的流程如下：&lt;/p&gt;
+&lt;p&gt;&lt;img alt="流程图" src="https://upload-images.jianshu.io/upload_images/10175660-d0954b5dd4f6d7ba.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;API说明&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;DispatcherServlet&lt;/em&gt;：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Spring提供的前端控制器，所有的请求都有经过它来统一分发。在DispatcherServlet将请求分发给Controller之前，需要借助于Spring提供的HandlerMapping定位到具体的Controller。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;em&gt;HandlerMapping&lt;/em&gt; ：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;完成客户请求到Controller映射，包括拦截器部分内容&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;em&gt;Controller&lt;/em&gt; ：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Controller将处理用户请求，调用业务层接口分析，并返回ModelAndView对象给DispatcherServlet前端控制器，ModelAndView中包含了模型（Model）和视图（View）&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;em&gt;ViewResolver&lt;/em&gt; ：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Spring提供的视图解析器（ViewResolver）在Web应用中查找View对象，会根据当前的视图渲染引擎（JSP FreeMarker Thymeleaf）来渲染视图，返回给前端&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;流程概述&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;1 用户发送请求至前端控制器DispatcherServlet&lt;/li&gt;
+&lt;li&gt;2 DispatcherServlet收到请求调用HandlerMapping处理器映射器&lt;/li&gt;
+&lt;li&gt;3 …&lt;/li&gt;&lt;/ul&gt;&lt;/blockquote&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Sat, 25 Aug 2018 20:31:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-08-25:/spring/spring-springMvc.html</guid><category>spring-base</category></item><item><title>Spring之动手实现IOC功能</title><link>/spring/spring-bean-IOC.html</link><description>&lt;h1&gt;1 背景&lt;/h1&gt;
 &lt;p&gt;我们经常在使用Spring生态中的组件，我们在潜移默化的DI和IOC的思想下，来创建和使用Bean对象，使用过 &lt;em&gt;@Component @ComponentScan @Autowired @Bean @Configuration&lt;/em&gt; 等等的注解，所以了解Spring容器是如何创建和管理Bean,是我们必需掌握的技能。
 下面我们通过手写DI和IOC的方式来加深对Spring的理解。&lt;/p&gt;
 &lt;h1&gt;2 依赖注入&lt;/h1&gt;

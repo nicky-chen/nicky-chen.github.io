@@ -65,6 +65,80 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/distrubuted/id-redis.html" rel="bookmark" title="Permalink to 分布式全局序列ID方案之Redis优化方案">分布式全局序列ID方案之Redis优化方案</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-06-24T15:28:00+08:00"> 周日 24 六月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 Redis的Flicker方案</h1>
+<p>利用redis的lua脚本功能，在每个节点上通过lua脚本生成唯一ID，生成的ID为64位，具体如下：</p>
+<p>使用41 bit来存放时间，精确到毫秒，可以使用到2039年
+使用12 bit来存放逻辑分片ID，最大分片ID是4095
+使用10 bit来存放自增长ID，则每个节点，每毫秒最多可生成1024个ID
+比如GTM时间 2018年6月24日11点23分 ，它的距1970年的毫秒数是 1529810591000，假定分片ID是60，自增长序列是20，则生成的ID是：</p>
+<div class="highlight"><pre><span></span>6416490681073670164 = 1529810591000 &lt;&lt; 22 | 60 &lt;&lt; 10 | 20
+redis提供了TIME命令，取得redis服务器的秒值和微秒值
+毫秒值获取命令：EVAL &quot;local current = redis.call(&#39;TIME&#39;) ;return a[1]*1000 + a[2]/1000&quot; 0
+生成最终ID : current &lt;&lt; (12 …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/distrubuted/id-redis.html" rel="bookmark" title="Permalink to 分布式全局序列ID方案之Redis优化方案">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/distrubuted/id-flicker.html" rel="bookmark" title="Permalink to 分布式全局序列ID方案之Flicker优化方案">分布式全局序列ID方案之Flicker优化方案</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-06-20T22:28:00+08:00"> 周三 20 六月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 Flicker的解决方案</h1>
+<p>MySQL中id自增的特性，可以借此来生成全局的序列号，Flicker在解决全局ID生成方案里就采用了MySQL自增长ID的机制（auto_increment + replace into + MyISAM）。一个生成64位ID方案具体就是这样的： 
+先创建单独的数据库，然后创建一个表：</p>
+<div class="highlight"><pre><span></span>CREATE TABLE borrow_order (
+id bigint(20) unsigned NOT NULL auto_increment,
+stub char(1) NOT NULL default &#39;&#39;,
+PRIMARY KEY (id),
+UNIQUE KEY stub (stub)
+) ENGINE=MyISAM
+</pre></div>
+
+
+<p>当我们插入记录后，执行SELECT * from borrow_order ，查询结果就是这样的：</p>
+<div class="highlight"><pre><span></span>+-------------------+------+
+| id | stub |
++-------------------+------+
+| 1 | 192.168.100.102      |
++-------------------+------+
+</pre></div>
+
+
+<p>在我们的应用端需要做下面这两个操作 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/distrubuted/id-flicker.html" rel="bookmark" title="Permalink to 分布式全局序列ID方案之Flicker优化方案">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/fen-bu-shi-idfang-an.html">分布式ID方案</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/distrubuted/id-snowflake.html" rel="bookmark" title="Permalink to 分布式全局序列ID方案之Snowflake算法">分布式全局序列ID方案之Snowflake算法</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-06-17T22:53:00+08:00"> 周日 17 六月 2018 </abbr>
@@ -174,91 +248,6 @@
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
                                             <a class="danger label" href="/tag/chuang-jian-xing.html">创建型</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/java-base/fail-fast-safe.html" rel="bookmark" title="Permalink to Fail-Fast和Fail-Safe机制">Fail-Fast和Fail-Safe机制</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-06-02T19:01:00+08:00"> 周六 02 六月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1 Fail-Fast</h1>
-<h3>1.1 fail-fast定义</h3>
-<p>fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件
-例如：当某一个线程A通过iterator去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出ConcurrentModificationException异常，产生fail-fast事件</p>
-<h3>1.2 Iterator与fast-fail机制</h3>
-<p><strong>1.2.1 Iterator的好处</strong>
-java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。
-比如下面的 <em>ArrayList</em> 和  <em>ImmutableList</em> 遍历的例子：</p>
-<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IteratorTest</span> <span class="o">{</span>
-
-    <span class="kd">public</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="n">Lists</span><span class="o">.</span><span class="na">newArrayList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">11</span><span class="o">,</span> <span class="mi">18</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="mi">20</span><span class="o">,</span> <span class="mi">99</span><span class="o">);</span>
-
-    <span class="kd">public …</span></pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/java-base/fail-fast-safe.html" rel="bookmark" title="Permalink to Fail-Fast和Fail-Safe机制">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/design-pattern/adapter.html" rel="bookmark" title="Permalink to 实际项目运用之Adapter模式（适配器模式）">实际项目运用之Adapter模式（适配器模式）</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-05-27T23:15:00+08:00"> 周日 27 五月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1. 模式简介</h1>
-<p>适配器模式解决的问题：让原本因为接口不兼容而不能一起工作的类可以一起工作</p>
-<p>适配器模式中有三种角色：</p>
-<ul>
-<li>目标接口Target：用户期望的类，可以是接口，也可以是抽象类或具体类；</li>
-<li>需要适配的类Adaptee：当前系统中有的类；</li>
-<li>适配器Adapter：在现有接口和目标接口之间的“适配者”</li>
-</ul>
-<p>适配器模式的优点：</p>
-<blockquote>
-<p>通过适配器模式，用户在做相似的操作时可以调用同一个接口，其内部过程对于用户是透明的，这样做更简单、更直接、更解耦；
-复用了现存的类，解决了现存类和复用环境要求不一致的问题；
-将目标接口和现有接口解耦，通过引入一个适配器类，而无需修改原有的代码。</p>
-</blockquote>
-<p>适配器模式的缺点：</p>
-<blockquote>
-<p>使用适配器模式后，如果想要改变适配对象，就需要更换适配器，而更换适配器是一个非常复杂的过程。</p>
-</blockquote>
-<p>适配器模式的适用场景：</p>
-<blockquote>
-<p>当系统需要使用现有的类，而现有的类不符合系统的接口
- 当期望的功能和系统中现有的某个类的功能相似，但是具有不同的接口
-当系统已经实现某功能，但用户想通过另种接口方式访问，而不想修改原有接口
-当使用的第三方组件的接口和系统中定义好的接口不同，不希望修改系统接口</p>
-</blockquote>
-<h1>2.案例代码</h1>
-<p>适配器分类_适配器模式_和_对象适配器模式_</p>
-<p><strong>2.1 类适配器UML</strong></p>
-<p><img alt="类适配器类图" src="https://upload-images.jianshu.io/upload_images/10175660-d80f54d37ebaa675.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p><strong>2.2 对象适配器模式UML …</strong></p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/design-pattern/adapter.html" rel="bookmark" title="Permalink to 实际项目运用之Adapter模式（适配器模式）">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/jie-gou-xing.html">结构型</a>
                                 </div>
 
 

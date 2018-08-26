@@ -65,6 +65,76 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/concurrent/synchronized-principle.html" rel="bookmark" title="Permalink to synchronized实现原理及锁优化">synchronized实现原理及锁优化</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-14T19:16:00+08:00"> 周一 14 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1.引言</h1>
+<p>并发编程中synchronized是重量级锁，但随着JVM1.6对synchronized进行优化后，有些情况下它并不那么重，本文介绍了Java SE1.6中为了减少获得锁和释放锁带来的性能消耗而引入的偏向锁和轻量级锁，以及锁的存储结构和升级过程。</p>
+<h1>2.术语定义</h1>
+<p><strong>CAS(Compare and Swap):</strong>  比较并交换。用于在硬件层面上提供原子性操作。在 Intel 处理器中，比较并交换通过指令cmpxchg实现。比较是否和给定的数值一致，如果一致则修改，不一致则不修改。</p>
+<h1>3.同步的基础</h1>
+<p>Java中的每一个对象都可以作为锁。
+对于同步方法，锁是当前实例对象。
+对于静态同步方法，锁是当前对象的Class对象。
+对于同步方法块，锁是synchonized括号里配置的对象。</p>
+<p>我们通过java代码和字节码分析下
+java代码如下：</p>
+<div class="highlight"><pre><span></span>public class SyncTest {
+
+    private static double a = 1;
+
+    public synchronized void plusNumber() {
+        a++;
+    }
+
+    public …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/concurrent/synchronized-principle.html" rel="bookmark" title="Permalink to synchronized实现原理及锁优化">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/suo-you-hua.html">锁优化</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/concurrent/juc-tree-info.html" rel="bookmark" title="Permalink to JUC知识点总结">JUC知识点总结</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-13T20:16:00+08:00"> 周日 13 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>作为并发的基础，我们需要熟悉掌握JUC相关的知识，才能更好的在实际项目中运用，
+下面是整理出来的juc思维导图：</p>
+<p><img alt="JUC知识点总结.png" src="https://upload-images.jianshu.io/upload_images/10175660-4bceb180f4aacafe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h1>系列文章</h1>
+<p><a href="https://www.jianshu.com/p/6ac7207d81d3">java内存模型之[JMM][重排序][happens-before]</a>
+<a href="https://www.jianshu.com/p/53da4e746657">volatile关键字原理实现及应用</a>
+<a href="https://www.jianshu.com/p/1ea87c152413">synchronized实现原理及锁优化</a>
+=============不定期更新============================</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/concurrent/juc-tree-info.html" rel="bookmark" title="Permalink to JUC知识点总结">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/si-wei-dao-tu.html">思维导图</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/mysql/SHOW-GLOBAL-STATUS.html" rel="bookmark" title="Permalink to 库级优化之SHOW GLOBAL STATUS">库级优化之SHOW GLOBAL STATUS</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-05-10T18:11:00+08:00"> 周四 10 五月 2018 </abbr>
@@ -174,92 +244,6 @@ set GLOBAL sort_buffer_size = 720000
 <p>但是具体地址到底要不要拆分 还要看具体情形，比如看看将来会不会按国家或者省市进行分类汇总或者排序，如果需要，最好就拆，如果不需要而仅仅起字符串的作用，可以不拆 …</p> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/mysql/design-rule.html" rel="bookmark" title="Permalink to 数据库设计三范式和反范式">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/design-pattern/strategy.html" rel="bookmark" title="Permalink to 实际项目运用之Strategy模式（策略模式）">实际项目运用之Strategy模式（策略模式）</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-05-06T17:20:00+08:00"> 周日 06 五月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1. 策略模式概要</h1>
-<p>策略模式是对算法的包装，是把使用算法的责任和算法本身分割开来，委派给不同的对象管理。策略模式通常把一个系列的算法包装到一系列的策略类里面，作为一个抽象策略类的子类。用一句话来说，就是：“准备一组算法，并将每一个算法封装起来，使得它们可以互换”。
-下面就以一个示意性的实现讲解策略模式实例的结构。
-<img alt="策略模式" src="https://upload-images.jianshu.io/upload_images/10175660-2d9b5e02ce921d8e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p>这个模式涉及到三个角色：</p>
-<p>● <strong>环境(Context)角色：</strong>持有一个Strategy的引用。</p>
-<p>● <strong>抽象策略(Strategy)角色：</strong>这是一个抽象角色，通常由一个接口或抽象类实现。此角色给出所有的具体策略类所需的接口。</p>
-<p>● <strong>具体策略(ConcreteStrategy)角色：</strong>包装了相关的算法或行为。</p>
-<h3>1.1 案例代码</h3>
-<p>策略模式上下文</p>
-<div class="highlight"><pre><span></span>public class Context {
-    //持有一个具体策略的对象
-    private Strategy strategy;
-    /**
-     * 构造函数，传入一个具体策略对象
-     * @param strategy    具体策略对象
-     */
-    public Context(Strategy strategy){
-        this.strategy …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/design-pattern/strategy.html" rel="bookmark" title="Permalink to 实际项目运用之Strategy模式（策略模式）">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/xing-wei-xing.html">行为型</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/concurrent/volatile-feature.html" rel="bookmark" title="Permalink to volatile关键字原理实现及应用">volatile关键字原理实现及应用</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-05-04T22:46:00+08:00"> 周五 04 五月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1.并发编程中的三个概念</h1>
-<p>在并发编程中, 需要了解线程的三个概念：原子性，可见性，有序性：</p>
-<p><strong>1.1.原子性</strong></p>
-<blockquote>
-<p>原子性：即一个操作或者多个操作 要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。</p>
-</blockquote>
-<p>一个很经典的例子就是银行账户转账问题：</p>
-<div class="highlight"><pre><span></span>比如从账户A向账户B转1000元，那么必然包括2个操作：从账户A减去1000元，往账户B加上1000元。
-
-试想一下，如果这2个操作不具备原子性，会造成什么样的后果。假如从账户A减去1000元之后，操作突然中止。然后又从B取出了500元，取出500元之后，
-再执行 往账户B加上1000元 的操作。这样就会导致账户A虽然减去了1000元，但是账户B没有收到这个转过来的1000元。
-
-所以这2个操作必须要具备原子性才能保证不出现一些意外的问题。
-</pre></div>
-
-
-<p>同样地反映到并发编程中会出现什么结果呢？</p>
-<p>举个最简单的例子，大家想一下假如为一个32位的变量赋值过程不具备原子性的话，会发生什么后果？</p>
-<div class="highlight"><pre><span></span>i = 9;
-</pre></div>
-
-
-<p>假若一个线程执行到这个语句时，我暂且假设为一个32位的变量赋值包括两个过程：为低16位赋值，为高16位赋值。
-那么就可能发生一种情况：当将低16位数值写入之后，突然被中断，而此时又有一个线程去读取i的值，那么读取到的就是错误的数据。</p>
-<p><strong>1.2.可见性 …</strong></p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/concurrent/volatile-feature.html" rel="bookmark" title="Permalink to volatile关键字原理实现及应用">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 

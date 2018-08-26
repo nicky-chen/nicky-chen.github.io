@@ -65,6 +65,92 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/design-pattern/strategy.html" rel="bookmark" title="Permalink to 实际项目运用之Strategy模式（策略模式）">实际项目运用之Strategy模式（策略模式）</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-06T17:20:00+08:00"> 周日 06 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1. 策略模式概要</h1>
+<p>策略模式是对算法的包装，是把使用算法的责任和算法本身分割开来，委派给不同的对象管理。策略模式通常把一个系列的算法包装到一系列的策略类里面，作为一个抽象策略类的子类。用一句话来说，就是：“准备一组算法，并将每一个算法封装起来，使得它们可以互换”。
+下面就以一个示意性的实现讲解策略模式实例的结构。
+<img alt="策略模式" src="https://upload-images.jianshu.io/upload_images/10175660-2d9b5e02ce921d8e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>这个模式涉及到三个角色：</p>
+<p>● <strong>环境(Context)角色：</strong>持有一个Strategy的引用。</p>
+<p>● <strong>抽象策略(Strategy)角色：</strong>这是一个抽象角色，通常由一个接口或抽象类实现。此角色给出所有的具体策略类所需的接口。</p>
+<p>● <strong>具体策略(ConcreteStrategy)角色：</strong>包装了相关的算法或行为。</p>
+<h3>1.1 案例代码</h3>
+<p>策略模式上下文</p>
+<div class="highlight"><pre><span></span>public class Context {
+    //持有一个具体策略的对象
+    private Strategy strategy;
+    /**
+     * 构造函数，传入一个具体策略对象
+     * @param strategy    具体策略对象
+     */
+    public Context(Strategy strategy){
+        this.strategy …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/design-pattern/strategy.html" rel="bookmark" title="Permalink to 实际项目运用之Strategy模式（策略模式）">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/xing-wei-xing.html">行为型</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/concurrent/volatile-feature.html" rel="bookmark" title="Permalink to volatile关键字原理实现及应用">volatile关键字原理实现及应用</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-05-04T22:46:00+08:00"> 周五 04 五月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1.并发编程中的三个概念</h1>
+<p>在并发编程中, 需要了解线程的三个概念：原子性，可见性，有序性：</p>
+<p><strong>1.1.原子性</strong></p>
+<blockquote>
+<p>原子性：即一个操作或者多个操作 要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。</p>
+</blockquote>
+<p>一个很经典的例子就是银行账户转账问题：</p>
+<div class="highlight"><pre><span></span>比如从账户A向账户B转1000元，那么必然包括2个操作：从账户A减去1000元，往账户B加上1000元。
+
+试想一下，如果这2个操作不具备原子性，会造成什么样的后果。假如从账户A减去1000元之后，操作突然中止。然后又从B取出了500元，取出500元之后，
+再执行 往账户B加上1000元 的操作。这样就会导致账户A虽然减去了1000元，但是账户B没有收到这个转过来的1000元。
+
+所以这2个操作必须要具备原子性才能保证不出现一些意外的问题。
+</pre></div>
+
+
+<p>同样地反映到并发编程中会出现什么结果呢？</p>
+<p>举个最简单的例子，大家想一下假如为一个32位的变量赋值过程不具备原子性的话，会发生什么后果？</p>
+<div class="highlight"><pre><span></span>i = 9;
+</pre></div>
+
+
+<p>假若一个线程执行到这个语句时，我暂且假设为一个32位的变量赋值包括两个过程：为低16位赋值，为高16位赋值。
+那么就可能发生一种情况：当将低16位数值写入之后，突然被中断，而此时又有一个线程去读取i的值，那么读取到的就是错误的数据。</p>
+<p><strong>1.2.可见性 …</strong></p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/concurrent/volatile-feature.html" rel="bookmark" title="Permalink to volatile关键字原理实现及应用">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/mysql/high-event.html" rel="bookmark" title="Permalink to MYSQL高级特性之【Event事件】">MYSQL高级特性之【Event事件】</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-04-28T20:18:00+08:00"> 周六 28 四月 2018 </abbr>
@@ -161,75 +247,6 @@
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
                                             <a class="danger label" href="/tag/li-lun.html">理论</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/java-base/string-builder-question.html" rel="bookmark" title="Permalink to 字符串拼接的疑惑">字符串拼接的疑惑</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-04-21T15:34:00+08:00"> 周六 21 四月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>最近没事在玩ASM框架，于是乎想将业务代码中的PO对象中的toString方法 在编译期间，自动转换了基于StringBuilder 拼接的代码。发现了一个奇怪的问题：
-实体类如下</p>
-<div class="highlight"><pre><span></span>@Getter
-@Setter
-@EqualsAndHashCode(of = &quot;id&quot;)
-@ApiModel(&quot;活动&quot;)
-public class Banner implements Serializable{
-
-    private static final long serialVersionUID = 191609922585601269L;
-
-    @ApiModelProperty(value = &quot;ID&quot;, position = 1)
-    private Integer id;
-
-    @ApiModelProperty(value = &quot;显示次序&quot;, position = 2)
-    private Integer orderNo;
-
-    @ApiModelProperty(value = &quot;关联文件&quot;, position = 3)
-    private Integer fileId;
-
-    @ApiModelProperty …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/java-base/string-builder-question.html" rel="bookmark" title="Permalink to 字符串拼接的疑惑">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/java-base/exception-introduce.html" rel="bookmark" title="Permalink to Java异常处理-原理及优化建议">Java异常处理-原理及优化建议</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-04-17T19:00:00+08:00"> 周二 17 四月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1 异常层次结构</h1>
-<p>异常指不期而至的各种状况，如：文件找不到、网络连接失败、非法参数等。异常是一个事件，它发生在程序运行期间，干扰了正常的指令流程。Java通 过API中Throwable类的众多子类描述各种不同的异常。因而，Java异常都是对象，是Throwable子类的实例，描述了出现在一段编码中的 错误条件。当条件生成时，错误将引发异常。
-      Java异常类层次结构图：
-<img alt="Java异常类层次结构图" src="https://upload-images.jianshu.io/upload_images/10175660-248cd3eb6352bfb8.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p>在 Java 中，所有的异常都有一个共同的祖先 Throwable（可抛出）。Throwable 指定代码中可用异常传播机制通过 Java 应用程序传输的任何问题的共性。
-       <strong>Throwable</strong>： 有两个重要的子类：<em>Exception（异常）和 Error（错误）</em>，二者都是 Java 异常处理的重要子类，各自都包含大量子类。
-       <strong>Error</strong>（错误）:是程序无法处理的错误，表示运行应用程序中较严重问题。大多数错误与代码编写者执行的操作无关，而表示代码运行时 JVM（Java 虚拟机 …</p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/java-base/exception-introduce.html" rel="bookmark" title="Permalink to Java异常处理-原理及优化建议">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
                                 </div>
 
 

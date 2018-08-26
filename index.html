@@ -65,6 +65,91 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/spring/spring-springMvc.html" rel="bookmark" title="Permalink to Spring之动手实现SpringMVC功能">Spring之动手实现SpringMVC功能</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-08-25T20:31:00+08:00"> 周六 25 八月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 简介</h1>
+<p>SpringMVC大家应该耳熟能详，只要是做Java网站开发的小伙伴，都会使用的框架。SpringMVC以 <em>DispatcherServlet</em> 为核心，负责协调和组织不同组件以完成请求处理并返回响应的工作，实现了MVC模式。接下来我们从 该框架的流程 来整理设计思路，最后自己实现一个mvc框架.</p>
+<h1>2 SpringMVC运行流程</h1>
+<p>springmvc的流程如下：</p>
+<p><img alt="流程图" src="https://upload-images.jianshu.io/upload_images/10175660-d0954b5dd4f6d7ba.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><strong>API说明</strong></p>
+<p><em>DispatcherServlet</em>：</p>
+<blockquote>
+<p>Spring提供的前端控制器，所有的请求都有经过它来统一分发。在DispatcherServlet将请求分发给Controller之前，需要借助于Spring提供的HandlerMapping定位到具体的Controller。</p>
+</blockquote>
+<p><em>HandlerMapping</em> ：</p>
+<blockquote>
+<p>完成客户请求到Controller映射，包括拦截器部分内容</p>
+</blockquote>
+<p><em>Controller</em> ：</p>
+<blockquote>
+<p>Controller将处理用户请求，调用业务层接口分析，并返回ModelAndView对象给DispatcherServlet前端控制器，ModelAndView中包含了模型（Model）和视图（View）</p>
+</blockquote>
+<p><em>ViewResolver</em> ：</p>
+<blockquote>
+<p>Spring提供的视图解析器（ViewResolver）在Web应用中查找View对象，会根据当前的视图渲染引擎（JSP FreeMarker Thymeleaf）来渲染视图，返回给前端</p>
+</blockquote>
+<p><strong>流程概述</strong></p>
+<blockquote>
+<ul>
+<li>1 用户发送请求至前端控制器DispatcherServlet</li>
+<li>2 DispatcherServlet收到请求调用HandlerMapping处理器映射器</li>
+<li>3 …</li></ul></blockquote> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/spring/spring-springMvc.html" rel="bookmark" title="Permalink to Spring之动手实现SpringMVC功能">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/spring-base.html">spring-base</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/java-methodHandler.html" rel="bookmark" title="Permalink to Java反射优化之方法句柄">Java反射优化之方法句柄</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-08-22T21:11:00+08:00"> 周三 22 八月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 简介</h1>
+<p>java7中为间接调用方法引入了新的api，即 <strong>方法句柄</strong></p>
+<p>方法句柄中包含两个重要的类，<em>MethodHandle和MethodType</em></p>
+<p><strong>MethodHandle</strong></p>
+<p>通过句柄我们可以直接调用该句柄所引用的底层方法。从作用上来看，方法句柄类似于反射中的Method类，是对要执行的方法的一个引用，我们也是通过它来调用底层方法，它调用时有两个方法 <code>invoke和invokeExact</code>，后者要求参数类型与底层方法的参数完全匹配，前者则在有出入时做修改如包装类型。</p>
+<p><strong>MethodType</strong></p>
+<p>方法签名不可变对象，是对方法的一个映射，包含返回值和参数类型。在lookup时也是通过它来寻找的。
+每个方法句柄都有一个MethodType实例，用来指明方法的返回类型和参数类型。</p>
+<h1>2 简单使用</h1>
+<h3>2.1 demo测试</h3>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MethodHandleDemo</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Throwable</span><span class="o">{</span>
+        <span class="c1">//参数为返回值类型、参数类型  单个参数</span>
+        <span class="n">MethodType</span> <span class="n">methodType</span> <span class="o">=</span> <span class="n">MethodType</span><span class="o">.</span><span class="na">methodType</span><span class="o">(</span><span class="kt">void</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">String …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/java-methodHandler.html" rel="bookmark" title="Permalink to Java反射优化之方法句柄">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/spring/spring-bean-IOC.html" rel="bookmark" title="Permalink to Spring之动手实现IOC功能">Spring之动手实现IOC功能</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-08-16T20:31:00+08:00"> 周四 16 八月 2018 </abbr>
@@ -171,85 +256,6 @@ condition对象的属性对开发者透明</p>
             <span class="n">System …</span></pre></div> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/concurrent/aqs-condition.html" rel="bookmark" title="Permalink to 并发基础之Condition(等待队列)">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/duo-xian-cheng.html">多线程</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/cache/cache-redis-optimize.html" rel="bookmark" title="Permalink to Redis注意事项及常见优化">Redis注意事项及常见优化</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-08-07T19:01:00+08:00"> 周二 07 八月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <h1>1 键值设计</h1>
-<h4>1.1  key名设计</h4>
-<ul>
-<li>(1)【建议】: 可读性和可管理性</li>
-</ul>
-<p>以业务名(或数据库名)为前缀(防止key冲突)，用冒号分隔，比如业务名:表名:id</p>
-<div class="highlight"><pre><span></span><span class="n">roborder</span><span class="o">:</span><span class="n">user</span><span class="o">:</span><span class="mi">1</span><span class="o">:</span><span class="n">amount</span>
-</pre></div>
-
-
-<ul>
-<li>(2)【建议】：简洁性</li>
-</ul>
-<p>保证语义的前提下，控制key的长度，当key较多时，内存占用也不容忽视，例如：</p>
-<div class="highlight"><pre><span></span>user<span class="p">:{</span>uid<span class="p">}:</span><span class="l">friends:messages:</span><span class="p">{</span>mid<span class="p">}</span>
-<span class="err">简化为</span> u<span class="p">:{</span>uid<span class="p">}:</span><span class="l">fr:m:</span><span class="p">{</span>mid<span class="p">}</span><span class="err">。</span>
-</pre></div>
-
-
-<ul>
-<li>(3)【强制】：不要包含特殊字符</li>
-</ul>
-<p>反例：包含空格、换行、单双引号以及其他转义字符</p>
-<h4>1.2 value设计</h4>
-<ul>
-<li>(1 …</li></ul> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/cache/cache-redis-optimize.html" rel="bookmark" title="Permalink to Redis注意事项及常见优化">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/redis.html">redis</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/concurrent/aqs-chapter02.html" rel="bookmark" title="Permalink to 并发基础之AQS同步器（二）">并发基础之AQS同步器（二）</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2018-08-04T22:52:00+08:00"> 周六 04 八月 2018 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>在AQS同步器组件原理分析前，我们需要了解同步队列这个概念，了解同步队列中节点的入队和出队的流程，CHL同步队列的由来，可以参考我之前的文章：
-<a href="https://www.jianshu.com/p/afce44b21d77">并发基础之AQS同步器（一）</a></p>
-<h1>1 同步队列</h1>
-<p>同步器依赖内部的同步队列（一个FIFO双向队列）来完成同步状态的管理，当前线程获取同步状态失败时，同步器会将当前线程以及等待状态等信息构造成为一个节点（Node）并将其加入同步队列，同时会阻塞当前线程，当同步状态释放时，会把首节点中的线程唤醒，使其再次尝试获取同步状态</p>
-<p>FIFO队列<code>Node</code>对象的具体实现如下：</p>
-<div class="highlight"><pre><span></span><span class="kd">static</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Node</span> <span class="o">{</span>
-        <span class="kd">static</span> <span class="kd">final</span> <span class="n">Node</span> <span class="n">SHARED</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
-        <span class="kd">static</span> <span class="kd">final</span> <span class="n">Node</span> <span class="n">EXCLUSIVE</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-        <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">CANCELLED</span> <span class="o">=</span>  <span class="mi">1</span><span class="o">;</span>
-        <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">SIGNAL</span>    <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
-        <span class="kd">static</span> <span class="kd">final …</span></pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/concurrent/aqs-chapter02.html" rel="bookmark" title="Permalink to 并发基础之AQS同步器（二）">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 

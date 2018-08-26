@@ -65,6 +65,65 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/java-base/binary-operation.html" rel="bookmark" title="Permalink to java中位运算技巧">java中位运算技巧</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-03-21T22:17:00+08:00"> 周三 21 三月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>位运算符主要针对二进制，它包括了：“与”、“非”、“或”、“异或”。</p>
+<h2>运算符 含义 描述</h2>
+<p>【&amp;】 按位与 如果两个相应的二进制位都为1，则该位的结果值为1，否则为0
+【|】按位或 两个相应的二进制位中只要有一个为1，该位的结果值为1
+【^】 按位异或 若参加运算的两个二进制位值相同则为0，否则为1
+【~】 取反 ~是一元运算符，用来对一个二进制数按位取反，即将0变1，将1变0
+【&lt;&lt;】 左移 用来将一个数的各二进制位全部左移N位，右补0
+【&gt;&gt;】右移 将一个数的各二进制位右移N位，移到右端的低位被舍弃，对于无符号数，高位补0</p>
+<h4>1、“按位与”运算符（&amp;）</h4>
+<p>按位与是指：参加运算的两个数据，按二进制位进行“与”运算。如果两个相应的二进制位都为１，则该位的结果值为1；否则为0。内存储存数据的基本单位是字节（Byte），一个字节由8个位（bit)所组成。位是用以描述电脑数据量的最小单位。二进制系统中 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/java-base/binary-operation.html" rel="bookmark" title="Permalink to java中位运算技巧">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/classloader/classloader-chapter02.html" rel="bookmark" title="Permalink to ClassLoader类加载分析（二）">ClassLoader类加载分析（二）</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-03-20T22:48:00+08:00"> 周二 20 三月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>一、JVM 提供的 Classloader</h1>
+<h2>1.1 BootstrapClassloader</h2>
+<p>引导类加载器，又称启动类加载器，是最顶层的类加载器，主要用来加载Java核心类，如rt.jar、resources.jar、charsets.jar等，Sun的JVM中，执行java的命令中使用<strong>-Xbootclasspath选项或使用- D选项</strong>指定sun.boot.class.path系统属性值可以指定附加的类，它不是 java.lang.ClassLoader的子类，而是由JVM自身实现的该类c 语言实现，Java程序访问不到该加载器。通过下面代码可以查看该加载器加载了哪些jar包</p>
+<div class="highlight"><pre><span></span><span class="nt">public</span> <span class="nt">class</span> <span class="nt">MainClass</span> <span class="p">{</span>
+
+    <span class="err">public</span> <span class="err">static</span> <span class="err">void</span> <span class="err">main(String</span><span class="cp">[]</span> <span class="err">args)</span> <span class="err">throws</span> <span class="err">ClassNotFoundException</span> <span class="err">{</span>
+        <span class="err">URL</span><span class="cp">[]</span> <span class="err">urls</span> <span class="err">=</span> <span class="err">sun.misc.Launcher.getBootstrapClassPath …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/classloader/classloader-chapter02.html" rel="bookmark" title="Permalink to ClassLoader类加载分析（二）">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/yuan-ma.html">源码</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/java-base/introspector.html" rel="bookmark" title="Permalink to Java 内省(Introspector)">Java 内省(Introspector)</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-03-13T15:15:00+08:00"> 周二 13 三月 2018 </abbr>
@@ -176,82 +235,6 @@
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
                                             <a class="danger label" href="/tag/chuang-jian-xing.html">创建型</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/design-pattern/builder-factory.html" rel="bookmark" title="Permalink to 设计模式之factory模式">设计模式之factory模式</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2017-12-07T22:30:00+08:00"> 周四 07 十二月 2017 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p><strong>定义</strong>：工厂模式通俗意义上讲就是一个多产品的流程化工厂，每个工厂生产同一系列相关性的组件</p>
-<p><strong>分类</strong>：</p>
-<p>按工厂职能划分可以分为三类： 
- 简单工厂模式（Simple Factory） 
- 工厂方法模式（Factory Method） 
- 抽象工厂方法（Abstract Factory）</p>
-<p>接下来我们直接通过<strong>uml</strong>图和具体的代码实现以上三类</p>
-<p>我们以汽车工厂生产汽车为例，本田工厂假设要生产CIVIC和CRV两种车型，那么我们该怎么去设计实现</p>
-<p><strong>1 简单工厂模式</strong></p>
-<p><img alt="简单工厂模式" src="http://upload-images.jianshu.io/upload_images/10175660-4012e2250133cb61?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p>工厂产品线流程如上图所示：工厂生产汽车通过指定汽车的编号，我们就可以走指定的产品线；调用者只需要选择具体车型而不需要内部车是怎么制造出来的</p>
-<p>简单工厂模式主要包括三部分： 
-工厂角色：上图中的HONDAFactroy 生产车型用 
-抽象产品角色：上图中的HONDA和HONDACar 包含通用的属性和方法 
-具体产品角色：上图中的CIVIC和CRV，具体的车型包含各种参数</p>
-<p><strong>代码如下</strong></p>
-<div class="highlight"><pre><span></span><span class="cm">/** </span>
-<span class="cm">* @author nicky_chin [shuilianpiying@163.com] </span>
-<span class="cm">* @since –created on 2017/12/27 at 11 …</span></pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/design-pattern/builder-factory.html" rel="bookmark" title="Permalink to 设计模式之factory模式">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/chuang-jian-xing.html">创建型</a>
-                                </div>
-
-
-
-                        </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/concurrent/thread-communication.html" rel="bookmark" title="Permalink to 多线程之线程通信摘要">多线程之线程通信摘要</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2017-11-18T21:52:00+08:00"> 周六 18 十一月 2017 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>首先我们要知道进程之间的通讯方式有哪些？</p>
-<h1>管道( pipe )  #消息队列( message queue ) #共享内存( shared memory ) ：#套接字( socket ) 等等--</h1>
-<p>线程的通讯方式：</p>
-<p>1 wait/notify 机制</p>
-<p>wait()方法和notify()方法是Object类提供的方法，而在使用的条件就是当前线程必须有自己的监听器</p>
-<p>否则就是抛出异常，我们可以使用jvm提供的内置锁 synchronized 关键字来配合使用；注意如果有多个</p>
-<p>线程等待，当某一线程发起唤醒操作，会随机唤醒一个线程，而非所有线程，如果想唤醒所有线程，可以使用</p>
-<p>notifyAll()方法</p>
-<p>下面是 启动一个等待线程和一个通知线程的例子</p>
-<div class="highlight"><pre><span></span>public class MyThread1 extends Thread {  
-
-    private Object lock;  
-
-    public MyThread1(Object lock) {  
-        this.lock …</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/concurrent/thread-communication.html" rel="bookmark" title="Permalink to 多线程之线程通信摘要">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/ji-chu.html">基础</a>
                                 </div>
 
 

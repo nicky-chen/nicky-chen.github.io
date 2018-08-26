@@ -66,6 +66,55 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/spring/spring-springMvc.html" rel="bookmark" title="Permalink to Spring之动手实现SpringMVC功能">Spring之动手实现SpringMVC功能</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2018-08-25T20:31:00+08:00"> 周六 25 八月 2018 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/nicky_chin.html"> nicky_chin</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <h1>1 简介</h1>
+<p>SpringMVC大家应该耳熟能详，只要是做Java网站开发的小伙伴，都会使用的框架。SpringMVC以 <em>DispatcherServlet</em> 为核心，负责协调和组织不同组件以完成请求处理并返回响应的工作，实现了MVC模式。接下来我们从 该框架的流程 来整理设计思路，最后自己实现一个mvc框架.</p>
+<h1>2 SpringMVC运行流程</h1>
+<p>springmvc的流程如下：</p>
+<p><img alt="流程图" src="https://upload-images.jianshu.io/upload_images/10175660-d0954b5dd4f6d7ba.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><strong>API说明</strong></p>
+<p><em>DispatcherServlet</em>：</p>
+<blockquote>
+<p>Spring提供的前端控制器，所有的请求都有经过它来统一分发。在DispatcherServlet将请求分发给Controller之前，需要借助于Spring提供的HandlerMapping定位到具体的Controller。</p>
+</blockquote>
+<p><em>HandlerMapping</em> ：</p>
+<blockquote>
+<p>完成客户请求到Controller映射，包括拦截器部分内容</p>
+</blockquote>
+<p><em>Controller</em> ：</p>
+<blockquote>
+<p>Controller将处理用户请求，调用业务层接口分析，并返回ModelAndView对象给DispatcherServlet前端控制器，ModelAndView中包含了模型（Model）和视图（View）</p>
+</blockquote>
+<p><em>ViewResolver</em> ：</p>
+<blockquote>
+<p>Spring提供的视图解析器（ViewResolver）在Web应用中查找View对象，会根据当前的视图渲染引擎（JSP FreeMarker Thymeleaf）来渲染视图，返回给前端</p>
+</blockquote>
+<p><strong>流程概述</strong></p>
+<blockquote>
+<ul>
+<li>1 用户发送请求至前端控制器DispatcherServlet</li>
+<li>2 DispatcherServlet收到请求调用HandlerMapping处理器映射器</li>
+<li>3 …</li></ul></blockquote> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/spring/spring-springMvc.html" rel="bookmark" title="Permalink to Spring之动手实现SpringMVC功能">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/spring-base.html">spring-base</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/spring/spring-bean-IOC.html" rel="bookmark" title="Permalink to Spring之动手实现IOC功能">Spring之动手实现IOC功能</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2018-08-16T20:31:00+08:00"> 周四 16 八月 2018 </abbr>

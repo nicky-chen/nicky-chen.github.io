@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>南乡清水 - java-base</title><link>/</link><description></description><lastBuildDate>Thu, 05 Jul 2018 19:22:00 +0800</lastBuildDate><item><title>框架基础之SPI机制</title><link>/java-base/spi-introduction.html</link><description>&lt;h1&gt;1 定义&lt;/h1&gt;
+<rss version="2.0"><channel><title>南乡清水 - java-base</title><link>/</link><description></description><lastBuildDate>Wed, 22 Aug 2018 21:11:00 +0800</lastBuildDate><item><title>Java反射优化之方法句柄</title><link>/java-base/java-methodHandler.html</link><description>&lt;h1&gt;1 简介&lt;/h1&gt;
+&lt;p&gt;java7中为间接调用方法引入了新的api，即 &lt;strong&gt;方法句柄&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;方法句柄中包含两个重要的类，&lt;em&gt;MethodHandle和MethodType&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;MethodHandle&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;通过句柄我们可以直接调用该句柄所引用的底层方法。从作用上来看，方法句柄类似于反射中的Method类，是对要执行的方法的一个引用，我们也是通过它来调用底层方法，它调用时有两个方法 &lt;code&gt;invoke和invokeExact&lt;/code&gt;，后者要求参数类型与底层方法的参数完全匹配，前者则在有出入时做修改如包装类型。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;MethodType&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;方法签名不可变对象，是对方法的一个映射，包含返回值和参数类型。在lookup时也是通过它来寻找的。
+每个方法句柄都有一个MethodType实例，用来指明方法的返回类型和参数类型。&lt;/p&gt;
+&lt;h1&gt;2 简单使用&lt;/h1&gt;
+&lt;h3&gt;2.1 demo测试&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MethodHandleDemo&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="kd"&gt;throws&lt;/span&gt; &lt;span class="n"&gt;Throwable&lt;/span&gt;&lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="c1"&gt;//参数为返回值类型、参数类型  单个参数&lt;/span&gt;
+        &lt;span class="n"&gt;MethodType&lt;/span&gt; &lt;span class="n"&gt;methodType&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;MethodType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;methodType&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;String …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">nicky_chin</dc:creator><pubDate>Wed, 22 Aug 2018 21:11:00 +0800</pubDate><guid isPermaLink="false">tag:None,2018-08-22:/java-base/java-methodHandler.html</guid><category>基础</category></item><item><title>框架基础之SPI机制</title><link>/java-base/spi-introduction.html</link><description>&lt;h1&gt;1 定义&lt;/h1&gt;
 &lt;p&gt;&lt;strong&gt;SPI&lt;/strong&gt; 的全名为 &lt;em&gt;Service Provider Interface&lt;/em&gt; ，用于接口寻找服务实现类&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;实现方式&lt;/strong&gt;&lt;/p&gt;
 &lt;blockquote&gt;
