@@ -1,7 +1,305 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="119c48ed-5227-48e3-b916-4f239060df21" name="Revert: 加入相关文章和导航" comment="fix: 图标问题" />
+    <list default="true" id="119c48ed-5227-48e3-b916-4f239060df21" name="Revert: 加入相关文章和导航" comment="fix: 显示问题">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1/01/01/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2017/02/19/open_source/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2017/02/19/tools/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2017/03/17/book_list/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2017/11/03/recursive-lock/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2017/12/07/builder-factory/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2017/12/19/builder/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/03/08/classloader-chapter01/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/03/13/introspector/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/03/20/classloader-chapter02/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/03/21/binary-operation/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/03/28/decorator/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/04/03/thread-jmm-happens-before/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/04/17/exception-introduce/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/04/21/string-builder-question/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/04/27/process-fun/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/04/28/high-event/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/05/04/volatile-feature/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/05/06/strategy/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/05/13/juc-tree-info/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/05/14/synchronized-principle/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/05/18/template/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/05/27/adapter/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/06/02/fail-fast-safe/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/06/07/singletion/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/06/17/architect/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/06/25/jndi-introdution/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/06/29/responsibility-chain/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/07/13/java-securitymanager/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/07/16/junit-codeanalysis/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/07/19/state-machine/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/07/31/aqs_chapter01/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/08/01/cache-redis-slowlog/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/08/04/aqs_chapter02/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/08/07/cache-redis-optimize/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/08/09/aqs-condition/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/08/12/spring-bean-lifecycle/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/08/16/spring-bean-ioc/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/08/22/java-methodhandler/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2018/08/25/spring-springmvc/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2019/05/03/apt_lombok_implement/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/404.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/apple-touch-icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/background/bg-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/background/bg-10.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/background/bg-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/background/bg-3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/background/bg-4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/background/bg-5.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/background/bg-6.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/background/bg-7.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/background/bg-8.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/background/bg-9.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/cache/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/cache/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/cache/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/classloader/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/classloader/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/classloader/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/concurrent/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/concurrent/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/concurrent/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/design-pattern/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/design-pattern/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/design-pattern/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/java-base/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/java-base/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/java-base/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/mysql/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/mysql/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/mysql/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/security/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/security/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/security/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/source-code/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/source-code/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/source-code/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/spring/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/spring/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories/spring/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fancybox/blank.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fancybox/fancybox_loading.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fancybox/fancybox_loading@2x.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fancybox/fancybox_overlay.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fancybox/fancybox_sprite.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fancybox/fancybox_sprite@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fancybox/helpers/fancybox_buttons.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fancybox/helpers/jquery.fancybox-buttons.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fancybox/helpers/jquery.fancybox-buttons.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fancybox/helpers/jquery.fancybox-media.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fancybox/helpers/jquery.fancybox-thumbs.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fancybox/helpers/jquery.fancybox-thumbs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fancybox/jquery.fancybox.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fancybox/jquery.fancybox.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fancybox/jquery.fancybox.pack.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/favicon11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/font-awesome/css/font-awesome.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/font-awesome/css/font-awesome.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/font-awesome/fonts/FontAwesome.otf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/font-awesome/fonts/fontawesome-webfont.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/font-awesome/fonts/fontawesome-webfont.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/font-awesome/fonts/fontawesome-webfont.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/font-awesome/fonts/fontawesome-webfont.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/font-awesome/fonts/fontawesome-webfont.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/CHANGES.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/README.ru.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/highlight.pack.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/agate.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/androidstudio.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/arduino-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/arta.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/ascetic.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-cave-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-cave-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-dune-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-dune-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-estuary-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-estuary-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-forest-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-forest-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-heath-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-heath-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-lakeside-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-lakeside-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-plateau-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-plateau-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-savanna-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-savanna-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-seaside-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-seaside-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-sulphurpool-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atelier-sulphurpool-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atom-one-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/atom-one-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/brown-paper.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/brown-papersq.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/codepen-embed.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/color-brewer.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/common.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/darcula.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/darkula.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/default.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/docco.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/dracula.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/errorPage.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/far.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/foundation.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/github-gist.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/github.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/googlecode.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/grayscale.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/gruvbox-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/gruvbox-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/hopscotch.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/hybrid.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/idea.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/ir-black.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/kimbie.dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/kimbie.light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/magula.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/mono-blue.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/monokai-sublime.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/monokai.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/obsidian.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/ocean.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/paraiso-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/paraiso-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/pojoaque.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/pojoaque.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/purebasic.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/qtcreator_dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/qtcreator_light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/railscasts.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/rainbow.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/routeros.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/school-book.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/school-book.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/solarized-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/solarized-light.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/sunburst.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/tomorrow-night-blue.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/tomorrow-night-bright.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/tomorrow-night-eighties.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/tomorrow-night.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/tomorrow.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/vs.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/vs2015.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/xcode.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/xt256.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight/styles/zenburn.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/GitHub.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/SegmentFault.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/TiddlyWiki.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/V2EX.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/avatar.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/avatar11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/coderwall.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/delicious.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/facebook.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/google.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img-err.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img-loading.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/linkedin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/mail.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/pinboard.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/pinterest.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/qrcode_wechat.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/rss.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/scrollbar_arrow.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/stackoverflow.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/twitter.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/新浪微博.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/知乎.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/简书.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/网易云音乐.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/虾米音乐.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/豆瓣.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/GithubRepoWidget.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/analytics.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/clipboard.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/common.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/embed.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/errorPage.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/instagram.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/jquery.lazyload.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/md5.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/mobile.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/pc.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/zepto.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/page/2/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/page/3/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/page/4/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/page/5/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/page/6/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/post/external/book_list.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/post/external/open_source.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/post/external/teach_pic.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/post/external/tools.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/post/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/post/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/post/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/post/page/2/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/post/page/3/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/post/page/4/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/post/page/5/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/post/page/6/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/post/page/7/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robots.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sitemap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/junit/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/junit/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/junit/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/redis/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/redis/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/redis/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/spring-base/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/spring-base/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/spring-base/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/创建型/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/创建型/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/创建型/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/基础/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/基础/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/基础/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/基础/page/2/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/多线程/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/多线程/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/多线程/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/思维导图/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/思维导图/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/思维导图/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/源码/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/源码/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/源码/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/结构型/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/结构型/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/结构型/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/行为型/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/行为型/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/行为型/page/1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/锁优化/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/锁优化/index.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tags/锁优化/page/1/index.html" beforeDir="false" />
+    </list>
     <list id="b5937023-c407-40d8-b7aa-bcba4a685ed0" name="Default" comment="" />
     <ignored path=".idea/vcs.xml" />
     <ignored path=".idea/inspectionProfiles/profiles_settings.xml" />
@@ -61,45 +359,41 @@
     <session id="-1250631899">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="3" />
-          <entry key="project.open.time.1" value="3" />
-          <entry key="project.opened" value="3" />
+          <entry key="project.closed" value="4" />
+          <entry key="project.open.time.1" value="4" />
+          <entry key="project.opened" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="gitignore" value="1" />
-          <entry key="html" value="10" />
+          <entry key="html" value="12" />
           <entry key="txt" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Git file" value="1" />
-          <entry key="HTML" value="10" />
+          <entry key="HTML" value="12" />
           <entry key="PLAIN_TEXT" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="txt" value="7" />
+          <entry key="html" value="1" />
+          <entry key="txt" value="14" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="7" />
+          <entry key="HTML" value="1" />
+          <entry key="PLAIN_TEXT" value="14" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/1/01/01/index.html">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -142,7 +436,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
+  <component name="ProjectFrameBounds">
     <option name="y" value="23" />
     <option name="width" value="1440" />
     <option name="height" value="877" />
@@ -153,6 +447,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -160,37 +455,18 @@
               <item name="nicky-chen.github.io" type="b2602c69:ProjectViewProjectNode" />
               <item name="nicky-chen.github.io" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="nicky-chen.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="nicky-chen.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="1" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="nicky-chen.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="nicky-chen.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="1" type="462c0819:PsiDirectoryNode" />
-              <item name="01" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="nicky-chen.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="nicky-chen.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="1" type="462c0819:PsiDirectoryNode" />
-              <item name="01" type="462c0819:PsiDirectoryNode" />
-              <item name="01" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
-      <pane id="AndroidView" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1557305749413" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1557306638331" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.import" />
   </component>
@@ -202,13 +478,13 @@
     </option>
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\my_blog\output\nicky-chen.github.io\theme\images" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
       <recent name="E:\my_blog\output\nicky-chen.github.io" />
       <recent name="E:\my_blog\output\nicky-chen.github.io\theme\js" />
-      <recent name="E:\my_blog\output\nicky-chen.github.io\theme\images" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\my_blog\output\nicky-chen.github.io\theme\images" />
     </key>
   </component>
@@ -281,20 +557,7 @@
       <workItem from="1557292674220" duration="23000" />
       <workItem from="1557292707074" duration="162000" />
       <workItem from="1557294280561" duration="3991000" />
-    </task>
-    <task id="LOCAL-00007" summary="百度验证">
-      <created>1527562321208</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1527562321208</updated>
-    </task>
-    <task id="LOCAL-00008" summary="去百度">
-      <created>1527568147657</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1527568147657</updated>
+      <workItem from="1557305670841" duration="1030000" />
     </task>
     <task id="LOCAL-00009" summary="robots">
       <created>1527568432109</created>
@@ -625,16 +888,30 @@
       <option name="project" value="LOCAL" />
       <updated>1557301294672</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <task id="LOCAL-00056" summary="fix: 显示问题">
+      <created>1557306001261</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1557306001261</updated>
+    </task>
+    <task id="LOCAL-00057" summary="fix: 显示问题">
+      <created>1557306424614</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1557306424616</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9725000" />
+    <option name="totallyTimeSpent" value="10755000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.42775393" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.29899856" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="JRebel" order="3" side_tool="true" />
@@ -649,8 +926,8 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="7" visible="true" weight="0.6183575" />
-      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.6183575" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32971016" />
       <window_info anchor="bottom" id="Python Console" order="9" weight="0.32960895" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Messages" order="11" />
@@ -711,7 +988,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="算法" />
     <MESSAGE value="Fail-Fast" />
     <MESSAGE value="fail fast safe" />
     <MESSAGE value="fast" />
@@ -736,7 +1012,8 @@
     <MESSAGE value="fix: 404" />
     <MESSAGE value="404问题" />
     <MESSAGE value="fix: 图标问题" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: 图标问题" />
+    <MESSAGE value="fix: 显示问题" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: 显示问题" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="editorHistoryManager">
@@ -782,18 +1059,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/1/01/01/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="26" selection-start-line="7" selection-start-column="26" selection-end-line="7" selection-end-column="26" />
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/404.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="80">
-          <caret line="26" column="18" selection-start-line="26" selection-start-column="18" selection-end-line="26" selection-end-column="18" />
+          <caret line="25" column="19" lean-forward="true" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
+          <folding>
+            <element signature="n#style#0;n#span#0;n#button#0;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/1/01/01/index.html">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>
