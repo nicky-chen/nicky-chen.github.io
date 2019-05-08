@@ -1,91 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="119c48ed-5227-48e3-b916-4f239060df21" name="Revert: 加入相关文章和导航" comment="fix: 图标问题">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1/01/01/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/1/01/01/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2017/02/19/open_source/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2017/02/19/open_source/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2017/02/19/tools/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2017/02/19/tools/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2017/03/17/book_list/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2017/03/17/book_list/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2017/11/03/recursive-lock/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2017/11/03/recursive-lock/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2017/12/07/builder-factory/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2017/12/07/builder-factory/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2017/12/19/builder/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2017/12/19/builder/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/03/08/classloader-chapter01/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/03/08/classloader-chapter01/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/03/13/introspector/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/03/13/introspector/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/03/20/classloader-chapter02/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/03/20/classloader-chapter02/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/03/21/binary-operation/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/03/21/binary-operation/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/03/28/decorator/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/03/28/decorator/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/04/03/thread-jmm-happens-before/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/04/03/thread-jmm-happens-before/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/04/17/exception-introduce/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/04/17/exception-introduce/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/04/21/string-builder-question/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/04/21/string-builder-question/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/04/27/process-fun/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/04/27/process-fun/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/04/28/high-event/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/04/28/high-event/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/05/04/volatile-feature/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/05/04/volatile-feature/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/05/06/strategy/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/05/06/strategy/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/05/13/juc-tree-info/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/05/13/juc-tree-info/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/05/14/synchronized-principle/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/05/14/synchronized-principle/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/05/18/template/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/05/18/template/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/05/27/adapter/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/05/27/adapter/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/06/02/fail-fast-safe/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/06/02/fail-fast-safe/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/06/07/singletion/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/06/07/singletion/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/06/17/architect/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/06/17/architect/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/06/25/jndi-introdution/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/06/25/jndi-introdution/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/06/29/responsibility-chain/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/06/29/responsibility-chain/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/07/13/java-securitymanager/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/07/13/java-securitymanager/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/07/16/junit-codeanalysis/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/07/16/junit-codeanalysis/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/07/19/state-machine/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/07/19/state-machine/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/07/31/aqs_chapter01/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/07/31/aqs_chapter01/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/08/01/cache-redis-slowlog/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/08/01/cache-redis-slowlog/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/08/04/aqs_chapter02/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/08/04/aqs_chapter02/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/08/07/cache-redis-optimize/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/08/07/cache-redis-optimize/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/08/09/aqs-condition/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/08/09/aqs-condition/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/08/12/spring-bean-lifecycle/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/08/12/spring-bean-lifecycle/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/08/16/spring-bean-ioc/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/08/16/spring-bean-ioc/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/08/22/java-methodhandler/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/08/22/java-methodhandler/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2018/08/25/spring-springmvc/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2018/08/25/spring-springmvc/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2019/05/03/apt_lombok_implement/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/2019/05/03/apt_lombok_implement/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/404.html" beforeDir="false" afterPath="$PROJECT_DIR$/404.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/categories/cache/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/categories/cache/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/categories/classloader/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/categories/classloader/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/categories/concurrent/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/categories/concurrent/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/categories/design-pattern/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/categories/design-pattern/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/categories/java-base/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/categories/java-base/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/categories/mysql/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/categories/mysql/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/categories/security/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/categories/security/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/categories/source-code/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/categories/source-code/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/categories/spring/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/categories/spring/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/favicon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/favicon.png" beforeDir="false" afterPath="$PROJECT_DIR$/favicon.ico" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/page/2/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/page/2/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/page/3/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/page/3/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/page/4/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/page/4/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/page/5/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/page/5/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/page/6/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/page/6/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/post/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/post/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/post/page/2/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/post/page/2/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/post/page/3/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/post/page/3/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/post/page/4/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/post/page/4/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/post/page/5/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/post/page/5/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/post/page/6/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/post/page/6/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/post/page/7/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/post/page/7/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sitemap.xml" beforeDir="false" afterPath="$PROJECT_DIR$/sitemap.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tags/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/tags/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tags/junit/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/tags/junit/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tags/redis/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/tags/redis/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tags/spring-base/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/tags/spring-base/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tags/创建型/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/tags/创建型/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tags/基础/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/tags/基础/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tags/基础/page/2/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/tags/基础/page/2/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tags/多线程/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/tags/多线程/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tags/思维导图/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/tags/思维导图/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tags/源码/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/tags/源码/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tags/结构型/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/tags/结构型/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tags/行为型/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/tags/行为型/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tags/锁优化/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/tags/锁优化/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web.ico" beforeDir="false" afterPath="$PROJECT_DIR$/img/web.ico" afterDir="false" />
-    </list>
+    <list default="true" id="119c48ed-5227-48e3-b916-4f239060df21" name="Revert: 加入相关文章和导航" comment="fix: 图标问题" />
     <list id="b5937023-c407-40d8-b7aa-bcba4a685ed0" name="Default" comment="" />
     <ignored path=".idea/vcs.xml" />
     <ignored path=".idea/inspectionProfiles/profiles_settings.xml" />
@@ -145,7 +61,7 @@
     <session id="-1250631899">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="2" />
+          <entry key="project.closed" value="3" />
           <entry key="project.open.time.1" value="3" />
           <entry key="project.opened" value="3" />
         </counts>
@@ -226,7 +142,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+  <component name="ProjectFrameBounds" fullScreen="true">
     <option name="y" value="23" />
     <option name="width" value="1440" />
     <option name="height" value="877" />
@@ -274,7 +190,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1557301065855" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1557305749413" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.import" />
   </component>
@@ -364,14 +280,7 @@
       <workItem from="1557287237381" duration="531000" />
       <workItem from="1557292674220" duration="23000" />
       <workItem from="1557292707074" duration="162000" />
-      <workItem from="1557294280561" duration="3297000" />
-    </task>
-    <task id="LOCAL-00006" summary="在线工具修改">
-      <created>1527560488671</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1527560488671</updated>
+      <workItem from="1557294280561" duration="3991000" />
     </task>
     <task id="LOCAL-00007" summary="百度验证">
       <created>1527562321208</created>
@@ -709,17 +618,23 @@
       <option name="project" value="LOCAL" />
       <updated>1557300121239</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="fix: 图标问题">
+      <created>1557301294672</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1557301294672</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9031000" />
+    <option name="totallyTimeSpent" value="9725000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.42775393" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.42775393" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="JRebel" order="3" side_tool="true" />
@@ -734,7 +649,7 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.6183575" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="7" visible="true" weight="0.6183575" />
       <window_info anchor="bottom" id="Terminal" order="8" />
       <window_info anchor="bottom" id="Python Console" order="9" weight="0.32960895" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
