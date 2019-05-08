@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  true ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+
+    <title>初窥门径之JUnit源码分析</title>
+    <link rel="icon" href="https://nicky-chen.github.io/favicon.png">
+
+    <link rel="stylesheet" href="https://nicky-chen.github.io/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chen.github.io/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chen.github.io/apple-touch-icon.png">
+
+
+    <link rel="stylesheet" href="https://nicky-chen.github.io/fancybox/jquery.fancybox.css">
+
+    
+    
+    <link rel="stylesheet" href="https://nicky-chen.github.io/highlight/styles/darcula.css">
+    <script src="https://nicky-chen.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chen.github.io/" class="profilepic">
+            <img src="https://nicky-chen.github.io/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chen.github.io/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chen.github.io/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chen.github.io/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/external/open_source.html">开源项目</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/">归档日志</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="简书"><a class="简书" target="_blank" href="https://www.jianshu.com/u/c44ed4847c3d" title="简书"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chen.github.io/tags/junit" style="font-size: 12px;" class="color2">Junit</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/redis" style="font-size: 12px;" class="color2">Redis</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/spring-base" style="font-size: 12px;" class="color4">Spring-Base</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color1">创建型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">基础</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color2">多线程</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color1">思维导图</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color2">源码</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color2">结构型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color4">行为型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color1">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chen.github.io/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chen.github.io/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chen.github.io/" class="profilepic">
+                <img src="https://nicky-chen.github.io/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chen.github.io/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chen.github.io/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/external/open_source.html">开源项目</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/">归档日志</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="简书"><a class="简书" target="_blank" href="https://www.jianshu.com/u/c44ed4847c3d" title="简书"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+            <article id="post-js-android" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chen.github.io/2018/07/16/junit-codeanalysis/" class="article-date">
+            <time datetime="2018-07-16 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-07-16</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 class="article-title" itemprop="name">
+                <a class="article-title" href="https://nicky-chen.github.io/2018/07/16/junit-codeanalysis/">初窥门径之JUnit源码分析</a>
+            </h1>
+
+
+        </header>
+
+        <div class="article-info article-info-post">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="article-category-link" href="https://nicky-chen.github.io/categories/source-code/" style="font-size: 12px;">Source-code</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/junit/"
+                           style="font-size: 12px;">junit</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="article-entry" itemprop="articleBody">
+
+            
+
+<p>#1 源码分析流程
+对于阅读源码有兴趣的同学，可以按以下步骤进行：</p>
+
+<ol>
+<li>了解框架架构图</li>
+<li>了解各包包含功能点</li>
+<li>选择需要功能点入手</li>
+<li>了解 <strong>数据流和控制流</strong></li>
+<li>画 <strong>类图 和 时序图</strong></li>
+<li>复盘</li>
+</ol>
+
+<h1 id="2-junit架构详解">2 Junit架构详解</h1>
+
+<h3 id="2-1-包功能概述">2.1 包功能概述</h3>
+
+<p>通过分析JUnit-3.8.1的源代码文件可以看到，JUnit的源码被分散在6个package中，这个6个package分别为： <em>junit.awtui</em> 、 <em>junit.swingui</em> 、 <em>junit.textui</em> 、 <em>junit.extensions</em> 、 <em>junit.framework</em> 、 <em>junit.runner</em>  具体的文件分布图如下：</p>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/10175660-278a9ef83d38a42d.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="各包情况" /></p>
+
+<p>其中 junit.awtui 、 junit.swingui 、 junit.textui 这三个package是有关JUnit运行时的入口程序以及运行结果显示界面的
+junit.runner中则包含了支持单元测试运行的一些基础类以及自己的类加载器
+junit.framework 包含有编写一般JUnit单元测试类必须组件
+junit.extensions则是对framework包在功能上的一些必要功能点的扩展</p>
+
+<h3 id="2-2-类图">2.2 类图</h3>
+
+<p><strong>junit.framework 类图</strong></p>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/10175660-987c87e79cd5bdf9.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="famework" /></p>
+
+<p><strong>junit.extensions 类图</strong></p>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/10175660-90287934613de21e.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="extension" /></p>
+
+<p><strong>junit.runner 类图</strong>
+<img src="https://upload-images.jianshu.io/upload_images/10175660-250a20e3ae367902.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="runner" /></p>
+
+<h1 id="3-运行流程">3 运行流程</h1>
+
+<p><strong>时序图</strong></p>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/10175660-c7138d22bd8bbd28.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="junit时序图.PNG" /></p>
+
+<p>JUnit的完整生命周期分为3个阶段：<em>初始化阶段、运行阶段、 结果捕捉阶段</em></p>
+
+<p><strong>测试案例demo</strong></p>
+
+<pre><code>public class CalculatorTest extends TestCase {
+
+
+    private Calculator calculator = null;
+
+    public static void main(String args[]) {
+        TestRunner aTestRunner= new TestRunner();
+        try {
+            TestResult r= aTestRunner.start(new String[]{&quot;CalculatorTest&quot;});
+            if (!r.wasSuccessful())
+                System.exit(FAILURE_EXIT);
+            System.exit(SUCCESS_EXIT);
+        } catch(Exception e) {
+            System.err.println(e.getMessage());
+            System.exit(EXCEPTION_EXIT);
+        }
+    }
+
+    @Override
+    public void setUp() throws Exception
+    {
+        System.out.println(&quot;set up&quot;);
+        // 生成成员变量的实例
+        calculator = new Calculator();
+    }
+
+    public void testAdd() {
+        System.out.println(&quot;testAdd&quot;);
+        int result = calculator.add(1, 2);
+        System.out.println(result);
+        // 判断方法的返回结果
+        Assert.assertEquals(3, result);// 第`一个参数是期望值，第二个参数是要验证的值
+    }
+
+    public void testSubtract() {
+        System.out.println(&quot;testSubtract&quot;);
+        int result = calculator.subtract(1, 2);
+        // 判断方法的返回结果
+        Assert.assertEquals(-1, result);// 第一个参数是期望值，第二个参数是要验证的值
+
+    }
+
+    public void testMultiply() {
+        System.out.println(&quot;testMultiply&quot;);
+        int result = calculator.multiply(2, 3);
+        // 判断方法的返回结果
+        Assert.assertEquals(5, result);// 第一个参数是期望值，第二个参数是要验证的值
+
+    }
+
+    public void testDivide() {
+        System.out.println(&quot;testDivide&quot;);
+        int result = calculator.divide(12, 3);
+        // 判断方法的返回结果
+        Assert.assertEquals(4, result);// 第一个参数是期望值，第二个参数是要验证的值
+
+    }
+
+}
+</code></pre>
+
+<p><strong>1.初始化阶段</strong>：
+通过分析源码，可以看到JUnit的入口点在 <code>junit.textui.TestRunner 的 main</code> 方法，在这个方法中，首先创建一个 <em>TestRunner</em>  实例 aTestRunner ，然后 main 函数中主体工作函数为 <code>TestResult r = aTestRunner.start(args)</code>。此时 TestRunner 实例存在并开始工作。接下来进入 <code>start()</code> 方法中：</p>
+
+<pre><code> public static void main(String args[]) {
+        TestRunner aTestRunner= new TestRunner();
+        try {
+            TestResult r= aTestRunner.start(new String[]{&quot;CalculatorTest&quot;});
+            if (!r.wasSuccessful())
+                System.exit(FAILURE_EXIT);
+            System.exit(SUCCESS_EXIT);
+        } catch(Exception e) {
+            System.err.println(e.getMessage());
+            System.exit(EXCEPTION_EXIT);
+        }
+    }
+
+	/**
+	 * Starts a test run. Analyzes the command line arguments
+     * 启动一个测试运行，分析命令参数 并且执行所给的测试组件
+	 * and runs the given test suite.
+	 */
+	public /*protected*/ TestResult start(String args[]) throws Exception {
+		String testCase= &quot;&quot;;
+		boolean wait= false;
+		//参数逻辑判断
+		for (int i= 0; i &lt; args.length; i++) {
+			if (args[i].equals(&quot;-wait&quot;))
+				wait= true;
+			else if (args[i].equals(&quot;-c&quot;)) 
+				testCase= extractClassName(args[++i]);
+			else if (args[i].equals(&quot;-v&quot;))
+				System.err.println(&quot;JUnit &quot;+Version.id()+&quot; by Kent Beck and Erich Gamma&quot;);
+			else
+				testCase= args[i];
+		}
+		
+		if (testCase.equals(&quot;&quot;)) 
+			throw new Exception(&quot;Usage: TestRunner [-wait] testCaseName, where name is the name of the TestCase class&quot;);
+		//获取测试组件
+		try {
+			Test suite= getTest(testCase); //初始化 TestSuite
+			return doRun(suite, wait); //运行测试组件
+		}
+		catch(Exception e) {
+			throw new Exception(&quot;Could not create and run test suite: &quot;+e);
+		}
+	}
+</code></pre>
+
+<p>TestResult 用于展示最终结果，首先会进入 <code>start()</code> 方法 初始化一个TestSuite对象
+<em>Test suite= getTest(testCase)</em>;  该测试组件包含了多个 TestCase测试方法用例</p>
+
+<p><strong>进入getTest方法</strong></p>
+
+<pre><code>/**
+	 * Returns the Test corresponding to the given suite. This is
+	 * 返回对应的测试组件，这是一个模版方法，子类重写两个方法
+	 * a template method, subclasses override runFailed(), clearStatus().
+	 */
+	public Test getTest(String suiteClassName) {
+		if (suiteClassName.length() &lt;= 0) {
+			clearStatus();
+			return null;
+		}
+		Class testClass= null;
+		try {
+		    //加载Class
+			testClass= loadSuiteClass(suiteClassName);
+		} catch (ClassNotFoundException e) {
+			String clazz= e.getMessage();
+			if (clazz == null)
+				clazz= suiteClassName;
+			runFailed(&quot;Class not found \&quot;&quot;+clazz+&quot;\&quot;&quot;);
+			return null;
+		} catch(Exception e) {
+			runFailed(&quot;Error: &quot;+e.toString());
+			return null;
+		}
+		Method suiteMethod= null;
+		try {//执行测试组件方法
+			suiteMethod= testClass.getMethod(SUITE_METHODNAME, new Class[0]);
+	 	} catch(Exception e) {
+	 		// try to extract a test suite automatically 如果没有对应的方法，则自动创建一个测试组件
+			clearStatus(); //清除状态信息
+			return new TestSuite(testClass);  //创建testsuite对象 包含需要测试方法集合的Vector
+		}
+</code></pre>
+
+<p><code>new TestSuite(testClass)</code>创建对象， 进入构造器主要是一些参数和方法的校验</p>
+
+<p>为每个测试方法创建 TestCase, 并存入 Vector fTests 向量集合中</p>
+
+<pre><code> public TestSuite(final Class theClass) {
+		fName= theClass.getName();
+		try {//判断是否有公共的带String参数的构造器或者无参构造器，如果没有打印错误信息
+			getTestConstructor(theClass); // Avoid generating multiple error messages
+		} catch (NoSuchMethodException e) {
+			addTest(warning(&quot;Class &quot;+theClass.getName()+&quot; has no public constructor TestCase(String name) or TestCase()&quot;));
+			return;
+		}
+		//判断类的修饰符是否是public的，如果不是打印错误信息
+		if (!Modifier.isPublic(theClass.getModifiers())) {
+			addTest(warning(&quot;Class &quot;+theClass.getName()+&quot; is not public&quot;));
+			return;
+		}
+
+		Class superClass= theClass;
+		Vector names= new Vector();
+		while (Test.class.isAssignableFrom(superClass)) {//判断当前class是否实现或者继承了Test类
+			Method[] methods= superClass.getDeclaredMethods();
+			for (int i= 0; i &lt; methods.length; i++) {//遍历继承TestCase方法的类中包含的test方法
+				addTestMethod(methods[i], names, theClass);
+			}
+			superClass= superClass.getSuperclass(); //获取父类并重复上述操作
+		}
+		if (fTests.size() == 0)
+			addTest(warning(&quot;No tests found in &quot;+theClass.getName()));
+	}
+</code></pre>
+
+<p>关键性代码在 <code>addTestMethod(methods[i], names, theClass)</code></p>
+
+<p>最终添加进入 <em>fTests</em> 集合</p>
+
+<pre><code>private void addTestMethod(Method m, Vector names, Class theClass) {
+		String name= m.getName();
+		if (names.contains(name))
+			return;
+		if (! isPublicTestMethod(m)) {//判断是否是无参数无返回值方法，是则加入到 names集合里
+			if (isTestMethod(m))
+				addTest(warning(&quot;Test method isn't public: &quot;+m.getName()));
+			return;
+		}
+		names.addElement(name);
+		addTest(createTest(theClass, name));//为每个方法增加TestCase用例
+	}
+
+	public void addTest(Test test) {
+		fTests.addElement(test);
+	}
+</code></pre>
+
+<p><strong>2.测试运行阶段</strong>：</p>
+
+<p>在 TestRunner 中的 <code>start()</code> 方法中可以看到开始调用 <code>doRun(</code>) 方法开始执行测试</p>
+
+<pre><code>	public TestResult doRun(Test suite, boolean wait) {
+		TestResult result= createTestResult();
+		result.addListener(fPrinter); //增加一个TestRunner的打印监听器
+		long startTime= System.currentTimeMillis();
+		suite.run(result);
+		long endTime= System.currentTimeMillis();
+		long runTime= endTime-startTime;
+		fPrinter.print(result, runTime);
+
+		pause(wait);
+		return result;
+	}
+</code></pre>
+
+<p>首先是利用 <code>createTestResult()</code>方法生成一个 TestResult 实例，然后将 junit.textui.TestRunner 的监听器 fPrinter 加入到result 的监听器列表中。其中， fPrinter 是 junit.textui.ResultPrinter 类的实例，该类提供了向控制台输出测试结果的一系列功能接口，输出的格式在类中定义。 ResultPrinter 类实现了 TestListener 接口，具体实现了<code>addError 、 addFailure 、 endTest 和 startTest</code>  四个重要的方法，这种设计体现了Observer设计模式。而将 ResultPrinter 对象加入到 TestResult 对象的监听器列表中，因此实质上 TestResult 对象可以有多个监听器显示测试结果。</p>
+
+<p>接下来我们查看run方法，可以看到：</p>
+
+<pre><code>public void run(TestResult result) {
+		for (Enumeration e= tests(); e.hasMoreElements(); ) {//遍历测试方法
+	  		if (result.shouldStop() ) //是否停止继续运行
+	  			break;
+			Test test= (Test)e.nextElement();
+			runTest(test, result);//运行具体测试用例方法TestCase
+		}
+	}
+</code></pre>
+
+<p>运行具体测试用例方法TestCase,在<code>runTest(test, result)</code>方法中</p>
+
+<pre><code>protected void run(final TestCase test) {
+		startTest(test);
+		Protectable p= new Protectable() {
+			public void protect() throws Throwable {
+				test.runBare();
+			}
+		};
+		runProtected(test, p);//执行test方法
+
+		endTest(test);
+	}
+
+	public void runBare() throws Throwable {
+		setUp(); //运行setup
+		try {
+			runTest(); //运行具体测试方法
+		}
+		finally {
+			tearDown();
+		}
+	}
+</code></pre>
+
+<p>首先它会运行<code>setUp</code>方法，在我们的测试demo中会给<code>private Calculator calculator</code> 这个成员变量实例化， 然后 <code>runTest()</code> 具体跑一个方法 ，该方法首先会通过反射创建一个无参构造器，然后实例化对象，最后获取当前TestCase对象中的测试方法名去获取Method对象，然后<code>runMethod.invoke(this, new Class[0])</code>执行该方法，完成测试</p>
+
+<p><strong>3.测试结果捕捉阶段</strong>：</p>
+
+<p>运行已经完成，日志输出阶段</p>
+
+<pre><code>public void runProtected(final Test test, Protectable p) {
+		try {
+			p.protect();
+		} 
+		catch (AssertionFailedError e) {
+			addFailure(test, e); //如果计算结果和assert预期结果不一样，则出现这个错误
+		}
+		catch (ThreadDeath e) { // don't catch ThreadDeath by accident
+			throw e;
+		}
+		catch (Throwable e) {
+			addError(test, e);
+		}
+	}
+</code></pre>
+
+<p>TestResult对象中有三个观察者对象
+&gt;protected Vector fFailures; //观察者 失败信息 TestFailure对象
+protected Vector fErrors; //观察者 错误信息 TestFailure 对象
+protected Vector fListeners;//观察者 监听器列表 TestListener</p>
+
+<p>如果测试结果与 Assert断言结果不一样，会进入<code>addFailure(test, e)</code>方法，其他未知异常会捕获进入<code>addError(test, e)</code>记录错误信息，然后存入 <em>fErrors</em> 向量集合中。最后通过 <em>ResultPrinter</em> 答应结果</p>
+
+<p>控制台最终打印结果</p>
+
+<pre><code>.set up
+testAdd
+3
+.set up
+testDivide
+.set up
+testSubtract
+.set up
+testMultiply
+F
+Time: 1,507.526
+There was 1 failure:
+1) testMultiply(CalculatorTest)junit.framework.AssertionFailedError: expected:&lt;5&gt; but was:&lt;6&gt;
+	at CalculatorTest.testMultiply(CalculatorTest.java:61)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at CalculatorTest.main(CalculatorTest.java:23)
+
+FAILURES!!!
+Tests run: 4,  Failures: 1,  Errors: 0
+
+</code></pre>
+
+<p>在执行完<code>testMultiply</code>方法后，因为断言的预期结果和实际结果不一致，所以首先会打印一个F表示有错误信息，当所有方法执行完，会执行<code>fPrinter.print(result, runTime)</code>方法: <strong>同步答应  耗时 异常信息 断言错误信息 统计结果</strong></p>
+
+<pre><code>	synchronized void print(TestResult result, long runTime) {
+	   printHeader(runTime);
+	    printErrors(result);
+	    printFailures(result);
+	    printFooter(result);
+	}
+</code></pre>
+
+<h1 id="4-总结">4 总结</h1>
+
+<p>在这个源码框架中，你可以看到一些常见的设计模式，比如观察者模式，模版模式，装饰器模式，组合模式等等，通过<strong>类图和时序图</strong> 我们可以清楚明了的了解功能点的用途和具体实现原理，看源码需要懂得取舍，找到关键部分，精髓部分，才能事半功倍
+具体junit源码代码及关键注释请看<a href="https://github.com/nicky-chen/junit">GitHub</a></p>
+
+<h1 id="refence">Refence</h1>
+
+<p><a href="https://www.ibm.com/developerworks/cn/java/j-lo-junit-src/">分析 JUnit 框架源代码</a></p>
+
+
+        </div>
+
+    </div>
+
+    
+    <nav id="article-nav">
+
+        
+        <div id="article-nav-newer" class="article-nav-title">
+            <a href="https://nicky-chen.github.io/2018/07/19/state-machine/">
+                实际项目运用之State模式（状态模式）
+            </a>
+        </div>
+        
+
+        
+        <div id="article-nav-older" class="article-nav-title">
+            <a href="https://nicky-chen.github.io/2018/07/13/java-securitymanager/">
+                Java安全之SecurityManager
+            </a>
+        </div>
+        
+
+    </nav>
+    
+
+
+</article>
+
+<div id="toc" class="toc-article" >
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc">
+        <nav id="TableOfContents">
+<ul>
+<li><a href="#2-junit架构详解">2 Junit架构详解</a>
+<ul>
+<li>
+<ul>
+<li><a href="#2-1-包功能概述">2.1 包功能概述</a></li>
+<li><a href="#2-2-类图">2.2 类图</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#3-运行流程">3 运行流程</a></li>
+<li><a href="#4-总结">4 总结</a></li>
+<li><a href="#refence">Refence</a></li>
+</ul>
+</nav>
+    </ol>
+</div>
+<style>
+    
+    .left-col .switch-btn {
+        display: none;
+    }
+
+    .left-col .switch-area {
+        display: none;
+    }
+    
+
+
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录" >
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function () {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    
+    
+    
+        
+    
+</script>
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_more" data-cmd="more"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+        <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+        <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config = {
+            "common": {
+                "bdSnsKey": {},
+                "bdText": "",
+                "bdMini": "2",
+                "bdMiniList": false,
+                "bdPic": "",
+                "bdStyle": "0",
+                "bdSize": "24"
+            }, "share": {}
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '//bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+</div>
+
+
+
+
+<div style="margin-left: 30px;margin-right: 30px;background: white;padding-left: 30px;padding-right: 30px">
+    <div class="comments">
+        <h3>COMMENTS</h3>
+        <script type="text/javascript">
+            (function() {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                dsq.setAttribute('data-timestamp', +new Date());
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <div id="disqus_thread"></div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="scroll" id="post-nav-button">
+
+    
+    <a href="https://nicky-chen.github.io/2018/07/19/state-machine/" title="上一篇: 实际项目运用之State模式（状态模式）">
+        <i class="fa fa-angle-left"></i>
+    </a>
+    
+
+
+    <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+
+    
+    <a href="https://nicky-chen.github.io/2018/07/13/java-securitymanager/" title="下一篇: Java安全之SecurityManager">
+        <i class="fa fa-angle-right"></i>
+    </a>
+    
+
+</div>
+
+
+<ul class="post-list toc-article">
+    
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2019/05/03/apt_lombok_implement/" target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/25/spring-springmvc/" target="_blank">Spring之动手实现SpringMVC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/22/java-methodhandler/" target="_blank">Java反射优化之方法句柄</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/16/spring-bean-ioc/" target="_blank">Spring之动手实现IOC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/12/spring-bean-lifecycle/" target="_blank">Spring之Bean加载-解析-生命周期</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/09/aqs-condition/" target="_blank">并发基础之Condition(等待队列)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/07/cache-redis-optimize/" target="_blank">Redis注意事项及常见优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/04/aqs_chapter02/" target="_blank">并发基础之AQS同步器（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/01/cache-redis-slowlog/" target="_blank">Redis之慢查询日志</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/31/aqs_chapter01/" target="_blank">并发基础之AQS同步器（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/16/junit-codeanalysis/" target="_blank">初窥门径之JUnit源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/13/java-securitymanager/" target="_blank">Java安全之SecurityManager</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/29/responsibility-chain/" target="_blank">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/25/jndi-introdution/" target="_blank">JNDI知识摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/17/architect/" target="_blank">技术图谱</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/07/singletion/" target="_blank">设计模式之单例模式终极版【克隆-序列化-反射】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/02/fail-fast-safe/" target="_blank">Fail-Fast和Fail-Safe机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/27/adapter/" target="_blank">实际项目运用之Adapter模式（适配器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/18/template/" target="_blank">设计模式之Template模式（模版模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/14/synchronized-principle/" target="_blank">synchronized实现原理及锁优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/13/juc-tree-info/" target="_blank">JUC知识点总结</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/06/strategy/" target="_blank">实际项目运用之Strategy模式（策略模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/04/volatile-feature/" target="_blank">volatile关键字原理实现及应用</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/28/high-event/" target="_blank">MYSQL高级特性之【Event事件】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/27/process-fun/" target="_blank">MYSQL高级特性之【存储过程与函数】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/21/string-builder-question/" target="_blank">字符串拼接的疑惑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/17/exception-introduce/" target="_blank">Java异常处理-原理及优化建议</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/03/thread-jmm-happens-before/" target="_blank">java内存模型之[JMM][重排序][happens-before]</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/28/decorator/" target="_blank">实际项目运用之Decorator模式（装饰器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/21/binary-operation/" target="_blank">java中位运算技巧</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/20/classloader-chapter02/" target="_blank">ClassLoader类加载分析（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/13/introspector/" target="_blank">Java 内省(Introspector)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/08/classloader-chapter01/" target="_blank">ClassLoader类加载分析（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/12/19/builder/" target="_blank">设计模式之builder模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/12/07/builder-factory/" target="_blank">设计模式之factory模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/11/03/recursive-lock/" target="_blank">可重入锁</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/03/17/book_list/" target="_blank">阅读书单</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/02/19/open_source/" target="_blank">开源项目</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/02/19/tools/" target="_blank">在线工具</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+</ul>
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    $(".post-list").addClass("toc-article");
+    $(".post-list-item a").attr("target", "_blank");
+    $("#post-nav-button > a:nth-child(2)").click(function () {
+        $(".fa-bars, .fa-times").toggle();
+        $(".post-list").toggle(300);
+        if ($(".toc").length > 0) {
+            $("#toc, #tocButton").toggle(200, function () {
+                if ($(".switch-area").is(":visible")) {
+                    $("#toc, .switch-btn, .switch-area").toggle();
+                    $("#tocButton").attr("value", valueHide);
+                }
+            })
+        }
+        else {
+            $(".switch-btn, .switch-area").fadeToggle(300);
+        }
+    })
+</script>
+
+
+<script>
+
+</script>
+
+
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2019 nicky_chin
+            </div>
+            <div class="footer-right">
+                <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >本站到访数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量:
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chen.github.io/js/GithubRepoWidget.js"></script>
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chen.github.io/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  5 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-119892182-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i &lt; all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+<script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  true ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+
+    <title>Posts</title>
+    <link rel="icon" href="https://nicky-chen.github.io/favicon.png">
+
+    <link rel="stylesheet" href="https://nicky-chen.github.io/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chen.github.io/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chen.github.io/apple-touch-icon.png">
+
+
+    <link rel="stylesheet" href="https://nicky-chen.github.io/fancybox/jquery.fancybox.css">
+
+    
+    
+    <link rel="stylesheet" href="https://nicky-chen.github.io/highlight/styles/darcula.css">
+    <script src="https://nicky-chen.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chen.github.io/" class="profilepic">
+            <img src="https://nicky-chen.github.io/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chen.github.io/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chen.github.io/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chen.github.io/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/external/open_source.html">开源项目</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/">归档日志</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="简书"><a class="简书" target="_blank" href="https://www.jianshu.com/u/c44ed4847c3d" title="简书"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chen.github.io/tags/junit" style="font-size: 12px;" class="color4">Junit</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/redis" style="font-size: 12px;" class="color3">Redis</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/spring-base" style="font-size: 12px;" class="color3">Spring-Base</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color4">创建型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">基础</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color3">多线程</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color2">思维导图</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color3">源码</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color4">结构型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color3">行为型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chen.github.io/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chen.github.io/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chen.github.io/" class="profilepic">
+                <img src="https://nicky-chen.github.io/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chen.github.io/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chen.github.io/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/external/open_source.html">开源项目</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/">归档日志</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="简书"><a class="简书" target="_blank" href="https://www.jianshu.com/u/c44ed4847c3d" title="简书"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+
+            
+            <section class="archives-wrap">
+                <div class="archive-year-wrap">
+                    <a href="https://nicky-chen.github.io/archives/2018" class="archive-year">2018</a>
+                </div>
+
+                <div class="archives">
+                
+
+                    <article class="archive-article archive-type-post">
+                        <div class="archive-article-inner">
+                            <header class="archive-article-header">
+                                <div class="article-meta">
+                                    <a href="https://nicky-chen.github.io/2018/04/28/high-event/" class="archive-article-date">
+                                        <time datetime="2018-04-28 11:18:15 &#43;0800 CST" itemprop="datePublished">04-28
+                                        </time>
+                                    </a>
+                                </div>
+
+
+                                <h1 itemprop="name">
+                                    <a class="archive-article-title" href="https://nicky-chen.github.io/2018/04/28/high-event/"
+                                       target="_blank">MYSQL高级特性之【Event事件】</a>
+                                </h1>
+
+
+                                <div class="article-info info-on-archive">
+
+                                    
+                                    <div class="article-category tagcloud">
+                                        
+                                        <a class="article-category-link" href="https://nicky-chen.github.io/categories/mysql/">MySql</a>
+                                        
+                                    </div>
+                                    
+
+                                    
+                                    <div class="article-tag tagcloud">
+                                        <ul class="article-tag-list">
+                                            
+                                            <li class="article-tag-list-item">
+                                                <a class="article-tag-list-link" href="https://nicky-chen.github.io/tags/%e5%9f%ba%e7%a1%80/">基础</a>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                    
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </header>
+                        </div>
+                    </article>
+                
+
+                    <article class="archive-article archive-type-post">
+                        <div class="archive-article-inner">
+                            <header class="archive-article-header">
+                                <div class="article-meta">
+                                    <a href="https://nicky-chen.github.io/2018/04/27/process-fun/" class="archive-article-date">
+                                        <time datetime="2018-04-27 11:18:15 &#43;0800 CST" itemprop="datePublished">04-27
+                                        </time>
+                                    </a>
+                                </div>
+
+
+                                <h1 itemprop="name">
+                                    <a class="archive-article-title" href="https://nicky-chen.github.io/2018/04/27/process-fun/"
+                                       target="_blank">MYSQL高级特性之【存储过程与函数】</a>
+                                </h1>
+
+
+                                <div class="article-info info-on-archive">
+
+                                    
+                                    <div class="article-category tagcloud">
+                                        
+                                        <a class="article-category-link" href="https://nicky-chen.github.io/categories/mysql/">MySql</a>
+                                        
+                                    </div>
+                                    
+
+                                    
+                                    <div class="article-tag tagcloud">
+                                        <ul class="article-tag-list">
+                                            
+                                            <li class="article-tag-list-item">
+                                                <a class="article-tag-list-link" href="https://nicky-chen.github.io/tags/%e5%9f%ba%e7%a1%80/">基础</a>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                    
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </header>
+                        </div>
+                    </article>
+                
+
+                    <article class="archive-article archive-type-post">
+                        <div class="archive-article-inner">
+                            <header class="archive-article-header">
+                                <div class="article-meta">
+                                    <a href="https://nicky-chen.github.io/2018/04/21/string-builder-question/" class="archive-article-date">
+                                        <time datetime="2018-04-21 11:18:15 &#43;0800 CST" itemprop="datePublished">04-21
+                                        </time>
+                                    </a>
+                                </div>
+
+
+                                <h1 itemprop="name">
+                                    <a class="archive-article-title" href="https://nicky-chen.github.io/2018/04/21/string-builder-question/"
+                                       target="_blank">字符串拼接的疑惑</a>
+                                </h1>
+
+
+                                <div class="article-info info-on-archive">
+
+                                    
+                                    <div class="article-category tagcloud">
+                                        
+                                        <a class="article-category-link" href="https://nicky-chen.github.io/categories/java-base/">java-base</a>
+                                        
+                                    </div>
+                                    
+
+                                    
+                                    <div class="article-tag tagcloud">
+                                        <ul class="article-tag-list">
+                                            
+                                            <li class="article-tag-list-item">
+                                                <a class="article-tag-list-link" href="https://nicky-chen.github.io/tags/%e5%9f%ba%e7%a1%80/">基础</a>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                    
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </header>
+                        </div>
+                    </article>
+                
+
+                    <article class="archive-article archive-type-post">
+                        <div class="archive-article-inner">
+                            <header class="archive-article-header">
+                                <div class="article-meta">
+                                    <a href="https://nicky-chen.github.io/2018/04/17/exception-introduce/" class="archive-article-date">
+                                        <time datetime="2018-04-17 11:18:15 &#43;0800 CST" itemprop="datePublished">04-17
+                                        </time>
+                                    </a>
+                                </div>
+
+
+                                <h1 itemprop="name">
+                                    <a class="archive-article-title" href="https://nicky-chen.github.io/2018/04/17/exception-introduce/"
+                                       target="_blank">Java异常处理-原理及优化建议</a>
+                                </h1>
+
+
+                                <div class="article-info info-on-archive">
+
+                                    
+                                    <div class="article-category tagcloud">
+                                        
+                                        <a class="article-category-link" href="https://nicky-chen.github.io/categories/java-base/">java-base</a>
+                                        
+                                    </div>
+                                    
+
+                                    
+                                    <div class="article-tag tagcloud">
+                                        <ul class="article-tag-list">
+                                            
+                                            <li class="article-tag-list-item">
+                                                <a class="article-tag-list-link" href="https://nicky-chen.github.io/tags/%e5%9f%ba%e7%a1%80/">基础</a>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                    
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </header>
+                        </div>
+                    </article>
+                
+
+                    <article class="archive-article archive-type-post">
+                        <div class="archive-article-inner">
+                            <header class="archive-article-header">
+                                <div class="article-meta">
+                                    <a href="https://nicky-chen.github.io/2018/04/03/thread-jmm-happens-before/" class="archive-article-date">
+                                        <time datetime="2018-04-03 11:18:15 &#43;0800 CST" itemprop="datePublished">04-03
+                                        </time>
+                                    </a>
+                                </div>
+
+
+                                <h1 itemprop="name">
+                                    <a class="archive-article-title" href="https://nicky-chen.github.io/2018/04/03/thread-jmm-happens-before/"
+                                       target="_blank">java内存模型之[JMM][重排序][happens-before]</a>
+                                </h1>
+
+
+                                <div class="article-info info-on-archive">
+
+                                    
+                                    <div class="article-category tagcloud">
+                                        
+                                        <a class="article-category-link" href="https://nicky-chen.github.io/categories/concurrent/">concurrent</a>
+                                        
+                                    </div>
+                                    
+
+                                    
+                                    <div class="article-tag tagcloud">
+                                        <ul class="article-tag-list">
+                                            
+                                            <li class="article-tag-list-item">
+                                                <a class="article-tag-list-link" href="https://nicky-chen.github.io/tags/%e5%9f%ba%e7%a1%80/">基础</a>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                    
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </header>
+                        </div>
+                    </article>
+                
+
+                    <article class="archive-article archive-type-post">
+                        <div class="archive-article-inner">
+                            <header class="archive-article-header">
+                                <div class="article-meta">
+                                    <a href="https://nicky-chen.github.io/2018/03/28/decorator/" class="archive-article-date">
+                                        <time datetime="2018-03-28 11:18:15 &#43;0800 CST" itemprop="datePublished">03-28
+                                        </time>
+                                    </a>
+                                </div>
+
+
+                                <h1 itemprop="name">
+                                    <a class="archive-article-title" href="https://nicky-chen.github.io/2018/03/28/decorator/"
+                                       target="_blank">实际项目运用之Decorator模式（装饰器模式）</a>
+                                </h1>
+
+
+                                <div class="article-info info-on-archive">
+
+                                    
+                                    <div class="article-category tagcloud">
+                                        
+                                        <a class="article-category-link" href="https://nicky-chen.github.io/categories/design-pattern/">design-pattern</a>
+                                        
+                                    </div>
+                                    
+
+                                    
+                                    <div class="article-tag tagcloud">
+                                        <ul class="article-tag-list">
+                                            
+                                            <li class="article-tag-list-item">
+                                                <a class="article-tag-list-link" href="https://nicky-chen.github.io/tags/%e7%bb%93%e6%9e%84%e5%9e%8b/">结构型</a>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                    
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </header>
+                        </div>
+                    </article>
+                
+
+                    <article class="archive-article archive-type-post">
+                        <div class="archive-article-inner">
+                            <header class="archive-article-header">
+                                <div class="article-meta">
+                                    <a href="https://nicky-chen.github.io/2018/03/21/binary-operation/" class="archive-article-date">
+                                        <time datetime="2018-03-21 11:18:15 &#43;0800 CST" itemprop="datePublished">03-21
+                                        </time>
+                                    </a>
+                                </div>
+
+
+                                <h1 itemprop="name">
+                                    <a class="archive-article-title" href="https://nicky-chen.github.io/2018/03/21/binary-operation/"
+                                       target="_blank">java中位运算技巧</a>
+                                </h1>
+
+
+                                <div class="article-info info-on-archive">
+
+                                    
+                                    <div class="article-category tagcloud">
+                                        
+                                        <a class="article-category-link" href="https://nicky-chen.github.io/categories/java-base/">java-base</a>
+                                        
+                                    </div>
+                                    
+
+                                    
+                                    <div class="article-tag tagcloud">
+                                        <ul class="article-tag-list">
+                                            
+                                            <li class="article-tag-list-item">
+                                                <a class="article-tag-list-link" href="https://nicky-chen.github.io/tags/%e5%9f%ba%e7%a1%80/">基础</a>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                    
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </header>
+                        </div>
+                    </article>
+                
+
+                    <article class="archive-article archive-type-post">
+                        <div class="archive-article-inner">
+                            <header class="archive-article-header">
+                                <div class="article-meta">
+                                    <a href="https://nicky-chen.github.io/2018/03/20/classloader-chapter02/" class="archive-article-date">
+                                        <time datetime="2018-03-20 11:18:15 &#43;0800 CST" itemprop="datePublished">03-20
+                                        </time>
+                                    </a>
+                                </div>
+
+
+                                <h1 itemprop="name">
+                                    <a class="archive-article-title" href="https://nicky-chen.github.io/2018/03/20/classloader-chapter02/"
+                                       target="_blank">ClassLoader类加载分析（二）</a>
+                                </h1>
+
+
+                                <div class="article-info info-on-archive">
+
+                                    
+                                    <div class="article-category tagcloud">
+                                        
+                                        <a class="article-category-link" href="https://nicky-chen.github.io/categories/classloader/">Classloader</a>
+                                        
+                                    </div>
+                                    
+
+                                    
+                                    <div class="article-tag tagcloud">
+                                        <ul class="article-tag-list">
+                                            
+                                            <li class="article-tag-list-item">
+                                                <a class="article-tag-list-link" href="https://nicky-chen.github.io/tags/%e6%ba%90%e7%a0%81/">源码</a>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                    
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </header>
+                        </div>
+                    </article>
+                
+                </div>
+            </section>
+            
+
+
+            
+<nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="https://nicky-chen.github.io/post/page/3/">« Prev</a>
+    
+
+    
+        
+        
+            <a class="page-number" href="https://nicky-chen.github.io/post/">1</a>
+        
+    
+        
+        
+            <a class="page-number" href="https://nicky-chen.github.io/post/page/2/">2</a>
+        
+    
+        
+        
+            <a class="page-number" href="https://nicky-chen.github.io/post/page/3/">3</a>
+        
+    
+        
+        
+            <span class="page-number current">4</span>
+        
+    
+        
+        
+            <a class="page-number" href="https://nicky-chen.github.io/post/page/5/">5</a>
+        
+    
+        
+        
+            <a class="page-number" href="https://nicky-chen.github.io/post/page/6/">6</a>
+        
+    
+        
+        
+            <a class="page-number" href="https://nicky-chen.github.io/post/page/7/">7</a>
+        
+    
+    
+    
+    
+    
+    
+
+    
+    <a class="extend next" rel="next" href="https://nicky-chen.github.io/post/page/5//">Next »</a>
+    
+
+    
+    
+
+
+</nav>
+
+
+            <button class="hide-labels">TAG 开关</button>
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js">
+</script>
+<script>
+    $(document).ready(function () {
+        $("button").click(function () {
+            $(".article-info").toggle(200);
+        });
+    });
+</script>
+
+
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2019 nicky_chin
+            </div>
+            <div class="footer-right">
+                <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >本站到访数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量:
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chen.github.io/js/GithubRepoWidget.js"></script>
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chen.github.io/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  5 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-119892182-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i &lt; all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+<script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>
+

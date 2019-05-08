@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  true ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+
+    <title>设计模式之factory模式</title>
+    <link rel="icon" href="https://nicky-chen.github.io/favicon.png">
+
+    <link rel="stylesheet" href="https://nicky-chen.github.io/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chen.github.io/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chen.github.io/apple-touch-icon.png">
+
+
+    <link rel="stylesheet" href="https://nicky-chen.github.io/fancybox/jquery.fancybox.css">
+
+    
+    
+    <link rel="stylesheet" href="https://nicky-chen.github.io/highlight/styles/darcula.css">
+    <script src="https://nicky-chen.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chen.github.io/" class="profilepic">
+            <img src="https://nicky-chen.github.io/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chen.github.io/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chen.github.io/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chen.github.io/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/external/open_source.html">开源项目</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/">归档日志</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="简书"><a class="简书" target="_blank" href="https://www.jianshu.com/u/c44ed4847c3d" title="简书"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chen.github.io/tags/junit" style="font-size: 12px;" class="color4">Junit</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/redis" style="font-size: 12px;" class="color2">Redis</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/spring-base" style="font-size: 12px;" class="color2">Spring-Base</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color4">创建型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color3">基础</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color4">多线程</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color3">思维导图</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color1">源码</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color1">结构型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color3">行为型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chen.github.io/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chen.github.io/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chen.github.io/" class="profilepic">
+                <img src="https://nicky-chen.github.io/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chen.github.io/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chen.github.io/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/external/open_source.html">开源项目</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/">归档日志</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="简书"><a class="简书" target="_blank" href="https://www.jianshu.com/u/c44ed4847c3d" title="简书"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+            <article id="post-js-android" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chen.github.io/2017/12/07/builder-factory/" class="article-date">
+            <time datetime="2017-12-07 11:18:15 &#43;0800 CST" itemprop="datePublished">2017-12-07</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 class="article-title" itemprop="name">
+                <a class="article-title" href="https://nicky-chen.github.io/2017/12/07/builder-factory/">设计模式之factory模式</a>
+            </h1>
+
+
+        </header>
+
+        <div class="article-info article-info-post">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="article-category-link" href="https://nicky-chen.github.io/categories/design-pattern/" style="font-size: 12px;">design-pattern</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/%e5%88%9b%e5%bb%ba%e5%9e%8b/"
+                           style="font-size: 12px;">创建型</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="article-entry" itemprop="articleBody">
+
+            <p><strong>定义</strong>：工厂模式通俗意义上讲就是一个多产品的流程化工厂，每个工厂生产同一系列相关性的组件</p>
+
+<p><strong>分类</strong>：</p>
+
+<p>按工厂职能划分可以分为三类：
+ 简单工厂模式（Simple Factory）
+ 工厂方法模式（Factory Method）
+ 抽象工厂方法（Abstract Factory）</p>
+
+<p>接下来我们直接通过<strong>uml</strong>图和具体的代码实现以上三类</p>
+
+<p>我们以汽车工厂生产汽车为例，本田工厂假设要生产CIVIC和CRV两种车型，那么我们该怎么去设计实现</p>
+
+<p><strong>1 简单工厂模式</strong></p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/10175660-4012e2250133cb61?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="简单工厂模式" /></p>
+
+<p>工厂产品线流程如上图所示：工厂生产汽车通过指定汽车的编号，我们就可以走指定的产品线；调用者只需要选择具体车型而不需要内部车是怎么制造出来的</p>
+
+<p>简单工厂模式主要包括三部分：
+工厂角色：上图中的HONDAFactroy 生产车型用
+抽象产品角色：上图中的HONDA和HONDACar 包含通用的属性和方法
+具体产品角色：上图中的CIVIC和CRV，具体的车型包含各种参数</p>
+
+<p><strong>代码如下</strong></p>
+
+<pre><code>/** 
+* @author nicky_chin [shuilianpiying@163.com] 
+* @since –created on 2017/12/27 at 11:11 
+*/ 
+public class CIVIC extends HONDACar implements HONDA {
+
+private String carName;
+
+private Double price;
+
+public CIVIC() {
+    this.carName = &quot;10代思域&quot;;
+    this.price = 158000.9;
+}
+
+@Override
+public String introduceCar() {
+    return &quot;CIVIC{&quot; + &quot;carName='&quot; + carName + '\'' + &quot;, price=&quot; + price + &quot;} &quot; + super.toString();
+}
+
+@Override
+public void salePlace() {
+    System.out.println(&quot;余杭区东本销售旗舰店&quot;);
+}
+
+}
+
+/** 
+* @author nicky_chin [shuilianpiying@163.com] 
+* @since –created on 2017/12/27 at 11:12 
+*/ 
+public class CRV extends HONDACar implements HONDA {
+
+private String carName;
+
+private Double price;
+
+public CRV() {
+    carName = &quot;本田crv&quot;;
+    price = 290000.8;
+}
+
+@Override
+public void salePlace() {
+    System.out.println(&quot;西湖东本顺风旗舰店&quot;);
+}
+
+@Override
+public String introduceCar() {
+    return &quot;CRV{&quot; + &quot;carName='&quot; + carName + '\'' + &quot;, price=&quot; + price + &quot;} &quot; + super.toString();
+
+}
+
+}
+</code></pre>
+
+<pre><code>public interface HONDA {
+
+String introduceCar();
+}
+
+/** 
+* @author nicky_chin [shuilianpiying@163.com] 
+* @since –created on 2017/12/27 at 11:15 
+*/ 
+public abstract class HONDACar implements HONDA {
+
+//供应商
+private String supplier;
+
+//税率
+private Double rate;
+
+public HONDACar() {
+    supplier = &quot;广州&quot;;
+    rate = 7.0;
+}
+
+public final String getSupplier() {
+    return this.supplier;
+}
+
+public final Double getRate() {
+    return this.rate;
+}
+
+public abstract void salePlace();
+
+@Override
+public String toString() {
+    return &quot;HONDACar{&quot; + &quot;supplier='&quot; + supplier + '\'' + &quot;, 税率rate=&quot; + rate + '}';
+}
+
+}
+
+
+public class FactoryHONDA {
+
+public static final int TYPE_CIVIC = 1;
+
+public static final int TYPE_CRV = 2;
+
+public static HONDA produceCar(int type) {
+    switch (type) {
+        case TYPE_CIVIC:
+        return new CIVIC();
+    case TYPE_CRV:
+        return new CRV();
+    }
+    return null;
+}
+}
+</code></pre>
+
+<p><strong>分析</strong>
+这种工厂方法不符合开闭原则，因为增加车型，需要在HONDAFactory中修改具体的代码，我们可以通过反射的方式动态加载类避免这种问题</p>
+
+<p><strong>2 工厂方法模式</strong></p>
+
+<p> 一个抽象产品，可以派生多个具体产品
+ 一个抽象工厂，可以派生多个具体工厂
+ 每个具体工厂创建一个产品线</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/10175660-922ce03d6a042ced?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="工厂方法模式" /></p>
+
+<p>如上图所示，工厂方法则有多个工厂实例，每个工厂负责一条流水线</p>
+
+<p>工厂方法模式主要包括四部分：
+抽象工厂角色：上图中的HONDAFactory，是具体工厂公共部分
+具体工厂角色：上图中的CIVICFactory和CRVFactory
+抽象产品角色：上图中的HONDA和HONDACar 包含通用的属性和方法
+具体产品角色：上图中的CIVIC和CRV，具体的车型包含各种参数</p>
+
+<p><strong>代码如下</strong></p>
+
+<pre><code>public class CIVICFactory extends HONDAFactory {
+
+@Override
+public HONDA produceCar() {
+    return new CIVIC();
+}
+
+} 
+public class CRVFactory extends HONDAFactory{
+
+@Override
+public HONDA produceCar() {
+    return new CRV();
+}
+
+} 
+public abstract class HONDAFactory {
+
+public abstract HONDA produceCar();
+
+} 
+/** 
+* @author nicky_chin [shuilianpiying@163.com] 
+* @since –created on 2017/12/27 at 11:39 
+*/ 
+public class HONDACustomer {
+
+public static void main(String[] args) {
+    Scanner scanner = new Scanner(System.in);
+    System.out.println(&quot;请看你想要买的车&quot;);
+    System.out.println(&quot;CIVIC&quot;);
+    System.out.println(&quot;CRV&quot;);
+    String type = scanner.nextLine();
+    System.out.println(&quot;您选择是：&quot; +type);
+    try {
+        Class&lt;?&gt; carType = Class.forName(&quot;designpattern.factory.factorymethod.&quot; + type.toUpperCase() + &quot;Factory&quot;);
+        Method factoryMtd = carType.getMethod(&quot;produceCar&quot;);
+        HONDA honda = (HONDA)factoryMtd.invoke(carType.newInstance());
+        System.out.println(honda.introduceCar());
+    } catch (ReflectiveOperationException e) {
+            System.out.println(&quot;没有该车型&quot;);
+        }
+    }
+
+}
+
+</code></pre>
+
+<p>分析
+当有新车型生产线时，只需创建具体的工厂类和车型类即可，不需要修改现有代码，符合开闭原则（代码中具体体现为通过反射加载类地址方式获取，如果你需要把地址配置到properties文件中，则可以使用Resorcebundle工具类配合使用，这样更灵活），但是如果工厂只是单生产线，那么新增车型越多工厂越多，越多越繁琐</p>
+
+<p>3抽象工厂方法</p>
+
+<p> 多个抽象产品，每个抽象产品有多个具体产品类
+ 一个抽象工厂，有多个具体工厂
+ 每个具体工厂可以创建多个具体产品实例</p>
+
+<p>uml图就不画了，只是在HONDAFactroy中加入多个产品线的方法
+抽象工厂模式的工作流程和工厂方法模式的工作流程基本相似，唯一不同是一个工厂生产多个组件
+我们以生产该类型汽车的同时还可以生产该类型的车毂（wheel）作为例子</p>
+
+<p>代码</p>
+
+<pre><code>public class CIVICFactory implements HONDAFactory {
+
+@Override
+public HONDA produceCar() {
+    return new CIVIC();
+}
+
+@Override
+public Wheel produceWheel() {
+    return new CIVICWheel();
+}
+
+}
+
+public class CRVFactory implements HONDAFactory {
+
+@Override
+public HONDA produceCar() {
+    return new CRV();
+}
+
+@Override
+public Wheel produceWheel() {
+    return new CRVWheel();
+}
+
+}
+
+ublic interface HONDAFactory {
+
+HONDA produceCar();
+
+Wheel produceWheel();
+
+} 
+public final class HONDACustomer {
+
+public static void main(String[] args) {
+    Scanner scanner = new Scanner(System.in);
+    System.out.println(&quot;请看你想要买的车&quot;);
+    System.out.println(&quot;CIVIC&quot;);
+    System.out.println(&quot;CRV&quot;);
+    String type = scanner.nextLine();
+    System.out.println(&quot;您选择是：&quot; +type);
+    try {
+        Class&lt;?&gt; carType = Class.forName(&quot;designpattern.factory.abstractfactory.&quot; + type.toUpperCase() + &quot;Factory&quot;);
+        Method carMtd = carType.getMethod(&quot;produceCar&quot;);
+        HONDA honda = (HONDA)carMtd.invoke(carType.newInstance());
+        System.out.println(honda.introduceCar());
+        Method wheelMtd = carType.getMethod(&quot;produceWheel&quot;);
+        Wheel wheel =(Wheel) wheelMtd.invoke(carType.newInstance());
+        wheel.introduce();
+
+    } catch (ReflectiveOperationException e) {
+            System.out.println(&quot;没有该车型或车毂&quot;);
+        }
+    }
+
+}
+</code></pre>
+
+<p><strong>分析</strong></p>
+
+<p>从上代码分析可见，抽象工厂模式应用场景是围绕同一主题的n个系列产品（如汽车和车毂） 抽象工厂模式和工厂方法模式的区别在于需要创建的对象的复杂程度
+、
+<strong>总结</strong></p>
+
+<p>综上所述，基本可以知道如何使用
+简单工厂：<strong>单工厂多产品线</strong>
+工厂方法：<strong>多工厂单产品线</strong>
+抽象工厂方法：<strong>多工厂多产品线</strong></p>
+
+<p>根据工厂产品需求选择合适的工厂模式</p>
+
+<p>具体的例子比如 mybatis 的SqlSessionFactory接口
+<img src="http://upload-images.jianshu.io/upload_images/10175660-2a587ed1bbed05b0?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="SqlSessionFactory" /></p>
+
+<p>有两个具体工厂（SqlSessionManager 和 DefalutSqlSessionFactory） 每个工厂中有 生产SqlSession 和 Configuration 的 流水线 SqlSession 又是抽象产品角色，有很多具体实现</p>
+
+
+        </div>
+
+    </div>
+
+    
+    <nav id="article-nav">
+
+        
+        <div id="article-nav-newer" class="article-nav-title">
+            <a href="https://nicky-chen.github.io/2017/12/19/builder/">
+                设计模式之builder模式
+            </a>
+        </div>
+        
+
+        
+        <div id="article-nav-older" class="article-nav-title">
+            <a href="https://nicky-chen.github.io/2017/11/03/recursive-lock/">
+                可重入锁
+            </a>
+        </div>
+        
+
+    </nav>
+    
+
+
+</article>
+
+<div id="toc" class="toc-article" >
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc">
+        
+    </ol>
+</div>
+<style>
+    
+    .left-col .switch-btn {
+        display: none;
+    }
+
+    .left-col .switch-area {
+        display: none;
+    }
+    
+
+
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录" >
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function () {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    
+    
+    
+        
+    
+</script>
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_more" data-cmd="more"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+        <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+        <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config = {
+            "common": {
+                "bdSnsKey": {},
+                "bdText": "",
+                "bdMini": "2",
+                "bdMiniList": false,
+                "bdPic": "",
+                "bdStyle": "0",
+                "bdSize": "24"
+            }, "share": {}
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '//bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+</div>
+
+
+
+
+<div style="margin-left: 30px;margin-right: 30px;background: white;padding-left: 30px;padding-right: 30px">
+    <div class="comments">
+        <h3>COMMENTS</h3>
+        <script type="text/javascript">
+            (function() {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                dsq.setAttribute('data-timestamp', +new Date());
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <div id="disqus_thread"></div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="scroll" id="post-nav-button">
+
+    
+    <a href="https://nicky-chen.github.io/2017/12/19/builder/" title="上一篇: 设计模式之builder模式">
+        <i class="fa fa-angle-left"></i>
+    </a>
+    
+
+
+    <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+
+    
+    <a href="https://nicky-chen.github.io/2017/11/03/recursive-lock/" title="下一篇: 可重入锁">
+        <i class="fa fa-angle-right"></i>
+    </a>
+    
+
+</div>
+
+
+<ul class="post-list toc-article">
+    
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2019/05/03/apt_lombok_implement/" target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/25/spring-springmvc/" target="_blank">Spring之动手实现SpringMVC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/22/java-methodhandler/" target="_blank">Java反射优化之方法句柄</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/16/spring-bean-ioc/" target="_blank">Spring之动手实现IOC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/12/spring-bean-lifecycle/" target="_blank">Spring之Bean加载-解析-生命周期</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/09/aqs-condition/" target="_blank">并发基础之Condition(等待队列)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/07/cache-redis-optimize/" target="_blank">Redis注意事项及常见优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/04/aqs_chapter02/" target="_blank">并发基础之AQS同步器（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/01/cache-redis-slowlog/" target="_blank">Redis之慢查询日志</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/31/aqs_chapter01/" target="_blank">并发基础之AQS同步器（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/16/junit-codeanalysis/" target="_blank">初窥门径之JUnit源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/13/java-securitymanager/" target="_blank">Java安全之SecurityManager</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/29/responsibility-chain/" target="_blank">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/25/jndi-introdution/" target="_blank">JNDI知识摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/17/architect/" target="_blank">技术图谱</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/07/singletion/" target="_blank">设计模式之单例模式终极版【克隆-序列化-反射】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/02/fail-fast-safe/" target="_blank">Fail-Fast和Fail-Safe机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/27/adapter/" target="_blank">实际项目运用之Adapter模式（适配器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/18/template/" target="_blank">设计模式之Template模式（模版模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/14/synchronized-principle/" target="_blank">synchronized实现原理及锁优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/13/juc-tree-info/" target="_blank">JUC知识点总结</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/06/strategy/" target="_blank">实际项目运用之Strategy模式（策略模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/04/volatile-feature/" target="_blank">volatile关键字原理实现及应用</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/28/high-event/" target="_blank">MYSQL高级特性之【Event事件】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/27/process-fun/" target="_blank">MYSQL高级特性之【存储过程与函数】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/21/string-builder-question/" target="_blank">字符串拼接的疑惑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/17/exception-introduce/" target="_blank">Java异常处理-原理及优化建议</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/03/thread-jmm-happens-before/" target="_blank">java内存模型之[JMM][重排序][happens-before]</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/28/decorator/" target="_blank">实际项目运用之Decorator模式（装饰器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/21/binary-operation/" target="_blank">java中位运算技巧</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/20/classloader-chapter02/" target="_blank">ClassLoader类加载分析（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/13/introspector/" target="_blank">Java 内省(Introspector)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/08/classloader-chapter01/" target="_blank">ClassLoader类加载分析（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/12/19/builder/" target="_blank">设计模式之builder模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/12/07/builder-factory/" target="_blank">设计模式之factory模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/11/03/recursive-lock/" target="_blank">可重入锁</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/03/17/book_list/" target="_blank">阅读书单</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/02/19/open_source/" target="_blank">开源项目</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/02/19/tools/" target="_blank">在线工具</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+</ul>
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    $(".post-list").addClass("toc-article");
+    $(".post-list-item a").attr("target", "_blank");
+    $("#post-nav-button > a:nth-child(2)").click(function () {
+        $(".fa-bars, .fa-times").toggle();
+        $(".post-list").toggle(300);
+        if ($(".toc").length > 0) {
+            $("#toc, #tocButton").toggle(200, function () {
+                if ($(".switch-area").is(":visible")) {
+                    $("#toc, .switch-btn, .switch-area").toggle();
+                    $("#tocButton").attr("value", valueHide);
+                }
+            })
+        }
+        else {
+            $(".switch-btn, .switch-area").fadeToggle(300);
+        }
+    })
+</script>
+
+
+<script>
+
+</script>
+
+
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2019 nicky_chin
+            </div>
+            <div class="footer-right">
+                <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >本站到访数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量:
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chen.github.io/js/GithubRepoWidget.js"></script>
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chen.github.io/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  5 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-119892182-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i &lt; all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+<script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>

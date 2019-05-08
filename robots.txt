@@ -1,4 +1,1 @@
-# robots.txt generated at http://tool.chinaz.com/robots/
 User-agent: *
-Disallow:
-Sitemap: https://nicky-chen.github.io/sitemap.xml

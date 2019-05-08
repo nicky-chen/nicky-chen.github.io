@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  true ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+
+    <title>Spring</title>
+    <link rel="icon" href="https://nicky-chen.github.io/favicon.png">
+
+    <link rel="stylesheet" href="https://nicky-chen.github.io/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chen.github.io/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chen.github.io/apple-touch-icon.png">
+
+
+    <link rel="stylesheet" href="https://nicky-chen.github.io/fancybox/jquery.fancybox.css">
+
+    
+    
+    <link rel="stylesheet" href="https://nicky-chen.github.io/highlight/styles/darcula.css">
+    <script src="https://nicky-chen.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chen.github.io/" class="profilepic">
+            <img src="https://nicky-chen.github.io/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chen.github.io/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chen.github.io/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chen.github.io/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/external/open_source.html">开源项目</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/">归档日志</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="简书"><a class="简书" target="_blank" href="https://www.jianshu.com/u/c44ed4847c3d" title="简书"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chen.github.io/tags/junit" style="font-size: 12px;" class="color1">Junit</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/redis" style="font-size: 12px;" class="color4">Redis</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/spring-base" style="font-size: 12px;" class="color2">Spring-Base</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color4">创建型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">基础</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color4">多线程</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color4">思维导图</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color2">源码</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color3">结构型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color2">行为型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chen.github.io/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chen.github.io/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chen.github.io/" class="profilepic">
+                <img src="https://nicky-chen.github.io/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chen.github.io/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chen.github.io/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/external/open_source.html">开源项目</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/">归档日志</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="简书"><a class="简书" target="_blank" href="https://www.jianshu.com/u/c44ed4847c3d" title="简书"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+            
+            
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chen.github.io/2018/08/25/spring-springmvc/" class="article-date">
+            <time datetime="2018-08-25 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-25</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chen.github.io/2018/08/25/spring-springmvc/">Spring之动手实现SpringMVC功能</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 简介 SpringMVC大家应该耳熟能详，只要是做Java网站开发的小伙伴，都会使用的框架。SpringMVC以 DispatcherServlet 为核心，负责协调和组织不同组件以完成请求处理并返回响应的工作，实现了MVC模式。接下来我们从 该框架的流程 来整理设计思路，最后自己实现一个mvc框架.
+2 SpringMVC运行流程 springmvc的流程如下：
+API说明
+_DispatcherServlet_：
+ Spring提供的前端控制器，所有的请求都有经过它来统一分发。在DispatcherServlet将请求分发给Controller之前，需要借助于Spring提供的HandlerMapping定位到具体的Controller。
+ HandlerMapping ：
+ 完成客户请求到Controller映射，包括拦截器部分内容
+ Controller ：
+ Controller将处理用户请求，调用业务层接口分析，并返回ModelAndView对象给DispatcherServlet前端控制器，ModelAndView中包含了模型（Model）和视图（View）
+ ViewResolver ：
+ Spring提供的视图解析器（ViewResolver）在Web应用中查找View对象，会根据当前的视图渲染引擎（JSP FreeMarker Thymeleaf）来渲染视图，返回给前端
+ 流程概述
+  1 用户发送请求至前端控制器DispatcherServlet 2 DispatcherServlet收到请求调用HandlerMapping处理器映射器 3 处理器映射器根据请求url找到具体的处理器，生成处理器对象及处理器拦截器(如果有则生成)一并返回给DispatcherServlet。 4 DispatcherServlet通过HandlerAdapter处理器适配器调用处理器 5 执行处理器(Controller，也叫后端控制器)。 6 Controller执行完成返回ModelAndView 7 HandlerAdapter将controller执行结果ModelAndView返回给DispatcherServlet 8 DispatcherServlet将ModelAndView传给ViewReslover视图解析器 9 ViewReslover解析后返回具体View 10 DispatcherServlet对View进行渲染视图（即将模型数据填充至视图中） 11 DispatcherServlet响应用户   3 MVC之九大组件 SpringMVC中的Servlet一共有三个层次，分别是HttpServletBean、FrameworkServlet和 DispatcherServlet。 HttpServletBean直接继承自java的HttpServlet，其作用是将Servlet中配置的参数设置到相应的属性； FrameworkServlet初始化了WebApplicationContext，DispatcherServlet初始化了自身的9个组件。
+DispatcherServlet初始化方法
+protected void onRefresh(ApplicationContext context) { initStrategies(context); } protected void initStrategies(ApplicationContext context) { initMultipartResolver(context); initLocaleResolver(context); initThemeResolver(context); initHandlerMappings(context); initHandlerAdapters(context); initHandlerExceptionResolvers(context); initRequestToViewNameTranslator(context); initViewResolvers(context); initFlashMapManager(context); }  具体9个组件介绍如下：
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chen.github.io/categories/spring/" style="font-size: 12px;">spring</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/spring-base/"
+                           style="font-size: 12px;">spring-base</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chen.github.io/2018/08/25/spring-springmvc/">more &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chen.github.io/2018/08/16/spring-bean-ioc/" class="article-date">
+            <time datetime="2018-08-16 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-16</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chen.github.io/2018/08/16/spring-bean-ioc/">Spring之动手实现IOC功能</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 背景 我们经常在使用Spring生态中的组件，我们在潜移默化的DI和IOC的思想下，来创建和使用Bean对象，使用过 @Component @ComponentScan @Autowired @Bean @Configuration 等等的注解，所以了解Spring容器是如何创建和管理Bean,是我们必需掌握的技能。 下面我们通过手写DI和IOC的方式来加深对Spring的理解。
+#2 依赖注入 DI，Dependency Injection，即依赖注入。具体含义表示组件之间的依赖关系由容器在应用系统运行期来决定，也就是由容器动态地将某种依赖关系的目标对象实例注入到应用系统中的各个关联的组件之中。对象只提供普通的方法让容器去决定依赖关系。
+Spring中创建Bean的方式有三种：
+ 通过XML显式配置 通过Java显式配置 (利用 @Configuration @Bean) 隐式进行bean搜索并自动装配 （利用基于@Component 元注解的方式）
+ 通过上面叙述我们知道，创建bean其实大致可以分为两种，一种是基于XML,另一种是基于注解的方式。
+2.1 XML方式 user.xml
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;beans&gt; &lt;bean id=&quot;studentA&quot; class=&quot;iockids.xml.Student&quot; scope=&quot;singleton&quot;&gt; &lt;property name=&quot;age&quot; value=&quot;20&quot;/&gt; &lt;property name=&quot;name&quot; value=&quot;nana&quot;/&gt; &lt;property name=&quot;address&quot; value=&quot;hangzhou&quot;/&gt; &lt;/bean&gt; &lt;bean id=&quot;studentB&quot; class=&quot;iockids.xml.Student&quot; scope=&quot;prototype&quot;&gt; &lt;property name=&quot;name&quot; value=&quot;nicky&quot;/&gt; &lt;property name=&quot;age&quot; value=&quot;22&quot;/&gt; &lt;property name=&quot;address&quot; value=&quot;ningbo&quot;/&gt; &lt;/bean&gt; &lt;/beans&gt;  Student对象
+@Data public class Student { private String name; private Integer age; private String address; }   /** * 单例对象容器 */ private Map&lt;String, Object&gt; singletonBeanFactory = new ConcurrentHashMap&lt;&gt;(); /** * bean对象的容器 */ private Map&lt;String, Class&lt;?
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chen.github.io/categories/spring/" style="font-size: 12px;">spring</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/spring-base/"
+                           style="font-size: 12px;">spring-base</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chen.github.io/2018/08/16/spring-bean-ioc/">more &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chen.github.io/2018/08/12/spring-bean-lifecycle/" class="article-date">
+            <time datetime="2018-08-12 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-12</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chen.github.io/2018/08/12/spring-bean-lifecycle/">Spring之Bean加载-解析-生命周期</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 概要 使用Spring框架，我们需要了解Bean的创建加载过程，需要熟悉Bean是如何获取和使用的。 下面我们通过分析下Spring加载XML文件的过程来分析Bean的数据流。 当前调试的Spring 版本是最新的 4.1.0 release 版本
+调试代码主入口
+ ApplicationContext context = new ClassPathXmlApplicationContext(&quot;consumer.xml&quot;); System.out.println(&quot;Consumer Started&quot;); ConsumerBean bean = context.getBean(ConsumerBean.class); String secretKey = bean.getProperties().getProperty(&quot;SecretKey&quot;); System.out.println(secretKey);  2 解析过程 创建 ClassPathXmlApplicationContext对象，会调用refresh()方法
+ public void refresh() throws BeansException, IllegalStateException { synchronized (this.startupShutdownMonitor) { // Prepare this context for refreshing. prepareRefresh(); // 获取xml文件的信息，存储在beanFactory对象中 ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory(); .................省略中间代码 // 注册bean信息 invokeBeanFactoryPostProcessors(beanFactory); // 实例化bean finishBeanFactoryInitialization(beanFactory); // Last step: publish corresponding event. finishRefresh(); }  之后会进入AbstractApplicationContext对象，处理如下方法：
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chen.github.io/categories/spring/" style="font-size: 12px;">spring</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/spring-base/"
+                           style="font-size: 12px;">spring-base</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chen.github.io/2018/08/12/spring-bean-lifecycle/">more &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            
+            
+
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2019 nicky_chin
+            </div>
+            <div class="footer-right">
+                <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >本站到访数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量:
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chen.github.io/js/GithubRepoWidget.js"></script>
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chen.github.io/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  5 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-119892182-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i &lt; all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+<script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>
+

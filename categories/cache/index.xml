@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cache on 南乡清水</title>
+    <link>https://nicky-chen.github.io/categories/cache/</link>
+    <description>Recent content in Cache on 南乡清水</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>All rights reserved - 2018</copyright>
+    <lastBuildDate>Tue, 07 Aug 2018 11:18:15 +0800</lastBuildDate>
+    
+	<atom:link href="https://nicky-chen.github.io/categories/cache/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Redis注意事项及常见优化</title>
+      <link>https://nicky-chen.github.io/2018/08/07/cache-redis-optimize/</link>
+      <pubDate>Tue, 07 Aug 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/08/07/cache-redis-optimize/</guid>
+      <description>1 键值设计 1.1 key名设计  (1)【建议】: 可读性和可管理性  以业务名(或数据库名)为前缀(防止key冲突)，用冒号分隔，比如业务名:表名:id
+roborder:user:1:amount   (2)【建议】：简洁性  保证语义的前提下，控制key的长度，当key较多时，内存占用也不容忽视，例如：
+user:{uid}:friends:messages:{mid} 简化为 u:{uid}:fr:m:{mid}。   (3)【强制】：不要包含特殊字符  反例：包含空格、换行、单双引号以及其他转义字符
+1.2 value设计  (1)【强制】：拒绝bigkey(防止网卡流量、慢查询)  string类型控制在10KB以内，hash、list、set、zset元素个数不要超过5000。
+反例：一个包含200万个元素的list。
+非字符串的bigkey，不要使用del删除，使用hscan、sscan、zscan方式渐进式删除，同时要注意防止bigkey过期时间自动删除问题(例如一个200万的zset设置1小时过期，会触发del操作，造成阻塞，而且该操作不会不出现在慢查询中(latency可查))
+ (2)【推荐】：选择适合的数据类型。  例如：实体类型(要合理控制和使用数据结构内存编码优化配置,例如ziplist，但也要注意节省内存和性能之间的平衡)
+反例：
+set user:1:name tom set user:1:age 19 set user:1:favor football  正例:
+hmset user:1 name tom age 19 favor football   (3)【推荐】：控制key的生命周期，redis不是垃圾桶。  建议使用expire设置过期时间(条件允许可以打散过期时间，防止集中过期)，不过期的数据重点关注idletime。同时设置时间的时候注意原子性操作，否则可能出现死锁情况
+ (4)【推荐】hash，set，zset，list 存储过多的元素优化 可以将这些元素分拆，通过hash取模的方式 正常存取流程是 hget(hashKey, field) ; hset(hashKey, field, value) 现在，固定一个桶的数量，比如 100， 每次存取的时候，先在本地计算field的hash值，模除 100， 确定了该field落在哪个key上。  newHashKey = hashKey + hash(field) % 10000; hset (newHashKey, field, value) ; hget(newHashKey, field)  set, zset, list 也可以类似上述做法,如果对于顺序有严格要求的则不试用</description>
+    </item>
+    
+    <item>
+      <title>Redis之慢查询日志</title>
+      <link>https://nicky-chen.github.io/2018/08/01/cache-redis-slowlog/</link>
+      <pubDate>Wed, 01 Aug 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/08/01/cache-redis-slowlog/</guid>
+      <description>Redis提供了5种数据结构,但除此之外,Redis还提供了注入慢查询分析,Redis Shell、Pipeline、事务、与Lua脚本、Bitmaps、HyperLogLog、PubSub、GEO等附加功能,这些功能可以在某些场景发挥很重要的作用.
+ 慢查询分析 许多存储系统(如:MySQL)提供慢查询日志帮助开发与运维人员定位系统存在的慢操作.所谓慢查询日志就是系统在命令执行前后计算每条命令的执行时间,当超过预设阈值,就将这条命令的相关信息(例如:发生时间,耗时,命令的详细信息)记录到慢查询日志中,Redis也提供了类似的功能.
+Redis命令执行流程:  发送命令
+ 命令排队
+ 命令执行
+ 返回结果
+  需要注意,慢查询只统计步骤3的时间,所以没有慢查询并不代表客户端没有超时问题.
+1) 慢查询的两个配置参数 对于慢查询功能,需要明确两件事:
+ 预设阈值怎么设置?
+ 慢查询记录存放在那?
+  Redis提供了slowlog-log-slower-than和slowlog-max-len配置来解决这两个问题.从字面意思就可以看出,slowlog-log-slower-than就是这个预设阈值,它的单位是毫秒(1秒=1000000微秒)默认值是10000,假如执行了一条&amp;rdquo;很慢&amp;rdquo;的命令(例如key *),如果执行时间超过10000微秒,那么它将被记录在慢查询日志中.
+ 如果slowlog-log-slower-than=0会记录所有命令,slowlog-log-slower-than&amp;lt;0对于任何命令都不会进行记录.
+ 从字面意思看,slowlog-max-len只是说明了慢查询日志最多存储多少条,并没有说明存放在哪里?实际上Redis使用了一个列表来存储慢查询日志,slowlog-max-len就是列表的最大长度.一个新的命令满足慢查询条件时被插入到这个列表中,当慢查询日志列表已处于其最大长度时,最早插入的一个命令将从列表中移出,例如slowlog-max-len设置长度为64.当有第65条慢查询日志插入的话,那么队头的第一条数据就出列,第65条慢查询就会入列.
+在Redis中有两种修改配置的方法,一种是修改配置文件,另一种是使用config set命令动态修改.例如下面使用config set命令将slowlog-log-slower-than设置为20000微妙.slowlog-max-len设置为1024:
+ config set slowlog-log-slower-than 20000 config set slowlog-max-len 1024 config rewrite  如果需要将Redis将配置持久化到本地配置文件,要执行config rewrite命令.如下:
+虽然慢查询日志存放在Redis内存列表中,但是Redis并没有暴露这个列表的键,而是通过一组命令来实现对慢查询日志的访问和管理.
+(1) 获取慢查询日志
+slowlog get [n]  参数n可以指定条数.
+例:
+ 127.0.0.1:6370&amp;gt; slowlog get 1) 1) (integer) 666 2) (integer) 1456786500 3) (integer) 11615 4) 1) &amp;quot;BGREWRITEAOF&amp;quot; 2) 1) (integer) 665 2) (integer) 1456718400 3) (integer) 12006 4) 1) &amp;quot;SETEX&amp;quot; 2) &amp;quot;video_info_200&amp;quot; 3) &amp;quot;300&amp;quot; 4) &amp;quot;2&amp;quot; .</description>
+    </item>
+    
+  </channel>
+</rss>

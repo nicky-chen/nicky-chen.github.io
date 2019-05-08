@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>结构型 on 南乡清水</title>
+    <link>https://nicky-chen.github.io/tags/%E7%BB%93%E6%9E%84%E5%9E%8B/</link>
+    <description>Recent content in 结构型 on 南乡清水</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>All rights reserved - 2018</copyright>
+    <lastBuildDate>Sun, 27 May 2018 11:18:15 +0800</lastBuildDate>
+    
+	<atom:link href="https://nicky-chen.github.io/tags/%E7%BB%93%E6%9E%84%E5%9E%8B/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>实际项目运用之Adapter模式（适配器模式）</title>
+      <link>https://nicky-chen.github.io/2018/05/27/adapter/</link>
+      <pubDate>Sun, 27 May 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/05/27/adapter/</guid>
+      <description>1. 模式简介 适配器模式解决的问题：让原本因为接口不兼容而不能一起工作的类可以一起工作
+适配器模式中有三种角色：
+ 目标接口Target：用户期望的类，可以是接口，也可以是抽象类或具体类； 需要适配的类Adaptee：当前系统中有的类； 适配器Adapter：在现有接口和目标接口之间的“适配者”  适配器模式的优点：
+ 通过适配器模式，用户在做相似的操作时可以调用同一个接口，其内部过程对于用户是透明的，这样做更简单、更直接、更解耦； 复用了现存的类，解决了现存类和复用环境要求不一致的问题； 将目标接口和现有接口解耦，通过引入一个适配器类，而无需修改原有的代码。
+ 适配器模式的缺点：
+ 使用适配器模式后，如果想要改变适配对象，就需要更换适配器，而更换适配器是一个非常复杂的过程。
+ 适配器模式的适用场景： &amp;gt; 当系统需要使用现有的类，而现有的类不符合系统的接口 当期望的功能和系统中现有的某个类的功能相似，但是具有不同的接口 当系统已经实现某功能，但用户想通过另种接口方式访问，而不想修改原有接口 当使用的第三方组件的接口和系统中定义好的接口不同，不希望修改系统接口
+2.案例代码 适配器分类_适配器模式_和对象适配器模式
+2.1 类适配器UML
+2.2 对象适配器模式UML
+2.3 案例代码：
+被适配对象
+public class Adaptee { public void adapteeMethod() { System.out.println(&amp;quot;这是我们已经实现的功能！&amp;quot;); } }  对象适配器
+public class Adapter implements Target { private Adaptee adaptee = new Adaptee(); @Override public void targetMethod() { adaptee.adapteeMethod(); } }  目标接口</description>
+    </item>
+    
+    <item>
+      <title>实际项目运用之Decorator模式（装饰器模式）</title>
+      <link>https://nicky-chen.github.io/2018/03/28/decorator/</link>
+      <pubDate>Wed, 28 Mar 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/03/28/decorator/</guid>
+      <description>1 概述 在项目中，经常因一些新增需求，导致同一业务的变更，如果所在类继承关系如下：Parent、Child、Grandparent，那么要在Child类上增强些功能怎么办？给Child类增加方法？那会对Grandparent产生什么影响？该如何去处理？看完本文，你会找到你的答案。
+JavaIO中，像下面的嵌套语句很常见，为什么要怎样定义呢？理解装饰模式后，你会找到答案。
+FilterInputStream filterInputStreasm = new BufferedInputStream(new FileInputStream(new File(&amp;quot;/user/a&amp;quot;)));  1.1案例 例如下面一个功能需求，4s店的汽车销售向客户推销自家品牌的产品，我们用代码实现，关系如下：
+具体代码： 汽车销售类
+public abstract class CarSale { /** * 推销车的详情 */ public abstract void displayCarInfo(); /** * 客户签订购买合同 */ public abstract void signContract(String customerName); }  汽车参数详情
+public class CarInfo extends CarSale { @Override public void displayCarInfo() { System.out.println(&amp;quot;日本丰田GTR&amp;quot;); System.out.println(&amp;quot;百公里加速1秒&amp;quot;); System.out.println(&amp;quot;油耗偏高&amp;quot;); System.out.println(&amp;quot;后驱涡轮增压&amp;quot;); System.out.println(&amp;quot;内饰豪华&amp;quot;); System.out.println(&amp;quot;发动机噪音偏大&amp;quot;); System.out.println(&amp;quot;不支持电动座椅，后视镜加热&amp;quot;); } @Override public void signContract(String customerName) { System.out.println(&amp;quot;客户签约销售合同， 付款人：&amp;quot; + customerName); } }  客户</description>
+    </item>
+    
+  </channel>
+</rss>

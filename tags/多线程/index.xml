@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>多线程 on 南乡清水</title>
+    <link>https://nicky-chen.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/</link>
+    <description>Recent content in 多线程 on 南乡清水</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>All rights reserved - 2018</copyright>
+    <lastBuildDate>Thu, 09 Aug 2018 11:18:15 +0800</lastBuildDate>
+    
+	<atom:link href="https://nicky-chen.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>并发基础之Condition(等待队列)</title>
+      <link>https://nicky-chen.github.io/2018/08/09/aqs-condition/</link>
+      <pubDate>Thu, 09 Aug 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/08/09/aqs-condition/</guid>
+      <description>1 定义 Condition是在AQS中配合使用的wait/nofity线程通信协调工具类，我们可以称之为等待队列
+Condition定义了等待/通知两种类型的方法，当前线程调用这些方法时，需要提前获取到Condition对象关联的锁。Condition对象是调用Lock对象的newCondition()方法创建出来的，换句话说，Condition是依赖Lock对象。
+Condition与Object中监视器方法不同点 &amp;gt;condition可以有多个等待队列 monitor只有一个队列在对象头中 condition的等待可以自定义超时时间 conditon的signal 是唤醒等待队列头部的线程节点， Object的notify是随机唤醒 condition对象的属性对开发者透明
+2 Condition使用 demo代码如下
+public class MyService { private Lock lock = new ReentrantLock(); private Condition condition = lock.newCondition(); public void await() { try { lock.lock(); System.out.println(&amp;quot;A&amp;quot;); condition.await(); System.out.println(&amp;quot;B&amp;quot;); } catch (InterruptedException e) { e.printStackTrace(); }finally { lock.unlock(); System.out.println(&amp;quot;锁释放了&amp;quot;); } } public void signal() { try { lock.lock(); condition.signal(); System.out.println(&amp;quot;唤醒时间 ：&amp;quot; + System.currentTimeMillis()); } catch (Exception e) { e.</description>
+    </item>
+    
+    <item>
+      <title>并发基础之AQS同步器（二）</title>
+      <link>https://nicky-chen.github.io/2018/08/04/aqs_chapter02/</link>
+      <pubDate>Sat, 04 Aug 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/08/04/aqs_chapter02/</guid>
+      <description>在AQS同步器组件原理分析前，我们需要了解同步队列这个概念，了解同步队列中节点的入队和出队的流程，CHL同步队列的由来，可以参考我之前的文章： 并发基础之AQS同步器（一）
+1 同步队列 同步器依赖内部的同步队列（一个FIFO双向队列）来完成同步状态的管理，当前线程获取同步状态失败时，同步器会将当前线程以及等待状态等信息构造成为一个节点（Node）并将其加入同步队列，同时会阻塞当前线程，当同步状态释放时，会把首节点中的线程唤醒，使其再次尝试获取同步状态
+FIFO队列Node对象的具体实现如下：
+static final class Node { static final Node SHARED = new Node(); static final Node EXCLUSIVE = null; static final int CANCELLED = 1; static final int SIGNAL = -1; static final int CONDITION = -2; static final int PROPAGATE = -3; volatile int waitStatus; volatile Node prev; volatile Node next; volatile Thread thread; Node nextWaiter; .final boolean isShared() { return nextWaiter == SHARED; } final Node predecessor() throws NullPointerException { Node p = prev; if (p == null) throw new NullPointerException(); else return p; } Node() { } Node(Thread thread, Node mode) { this.</description>
+    </item>
+    
+    <item>
+      <title>并发基础之AQS同步器（一）</title>
+      <link>https://nicky-chen.github.io/2018/07/31/aqs_chapter01/</link>
+      <pubDate>Tue, 31 Jul 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/07/31/aqs_chapter01/</guid>
+      <description>1 AQS同步器 队列同步器AbstractQueuedSynchronizer，是用来构建锁或者其他同步组件的基础框架，它使用了一个int成员变量表示同步状态，通过内置的FIFO队列来完成资源获取线程的排队工作，并发包的作者（Doug Lea）期望它能够成为实现大部分同步需求的基础。
+同步器的主要使用方式是继承，子类通过继承同步器并实现它的抽象方法来管理同步状态，在抽象方法的实现过程中免不了要对同步状态进行更改，这时就需要使用同步器提供的3个方法 &amp;gt;getState() setState(int newState) compareAndSetState(int expect,int update)
+来进行操作，因为它们能够保证状态的改变是安全的。这样就可以方便实现不同类型的同步组件（ReentrantLock、ReentrantReadWriteLock和CountDownLatch等）
+核心操作方式：
+场景1：阻塞直到获取指定资源数
+场景2：可中断限时等待直到获取指定资源数
+场景3：直接尝试获取指定资源数
+场景4：释放指定资源数
+上述四个步骤又都可以分为 共享（share）操作和独占（exclusive） 操作两种，如果AQS设计的足够好，则所有的容器类只需要控制资源数目、获取的资源量和释放的资源量即可
+下图（独占和共享的方法调用）：
+acquire用来表示是获取资源数的操作，而release表示用来释放资源数的操作，不带Shared表示是独占的操作。如果我们没有实现红色圆角矩形框的方法却间接调用了，将会抛出著名的UnsupportedOperationException异常。
+2 队列同步器的接口 同步器的设计是基于模板方法模式 模板方法将会调用使用者重写的方法 重写同步器指定的方法时，需要使用同步器提供的如下3个方法来访问或修改同步状态。 * getState()：获取当前同步状态。 * setState(int newState)：设置当前同步状态。 * compareAndSetState(int expect,int update)：使用CAS设置当前状态，该方法能够保证状态设置的原子性。
+独占锁操作方法说明如下：
+共享锁操作方法如下：
+同步器提供的模板方法基本上分为3类： &amp;gt;独占式获取与释放同步状态 共享式获取与释放 同步状态和查询同步队列中的等待线程情况
+自定义同步组件将使用同步器提供的模板方法来实现自己的同步语义。只有掌握了同步器的工作原理才能更加深入地理解并发包中其他的并发组件
+自定义同步组件 :::java public class Mutex implements Lock { public static void main(String[] args) { Mutex mutex = new Mutex(); CountDownLatch latch = new CountDownLatch(1); Test test = new Test(); ExecutorService pool = Executors.</description>
+    </item>
+    
+  </channel>
+</rss>

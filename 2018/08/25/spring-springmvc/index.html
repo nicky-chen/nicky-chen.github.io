@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  true ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+
+    <title>Spring之动手实现SpringMVC功能</title>
+    <link rel="icon" href="https://nicky-chen.github.io/favicon.png">
+
+    <link rel="stylesheet" href="https://nicky-chen.github.io/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chen.github.io/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chen.github.io/apple-touch-icon.png">
+
+
+    <link rel="stylesheet" href="https://nicky-chen.github.io/fancybox/jquery.fancybox.css">
+
+    
+    
+    <link rel="stylesheet" href="https://nicky-chen.github.io/highlight/styles/darcula.css">
+    <script src="https://nicky-chen.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chen.github.io/" class="profilepic">
+            <img src="https://nicky-chen.github.io/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chen.github.io/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chen.github.io/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chen.github.io/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/external/open_source.html">开源项目</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/">归档日志</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="简书"><a class="简书" target="_blank" href="https://www.jianshu.com/u/c44ed4847c3d" title="简书"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chen.github.io/tags/junit" style="font-size: 12px;" class="color4">Junit</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/redis" style="font-size: 12px;" class="color1">Redis</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/spring-base" style="font-size: 12px;" class="color3">Spring-Base</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color1">创建型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">基础</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color3">多线程</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color2">思维导图</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color1">源码</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color1">结构型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color3">行为型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chen.github.io/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chen.github.io/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chen.github.io/" class="profilepic">
+                <img src="https://nicky-chen.github.io/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chen.github.io/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chen.github.io/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/external/open_source.html">开源项目</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/">归档日志</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="简书"><a class="简书" target="_blank" href="https://www.jianshu.com/u/c44ed4847c3d" title="简书"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+            <article id="post-js-android" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chen.github.io/2018/08/25/spring-springmvc/" class="article-date">
+            <time datetime="2018-08-25 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-25</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 class="article-title" itemprop="name">
+                <a class="article-title" href="https://nicky-chen.github.io/2018/08/25/spring-springmvc/">Spring之动手实现SpringMVC功能</a>
+            </h1>
+
+
+        </header>
+
+        <div class="article-info article-info-post">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="article-category-link" href="https://nicky-chen.github.io/categories/spring/" style="font-size: 12px;">spring</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/spring-base/"
+                           style="font-size: 12px;">spring-base</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="article-entry" itemprop="articleBody">
+
+            
+
+<h1 id="1-简介">1 简介</h1>
+
+<p>SpringMVC大家应该耳熟能详，只要是做Java网站开发的小伙伴，都会使用的框架。SpringMVC以 <em>DispatcherServlet</em> 为核心，负责协调和组织不同组件以完成请求处理并返回响应的工作，实现了MVC模式。接下来我们从 该框架的流程 来整理设计思路，最后自己实现一个mvc框架.</p>
+
+<h1 id="2-springmvc运行流程">2 SpringMVC运行流程</h1>
+
+<p>springmvc的流程如下：</p>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/10175660-d0954b5dd4f6d7ba.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="流程图" /></p>
+
+<p><strong>API说明</strong></p>
+
+<p>_DispatcherServlet_：</p>
+
+<blockquote>
+<p>Spring提供的前端控制器，所有的请求都有经过它来统一分发。在DispatcherServlet将请求分发给Controller之前，需要借助于Spring提供的HandlerMapping定位到具体的Controller。</p>
+</blockquote>
+
+<p><em>HandlerMapping</em> ：</p>
+
+<blockquote>
+<p>完成客户请求到Controller映射，包括拦截器部分内容</p>
+</blockquote>
+
+<p><em>Controller</em> ：</p>
+
+<blockquote>
+<p>Controller将处理用户请求，调用业务层接口分析，并返回ModelAndView对象给DispatcherServlet前端控制器，ModelAndView中包含了模型（Model）和视图（View）</p>
+</blockquote>
+
+<p><em>ViewResolver</em> ：</p>
+
+<blockquote>
+<p>Spring提供的视图解析器（ViewResolver）在Web应用中查找View对象，会根据当前的视图渲染引擎（JSP FreeMarker Thymeleaf）来渲染视图，返回给前端</p>
+</blockquote>
+
+<p><strong>流程概述</strong></p>
+
+<blockquote>
+<ul>
+<li>1 用户发送请求至前端控制器DispatcherServlet</li>
+<li>2 DispatcherServlet收到请求调用HandlerMapping处理器映射器</li>
+<li>3 处理器映射器根据请求url找到具体的处理器，生成处理器对象及处理器拦截器(如果有则生成)一并返回给DispatcherServlet。</li>
+<li>4 DispatcherServlet通过HandlerAdapter处理器适配器调用处理器</li>
+<li>5 执行处理器(Controller，也叫后端控制器)。</li>
+<li>6 Controller执行完成返回ModelAndView</li>
+<li>7 HandlerAdapter将controller执行结果ModelAndView返回给DispatcherServlet</li>
+<li>8  DispatcherServlet将ModelAndView传给ViewReslover视图解析器</li>
+<li>9  ViewReslover解析后返回具体View</li>
+<li>10 DispatcherServlet对View进行渲染视图（即将模型数据填充至视图中）</li>
+<li>11 DispatcherServlet响应用户</li>
+</ul>
+</blockquote>
+
+<h1 id="3-mvc之九大组件">3 MVC之九大组件</h1>
+
+<p>SpringMVC中的Servlet一共有三个层次，分别是HttpServletBean、FrameworkServlet和 DispatcherServlet。
+HttpServletBean直接继承自java的HttpServlet，其作用是将Servlet中配置的参数设置到相应的属性；
+FrameworkServlet初始化了WebApplicationContext，DispatcherServlet初始化了自身的9个组件。</p>
+
+<p>DispatcherServlet初始化方法</p>
+
+<pre><code>protected void onRefresh(ApplicationContext context) {
+		initStrategies(context);
+	}
+
+protected void initStrategies(ApplicationContext context) {
+   initMultipartResolver(context);
+		initLocaleResolver(context);
+		initThemeResolver(context);
+		initHandlerMappings(context);
+		initHandlerAdapters(context);
+		initHandlerExceptionResolvers(context);
+		initRequestToViewNameTranslator(context);
+		initViewResolvers(context);
+		initFlashMapManager(context);
+}
+</code></pre>
+
+<p>具体9个组件介绍如下：</p>
+
+<ul>
+<li>1 <em>HandlerMapping</em></li>
+</ul>
+
+<p>用来查找Handler，在SpringMVC中会有很多请求，每个请求都需要一个Handler处理，具体接收到一个请求之后使用哪个Handler进行处理呢？这就是HandlerMapping需要做的事。</p>
+
+<ul>
+<li><p>2 <em>HandlerAdapter</em></p>
+
+<p>从名字上看，它就是一个适配器。因为SpringMVC中的Handler可以是任意的形式，只要能处理请求就ok，但是Servlet需要的处理方法的结构却是固定的，都是以request和response为参数的方法。如何让固定的Servlet处理方法调用灵活的Handler来进行处理呢？这就是HandlerAdapter要做的事情。</p></li>
+
+<li><p>3  <em>HandlerExceptionResolver</em></p></li>
+</ul>
+
+<p>其它组件都是用来干活的。在干活的过程中难免会出现问题，出问题后怎么办呢？这就需要有一个专门的角色对异常情况进行处理，在SpringMVC中就是HandlerExceptionResolver。具体来说，此组件的作用是根据异常设置ModelAndView，之后再交给render方法进行渲染。</p>
+
+<ul>
+<li>4 <em>ViewResolver</em></li>
+</ul>
+
+<p>ViewResolver用来将String类型的视图名和Locale解析为View类型的视图。View是用来渲染页面的，ViewResolver需要找到渲染所用的模板和所用的技术（也就是视图的类型）进行渲染，具体的渲染过程则交由不同的视图自己完成。</p>
+
+<ul>
+<li>5 <em>RequestToViewNameTranslator</em></li>
+</ul>
+
+<p>ViewName是根据ViewName查找View，但有的Handler处理完后并没有设置View也没有设置ViewName，这时就需要从request获取ViewName了，如何从request中获取ViewName就是RequestToViewNameTranslator要做的事情了。RequestToViewNameTranslator在Spring MVC容器里只可以配置一个，所以所有request到ViewName的转换规则都要在一个Translator里面全部实现。</p>
+
+<ul>
+<li><p>6 <em>LocaleResolver</em></p>
+
+<p>解析视图需要两个参数：一是视图名，另一个是Locale。视图名是处理器返回的，Locale是从哪里来的？这就是LocaleResolver要做的事情。LocaleResolver用于从request解析出Locale，Locale就是zh-cn之类，表示一个区域，有了这个就可以对不同区域的用户显示不同的结果。SpringMVC主要有两个地方用到了Locale：一是ViewResolver视图解析的时候；二是用到国际化资源或者主题的时候。</p></li>
+
+<li><p>7 <em>ThemeResolver</em></p>
+
+<p>用于解析主题。SpringMVC中一个主题对应一个properties文件，里面存放着跟当前主题相关的所有资源、如图片、css样式等。SpringMVC的主题也支持国际化，同一个主题不同区域也可以显示不同的风格。SpringMVC中跟主题相关的类有 ThemeResolver、ThemeSource和Theme。主题是通过一系列资源来具体体现的，要得到一个主题的资源，首先要得到资源的名称，这是ThemeResolver的工作。然后通过主题名称找到对应的主题（可以理解为一个配置）文件，这是ThemeSource的工作。最后从主题中获取资源就可以了。</p></li>
+
+<li><p>8 <em>MultipartResolver</em></p></li>
+</ul>
+
+<p>用于处理上传请求。处理方法是将普通的request包装成MultipartHttpServletRequest，后者可以直接调用getFile方法获取File，如果上传多个文件，还可以调用getFileMap得到FileName-&gt;File结构的Map。此组件中一共有三个方法，作用分别是判断是不是上传请求，将request包装成MultipartHttpServletRequest、处理完后清理上传过程中产生的临时资源。</p>
+
+<ul>
+<li>9 <em>FlashMapManager</em></li>
+</ul>
+
+<p>用来管理FlashMap的，FlashMap主要用在redirect中传递参数。</p>
+
+<h3 id="3-2-springmvc的设计思路">3.2 SpringMVC的设计思路</h3>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/10175660-36c6355383de4367.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="MVC类图" /></p>
+
+<p>为了读取web.xml中的配置，我们用到ServletConfig这个类，它代表当前Servlet在web.xml中的配置信息。通过web.xml中加载我们自己写的DispatcherServlet和读取配置文件。</p>
+
+<p>DispatcherServlet是整个Spring MVC的核心。它负责接收HTTP请求组织协调Spring MVC的各个组成部分。其主要工作有以下三项：</p>
+
+<blockquote>
+<p>1.截获符合特定格式的URL请求。
+2.初始化DispatcherServlet上下文对应的WebApplicationContext，并将其与业务层、持久化层的WebApplicationContext建立关联。
+3.初始化Spring MVC的各个组成组件，并装配到DispatcherServlet中。</p>
+</blockquote>
+
+<h1 id="4-动手实现springmvc">4 动手实现SpringMVC</h1>
+
+<p>项目目录结构如下：
+<img src="https://upload-images.jianshu.io/upload_images/10175660-70f9980e4b26f96f.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="项目结构.PNG" /></p>
+
+<p>注解</p>
+
+<pre><code>@Target({ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Autowired {
+}
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Documented
+public @interface ComponentScan {
+
+    String[] basePackages() default {};
+}
+
+@Target({java.lang.annotation.ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Controller {
+    String value() default &quot;&quot;;
+}
+
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
+@Documented
+public @interface Order {
+
+	int value() default Integer.MAX_VALUE;
+
+}
+
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface RequestMapping {
+
+    String value() default &quot;&quot;;
+
+    RequestMethod[] method() default {};
+}
+
+public enum RequestMethod {
+
+	GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE
+
+}
+
+@Target({ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface RequestParam {
+
+    String value() default &quot;&quot;;
+}
+
+@Target({java.lang.annotation.ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Service {
+
+    String beanName() default &quot;&quot;;
+}
+
+</code></pre>
+
+<p>这些注解没什么好解释的，平时大家开发中常用</p>
+
+<p>IOC方法</p>
+
+<pre><code>@ComponentScan(basePackages = &quot;com.nicky&quot;)
+public class ApplicationContext {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private volatile static boolean beanIsInitialized = false;
+
+    private List&lt;String&gt; classNames = new CopyOnWriteArrayList&lt;&gt;();
+
+    private Map&lt;String, Object&gt; beanFactory = new ConcurrentHashMap&lt;&gt;();
+
+    private ApplicationContext() {
+        synchronized (ApplicationContext.class) {
+            if (!beanIsInitialized) {
+                beanIsInitialized = true;
+                //扫描包
+                scanPackage(this.getClass().getAnnotation(ComponentScan.class).basePackages()[0]);
+                //实例化
+                instance();
+                //依赖注入
+                dependencyInjection();
+
+            } else {
+                throw new RuntimeException(&quot;ApplicationContext is only be created by singleton&quot;);
+
+            }
+        }
+    }
+
+    private static class ApplicationContextHolder{
+
+        private static final ApplicationContext CONTEXT = new ApplicationContext();
+    }
+
+    public synchronized static ApplicationContext getApplicationContext() {
+        if (!beanIsInitialized) {
+            return ApplicationContextHolder.CONTEXT;
+        }
+        return null;
+    }
+
+    public Object getBean(String beanName) {
+        Object o = beanFactory.get(beanName);
+        if (o == null) {
+            throw new RuntimeException(&quot;bean not found&quot;);
+        }
+        return o;
+    }
+
+    public &lt;T&gt; T getBean(String beanName, Class&lt;T&gt; cls) {
+        return cls.cast(getBean(beanName));
+    }
+
+    public Map&lt;String, Object&gt; getBeanFactory (){
+        return beanFactory;
+    }
+
+    private void dependencyInjection() {
+
+        if (CollectionUtils.isEmpty(beanFactory.entrySet())) {
+            logger.error(&quot;instance has not been over&quot;);
+            return;
+        }
+        beanFactory.forEach((k, v) -&gt;{
+            Class cls = v.getClass();
+            if (cls.isAnnotationPresent(Controller.class) || cls.isAnnotationPresent(Service.class)) {
+                Arrays.stream(cls.getDeclaredFields()).forEach(field -&gt; {
+                    if (field.isAnnotationPresent(Autowired.class) &amp;&amp; classNames.contains(field.getType().getName())) {
+                        field.setAccessible(true);
+                        try {
+                            field.set(v, beanFactory.get(camelNameSpell(field.getType().getSimpleName())));
+                        } catch (IllegalAccessException e) {
+                            logger.error(&quot;error dependencyInjection&quot;, e);
+                        }
+                    }
+                });
+                //beanFactoryAware applicationContextAware
+                if (BeanFactoryAware.class.isAssignableFrom(cls)) {
+                    try {
+                        Method method = cls.getMethod(&quot;setBeanFactory&quot;, Map.class);
+                        method.invoke(v, beanFactory);
+                    } catch (ReflectiveOperationException e) {
+                        logger.error(&quot;beanFactoryAware error&quot;, e);
+                    }
+                }
+            }
+        });
+
+
+    }
+
+    /**
+     * 销毁方法，用于释放资源
+     */
+    public void close() {
+        beanFactory.clear();
+        beanFactory = null;
+    }
+
+    private void scanPackage(String basePackage) {
+
+        URL url = this.getClass().getClassLoader().getResource(basePackage.replaceAll(&quot;\\.&quot;, &quot;/&quot;));
+        File[] classFileList = getClassFileList(url.getPath());
+        if (classFileList != null) {
+            for (File file : classFileList) {
+                if (file.isDirectory()) {
+                    scanPackage(basePackage + &quot;.&quot; + file.getName());
+                }else {
+                    String className = basePackage+&quot;.&quot;+file.getName().replace(&quot;.class&quot;, &quot;&quot;);
+                    classNames.add(className);
+                }
+            }
+        }
+    }
+
+    //获取该路径下所遇的class文件和目录
+    private static File[] getClassFileList(String filePath) {
+        return new File(filePath).listFiles(
+                file -&gt; file.isFile() &amp;&amp; file.getName().endsWith(&quot;.class&quot;) || file.isDirectory());
+    }
+
+    private void instance() {
+        if (CollectionUtils.isEmpty(classNames)) {
+            logger.error(&quot;scan path error！&quot;);
+            return;
+        }
+
+        for (String className : classNames) {
+            try {
+                Class&lt;?&gt; clazz = Class.forName(className);
+                if (clazz.isInterface()) {
+                    continue;
+                }
+                if (clazz.isAnnotationPresent(Controller.class)) {
+                    Controller annotation = clazz.getAnnotation(Controller.class);
+                    Object instance = clazz.newInstance();
+                    //不指定beanName,采用驼峰命名
+                    Object o = beanFactory.putIfAbsent(StringUtils.isEmpty(annotation.value()) ?
+                            camelNameSpell(clazz.getSimpleName()) :
+                            annotation.value(), instance);
+                    if (o != null) {
+                        throw new RuntimeException(String.format(&quot;duplicated beanName %s&quot;, clazz.getSimpleName()));
+                    }
+                }
+
+                if (clazz.isAnnotationPresent(Service.class)) {
+                    Service service = clazz.getAnnotation(Service.class);
+                    Object instance = clazz.newInstance();
+                    Object o = beanFactory.putIfAbsent(StringUtils.isEmpty(service.beanName()) ?
+                            camelNameSpell(clazz.getSimpleName()) :
+                            service.beanName(), instance);
+                    if (o != null) {
+                        throw new RuntimeException(String.format(&quot;duplicated beanName %s&quot;, clazz.getSimpleName()));
+                    }
+                }
+            } catch (ReflectiveOperationException e) {
+                logger.error(&quot;instance reflect error&quot;, e);
+            }
+        }
+    }
+
+    private static String camelNameSpell(String name) {
+        if (StringUtils.isEmpty(name)) {
+            return name;
+        }
+        return String.valueOf(name.charAt(0)).toLowerCase() + name.substring(1);
+
+    }
+
+}
+</code></pre>
+
+<p>*Aware 用于获取Aware名称前面的*对象</p>
+
+<pre><code>:::java
+public interface ApplicationContextAware{
+
+	void setApplicationContext(ApplicationContext applicationContext);
+
+}
+
+public interface BeanFactoryAware {
+
+    void setBeanFactory(Map&lt;String, Object&gt; beanFactory);
+}
+</code></pre>
+
+<p>controller 和service</p>
+
+<pre><code>:::java
+@Controller(&quot;testController&quot;)
+@RequestMapping(&quot;/user&quot;)
+public class UserController {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
+    @Autowired
+    private UserService userService;
+
+    @RequestMapping(&quot;/query.do&quot;)
+    public void queryUserInfo(HttpServletRequest request, HttpServletResponse response, @RequestParam(&quot;userName&quot;) String userName) {
+        logger.info(&quot;userName: {}&quot;, userName );
+        try {
+            PrintWriter pw = response.getWriter();
+            String result = userService.query(userName);
+            pw.write(result);
+        }
+        catch (IOException e) {
+            logger.error(&quot;test&quot;, e);
+        }
+    }
+
+    @RequestMapping(&quot;/insert.do&quot;)
+    public String insert(String param) {
+        return &quot;success&quot;;
+    }
+}
+
+public interface UserService {
+    
+    String query(String param);
+    
+}
+
+@Service(beanName = &quot;userService&quot;)
+public class UserServiceImpl implements UserService {
+    
+    @Override
+    public String query(String param) {
+       return &quot;User:{name = nicky, age = 23}&quot; ;
+    }
+
+}
+
+</code></pre>
+
+<p>接下来是核心类
+DispatcherServlet</p>
+
+<pre><code>@NoArgsConstructor
+@Service
+public class DispatcherServlet extends FrameworkServlet {
+
+    private static final long serialVersionUID = -6961498140472266321L;
+
+    private static final Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
+    
+    private Map&lt;String, HandlerMapping&gt; handlerMappings = new ConcurrentHashMap&lt;&gt;();
+    
+    private static Properties prop;
+
+    private final String handlerAdapter = &quot;spring.bean.handlerAdapter&quot;;
+
+    static {
+
+        InputStream is = DispatcherServlet.class.getResourceAsStream(&quot;/application.properties&quot;);
+        prop = new Properties();
+        try {
+            prop.load(is);
+        } catch (IOException e) {
+            logger.error(&quot;static block error&quot;, e);
+        }
+    }
+
+
+    @Override
+    public void init(ServletConfig config) {
+        //处理映射
+        handlerMapping();
+        
+    }
+    
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        processRequest(request, response);
+        ServletRequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        doPost(requestAttributes.getRequest(), requestAttributes.getResponse());
+    }
+
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response){
+        String uri = request.getRequestURI();
+        String context = request.getContextPath();
+        String path = uri.replace(context, &quot;&quot;);
+        logger.warn(&quot;access path :{}&quot;, path);
+
+        String className = prop.getProperty(handlerAdapter);
+        Class&lt;?&gt; cls = null;
+        try {
+            cls = Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            logger.error(&quot;adapter not found&quot;, e);
+        }
+        Service annotation = cls.getAnnotation(Service.class);
+        HandlerAdapter adapter = applicationContext.getBean(annotation.beanName(), HandlerAdapter.class);
+        HandlerMapping handlerMapping = handlerMappings.get(path);
+        if (handlerMapping == null) {
+            try {
+                PrintWriter pw = response.getWriter();
+                pw.write(&quot;404, page not found&quot;);
+                return;
+            } catch (IOException e) {
+                e.getLocalizedMessage();
+            }
+        }
+        adapter.handle(request, response, handlerMapping);
+        
+    }
+    
+    private void handlerMapping() {
+
+        for (Map.Entry&lt;String, Object&gt; entry : applicationContext.getBeanFactory().entrySet()) {
+            Object instance = entry.getValue();
+            Class&lt;?&gt; clazz = instance.getClass();
+
+            if (clazz.isAnnotationPresent(Controller.class)) {
+                Controller annotation = clazz.getAnnotation(Controller.class);
+                RequestMapping requestMapping = clazz.getAnnotation(RequestMapping.class);
+                String rootPath = requestMapping.value();
+
+                for (Method method : clazz.getMethods()) {
+                    if (method.isAnnotationPresent(RequestMapping.class)) {
+                        RequestMapping subMethod = method.getAnnotation(RequestMapping.class);
+                        String methodPath = subMethod.value();
+                        handlerMappings.putIfAbsent(rootPath + methodPath, new HandlerMapping(annotation.value(), method));
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+public abstract class FrameworkServlet extends HttpServlet {
+
+    protected ApplicationContext applicationContext;
+
+    public FrameworkServlet() {
+        applicationContext = ApplicationContext.getApplicationContext();
+    }
+
+    /**
+     * 保证单例servlet下的请求线程安全
+     */
+    protected final void processRequest(HttpServletRequest request, HttpServletResponse response) {
+        RequestContextHolder.resetRequestAttributes();
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request, response));
+    }
+
+}
+</code></pre>
+
+<p>首先 静态块中的内容会预加载，即获取resouce下application.properties文件的内容，存入对象中。并且创建DispatcherServlet对象的时候，会获取到applicationcontext。</p>
+
+<p>当http请求过来的时候，第一次会触发DispatcherServlet的<code>init(ServletConfig config)</code>方法，这里的<code>handlerMapping()</code>方法会在初始化的时候获取controller中的URL链接并保存。</p>
+
+<p>之后get请求会进入<code>doGet</code>方法,因为考虑到servlet是单例的，所以请求会有并发线程安全问题，所以我们通过<strong>ThreadLocal</strong>去解决，在<code>processRequest(request, response)</code>;方法中,最后会调用RequestContextHolder这个类的方法，具体代码如下：</p>
+
+<pre><code>
+public final class RequestContextHolder {
+
+    private static final ThreadLocal&lt;ServletRequestAttributes&gt; requestHolder =
+            new NamedThreadLocal&lt;&gt;(&quot;Request attributes&quot;);
+
+
+    private static final ThreadLocal&lt;ServletRequestAttributes&gt; inheritableRequestHolder =
+            new NamedInheritableThreadLocal&lt;&gt;(&quot;Request context&quot;);
+
+
+    public static void resetRequestAttributes() {
+        requestHolder.remove();
+        inheritableRequestHolder.remove();
+    }
+
+    public static void setRequestAttributes(ServletRequestAttributes attributes) {
+        setRequestAttributes(attributes, false);
+    }
+
+    public static void setRequestAttributes(ServletRequestAttributes attributes, boolean inheritable) {
+        if (attributes == null) {
+            resetRequestAttributes();
+        }
+        else {
+            if (inheritable) {
+                inheritableRequestHolder.set(attributes);
+                requestHolder.remove();
+            }
+            else {
+                requestHolder.set(attributes);
+                inheritableRequestHolder.remove();
+            }
+        }
+    }
+
+
+    public static ServletRequestAttributes getRequestAttributes() {
+        ServletRequestAttributes attributes = requestHolder.get();
+        if (attributes == null) {
+            attributes = inheritableRequestHolder.get();
+        }
+        return attributes;
+    }
+
+}
+
+
+@Data
+public class ServletRequestAttributes {
+
+    private final HttpServletRequest request;
+
+    private final HttpServletResponse response;
+
+}
+
+public class NamedInheritableThreadLocal&lt;T&gt; extends InheritableThreadLocal&lt;T&gt; {
+
+	private final String name;
+
+
+	/**
+	 * Create a new NamedInheritableThreadLocal with the given name.
+	 * @param name a descriptive name for this ThreadLocal
+	 */
+	public NamedInheritableThreadLocal(String name) {
+		Assert.hasText(name, &quot;Name must not be empty&quot;);
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return this.name;
+	}
+
+}
+
+public class NamedThreadLocal&lt;T&gt; extends ThreadLocal&lt;T&gt; {
+
+	private final String name;
+
+
+	/**
+	 * Create a new NamedThreadLocal with the given name.
+	 * @param name a descriptive name for this ThreadLocal
+	 */
+	public NamedThreadLocal(String name) {
+		Assert.hasText(name, &quot;Name must not be empty&quot;);
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return this.name;
+	}
+
+}
+</code></pre>
+
+<p>当进入<code>doPost</code>方法的时候，会通过HandlerAdapter对象来处理具体的请求，通过分析 HandlerMapping 查询，当前请求的地址是否可以分发到已有的controller中，如果没有则，直接向前端页面报错 404，如果有，则通过 HandlerAdapter继续处理</p>
+
+<pre><code>@Service(beanName = &quot;handlerAdapter&quot;)
+public class HttpRequestHandlerAdapter implements HandlerAdapter, BeanFactoryAware {
+
+    private Map&lt;String, Object&gt; beanFactory;
+    
+    @Override
+    public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, HandlerMapping handler) {
+
+        Method method = handler.getMethod();
+        Class&lt;?&gt;[] paramList = method.getParameterTypes();
+        
+        Object[] args = new Object[paramList.length];
+        
+        //获取接口的实现
+        Map&lt;String, Object&gt; resolvers = getBeanInterfaceImpl(HandlerMethodArgumentResolver.class);
+        //todo HandlerMethodArgumentResolver 可以排序
+        int paramIndex = 0, i = 0;
+        for (Class&lt;?&gt; paramClazz : paramList) {
+            for (Map.Entry&lt;String, Object&gt; entry : resolvers.entrySet()) {
+                HandlerMethodArgumentResolver resolver = (HandlerMethodArgumentResolver)entry.getValue();
+                MethodParameter warp = new MethodParameter(paramClazz, paramIndex, method);
+                if (resolver.supportsParameter(warp)) {
+                    args[i++] = resolver.resolveArgument(request, response, warp);
+                }
+            }
+            paramIndex++;
+        }
+        Map&lt;String, Object&gt; model = new HashMap&lt;&gt;(1);
+        ModelAndView view = new ModelAndView();
+        Object obj;
+        try {
+            Object instance = beanFactory.get(handler.getControllerBeanName());
+            obj = method.invoke(instance, args);
+            //如果调用方法没有传入HttpServletResponse参数，则自己封装
+            if (!Arrays.asList(paramList).contains(HttpServletResponse.class)) {
+                PrintWriter writer = response.getWriter();
+                writer.write(obj.toString());
+            }
+            //移除ThreadLocal副本
+            RequestContextHolder.resetRequestAttributes();
+        } catch (ReflectiveOperationException | IOException e) {
+            view.setStatus(HttpStatus.EXPECTATION_FAILED);
+            model.put(&quot;result&quot;, e.getLocalizedMessage());
+            view.setModel(model);
+            return view;
+        }
+        view.setStatus(HttpStatus.OK);
+        model.put(&quot;result&quot;,obj);
+        view.setModel(model);
+        return view;
+    }
+    
+    private Map&lt;String, Object&gt; getBeanInterfaceImpl(Class&lt;?&gt; interfaceType) {
+        
+        Map&lt;String, Object&gt; result = new HashMap&lt;&gt;();
+        beanFactory.forEach((k, v) -&gt;{
+            if (interfaceType.isAssignableFrom(v.getClass())) {
+                result.put(k, v);
+            }
+        });
+        return result;
+    }
+
+    @Override
+    public void setBeanFactory(Map&lt;String, Object&gt; beanFactory) {
+        this.beanFactory = beanFactory;
+    }
+}
+
+public interface HandlerAdapter {
+    
+    ModelAndView handle(HttpServletRequest request, HttpServletResponse response, HandlerMapping handler);
+}
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class HandlerMapping {
+
+    private String controllerBeanName;
+
+    private Method method;
+
+}
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class ModelAndView {
+
+    private HttpStatus status;
+
+    private Map&lt;String, Object&gt; model;
+
+}
+</code></pre>
+
+<p>HttpRequestHandlerAdapter为HandlerAdapter的具体实现，它同时实现了BeanFactoryAware，主要是为了获取BeanFactory对象</p>
+
+<p><code>handle</code>方法中首先会获取到需要请求的HandlerMapping,它包含了controller的信息，然后对 controller对应路由的方法中所持有的参数做拦截处理即 HandlerMethodArgumentResolver 对象:</p>
+
+<pre><code>
+public interface HandlerMethodArgumentResolver {
+    
+    boolean supportsParameter(MethodParameter methodParameter);
+    
+    Object resolveArgument(HttpServletRequest request, HttpServletResponse response, MethodParameter methodParameter);
+
+    default int getOrderAnnotationValue(){
+        Order annotation = this.getClass().getAnnotation(Order.class);
+        if (annotation == null) {
+            return Integer.MAX_VALUE;
+        }
+        return annotation.value();
+    }
+}
+
+public abstract class AbstractOrderResolver implements HandlerMethodArgumentResolver {
+
+    protected int order = Integer.MAX_VALUE;
+
+    public AbstractOrderResolver() {
+        setOrder();
+    }
+
+    protected boolean paramConfirm(MethodParameter parameter, Class targetClass) {
+
+        try {
+            return ClassUtils.isAssignable(targetClass, parameter.getParamType());
+        }
+        catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public void setOrder(){
+        order = this.getOrderAnnotationValue();
+    }
+
+    public int getOrder() {
+        return order;
+    }
+}
+
+@Service(beanName = &quot;handlerRequestArgumentResolver&quot;)
+@Order(10)
+public class HandlerRequestArgumentResolver extends AbstractOrderResolver {
+    
+    @Override
+    public boolean supportsParameter(MethodParameter methodParameter) {
+        return paramConfirm(methodParameter, ServletRequest.class);
+    }
+    
+    @Override
+    public Object resolveArgument(HttpServletRequest request, HttpServletResponse response, MethodParameter methodParameter) {
+        System.out.println(&quot;ServletRequest.class&quot;);
+        return request;
+    }
+
+}
+
+@Service(beanName = &quot;handlerResponseArgumentResolver&quot;)
+@Order(1)
+public class HandlerResponseArgumentResolver extends AbstractOrderResolver {
+    
+    @Override
+    public boolean supportsParameter(MethodParameter methodParameter) {
+        return paramConfirm(methodParameter, ServletResponse.class);
+    }
+    
+    @Override
+    public Object resolveArgument(HttpServletRequest request,
+            HttpServletResponse response, MethodParameter methodParameter) {
+        System.out.println(&quot;ServletResponse.class&quot;);
+        return response;
+    }
+    
+}
+
+@Service
+public class RequestParamArgumentResolver extends AbstractOrderResolver {
+    
+    @Override
+    public boolean supportsParameter(MethodParameter methodParameter) {
+        
+        Annotation[][] an = methodParameter.getMethod().getParameterAnnotations();
+        
+        Annotation[] paramAns = an[methodParameter.getParamIndex()];
+        
+        for (Annotation paramAn : paramAns) {
+            if (RequestParam.class.isAssignableFrom(paramAn.getClass())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public Object resolveArgument(HttpServletRequest request, HttpServletResponse response, MethodParameter methodParameter) {
+
+        Annotation[][] an = methodParameter.getMethod().getParameterAnnotations();
+        Annotation[] paramAns = an[methodParameter.getParamIndex()];
+        
+        for (Annotation paramAn : paramAns) {
+            if (RequestParam.class.isAssignableFrom(paramAn.getClass())) {
+                RequestParam rp = (RequestParam)paramAn;
+                String value = rp.value();
+               return request.getParameter(value);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void setOrder() {
+        order = 100;
+    }
+}
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class MethodParameter {
+
+    private Class&lt;?&gt; paramType;
+
+    private int paramIndex;
+
+    private Method method;
+
+}
+</code></pre>
+
+<p>会筛选对应的方法中的参数，进行拦截处理。最后通过执行反射来获取具体的内容</p>
+
+<p>我们先借用springboot的IOC容器来构建我们的SpringMVC框架</p>
+
+<pre><code>
+@Configuration
+public class ContainerConfig {
+
+
+    @Bean
+    public ServletRegistrationBean MyServlet1(){
+        ServletRegistrationBean bean = new ServletRegistrationBean();
+        bean.setServlet(new DispatcherServlet());
+        bean.getUrlMappings().clear();
+        bean.addUrlMappings(&quot;/user/*&quot;);
+        return bean;
+    }
+
+}
+</code></pre>
+
+<p>启动项目，访问页面</p>
+
+<p>成功：
+<img src="https://upload-images.jianshu.io/upload_images/10175660-ac407f86bab8102d.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="success.PNG" /></p>
+
+<p>失败：
+<img src="https://upload-images.jianshu.io/upload_images/10175660-f0cfa256faeeda03.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="error.PNG" /></p>
+
+<p>如果你不使用springboot，你可以使用web.xml来指定servlet来实现</p>
+
+<p>当然我们也可以通过springboot基于SPI来实现，通过Servlet3.0的规范来实现</p>
+
+<pre><code>
+public class ServletConfig implements ServletContainerInitializer {
+
+    @Override
+    public void onStartup(Set&lt;Class&lt;?&gt;&gt; c, ServletContext container) throws ServletException {
+
+        System.out.println(&quot;启动加载自定义的MyServletContainerInitializer&quot;);
+        ServletRegistration.Dynamic dispatcher = container.addServlet(&quot;dispatcherServlet&quot;, &quot;com.nicky.servlet.DispatcherServlet&quot;);
+        dispatcher.setLoadOnStartup(1);
+        dispatcher.addMapping(&quot;/&quot;);
+
+    }
+}
+</code></pre>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/10175660-e0b48e8f31aeb880.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="spi.PNG" /></p>
+
+<p>在javax.servlet.ServletContainerInitializer加入spi.ServletConfig，然后打成jar包，最后向springmvc的项目打成war包，将spi的jar包放入WEB-INF\lib目录下重启服务即可，spi入门可参考我的文章<a href="https://www.jianshu.com/p/7b69543c348e">框架基础之SPI机制</a></p>
+
+<h1 id="reference">Reference</h1>
+
+<p><a href="https://blog.csdn.net/hu_zhiting/article/details/73648939">【SpringMVC】9大组件概览</a></p>
+
+
+        </div>
+
+    </div>
+
+    
+    <nav id="article-nav">
+
+        
+        <div id="article-nav-newer" class="article-nav-title">
+            <a href="https://nicky-chen.github.io/2019/05/03/apt_lombok_implement/">
+                基于APT(注解处理器)实现Lombok的@getter @setter @toString功能
+            </a>
+        </div>
+        
+
+        
+        <div id="article-nav-older" class="article-nav-title">
+            <a href="https://nicky-chen.github.io/2018/08/22/java-methodhandler/">
+                Java反射优化之方法句柄
+            </a>
+        </div>
+        
+
+    </nav>
+    
+
+
+</article>
+
+<div id="toc" class="toc-article" >
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc">
+        <nav id="TableOfContents">
+<ul>
+<li><a href="#1-简介">1 简介</a></li>
+<li><a href="#2-springmvc运行流程">2 SpringMVC运行流程</a></li>
+<li><a href="#3-mvc之九大组件">3 MVC之九大组件</a>
+<ul>
+<li>
+<ul>
+<li><a href="#3-2-springmvc的设计思路">3.2 SpringMVC的设计思路</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#4-动手实现springmvc">4 动手实现SpringMVC</a></li>
+<li><a href="#reference">Reference</a></li>
+</ul>
+</nav>
+    </ol>
+</div>
+<style>
+    
+    .left-col .switch-btn {
+        display: none;
+    }
+
+    .left-col .switch-area {
+        display: none;
+    }
+    
+
+
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录" >
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function () {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    
+    
+    
+        
+    
+</script>
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_more" data-cmd="more"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+        <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+        <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config = {
+            "common": {
+                "bdSnsKey": {},
+                "bdText": "",
+                "bdMini": "2",
+                "bdMiniList": false,
+                "bdPic": "",
+                "bdStyle": "0",
+                "bdSize": "24"
+            }, "share": {}
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '//bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+</div>
+
+
+
+
+<div style="margin-left: 30px;margin-right: 30px;background: white;padding-left: 30px;padding-right: 30px">
+    <div class="comments">
+        <h3>COMMENTS</h3>
+        <script type="text/javascript">
+            (function() {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                dsq.setAttribute('data-timestamp', +new Date());
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <div id="disqus_thread"></div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="scroll" id="post-nav-button">
+
+    
+    <a href="https://nicky-chen.github.io/2019/05/03/apt_lombok_implement/" title="上一篇: 基于APT(注解处理器)实现Lombok的@getter @setter @toString功能">
+        <i class="fa fa-angle-left"></i>
+    </a>
+    
+
+
+    <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+
+    
+    <a href="https://nicky-chen.github.io/2018/08/22/java-methodhandler/" title="下一篇: Java反射优化之方法句柄">
+        <i class="fa fa-angle-right"></i>
+    </a>
+    
+
+</div>
+
+
+<ul class="post-list toc-article">
+    
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2019/05/03/apt_lombok_implement/" target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/25/spring-springmvc/" target="_blank">Spring之动手实现SpringMVC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/22/java-methodhandler/" target="_blank">Java反射优化之方法句柄</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/16/spring-bean-ioc/" target="_blank">Spring之动手实现IOC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/12/spring-bean-lifecycle/" target="_blank">Spring之Bean加载-解析-生命周期</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/09/aqs-condition/" target="_blank">并发基础之Condition(等待队列)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/07/cache-redis-optimize/" target="_blank">Redis注意事项及常见优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/04/aqs_chapter02/" target="_blank">并发基础之AQS同步器（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/01/cache-redis-slowlog/" target="_blank">Redis之慢查询日志</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/31/aqs_chapter01/" target="_blank">并发基础之AQS同步器（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/16/junit-codeanalysis/" target="_blank">初窥门径之JUnit源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/13/java-securitymanager/" target="_blank">Java安全之SecurityManager</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/29/responsibility-chain/" target="_blank">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/25/jndi-introdution/" target="_blank">JNDI知识摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/17/architect/" target="_blank">技术图谱</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/07/singletion/" target="_blank">设计模式之单例模式终极版【克隆-序列化-反射】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/02/fail-fast-safe/" target="_blank">Fail-Fast和Fail-Safe机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/27/adapter/" target="_blank">实际项目运用之Adapter模式（适配器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/18/template/" target="_blank">设计模式之Template模式（模版模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/14/synchronized-principle/" target="_blank">synchronized实现原理及锁优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/13/juc-tree-info/" target="_blank">JUC知识点总结</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/06/strategy/" target="_blank">实际项目运用之Strategy模式（策略模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/04/volatile-feature/" target="_blank">volatile关键字原理实现及应用</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/28/high-event/" target="_blank">MYSQL高级特性之【Event事件】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/27/process-fun/" target="_blank">MYSQL高级特性之【存储过程与函数】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/21/string-builder-question/" target="_blank">字符串拼接的疑惑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/17/exception-introduce/" target="_blank">Java异常处理-原理及优化建议</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/03/thread-jmm-happens-before/" target="_blank">java内存模型之[JMM][重排序][happens-before]</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/28/decorator/" target="_blank">实际项目运用之Decorator模式（装饰器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/21/binary-operation/" target="_blank">java中位运算技巧</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/20/classloader-chapter02/" target="_blank">ClassLoader类加载分析（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/13/introspector/" target="_blank">Java 内省(Introspector)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/08/classloader-chapter01/" target="_blank">ClassLoader类加载分析（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/12/19/builder/" target="_blank">设计模式之builder模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/12/07/builder-factory/" target="_blank">设计模式之factory模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/11/03/recursive-lock/" target="_blank">可重入锁</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/03/17/book_list/" target="_blank">阅读书单</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/02/19/open_source/" target="_blank">开源项目</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/02/19/tools/" target="_blank">在线工具</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+</ul>
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    $(".post-list").addClass("toc-article");
+    $(".post-list-item a").attr("target", "_blank");
+    $("#post-nav-button > a:nth-child(2)").click(function () {
+        $(".fa-bars, .fa-times").toggle();
+        $(".post-list").toggle(300);
+        if ($(".toc").length > 0) {
+            $("#toc, #tocButton").toggle(200, function () {
+                if ($(".switch-area").is(":visible")) {
+                    $("#toc, .switch-btn, .switch-area").toggle();
+                    $("#tocButton").attr("value", valueHide);
+                }
+            })
+        }
+        else {
+            $(".switch-btn, .switch-area").fadeToggle(300);
+        }
+    })
+</script>
+
+
+<script>
+
+</script>
+
+
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2019 nicky_chin
+            </div>
+            <div class="footer-right">
+                <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >本站到访数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量:
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chen.github.io/js/GithubRepoWidget.js"></script>
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chen.github.io/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  5 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-119892182-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i &lt; all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+<script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>

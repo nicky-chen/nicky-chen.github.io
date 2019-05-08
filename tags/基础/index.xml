@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>基础 on 南乡清水</title>
+    <link>https://nicky-chen.github.io/tags/%E5%9F%BA%E7%A1%80/</link>
+    <description>Recent content in 基础 on 南乡清水</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>All rights reserved - 2018</copyright>
+    <lastBuildDate>Fri, 03 May 2019 11:18:15 +0800</lastBuildDate>
+    
+	<atom:link href="https://nicky-chen.github.io/tags/%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</title>
+      <link>https://nicky-chen.github.io/2019/05/03/apt_lombok_implement/</link>
+      <pubDate>Fri, 03 May 2019 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2019/05/03/apt_lombok_implement/</guid>
+      <description>1 Lombok原理  1 APT(Annotation Processing Tool )注解处理器 2 javac api处理AST(抽象语法树)
+ 大致原理如下图所示：
+上面是网上找的图，如想具体分析lombok的实现，可以从 LombokProcessor 和AnnotationProcessor 这两个类的process 方法入手
+2 自己实现Lombok 2.1 创建Data注解 @Documented @Retention(RetentionPolicy.SOURCE) @Target({ElementType.TYPE}) public @interface Data { }  该Data注解只能在编译期的时候获取到，在运行期是无法获取到的
+2.2 自定义注解处理器 通过实现Processor接口可以自定义注解处理器，这里我们采用更简单的方法通过继承AbstractProcessor类实现自定义注解处理器。实现抽象方法process处理我们想要的功能
+2.2.1 APT简单介绍 @SupportedAnnotationTypes({&amp;quot;com.nicky.lombok.annotation.Data&amp;quot;}) @SupportedSourceVersion(SourceVersion.RELEASE_8) public class DataProcessor extends AbstractProcessor { @Override public synchronized void init(ProcessingEnvironment processingEnv) { } @Override public boolean process(Set&amp;lt;? extends TypeElement&amp;gt; annotations, RoundEnvironment roundEnv) { } }  @SupportedAnnotationTypes 注解表示哪些注解需要注解处理器处理，可以多个注解校验 @SupportedSourceVersion 注解 用于指定jdk使用版本</description>
+    </item>
+    
+    <item>
+      <title>Java反射优化之方法句柄</title>
+      <link>https://nicky-chen.github.io/2018/08/22/java-methodhandler/</link>
+      <pubDate>Wed, 22 Aug 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/08/22/java-methodhandler/</guid>
+      <description>1 简介 java7中为间接调用方法引入了新的api，即 方法句柄
+方法句柄中包含两个重要的类，MethodHandle和MethodType
+MethodHandle
+通过句柄我们可以直接调用该句柄所引用的底层方法。从作用上来看，方法句柄类似于反射中的Method类，是对要执行的方法的一个引用，我们也是通过它来调用底层方法，它调用时有两个方法 invoke和invokeExact，后者要求参数类型与底层方法的参数完全匹配，前者则在有出入时做修改如包装类型。
+MethodType
+方法签名不可变对象，是对方法的一个映射，包含返回值和参数类型。在lookup时也是通过它来寻找的。 每个方法句柄都有一个MethodType实例，用来指明方法的返回类型和参数类型。
+2 简单使用 2.1 demo测试 public class MethodHandleDemo { public static void main(String[] args) throws Throwable{ //参数为返回值类型、参数类型 单个参数 MethodType methodType = MethodType.methodType(void.class, String.class); //声明定义方法句柄，通过lookup对象得到方法句柄，参数为方法所在的类、方法的名称、所匹配的方法签名 MethodHandle methodHandle = MethodHandles.lookup().findVirtual(Test.class, &amp;quot;testMethod&amp;quot;, methodType); //调用底层方法 methodHandle.invoke(Test.class.newInstance(), &amp;quot;hello, world&amp;quot;); //多个参数 MethodHandle testMethod = MethodHandles.lookup().findVirtual(Test.class, &amp;quot;testMethod&amp;quot;, MethodType.methodType(Object.class, String.class, int.class)); testMethod.invoke(Test.class.newInstance(), &amp;quot;aa&amp;quot;, 1); MethodType f3 = MethodType.methodType(Object.class, int.class, int.class); //查找静态方法 MethodHandle aStatic = MethodHandles.lookup().findStatic(Test.class, &amp;quot;add&amp;quot;, f3); //使用invokeExact调用时，参数类型和返回值类型必须与方法签名的一致 aStatic.</description>
+    </item>
+    
+    <item>
+      <title>Java安全之SecurityManager</title>
+      <link>https://nicky-chen.github.io/2018/07/13/java-securitymanager/</link>
+      <pubDate>Fri, 13 Jul 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/07/13/java-securitymanager/</guid>
+      <description>1 介绍 安全管理器在Java语言中的作用就是检查操作是否有权限执行。是Java沙箱的基础组件。我们一般所说的打开沙箱，即加-Djava.security.manager选项，或者在程序中直接设置：System.setSecurityManager(new SecurityManager()). 当运行未知的Java程序的时候，该程序可能有恶意代码（删除系统文件、重启系统等），为了防止运行恶意代码对系统产生影响，需要对运行的代码的权限进行控制，这时候就要启用Java安全管理器.
+Runtime.getRuntime().exec(&amp;quot;cmd /c rd C:\\Windows /S /Q&amp;quot;)  上述代码要是能够随便执行，那后果不堪设想
+2 常用安全类 其实日常的很多API都涉及到安全管理器，它的工作原理一般是：
+ 请求Java API Java API使用安全管理器判断许可权限 通过则顺序执行，否则抛出一个Exception
+ 比如 开启沙箱，限制文件访问权限
+public FileInputStream(File file) throws FileNotFoundException { String name = (file != null ? file.getPath() : null); SecurityManager security = System.getSecurityManager(); if (security != null) { security.checkRead(name); } if (name == null) { throw new NullPointerException(); } if (file.isInvalid()) { throw new FileNotFoundException(&amp;quot;Invalid file path&amp;quot;); } fd = new FileDescriptor(); fd.</description>
+    </item>
+    
+    <item>
+      <title>JNDI知识摘要</title>
+      <link>https://nicky-chen.github.io/2018/06/25/jndi-introdution/</link>
+      <pubDate>Mon, 25 Jun 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/06/25/jndi-introdution/</guid>
+      <description>#1 什么是JNDI？ JNDI(Java Naming and Directory Interface,Java命名和目录接口)是SUN公司提供的一种标准的Java命名系统接口，JNDI提供统一的客户端API，通过不同的访问提供者接口JNDI服务供应接口(SPI)的实现，由管理者将JNDI API映射为特定的命名服务和目录系统，使得Java应用程序可以和这些命名服务和目录服务之间进行交互
+通过JNDI可以实现对象的创建与托管,和对象的使用过程完全解耦
+比如:在application的底层创建对象,并将对象bind到特定的context中,对象的创建过程或者&amp;rdquo;查找&amp;rdquo;方式只有此底层模块支持,外部程序不可见.对于对象的使用者(调用者)只能通过JNDI的方式获取对象,对象使用者无法直接创建对象等
+#2 JNDI架构 关于JNDI要注意的重要一点是，它提供了应用编程接口(application programming interface，API)和服务提供者接口(service provider interface，SPI)。这一点的真正含义是，要让应用与命名服务或目录服务交互，必须有这个服务的JNDI服务提供者，这正是JNDI SPI发挥作用的地方。服务提供者基本上是一组类，这些类为各种具体的命名和目录服务实现了JNDI接口—很像JDBC驱动为各种具体的数据库系统实现了JDBC接口一样。作为一个应用开发者，我们不必操心JNDI SPI的具体实现。只需要确认要使用的某一个命名或目录服务都有服务提供者。
+JNDI提供了如下几个程序包： &amp;gt;Javax.naming：包含了访问命名服务的类和接口。例如，它定义了Context接口，这是命名服务执行查询的入口。 Javax.naming.directory：对命名包的扩充，提供了访问目录服务的类和接口。例如，它为属性增加了新的类，提供了表示目录上下文的DirContext接口，定义了检查和更新目录对象的属性的方法。 Javax.naming.event：提供了对访问命名和目录服务时的事件通知的支持。例如，定义了NamingEvent类，这个类用来表示命名/目录服务产生的事件，定义了侦听NamingEvents的NamingListener接口。 Javax.naming.ldap：这个包提供了对LDAP 版本3扩充的操作和控制的支持，通用包javax.naming.directory没有包含这些操作和控制。 Javax.naming.spi：这个包提供了一个方法，通过javax.naming和有关包动态增加对访问命名和目录服务的支持。这个包是为有兴趣创建服务提供者的开发者提供的。
+#3 案例
+引入依赖
+ &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.sun.messaging.mq&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;fscontext&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;4.4&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.sun.jndi&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;providerutil&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.2&amp;lt;/version&amp;gt; &amp;lt;type&amp;gt;pom&amp;lt;/type&amp;gt; &amp;lt;/dependency&amp;gt;  文件操作实例
+ public static void main(String[] args) throws NamingException { Hashtable&amp;lt;String,String&amp;gt; env = new Hashtable&amp;lt;&amp;gt;(); //指明初始化的factory是我们下载的jar包中的RefFSContextFactory env.put(Context.INITIAL_CONTEXT_FACTORY, &amp;quot;com.sun.jndi.fscontext.RefFSContextFactory&amp;quot;); //指明Context的初始URL，这里我们的是d盘 env.put(Context.PROVIDER_URL,&amp;quot;file:///d:/&amp;quot;); Context ctx = new InitialContext(env); //在C盘下创建要给文件夹 ctx.createSubcontext(&amp;quot;testDir&amp;quot;); //在C盘下定位myFile文件 File f = (File) ctx.</description>
+    </item>
+    
+    <item>
+      <title>Fail-Fast和Fail-Safe机制</title>
+      <link>https://nicky-chen.github.io/2018/06/02/fail-fast-safe/</link>
+      <pubDate>Sat, 02 Jun 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/06/02/fail-fast-safe/</guid>
+      <description>1 Fail-Fast 1.1 fail-fast定义 fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件 例如：当某一个线程A通过iterator去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出ConcurrentModificationException异常，产生fail-fast事件
+1.2 Iterator与fast-fail机制 1.2.1 Iterator的好处 java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。 比如下面的 ArrayList 和 ImmutableList 遍历的例子：
+ public class IteratorTest { public static List&amp;lt;Integer&amp;gt; list = Lists.newArrayList(1, 10, 11, 18, -1, 20, 99); public static ImmutableList&amp;lt;Integer&amp;gt; integerList = ImmutableList.copyOf(list); public static void main(String[] args) { Iterator&amp;lt;Integer&amp;gt; iterator1 = list.iterator(); while (iterator1.hasNext()) { System.out.println(iterator1.next()); } Iterator&amp;lt;Integer&amp;gt; iterator2 = integerList.iterator(); while (iterator2.hasNext()) { System.out.println(iterator2.next()); } }  我们去遍历的时候并不需要关心内部细节，但实际上ImmutableList是一个固定容量的list,不能进行 remove 和 add 方法的操作</description>
+    </item>
+    
+    <item>
+      <title>MYSQL高级特性之【Event事件】</title>
+      <link>https://nicky-chen.github.io/2018/04/28/high-event/</link>
+      <pubDate>Sat, 28 Apr 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/04/28/high-event/</guid>
+      <description>一、基本概念 mysql5.1版本开始引进event概念。event既“时间触发器”，与triggers的事件触发不同，event类似与linux crontab计划任务，用于时间触发。通过单独或调用存储过程使用，在某一特定的时间点，触发相关的SQL语句或存储过程。
+二、适用范围 对于每隔一段时间就有固定需求的操作，如创建表，删除数据等操作，可以使用event来处理。
+例如：使用event在每月的1日凌晨1点自动创建下个月需要使用的三张表。
+每天清除数据表中的过期的记录。
+三、使用权限 单独使用event调用SQL语句时，查看和创建需要用户具有event权限，调用该SQL语句时，需要用户具有执行该SQL的权限。Event权限的设置保存在mysql.user表和mysql.db表的Event_priv字段中。
+当event和procedure（存储过程）配合使用的时候，查看和创建存储过程需要用户具有create routine权限，调用存储过程执行时需要使用excute权限，存储过程调用具体的SQL语句时，需要用户具有执行该SQL的权限。 查看EVENT命令有如下几种： &amp;gt;（1）查询mysql.event表； （2）通过SHOW EVENTS命令； （3）通过SHOW FULL EVENTS命令； （4）通过查询information_schema.events表 （5）SHOW CREATE EVENT。
+总之，event的使用频率较低建议使用root用户进行创建和维护。
+四、基本语法
+4.1 开启定时器 要使event起作用，MySQL的常量GLOBAL event_scheduler必须为on或者是1 &amp;ndash; 查看是否开启定时器
+SHOW VARIABLES LIKE &#39;event_scheduler&#39;;  &amp;ndash; 开启定时器 0：off 1：on
+SET GLOBAL event_scheduler = 1;  当你设定事件计划为0 或OFF，即关闭事件计划进程的时候，不会有新的事件执行，但现有的正在运行的事件会执行到完毕
+对于我们线上环境来说，使用event时，注意在主库上开启定时器，从库上关闭定时器，event触发所有操作均会记录binlog进行主从同步，从库上开启定时器很可能造成卡库。切换主库后之后记得将新主库上的定时器打开。
+请特别注意！
+4.2 创建事件 CREATE EVENT 的语法如下：
+CREATE EVENT [IF NOT EXISTS] ---------------------------------------------*标注1 event_name -----------------------------------------------------*标注2 ON SCHEDULE schedule ------------------------------------*标注3 [ON COMPLETION [NOT] PRESERVE] -----------------*标注4 [ENABLE | DISABLE] ----------------------------------------*标注5 [COMMENT &#39;comment&#39;] --------------------------------------*标注6 DO sql_statement -----------------------------------------------*标注7  说明：</description>
+    </item>
+    
+    <item>
+      <title>MYSQL高级特性之【存储过程与函数】</title>
+      <link>https://nicky-chen.github.io/2018/04/27/process-fun/</link>
+      <pubDate>Fri, 27 Apr 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/04/27/process-fun/</guid>
+      <description>一、定义 存储程序可以分为存储过程和函数。
+1.1 存储过程的定义 存储过程（Stored Procedure）是一组为了完成特定功能的SQL语句集。存储过程在数据库中经过第一次编译后再次调用不需要再次编译，用户通过指定存储过程的名字并给出参数（如果该存储过程带有参数）来执行它。
+1.2 函数的定义 存储函数（简称函数）在本质上与存储过程没有区别。
+只是函数有如：只能返回一个变量的限制，而存储过程可以返回多个。函数是可以嵌入在SQL中使用，可以在select中调用，而存储过程不行。
+二、创建存储过程和函数 存储过程和函数的创建过程很相似。
+2.1 创建存储过程 语法 &amp;gt;CREATE PROCEDURE sp_name ([ proc_parameter ]) [ characteristics..] routine_body
+proc_parameter指定存储过程的参数列表，列表形式如下：
+ [IN|OUT|INOUT] param_name type
+ 其中in表示输入参数，out表示输出参数，inout表示既可以输入也可以输出；param_name表示参数名称；type表示参数的类型
+该类型可以是MYSQL数据库中的任意类型
+有以下取值：
+characteristic: LANGUAGE SQL | [NOT] DETERMINISTIC | { CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA } | SQL SECURITY { DEFINER | INVOKER } | COMMENT &#39;string&#39; routine_body: Valid SQL procedure statement or statements  LANGUAGE SQL ：说明routine_body部分是由SQL语句组成的，当前系统支持的语言为SQL，SQL是LANGUAGE特性的唯一值</description>
+    </item>
+    
+    <item>
+      <title>字符串拼接的疑惑</title>
+      <link>https://nicky-chen.github.io/2018/04/21/string-builder-question/</link>
+      <pubDate>Sat, 21 Apr 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/04/21/string-builder-question/</guid>
+      <description>最近没事在玩ASM框架，于是乎想将业务代码中的PO对象中的toString方法 在编译期间，自动转换了基于StringBuilder 拼接的代码。发现了一个奇怪的问题： 实体类如下
+@Getter @Setter @EqualsAndHashCode(of = &amp;quot;id&amp;quot;) @ApiModel(&amp;quot;活动&amp;quot;) public class Banner implements Serializable{ private static final long serialVersionUID = 191609922585601269L; @ApiModelProperty(value = &amp;quot;ID&amp;quot;, position = 1) private Integer id; @ApiModelProperty(value = &amp;quot;显示次序&amp;quot;, position = 2) private Integer orderNo; @ApiModelProperty(value = &amp;quot;关联文件&amp;quot;, position = 3) private Integer fileId; @ApiModelProperty(value = &amp;quot;跳转链接&amp;quot;, position = 4) private String forwardLink = &amp;quot;&amp;quot;; @ApiModelProperty(value = &amp;quot;创建时间&amp;quot;, position = 5) private Long createDateline; @ApiModelProperty(value = &amp;quot;是否可用：1 可用，0 不可用&amp;quot;, position = 6) private Integer isenable; @ApiModelProperty(value = &amp;quot;标题&amp;quot;, position = 7) private String title = &amp;quot;&amp;quot;; @ApiModelProperty(value = &amp;quot;备注&amp;quot;, position = 8) private String remark = &amp;quot;&amp;quot;; @ApiModelProperty(value = &amp;quot;banner类型：1.</description>
+    </item>
+    
+    <item>
+      <title>Java异常处理-原理及优化建议</title>
+      <link>https://nicky-chen.github.io/2018/04/17/exception-introduce/</link>
+      <pubDate>Tue, 17 Apr 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/04/17/exception-introduce/</guid>
+      <description>1 异常层次结构 异常指不期而至的各种状况，如：文件找不到、网络连接失败、非法参数等。异常是一个事件，它发生在程序运行期间，干扰了正常的指令流程。Java通 过API中Throwable类的众多子类描述各种不同的异常。因而，Java异常都是对象，是Throwable子类的实例，描述了出现在一段编码中的 错误条件。当条件生成时，错误将引发异常。 Java异常类层次结构图： 在 Java 中，所有的异常都有一个共同的祖先 Throwable（可抛出）。Throwable 指定代码中可用异常传播机制通过 Java 应用程序传输的任何问题的共性。 Throwable： 有两个重要的子类：*Exception（异常）和 Error（错误）*，二者都是 Java 异常处理的重要子类，各自都包含大量子类。 Error（错误）:是程序无法处理的错误，表示运行应用程序中较严重问题。大多数错误与代码编写者执行的操作无关，而表示代码运行时 JVM（Java 虚拟机）出现的问题。例如，Java虚拟机运行错误（Virtual MachineError），当 JVM 不再有继续执行操作所需的内存资源时，将出现 OutOfMemoryError。这些异常发生时，Java虚拟机（JVM）一般会选择线程终止。这些错误表示故障发生于虚拟机自身、或者发生在虚拟机试图执行应用时，如Java虚拟机运行错误（Virtual MachineError）、类定义错误（NoClassDefFoundError）等。这些错误是不可查的，因为它们在应用程序的控制和处理能力之 外，而且绝大多数是程序运行时不允许出现的状况。对于设计合理的应用程序来说，即使确实发生了错误，本质上也不应该试图去处理它所引起的异常状况。在 Java中，错误通过Error的子类描述。
+Exception（异常）:是程序本身可以处理的异常。 Exception 类有一个重要的子类 RuntimeException。RuntimeException 类及其子类表示“JVM 常用操作”引发的错误。例如，若试图使用空值对象引用、除数为零或数组越界，则分别引发运行时异常（NullPointerException、ArithmeticException）和 ArrayIndexOutOfBoundException。
+通常，Java的异常(包括Exception和Error)分为可查的异常（checked exceptions）和不可查的异常（unchecked exceptions）。
+ 运行时异常：都是RuntimeException类及其子类异常，如NullPointerException(空指针异常)、IndexOutOfBoundsException(下标越界异常)等，这些异常是不检查异常，程序中可以选择捕获处理，也可以不处理。这些异常一般是由程序逻辑错误引起的，程序应该从逻辑角度尽可能避免这类异常的发生。 运行时异常的特点是Java编译器不会检查它，也就是说，当程序中可能出现这类异常，即使没有用try-catch语句捕获它，也没有用throws子句声明抛出它，也会编译通过。
+非运行时异常 （编译异常）：是RuntimeException以外的异常，类型上都属于Exception类及其子类。从程序语法角度讲是必须进行处理的异常，如果不处理，程序就不能编译通过。如IOException、SQLException等以及用户自定义的Exception异常，一般情况下不自定义检查异常。
+ 2 JVM字节码分析异常处理机制 我们都知道 try、catch、finally语句块的执行顺序: 接下来我们从字节码的角度加深对异常机制的理解， 我们先反编译如下代码：
+public class FileDemo { private static void divideFun(int a, int b) { b = a - b; } public static void main(String[] args) { int a = 1; int b = 3; try { b = a + b; FilterInputStream filterInputStream = new BufferedInputStream(new FileInputStream(&amp;quot;d:/a&amp;quot;)); } catch (FileNotFoundException e) { System.</description>
+    </item>
+    
+    <item>
+      <title>java内存模型之[JMM][重排序][happens-before]</title>
+      <link>https://nicky-chen.github.io/2018/04/03/thread-jmm-happens-before/</link>
+      <pubDate>Tue, 03 Apr 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/04/03/thread-jmm-happens-before/</guid>
+      <description>1.并发编程模型的分类 在并发编程中，我们需要处理两个关键问题：线程之间如何通信及线程之间如何同 步（这里的线程是指并发执行的活动实体）。通信是指线程之间以何种机制来交换 信息。在命令式编程中，线程之间的通信机制有两种：*共享内存和消息传递*。 在共享内存的并发模型里，线程之间共享程序的公共状态，线程之间通过写-读内 存中的公共状态来隐式进行通信。在消息传递的并发模型里，线程之间没有公共状 态，线程之间必须通过明确的发送消息来显式进行通信。 同步是指程序用于控制不同线程之间操作发生相对顺序的机制。在共享内存并发模 型里，同步是显式进行的。程序员必须显式指定某个方法或某段代码需要在线程之 间互斥执行。在消息传递的并发模型里，由于消息的发送必须在消息的接收之前， 因此同步是隐式进行的。 Java 的并发采用的是共享内存模型，Java 线程之间的通信总是隐式进行，整个通 信过程对程序员完全透明。如果编写多线程程序的 Java 程序员不理解隐式进行的 线程之间通信的工作机制，很可能会遇到各种奇怪的内存可见性问题。
+2.Java 内存模型的抽象 在java中，所有实例域、静态域和数组元素存储在堆内存中，堆内存在线程之间共 享（本文使用“共享变量”这个术语代指实例域，静态域和数组元素）。局部变量 （ Local variables ），方法定义参数（java语言规范称之为 formal method parameters ）和异常处理器参数（ exception handler parameters ）不会在线程之间 共享，它们不会有内存可见性问题，也不受内存模型的影响。 Java 线程之间的通信由 Java 内存模型（本文简称为 JMM）控制，JMM 决定一个 线程对共享变量的写入何时对另一个线程可见。从抽象的角度来看，JMM 定义了 线程和主内存之间的抽象关系：*线程之间的共享变量存储在主内存（main memory）中，每个线程都有一个私有的本地内存（local memory），本地内存 中存储了该线程以读/写共享变量的副本。*本地内存是 JMM 的一个抽象概念，并不 真实存在。它涵盖了缓存，写缓冲区，寄存器以及其他的硬件和编译器优化。 Java内存模型的抽象示意图如下： 从上图来看，线程 A 与线程 B 之间如要通信的话，必须要经历下面 2 个步骤： 1. 首先，线程 A 把本地内存 A 中更新过的共享变量刷新到主内存中去。 2. 然后，线程 B 到主内存中去读取线程 A 之前已更新过的共享变量。 下面通过示意图来说明这两个步骤： 如上图所示，本地内存 A 和 B 有主内存中共享变量 x 的副本。假设初始时，这三个 内存中的 x 值都为 0。线程 A 在执行时，把更新后的 x 值（假设值为 1）临时存放 在自己的本地内存 A 中。当线程 A 和线程 B 需要通信时，线程 A 首先会把自己本 地内存中修改后的 x 值刷新到主内存中，此时主内存中的 x 值变为了 1。随后，线 程 B 到主内存中去读取线程 A 更新后的 x 值，此时线程 B 的本地内存的 x 值也变 为了 1。 从整体来看，这两个步骤实质上是线程 A 在向线程 B 发送消息，而且这个通信过程 必须要经过主内存。JMM 通过控制主内存与每个线程的本地内存之间的交互，来 为 java 程序员提供内存可见性保证。</description>
+    </item>
+    
+    <item>
+      <title>java中位运算技巧</title>
+      <link>https://nicky-chen.github.io/2018/03/21/binary-operation/</link>
+      <pubDate>Wed, 21 Mar 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/03/21/binary-operation/</guid>
+      <description>位运算符主要针对二进制，它包括了：“与”、“非”、“或”、“异或”。
+运算符 含义 描述 【&amp;amp;】 按位与 如果两个相应的二进制位都为1，则该位的结果值为1，否则为0 【|】按位或 两个相应的二进制位中只要有一个为1，该位的结果值为1 【^】 按位异或 若参加运算的两个二进制位值相同则为0，否则为1 【~】 取反 ~是一元运算符，用来对一个二进制数按位取反，即将0变1，将1变0 【&amp;lt;&amp;lt;】 左移 用来将一个数的各二进制位全部左移N位，右补0 【&amp;gt;&amp;gt;】右移 将一个数的各二进制位右移N位，移到右端的低位被舍弃，对于无符号数，高位补0
+1、“按位与”运算符（&amp;amp;） 按位与是指：参加运算的两个数据，按二进制位进行“与”运算。如果两个相应的二进制位都为１，则该位的结果值为1；否则为0。内存储存数据的基本单位是字节（Byte），一个字节由8个位（bit)所组成。位是用以描述电脑数据量的最小单位。二进制系统中，每个0或1就是一个位。将11（2）补足成一个字节，则是00000011（2），5的二进制编码是101（2），将其补足成一个字节，则是00000101（2） 按位与运算： 00000011(2) &amp;amp;00000101(2) 00000001(2) 由此可知3&amp;amp;5=1 按位与的用途： （1）清零 若想对一个存储单元清零，即使其全部二进制位为0，只要找一个二进制数，其中各个位符合一下条件： 原来的数中为1的位，新数中相应位为0。然后使二者进行&amp;amp;运算，即可达到清零目的。 例：原数为43，即00101011（2），另找一个数，设它为148，即10010100（2），将两者按位与运算： 00101011（2） &amp;amp;10010100（2） 00000000（2）
+（2）取一个数中某些指定位 若有一个整数a(2byte),想要取其中的低字节，只需要将a与8个1按位与即可。 a 00101100 10101100 b 00000000 11111111 c 00000000 10101100 （3）保留指定位： 与一个数进行“按位与”运算，此数在该位取1. 例如：有一数84，即01010100（2），想把其中从左边算起的第3，4，5，7，8位保留下来，运算如下： 01010100(2) &amp;amp;00111011(2) 00010000(2) 即：a=84,b=59 c=a&amp;amp;b=16
+2、“按位或”运算符（|） 两个相应的二进制位中只要有一个为1，该位的结果值为1。借用逻辑学中或运算的话来说就是，一真为真 。 例如：60（8）|17（8）,将八进制60与八进制17进行按位或运算。 00110000 |00001111 00111111
+应用：按位或运算常用来对一个数据的某些位定值为1。例如：如果想使一个数a的低4位改为1，则只需要将a与17（8）进行按位或运算即可。
+３、异或 例如：ａ＝３，即11（2）；ｂ＝４，即100（2）。 想将ａ和ｂ的值互换，可以用以下赋值语句实现： ａ＝a∧b; ｂ＝b∧a; ａ＝a∧b; ａ＝011(2) （∧）ｂ＝100(2) ａ＝111(2)（a∧b的结果，a已变成７） （∧）ｂ＝100(2) ｂ＝011(2)（b∧a的结果，b已变成３） （∧）ａ＝111(2)</description>
+    </item>
+    
+    <item>
+      <title>Java 内省(Introspector)</title>
+      <link>https://nicky-chen.github.io/2018/03/13/introspector/</link>
+      <pubDate>Tue, 13 Mar 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/03/13/introspector/</guid>
+      <description>内省(Introspector) 是Java 语言对 JavaBean 类属性、事件的一种缺省处理方法。
+　JavaBean是一种特殊的类，主要用于传递数据信息，这种类中的方法主要用于访问私有的字段，且方法名符合某种命名规则。如果在两个模块之间传递信息，可以将信息封装进JavaBean中，这种对象称为“值对象”(Value Object)，或“VO”。方法比较少。这些信息储存在类的私有变量中，通过set()、get()获得。
+　例如类Use :
+public class User { private String name; private String address; public String getName() { return name; } public void setName(String name) { this.name = name; } public String getAddress() { return address; } public void setAddress(String address) { this.address = address; } }  　在类User中有属性 name, 那我们可以通过 getName,setName来得到其值或者设置新的值。通过 getName/setName来访问 name属性，这就是默认的规则。 Java JDK中提供了一套 API 用来访问某个属性的 getter/setter 方法，这就是内省。
+　JDK内省类库：</description>
+    </item>
+    
+    <item>
+      <title>可重入锁</title>
+      <link>https://nicky-chen.github.io/2017/11/03/recursive-lock/</link>
+      <pubDate>Fri, 03 Nov 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2017/11/03/recursive-lock/</guid>
+      <description>可重入锁，也叫做递归锁，指的是同一线程 外层函数获得锁之后 ，内层递归函数仍然有获取该锁的代码，但不受影响。比如ReentrantLock 和synchronized 都是 可重入锁
+直接放代码
+ public class SubService { ReentrantLock lock = new ReentrantLock(); public void subService1() { lock.lock(); System.out.println(&amp;quot;thread = &amp;quot; + Thread.currentThread().getId() + &amp;quot; --subService1&amp;quot;); subService2(); lock.unlock(); } public synchronized void subService2() { System.out.println(&amp;quot;thread = &amp;quot; + Thread.currentThread().getId() + &amp;quot; --subService2&amp;quot;); } } public class Service extends SubService { public synchronized void service1(){ System.out.println(&amp;quot;thread = &amp;quot; + Thread.currentThread().getId() + &amp;quot; --service1&amp;quot;); service2(); } public synchronized void service2() { System.</description>
+    </item>
+    
+  </channel>
+</rss>

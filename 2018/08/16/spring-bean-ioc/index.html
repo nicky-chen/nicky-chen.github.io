@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  true ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+
+    <title>Spring之动手实现IOC功能</title>
+    <link rel="icon" href="https://nicky-chen.github.io/favicon.png">
+
+    <link rel="stylesheet" href="https://nicky-chen.github.io/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chen.github.io/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chen.github.io/apple-touch-icon.png">
+
+
+    <link rel="stylesheet" href="https://nicky-chen.github.io/fancybox/jquery.fancybox.css">
+
+    
+    
+    <link rel="stylesheet" href="https://nicky-chen.github.io/highlight/styles/darcula.css">
+    <script src="https://nicky-chen.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chen.github.io/" class="profilepic">
+            <img src="https://nicky-chen.github.io/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chen.github.io/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chen.github.io/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chen.github.io/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/external/open_source.html">开源项目</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/">归档日志</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="简书"><a class="简书" target="_blank" href="https://www.jianshu.com/u/c44ed4847c3d" title="简书"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chen.github.io/tags/junit" style="font-size: 12px;" class="color3">Junit</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/redis" style="font-size: 12px;" class="color4">Redis</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/spring-base" style="font-size: 12px;" class="color2">Spring-Base</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color3">创建型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">基础</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color4">多线程</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color3">思维导图</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color4">源码</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color1">结构型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color2">行为型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chen.github.io/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chen.github.io/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chen.github.io/" class="profilepic">
+                <img src="https://nicky-chen.github.io/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chen.github.io/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chen.github.io/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/external/open_source.html">开源项目</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/">归档日志</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="简书"><a class="简书" target="_blank" href="https://www.jianshu.com/u/c44ed4847c3d" title="简书"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+            <article id="post-js-android" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chen.github.io/2018/08/16/spring-bean-ioc/" class="article-date">
+            <time datetime="2018-08-16 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-16</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 class="article-title" itemprop="name">
+                <a class="article-title" href="https://nicky-chen.github.io/2018/08/16/spring-bean-ioc/">Spring之动手实现IOC功能</a>
+            </h1>
+
+
+        </header>
+
+        <div class="article-info article-info-post">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="article-category-link" href="https://nicky-chen.github.io/categories/spring/" style="font-size: 12px;">spring</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/spring-base/"
+                           style="font-size: 12px;">spring-base</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="article-entry" itemprop="articleBody">
+
+            
+
+<h1 id="1-背景">1 背景</h1>
+
+<p>我们经常在使用Spring生态中的组件，我们在潜移默化的DI和IOC的思想下，来创建和使用Bean对象，使用过 <em>@Component @ComponentScan @Autowired @Bean @Configuration</em> 等等的注解，所以了解Spring容器是如何创建和管理Bean,是我们必需掌握的技能。
+下面我们通过手写DI和IOC的方式来加深对Spring的理解。</p>
+
+<p>#2 依赖注入
+DI，<strong>Dependency Injection</strong>，即依赖注入。具体含义表示组件之间的依赖关系由容器在应用系统运行期来决定，也就是由容器动态地将某种依赖关系的目标对象实例注入到应用系统中的各个关联的组件之中。对象只提供普通的方法让容器去决定依赖关系。</p>
+
+<p><strong>Spring中创建Bean的方式有三种：</strong></p>
+
+<blockquote>
+<p>通过XML显式配置
+通过Java显式配置 (利用 @Configuration @Bean)
+隐式进行bean搜索并自动装配 （利用基于@Component 元注解的方式）</p>
+</blockquote>
+
+<p>通过上面叙述我们知道，创建bean其实大致可以分为两种，一种是基于XML,另一种是基于注解的方式。</p>
+
+<h4 id="2-1-xml方式">2.1 XML方式</h4>
+
+<p>user.xml</p>
+
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans&gt;
+    &lt;bean id=&quot;studentA&quot; class=&quot;iockids.xml.Student&quot; scope=&quot;singleton&quot;&gt;
+        &lt;property name=&quot;age&quot; value=&quot;20&quot;/&gt;
+        &lt;property name=&quot;name&quot; value=&quot;nana&quot;/&gt;
+        &lt;property name=&quot;address&quot; value=&quot;hangzhou&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;bean id=&quot;studentB&quot; class=&quot;iockids.xml.Student&quot; scope=&quot;prototype&quot;&gt;
+        &lt;property name=&quot;name&quot; value=&quot;nicky&quot;/&gt;
+        &lt;property name=&quot;age&quot; value=&quot;22&quot;/&gt;
+        &lt;property name=&quot;address&quot; value=&quot;ningbo&quot;/&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre>
+
+<p>Student对象</p>
+
+<pre><code>@Data
+public class Student {
+
+    private String name;
+
+    private Integer age;
+
+    private String address;
+
+}
+</code></pre>
+
+<pre><code> /**
+     * 单例对象容器
+     */
+    private Map&lt;String, Object&gt; singletonBeanFactory = new ConcurrentHashMap&lt;&gt;();
+
+    /**
+     * bean对象的容器
+     */
+    private Map&lt;String, Class&lt;?&gt;&gt; beanFactory = new ConcurrentHashMap&lt;&gt;();
+
+    /**
+     * beanElement对象容器
+     */
+    private Map&lt;String, Element&gt; beanElementMap = new ConcurrentHashMap&lt;&gt;();
+
+    /**
+     * 存储bean的scope属性容器
+     */
+    private Map&lt;String, String&gt; beanScopeMap = new ConcurrentHashMap&lt;&gt;();
+
+    private static TypeConverterManager converterManager = JoddBean.get().typeConverterManager();
+
+
+    /**有参的构造方法，在创建此类实例时需要指定xml文件路径*/
+    public ClassPathXmlApplicationContext(String xmlPath) {
+        //调用初始化方法
+        init(xmlPath);
+    }
+
+    /**
+     * 解析xml --&gt; 获取bean元素 --&gt;反射创建对象 --&gt; 缓存对象
+     * @param path 配置文件路径
+     */
+    private synchronized void init(String path) {
+
+        SAXReader reader = new SAXReader();
+        try {
+            //获取读取xml配置文件的输入流
+            InputStream is = getClass().getClassLoader().getResourceAsStream(path);
+            //读取xml，该操作会返回一个Document对象
+            Document document = reader.read(is);
+            //获取文档的根元素
+            Element rootElement = document.getRootElement();
+            //获取根元素下所有的bean标签
+            rootElement.elements(&quot;bean&quot;).forEach(ele -&gt;{
+                Element element = (Element) ele;
+                //获取bean的id值
+                String beanId = element.attributeValue(&quot;id&quot;);
+                //将beanElement对象存入map中，为对象设置属性值时使用
+                Element cache = beanElementMap.put(beanId, element);
+                if (cache != null) {
+                    throw new RuntimeException(&quot;duplicated object for the id : &quot; + beanId);
+                }
+                //获取bean的scope值
+                String beanScope = element.attributeValue(&quot;scope&quot;);
+                //如果beanScope不等于null，将bean的scope值存入map中方便后续使用
+                if(beanScope!=null){
+                    beanScopeMap.put(beanId, beanScope);
+                }
+                //获取bean的class路径
+                String beanClassPath = element.attributeValue(&quot;class&quot;);
+                //利用反射技术根据获得的beanClass路径得到类定义对象
+                Class&lt;?&gt; cls = null;
+                try {
+                    cls = Class.forName(beanClassPath);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                //如果反射获取的类定义对象不为null，则放入工厂中方便创建其实例对象
+                if(cls!=null){
+                    beanFactory.put(beanId, cls);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @param beanName 根据bean的名称获取
+     */
+    public Object getBean(String beanName){
+
+        Class&lt;?&gt; cls = beanFactory.get(beanName);
+        //根据id获取该bean对象的element元素对象
+        Element beanEle = beanElementMap.get(beanName);
+        //获取存在map中的bean元素的scope属性值
+        String scope = beanScopeMap.get(beanName);
+        Object obj;
+            //如果scope等于singleton,创建单例对象
+            if(null == scope || SCOPE.SINGLETON == SCOPE.valueOf(scope.toUpperCase())){
+                obj = singletonBeanFactory.get(beanName);
+                if(obj != null){
+                    return obj;
+                }
+                obj = setFieldValues(beanEle, cls);
+                singletonBeanFactory.putIfAbsent(beanName, obj);
+                return obj;
+            }
+            //如果scope等于prototype,则原型模式创建
+            if(SCOPE.PROTOTYPE == SCOPE.valueOf(scope.toUpperCase())){
+                return setFieldValues(beanEle, cls);
+            }
+
+            throw new RuntimeException(&quot;invalid scope&quot;);
+    }
+
+
+    public &lt;T&gt; T getBean(String beanName, Class&lt;T&gt; clazz) {
+        return clazz.cast(getBean(beanName));
+    }
+
+    /**
+     * bean是否是单例
+     */
+    public boolean beanIsSingleton(String beanName) {
+        return singletonBeanFactory.containsKey(beanName);
+    }
+
+    /**
+     * 对象设置成员属性值
+     * @param beanEle bean所对应的element对象
+     * @param cls 类对象
+     */
+    private Object setFieldValues(Element beanEle, Class&lt;?&gt; cls) {
+        try {
+            //获取每个bean元素下的所有property元素
+            List&lt;Element&gt; properties = beanEle.elements(&quot;property&quot;);
+            Object object = cls.newInstance();
+            if (properties == null || properties.size() &lt;= 0) {
+                return object;
+            }
+            BeanInfo beanInfo = Introspector.getBeanInfo(cls, Object.class);
+            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+            Map&lt;String, PropertyDescriptor&gt; collect = Arrays.stream(propertyDescriptors)
+                    .collect(Collectors.toMap(FeatureDescriptor::getName, v -&gt; v));
+            //遍历property元素集合
+            for (Element propEle : properties) {
+                //获取每个元素的name属性值和value属性值
+                String fieldName = propEle.attributeValue(&quot;name&quot;);
+                String fieldValue = propEle.attributeValue(&quot;value&quot;);
+
+                PropertyDescriptor descriptor = collect.get(fieldName);
+                Class&lt;?&gt; propertyType = descriptor.getPropertyType();
+                descriptor.getWriteMethod().invoke(object, converterManager.convertType(fieldValue, propertyType));
+            }
+            return object;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 销毁方法，用于释放资源
+     */
+    public void destroy(){
+
+        singletonBeanFactory.clear();
+        singletonBeanFactory = null;
+
+        beanFactory.clear();
+        beanFactory = null;
+
+        beanElementMap.clear();
+        beanElementMap = null;
+
+        beanScopeMap.clear();
+        beanScopeMap = null;
+    }
+
+    enum SCOPE{
+        SINGLETON,
+        PROTOTYPE;
+    }
+
+
+}
+</code></pre>
+
+<p>基于xml的方式，其核心就是通过<strong>DOM处理框架</strong>来解析xml文件，然后通过反射的方式创建对象，加入到Map缓存中。</p>
+
+<p>测试</p>
+
+<pre><code>
+public class SpringBeanTest {
+
+    public static void main(String[] args) {
+
+        //创建对象
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(&quot;user.xml&quot;);
+
+        Student studentA = (Student) ctx.getBean(&quot;studentA&quot;);
+        System.out.println(studentA + &quot;---是否是单例：&quot; +ctx.beanIsSingleton(&quot;studentA&quot;));
+
+        Student studentB = ctx.getBean(&quot;studentB&quot;,Student.class);
+        System.out.println(studentB +  &quot;---是否是单例：&quot; +ctx.beanIsSingleton(&quot;studentB&quot;));
+
+    }
+
+}
+</code></pre>
+
+<p>打印结果</p>
+
+<pre><code>Student(name=nana, age=20, address=hangzhou)---是否是单例：true
+Student(name=nicky, age=22, address=ningbo)---是否是单例：false
+</code></pre>
+
+<p>说明我们创建bean成功</p>
+
+<h4 id="2-2-注解方式">2.2 注解方式</h4>
+
+<p>其实DI的实现已经指定了规范，该规范定义了DI必须实现的基础注解，这也就是JSR-330规范的标准接口协议:</p>
+
+<p><strong>JSR-330</strong></p>
+
+<blockquote>
+<p>@Inject : 标记为“可注入”，相当于Spring里面的Autowired
+@Qualifier : 限定器，用于分门别类，最常用的是名称限定器
+@Scope : 标记作用域，最常用的就是单例作用域，扩展里面还有请求作用域、会话作用域等，这不是必须的。
+@Named : 基于 String 的限定器，也就是名称限定器
+@Singleton : 标记为单例，也就是单例作用域</p>
+</blockquote>
+
+<p>具体的依赖包</p>
+
+<pre><code>&lt;dependency&gt;
+	&lt;groupId&gt;javax.inject&lt;/groupId&gt;
+	&lt;artifactId&gt;javax.inject&lt;/artifactId&gt;
+	&lt;version&gt;1&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p>为了更贴合实际，我们创建Spring中使用的自定义注解即如下代码：</p>
+
+<pre><code>@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Component {
+
+    /**
+     * 为此注解定义scope属性,默认单例
+     */
+    SCOPE scope() default SCOPE.SINGLETON;
+
+    String value() default &quot;&quot;;
+}
+
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Value {
+    String value();
+}
+
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Autowired {
+
+}
+</code></pre>
+
+<p>你可以简单理解为 @Compent注解是@Named注解和@Singleton注解组合，@Autowired类似于@Inject注解。</p>
+
+<p>在Spring中的注解都是满足JSR-330规范的，具体可以看@Compent @Autowired的文档说明。</p>
+
+<p>枚举类标识是单例和是原型</p>
+
+<pre><code>public enum SCOPE {
+    SINGLETON,
+    PROTOTYPE;
+}
+</code></pre>
+
+<p>注解方式标记需要注入的Bean</p>
+
+<pre><code>@Component(scope = SCOPE.SINGLETON, value = &quot;studentA&quot;)
+@ToString
+public class Student {
+
+    @Value(&quot;nana&quot;)
+    private String name;
+
+    @Value(&quot;22&quot;)
+    private Integer age;
+
+    @Value(&quot;hangzhou&quot;)
+    private String address;
+
+}
+
+@Component(scope=SCOPE.PROTOTYPE)
+@Data
+class User {
+
+    @Value(&quot;1000.1&quot;)
+    private Double amount;
+
+    private String name;
+
+    @Value(&quot;nicky&quot;)
+    private String nickyName;
+
+    @Value(&quot;330983199611021638&quot;)
+    private String idCard;
+
+}
+</code></pre>
+
+<p>Bean上下文</p>
+
+<pre><code>public class ApplicationContext {
+
+    /**
+     * 此Map容器用于存储类定义对象,只考虑一个接口只有一种实现
+     */
+    private Map&lt;String, Class&lt;?&gt;&gt; beanFactory = new ConcurrentHashMap&lt;&gt;();
+
+    /**
+     * 此Map容器用于存储单例对象
+     */
+    private Map&lt;String, Object&gt; singletonBeanFactory = new ConcurrentHashMap&lt;&gt;();
+
+    private static TypeConverterManager converterManager = JoddBean.get().typeConverterManager();
+
+    public ApplicationContext(String ... packageName) {
+        //扫描指定的包路径
+        for (String name : packageName) {
+            initBean(name);
+        }
+        //进行DI依赖注入
+        dependencyInjection();
+    }
+
+    private synchronized void initBean(String packageName) {
+        Enumeration&lt;URL&gt; urls;
+        try {
+            urls = Thread.currentThread().getContextClassLoader().getResources(packageName.replaceAll(&quot;\\.&quot;, &quot;/&quot;));
+            //获取目录结构在类路径中的位置(其中url中封装了具体资源的路径)
+            // URL url=getClass().getClassLoader().getResource();
+            while (urls.hasMoreElements()) {
+                registerClass(urls.nextElement().getPath(), packageName);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //获取指定包路径下实现 Component主键Bean的实例
+    private void registerClass(String filePath, String packageName) {
+        try {
+            File[] files = getClassFileList(filePath);
+            if (files != null) {
+                for (File f : files) {
+                    String fileName = f.getName();
+                    if (f.isFile()) {
+                        Class&lt;?&gt; clazz = Class.forName(packageName + &quot;.&quot; + fileName.substring(0, fileName.lastIndexOf(&quot;.&quot;)));
+                        //判断该类是否实现了注解
+                        if (clazz.isAnnotationPresent(Component.class)) {
+                            Component annotation = clazz.getAnnotation(Component.class);
+                            //获取bean名称
+                            String key = annotation.value();
+                            if (&quot;&quot;.equals(key)) {
+                                //使用命名驼峰规则
+                                key = camelNameSpell(clazz.getSimpleName());
+                            }
+                            beanFactory.put(key, clazz);
+                        }
+                    } else {
+                        registerClass(f.getPath(), packageName + &quot;.&quot; + fileName);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //获取该路径下所遇的class文件和目录
+    private static File[] getClassFileList(String filePath) {
+        return new File(filePath).listFiles(new FileFilter() {
+
+            @Override public boolean accept(File file) {
+                return file.isFile() &amp;&amp; file.getName().endsWith(&quot;.class&quot;) || file.isDirectory();
+            }
+        });
+    }
+
+    /**
+     * 获取bean
+     */
+    public Object getBean(String beanName) {
+        //根据传入beanId获取类对象
+        Class&lt;?&gt; cls = beanFactory.get(beanName);
+        if (cls == null) {
+            throw new RuntimeException(&quot;beanName error&quot;);
+        }
+        //根据类对象获取其定义的注解
+        Component annotation = cls.getAnnotation(Component.class);
+        //获取注解的scope属性值
+        SCOPE scope = annotation.scope();
+        try {
+            Object obj;
+            //如果scope等于singleton,创建单例对象
+            if (SCOPE.SINGLETON == scope) {
+                obj = singletonBeanFactory.get(beanName);
+                if (obj == null) {
+                    obj = cls.newInstance();
+                    setFieldValues(cls, obj);
+                    singletonBeanFactory.putIfAbsent(beanName, obj);
+                }
+                return obj;
+            }
+            //如果scope等于prototype,则创建并返回多例对象
+            if (SCOPE.PROTOTYPE == scope) {
+                obj = cls.newInstance();
+                setFieldValues(cls, obj);
+                return obj;
+            }
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public &lt;T&gt; T getBean(String beanName, Class&lt;T&gt; cls) {
+        return  cls.cast(getBean(beanName));
+    }
+
+    private void setFieldValues(Class&lt;?&gt; cls, Object obj) {
+        //获取类中所有的成员属性
+        Field[] fields = cls.getDeclaredFields();
+        //遍历所有属性
+        for (Field field : fields) {
+            //如果此属性有Value注解修饰，对其进行操作
+            if (field.isAnnotationPresent(Value.class)) {
+                //获取注解中的值
+                String value = field.getAnnotation(Value.class).value();
+                try {
+                    field.setAccessible(true);
+                    field.set(obj, converterManager.convertType(value, field.getType()));
+                } catch (ReflectiveOperationException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void dependencyInjection() {
+
+        beanFactory.forEach((k, v) -&gt; {
+            Component annotation = v.getAnnotation(Component.class);
+            if (annotation.scope() == SCOPE.SINGLETON) {
+                Object obj = getBean(k);
+                Arrays.stream(v.getDeclaredFields()).forEach(field -&gt; {
+                    if (field.isAnnotationPresent(Autowired.class)) {
+                        try {
+                            field.setAccessible(true);
+                            Class&lt;?&gt; type = field.getType();
+                            Component ann = type.getAnnotation(Component.class);
+                            field.set(obj, getBean(&quot;&quot;.equals(ann.value()) ? camelNameSpell(type.getSimpleName()) : ann.value()));
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+            }
+
+        });
+
+    }
+
+    public boolean beanIsSingleton(String beanName) {
+        return singletonBeanFactory.containsKey(beanName);
+    }
+
+    /**
+     * 销毁方法，用于释放资源
+     */
+    public void close() {
+        beanFactory.clear();
+        beanFactory = null;
+        singletonBeanFactory.clear();
+        singletonBeanFactory = null;
+    }
+
+    private static String camelNameSpell(String name) {
+        if (StringUtil.isEmpty(name)) {
+            return name;
+        }
+        return String.valueOf(name.charAt(0)).toLowerCase() + name.substring(1);
+
+    }
+}
+</code></pre>
+
+<p>通过扫描包路径的文件和反射来创建对象</p>
+
+<p>测试</p>
+
+<pre><code>public class SpringBeanTest {
+
+    public static void main(String[] args) {
+
+        ApplicationContext ctx = new ApplicationContext(&quot;iockids.ioc02&quot;);
+
+        User user=(User) ctx.getBean(&quot;user&quot;);
+        System.out.println(user + &quot;对象是否是单例： &quot; + ctx.beanIsSingleton(&quot;user&quot;));
+
+        Student student = ctx.getBean(&quot;studentA&quot;, Student.class);
+        System.out.println(student + &quot;对象是否是单例： &quot; + ctx.beanIsSingleton(&quot;studentA&quot;));
+        //销毁资源
+        ctx.close();
+    }
+
+}
+</code></pre>
+
+<p>打印结果</p>
+
+<pre><code>User(amount=1000.1, name=null, nickyName=nicky, idCard=330983199611021638)对象是否是单例： false
+Student(name=nana, age=22, address=hangzhou)对象是否是单例： true
+</code></pre>
+
+<p>通过注解方式创建Bean成功</p>
+
+<h1 id="3-ioc">3 IOC</h1>
+
+<p>IoC即 <strong>控制反转</strong>， 是一种思想，一个重要的面向对象编程的法则，它能指导我们如何设计出松耦合、更优良的程序。传统应用程序都是由我们在类内部主动创建依赖对象，从而导致类与类之间高耦合，难于测试；有了IoC容器后，把创建和查找依赖对象的控制权交给了容器，由容器进行注入组合对象，所以对象与对象之间是松散耦合，这样也方便测试，利于功能复用，更重要的是使得程序的整个体系结构变得非常灵活。</p>
+
+<p>IoC很好的体现了面向对象设计法则之一—— 好莱坞法则：“不要给我们打电话，我们会给你打电话(don‘t call us, we‘ll call you)”；即由IoC容器帮对象找相应的依赖对象并注入，而不是由对象主动去找。</p>
+
+<p><strong>IOC集成Junit</strong></p>
+
+<p>Bean对象</p>
+
+<pre><code>@Component(scope=SCOPE.PROTOTYPE)
+@Data
+public class Teacher {
+
+    @Value(&quot;2000.1&quot;)
+    private Double amount;
+
+    private String name;
+
+    @Value(&quot;asuka&quot;)
+    private String nickyName;
+
+    @Value(&quot;330983199611021638&quot;)
+    private String idCard;
+
+}
+</code></pre>
+
+<p>业务层</p>
+
+<pre><code>@Component
+public class UserService {
+
+    @Autowired
+    private Student student;
+
+    @Autowired
+    private Teacher teacher;
+
+
+    public void getUserInfo(){
+        System.out.println(&quot;student: &quot; + student);
+        System.out.println(&quot;teacher: &quot; + teacher);
+    }
+}
+</code></pre>
+
+<p>编写测试类</p>
+
+<pre><code>public class SpringJunitTest extends TestCase {
+
+
+   private ApplicationContext ctx;
+
+
+    private UserService userService;
+
+
+    @Override
+    protected void setUp() {
+        System.out.println(&quot;引入Spring容器&quot;);
+        ctx = new ApplicationContext(&quot;iockids.ioc03&quot;, &quot;iockids.ioc02&quot;);
+        userService = ctx.getBean(&quot;userService&quot;, UserService.class);
+    }
+
+
+    public void testUser(){
+        userService.getUserInfo();
+    }
+
+    @Override
+    protected void tearDown() {
+        ctx.close();
+        System.out.println(&quot;销毁容器&quot;);
+    }
+
+}
+</code></pre>
+
+<p>运行 <code>testUser()</code>方法,打印结果如下：</p>
+
+<pre><code>引入Spring容器
+student: Student(name=nana, age=22, address=hangzhou)
+teacher: Teacher(amount=2000.1, name=null, nickyName=asuka, idCard=330983199611021638)
+销毁容器
+</code></pre>
+
+<p>说明Spring和Junit集成成功。</p>
+
+<p>在编写测试类的时候，我们通常是基于注解的，@Test注解，会将注解有该表示的方法加入到TestCase对象中，获取Spring的Bean，无非是在setup方法中，进行了处理。</p>
+
+
+        </div>
+
+    </div>
+
+    
+    <nav id="article-nav">
+
+        
+        <div id="article-nav-newer" class="article-nav-title">
+            <a href="https://nicky-chen.github.io/2018/08/22/java-methodhandler/">
+                Java反射优化之方法句柄
+            </a>
+        </div>
+        
+
+        
+        <div id="article-nav-older" class="article-nav-title">
+            <a href="https://nicky-chen.github.io/2018/08/12/spring-bean-lifecycle/">
+                Spring之Bean加载-解析-生命周期
+            </a>
+        </div>
+        
+
+    </nav>
+    
+
+
+</article>
+
+<div id="toc" class="toc-article" >
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc">
+        <nav id="TableOfContents">
+<ul>
+<li><a href="#1-背景">1 背景</a>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#2-1-xml方式">2.1 XML方式</a></li>
+<li><a href="#2-2-注解方式">2.2 注解方式</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#3-ioc">3 IOC</a></li>
+</ul>
+</nav>
+    </ol>
+</div>
+<style>
+    
+    .left-col .switch-btn {
+        display: none;
+    }
+
+    .left-col .switch-area {
+        display: none;
+    }
+    
+
+
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录" >
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function () {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    
+    
+    
+        
+    
+</script>
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_more" data-cmd="more"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+        <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+        <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config = {
+            "common": {
+                "bdSnsKey": {},
+                "bdText": "",
+                "bdMini": "2",
+                "bdMiniList": false,
+                "bdPic": "",
+                "bdStyle": "0",
+                "bdSize": "24"
+            }, "share": {}
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '//bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+</div>
+
+
+
+
+<div style="margin-left: 30px;margin-right: 30px;background: white;padding-left: 30px;padding-right: 30px">
+    <div class="comments">
+        <h3>COMMENTS</h3>
+        <script type="text/javascript">
+            (function() {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                dsq.setAttribute('data-timestamp', +new Date());
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <div id="disqus_thread"></div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="scroll" id="post-nav-button">
+
+    
+    <a href="https://nicky-chen.github.io/2018/08/22/java-methodhandler/" title="上一篇: Java反射优化之方法句柄">
+        <i class="fa fa-angle-left"></i>
+    </a>
+    
+
+
+    <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+
+    
+    <a href="https://nicky-chen.github.io/2018/08/12/spring-bean-lifecycle/" title="下一篇: Spring之Bean加载-解析-生命周期">
+        <i class="fa fa-angle-right"></i>
+    </a>
+    
+
+</div>
+
+
+<ul class="post-list toc-article">
+    
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2019/05/03/apt_lombok_implement/" target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/25/spring-springmvc/" target="_blank">Spring之动手实现SpringMVC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/22/java-methodhandler/" target="_blank">Java反射优化之方法句柄</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/16/spring-bean-ioc/" target="_blank">Spring之动手实现IOC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/12/spring-bean-lifecycle/" target="_blank">Spring之Bean加载-解析-生命周期</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/09/aqs-condition/" target="_blank">并发基础之Condition(等待队列)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/07/cache-redis-optimize/" target="_blank">Redis注意事项及常见优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/04/aqs_chapter02/" target="_blank">并发基础之AQS同步器（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/01/cache-redis-slowlog/" target="_blank">Redis之慢查询日志</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/31/aqs_chapter01/" target="_blank">并发基础之AQS同步器（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/16/junit-codeanalysis/" target="_blank">初窥门径之JUnit源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/13/java-securitymanager/" target="_blank">Java安全之SecurityManager</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/29/responsibility-chain/" target="_blank">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/25/jndi-introdution/" target="_blank">JNDI知识摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/17/architect/" target="_blank">技术图谱</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/07/singletion/" target="_blank">设计模式之单例模式终极版【克隆-序列化-反射】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/02/fail-fast-safe/" target="_blank">Fail-Fast和Fail-Safe机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/27/adapter/" target="_blank">实际项目运用之Adapter模式（适配器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/18/template/" target="_blank">设计模式之Template模式（模版模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/14/synchronized-principle/" target="_blank">synchronized实现原理及锁优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/13/juc-tree-info/" target="_blank">JUC知识点总结</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/06/strategy/" target="_blank">实际项目运用之Strategy模式（策略模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/04/volatile-feature/" target="_blank">volatile关键字原理实现及应用</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/28/high-event/" target="_blank">MYSQL高级特性之【Event事件】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/27/process-fun/" target="_blank">MYSQL高级特性之【存储过程与函数】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/21/string-builder-question/" target="_blank">字符串拼接的疑惑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/17/exception-introduce/" target="_blank">Java异常处理-原理及优化建议</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/03/thread-jmm-happens-before/" target="_blank">java内存模型之[JMM][重排序][happens-before]</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/28/decorator/" target="_blank">实际项目运用之Decorator模式（装饰器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/21/binary-operation/" target="_blank">java中位运算技巧</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/20/classloader-chapter02/" target="_blank">ClassLoader类加载分析（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/13/introspector/" target="_blank">Java 内省(Introspector)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/08/classloader-chapter01/" target="_blank">ClassLoader类加载分析（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/12/19/builder/" target="_blank">设计模式之builder模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/12/07/builder-factory/" target="_blank">设计模式之factory模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/11/03/recursive-lock/" target="_blank">可重入锁</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/03/17/book_list/" target="_blank">阅读书单</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/02/19/open_source/" target="_blank">开源项目</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/02/19/tools/" target="_blank">在线工具</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+</ul>
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    $(".post-list").addClass("toc-article");
+    $(".post-list-item a").attr("target", "_blank");
+    $("#post-nav-button > a:nth-child(2)").click(function () {
+        $(".fa-bars, .fa-times").toggle();
+        $(".post-list").toggle(300);
+        if ($(".toc").length > 0) {
+            $("#toc, #tocButton").toggle(200, function () {
+                if ($(".switch-area").is(":visible")) {
+                    $("#toc, .switch-btn, .switch-area").toggle();
+                    $("#tocButton").attr("value", valueHide);
+                }
+            })
+        }
+        else {
+            $(".switch-btn, .switch-area").fadeToggle(300);
+        }
+    })
+</script>
+
+
+<script>
+
+</script>
+
+
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2019 nicky_chin
+            </div>
+            <div class="footer-right">
+                <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >本站到访数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量:
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chen.github.io/js/GithubRepoWidget.js"></script>
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chen.github.io/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  5 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-119892182-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i &lt; all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+<script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  true ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+
+    <title>并发基础之AQS同步器（二）</title>
+    <link rel="icon" href="https://nicky-chen.github.io/favicon.png">
+
+    <link rel="stylesheet" href="https://nicky-chen.github.io/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chen.github.io/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chen.github.io/apple-touch-icon.png">
+
+
+    <link rel="stylesheet" href="https://nicky-chen.github.io/fancybox/jquery.fancybox.css">
+
+    
+    
+    <link rel="stylesheet" href="https://nicky-chen.github.io/highlight/styles/darcula.css">
+    <script src="https://nicky-chen.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chen.github.io/" class="profilepic">
+            <img src="https://nicky-chen.github.io/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chen.github.io/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chen.github.io/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chen.github.io/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/external/open_source.html">开源项目</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chen.github.io/./post/">归档日志</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="简书"><a class="简书" target="_blank" href="https://www.jianshu.com/u/c44ed4847c3d" title="简书"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chen.github.io/tags/junit" style="font-size: 12px;" class="color3">Junit</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/redis" style="font-size: 12px;" class="color4">Redis</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/spring-base" style="font-size: 12px;" class="color1">Spring-Base</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color2">创建型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">基础</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color3">多线程</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color3">思维导图</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color4">源码</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color2">结构型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color3">行为型</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chen.github.io/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chen.github.io/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chen.github.io/" class="profilepic">
+                <img src="https://nicky-chen.github.io/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chen.github.io/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chen.github.io/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/external/open_source.html">开源项目</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chen.github.io/./post/">归档日志</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="简书"><a class="简书" target="_blank" href="https://www.jianshu.com/u/c44ed4847c3d" title="简书"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+            <article id="post-js-android" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chen.github.io/2018/08/04/aqs_chapter02/" class="article-date">
+            <time datetime="2018-08-04 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-04</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 class="article-title" itemprop="name">
+                <a class="article-title" href="https://nicky-chen.github.io/2018/08/04/aqs_chapter02/">并发基础之AQS同步器（二）</a>
+            </h1>
+
+
+        </header>
+
+        <div class="article-info article-info-post">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="article-category-link" href="https://nicky-chen.github.io/categories/concurrent/" style="font-size: 12px;">concurrent</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/%e5%a4%9a%e7%ba%bf%e7%a8%8b/"
+                           style="font-size: 12px;">多线程</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="article-entry" itemprop="articleBody">
+
+            
+
+<p>在AQS同步器组件原理分析前，我们需要了解同步队列这个概念，了解同步队列中节点的入队和出队的流程，CHL同步队列的由来，可以参考我之前的文章：
+<a href="https://www.jianshu.com/p/afce44b21d77">并发基础之AQS同步器（一）</a></p>
+
+<h1 id="1-同步队列">1 同步队列</h1>
+
+<p>同步器依赖内部的同步队列（一个FIFO双向队列）来完成同步状态的管理，当前线程获取同步状态失败时，同步器会将当前线程以及等待状态等信息构造成为一个节点（Node）并将其加入同步队列，同时会阻塞当前线程，当同步状态释放时，会把首节点中的线程唤醒，使其再次尝试获取同步状态</p>
+
+<p>FIFO队列<code>Node</code>对象的具体实现如下：</p>
+
+<pre><code>static final class Node {
+        static final Node SHARED = new Node();
+        static final Node EXCLUSIVE = null;
+        static final int CANCELLED =  1;
+        static final int SIGNAL    = -1;
+        static final int CONDITION = -2;
+        static final int PROPAGATE = -3;
+        volatile int waitStatus;
+        volatile Node prev;
+        volatile Node next;
+        volatile Thread thread;
+        Node nextWaiter;
+        .final boolean isShared() {
+        return nextWaiter == SHARED;
+    }
+
+    final Node predecessor() throws NullPointerException {
+        Node p = prev;
+        if (p == null)
+            throw new NullPointerException();
+        else
+            return p;
+    }
+
+    Node() {
+    }
+
+    Node(Thread thread, Node mode) {
+        this.nextWaiter = mode;
+        this.thread = thread;
+    }
+
+    Node(Thread thread, int waitStatus) {
+        this.waitStatus = waitStatus;
+        this.thread = thread;
+    }
+}
+</code></pre>
+
+<p><strong>节点属性类型与名称以及描述</strong></p>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/10175660-50eaea466097ee17.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="属性名称" /></p>
+
+<blockquote>
+<p>volatile int waitStatus;
+        volatile Node prev;
+        volatile Node next;
+        volatile Thread thread;</p>
+</blockquote>
+
+<p>上述的几个属性都使用了volatile语义，是为了保证内存的可见性，在配合<strong>CAS</strong>的使用过程中，能够获取到该属性的变化，可以说 volatile + CAS 组合是实现同步器的基础</p>
+
+<p>同步队列结构图如下：</p>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/10175660-4458697e9594185c.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="同步队列" /></p>
+
+<p>同步器包含了两个节点类型的引用，一个指向头节点，而另一个指向尾节点。</p>
+
+<p>当一个线程成功地获取了同步状态（或者锁），其他线程将无法获取到同步状态，转而被构造成为节点并加入到同步队列中，而这个加入队列的过程必须要保证线程安全，因此同步器提供了一个基于CAS的设置尾节点的方法：<code>compareAndSetTail(Node expect,Nodeupdate)</code>，它需要传递当前线程“认为”的尾节点和当前节点，只有设置成功后，当前节点才正式与之前的尾节点建立关联。</p>
+
+<h3 id="1-1-入队操作">1.1 入队操作</h3>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/10175660-e883018e54906887.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="入队操作" /></p>
+
+<h3 id="1-2-获取同步状态">1.2 获取同步状态</h3>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/10175660-f95a12ea2655d585.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="设置首节点" /></p>
+
+<p>同步队列遵循FIFO，首节点是获取同步状态成功的节点，首节点的线程在释放同步状态时，将会唤醒后继节点，而后继节点将会在获取同步状态成功时将自己设置为首节点由于只有一个线程能够成功获取到同步状态，因此设置头节点的方法并不需要使用CAS来保证,后面代码中会具体分析</p>
+
+<h1 id="2-独占锁实现">2 独占锁实现</h1>
+
+<h3 id="2-1-同步状态获取">2.1 同步状态获取</h3>
+
+<p>同步器锁获取方法在<code>acquire</code>方法中,代码如下：</p>
+
+<pre><code>:::java
+//同步状态获取、节点构造、加入同步队列以及在同步队列中自旋
+    public final void acquire(int arg) {
+        if (!tryAcquire(arg) &amp;&amp;
+            acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+            selfInterrupt();
+    }
+</code></pre>
+
+<p>其主要逻辑是：
+* 1 首先调用自定义的<code>tryAcquire(int arg)</code>方法，获取同步状态
+* 2 如果同步状态获取失败，则构造同步节点,并通过<code>addWaiter(Node node)</code>方法将该节点加入到同步队列的尾部
+* 3 调用<code>acquireQueued(Node node,int arg)</code>方法，使得该节点以“死循环”的方式自旋获取同步状态。如果获取不到则阻塞节点中的线程，<em>而被阻塞线程的唤醒主要依靠前驱节点的出队或阻塞线程被中断来实现</em></p>
+
+<p>自定义实现的<code>tryAcquire(int arg)</code>方法如下</p>
+
+<pre><code>:::java
+  public boolean tryAcquire(int acquires) {
+            if (compareAndSetState(0, 1)) {
+                setExclusiveOwnerThread(Thread.currentThread());
+                return true;
+            }
+            return false;
+        }
+</code></pre>
+
+<p>通过CAS来获取同步状态，如果获取成功，则将<code>state</code>的的状态标记为1，并且将AQS对象中的独占拥有线程属性<code>exclusiveOwnerThread</code>的引用指向当前线程。如果获取失败，则直接返回false</p>
+
+<p>如果获取锁失败，节点的构造以及加入同步队列，方法如下</p>
+
+<pre><code>:::java
+  private Node addWaiter(Node mode) {
+    //构建同步队列节点
+        Node node = new Node(Thread.currentThread(), mode);
+        // Try the fast path of enq; backup to full enq on failure
+        Node pred = tail;
+      //如果当前同步队列尾节点不为空，即有等待状态的节点
+        if (pred != null) {
+            node.prev = pred; //将当前要加入节点的前驱节点指向同步队列的尾节点
+            if (compareAndSetTail(pred, node)) {//通过cas尝试将当前节点加入到同步队列尾部
+                pred.next = node;  //cas成功 则将同步队列的后继节点指向当前加入同步节点
+                return node;
+            }
+        }
+    //如果加入同步队列失败等其他状况，则如果 enq方法
+        enq(node);
+        return node;
+    }
+
+private Node enq(final Node node) {
+    //死循环自旋的方式将同步节点加入到同步队列操作
+        for (;;) {
+            Node t = tail;
+    //如果同步队列队尾为空，则初始化同步队列
+            if (t == null) { // Must initialize
+                if (compareAndSetHead(new Node()))
+                    tail = head;  //对头队尾都是同一对象，int waitStatus的等待状态为0
+            } else {
+//如果同步队列不为空，则cas将当前节点加入到同步器队尾
+                node.prev = t;
+                if (compareAndSetTail(t, node)) {
+                    t.next = node;
+                    return t;
+                }
+            }
+        }
+    }
+</code></pre>
+
+<p>上述代码通过使用<code>compareAndSetTail(Node expect,Node update)</code>方法来确保节点能够被线程安全添加。</p>
+
+<p>如果使用普通的LinkedList来维护节点之间的关系，多个线程由于调用<code>tryAcquire(int arg)</code>方法获取同步状态失败而并发地被添加到LinkedList时，LinkedList将难以保证Node的正确添加，最终的结果可能是节点的数量有偏差，而且顺序也是混乱的。</p>
+
+<p>在<code>enq(final Node node)</code>方法中，同步器通过“死循环”来保证节点的正确添加，在“死循环”中只有通过CAS将节点设置成为尾节点之后，当前线程才能从该方法返回，否则，当前线程不断地尝试设置。</p>
+
+<p><strong>同步队列中获取同步状态过程</strong></p>
+
+<p>节点进入同步队列之后，就进入了一个自旋的过程，当条件满足，获取到了同步状态，就可以从这个自旋过程中退出，否则依旧留在这个自旋过程中
+ <em>（并会阻塞节点的线程）</em></p>
+
+<p>具体方法如下:</p>
+
+<pre><code>:::java
+ final boolean acquireQueued(final Node node, int arg) {
+        boolean failed = true;
+        try {
+            boolean interrupted = false;
+    //自旋获取同步状态
+            for (;;) {
+    //获取当前自旋节点的前驱节点
+                final Node p = node.predecessor();
+    //如果前驱节点是同步队列的头节点，则尝试获取同步状态
+                if (p == head &amp;&amp; tryAcquire(arg)) {
+                    setHead(node); //获取同步状态成功，将头节点设置为当前节点，并将node.pre设置为null
+                    p.next = null; // help GC
+                    failed = false;
+                    return interrupted;
+                }
+    //获取锁失败后是否需要阻塞线程，需要则修改线程状态
+                if (shouldParkAfterFailedAcquire(p, node) &amp;&amp;
+                    parkAndCheckInterrupt())
+                    interrupted = true;
+            }
+        } finally {
+        //如果当前节点中断，则取消获取同步状态，并将waitStatus 设置为Node.CANCELLED 
+            if (failed)
+                cancelAcquire(node);
+        }
+    }
+
+//该方法主要通过前驱节点判断当前线程是否应该被阻塞
+ private static boolean shouldParkAfterFailedAcquire(Node pred, Node node) {
+    //获取前驱节点的等待状态
+        int ws = pred.waitStatus;
+        if (ws == Node.SIGNAL)
+            /*
+             * 如果状态是signal,表示线程处于blocked状态，返回true
+             */
+            return true;
+        if (ws &gt; 0) {
+           //前驱节点状态 &gt; 0 ，则为Cancelled,表明该节点已经超时或被中断，需要从同步队列中跳过
+            do {//循环跳过逻辑
+                node.prev = pred = pred.prev;
+            } while (pred.waitStatus &gt; 0);
+            pred.next = node; //找到waitStatus&lt;=0的节点与node节点前后链接
+        } else {
+    //如果前驱节点状态为Condition、propagate （0， -3）,则表明节点需要signal状态，而不是阻塞，
+    //则重试CAS操作确认该节点在阻塞前未获取到同步状态
+            compareAndSetWaitStatus(pred, ws, Node.SIGNAL);
+        }
+        return false;
+    }
+</code></pre>
+
+<p>在<code>acquireQueued(final Node node,int arg)</code>方法中，当前线程在“死循环”中尝试获取同步状态，而只有前驱节点是头节点才能够尝试获取同步状态，这是为什么？原因有两个，如下。
+* 1 头节点是成功获取到同步状态的节点，而头节点的线程释放了之后，将会唤醒其后继节点，后继节点的线程被唤醒后需要检查自己的前驱节点是否是头节点。
+* 2 维护同步队列的FIFO原则。该方法中，节点自旋获取同步状态的行为如图所示:</p>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/10175660-9435ca33949683ec.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="同步状态" /></p>
+
+<p>独占式同步状态获取流程，<code>acquire(int arg)</code>方法调用流程，如图：</p>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/10175660-4e42520e216e4c64.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="独占式获取锁流程" /></p>
+
+<p>前驱节点为头节点且能够获取同步状态的判断条件和线程进入等待状态是获取同步状态的自旋过程。当同步状态获取成功之后，当前线程从<code>acquire(int arg)</code>方法返回，如果对于锁这种并发组件而言，代表着当前线程获取了锁。</p>
+
+<h3 id="2-2-同步状态释放">2.2 同步状态释放</h3>
+
+<p>当前线程获取同步状态并执行了相应逻辑之后，就需要释放同步状态，使得后续节点能够继续获取同步状态。通过调用同步器的<code>release(int arg)</code>方法可以释放同步状态，该方法在释放了同步状态之后，会唤醒其后继节点（进而使后继节点重新尝试获取同步状态）。该方法如下:</p>
+
+<pre><code>:::java
+ public final boolean release(int arg) {
+        if (tryRelease(arg)) {
+            Node h = head;
+            if (h != null &amp;&amp; h.waitStatus != 0)
+                unparkSuccessor(h);
+            return true;
+        }
+        return false;
+    }
+
+     protected boolean tryRelease(int releases) {
+            if (getState() == 0) throw new IllegalMonitorStateException();
+            setExclusiveOwnerThread(null);
+            setState(0);
+            return true;
+        }
+
+//唤醒后继节点
+private void unparkSuccessor(Node node) {
+        //当前节点状态
+        int ws = node.waitStatus;
+        //当前状态 &lt; 0 则设置为 0
+        if (ws &lt; 0)
+            compareAndSetWaitStatus(node, ws, 0);
+
+        //当前节点的后继节点
+        Node s = node.next;
+        //后继节点为null或者其状态 &gt; 0 (超时或者被中断了)
+        if (s == null || s.waitStatus &gt; 0) {
+            s = null;
+            //从tail节点来找可用节点
+            for (Node t = tail; t != null &amp;&amp; t != node; t = t.prev)
+                if (t.waitStatus &lt;= 0)
+                    s = t;
+        }
+        //唤醒后继节点
+        if (s != null)
+            LockSupport.unpark(s.thread);
+    }
+</code></pre>
+
+<p>通过自定义的<code>tryRelease(int releases)</code>方法，当<strong>state</strong>变成0的时候表示释放成功，同时唤醒通过<code>unparkSuccessor(Node node)</code> 方法唤醒后继节点</p>
+
+<h3 id="2-3-独占式获取响应中断">2.3 独占式获取响应中断</h3>
+
+<p>AQS提供了<code>acquire(int arg)</code>方法以独占式获取同步状态，但是该方法对中断不响应，对线程进行中断操作后，该线程会依然位于CLH同步队列中等待着获取同步状态。为了响应中断，AQS提供了<code>acquireInterruptibly(int arg)</code>方法，该方法在等待获取同步状态时，如果当前线程被中断了，会立刻响应中断抛出异常InterruptedException。</p>
+
+<pre><code>:::java
+  public final void acquireInterruptibly(int arg)
+            throws InterruptedException {
+        if (Thread.interrupted())
+            throw new InterruptedException();
+        if (!tryAcquire(arg))
+            doAcquireInterruptibly(arg);
+    }
+</code></pre>
+
+<p><strong>private void doAcquireInterruptibly(int arg)</strong>方法和<strong>final boolean acquireQueued(final Node node, int arg)</strong>方法基本类似,所以这部分分析省略</p>
+
+<h3 id="2-4-独占式超时获取">2.4 独占式超时获取</h3>
+
+<p><code>tryAcquireNanos(int arg,long nanos)</code>该方法为<code>acquireInterruptibly</code>方法的进一步增强，它除了响应中断外，还有超时控制。即如果当前线程没有在指定时间内获取同步状态，则会返回false，否则返回true。针对超时获取，主要需要计算出需要睡眠的时间间隔<em>nanosTimeout</em>  , 方法如下：</p>
+
+<pre><code>:::java
+  public final boolean tryAcquireNanos(int arg, long nanosTimeout)
+            throws InterruptedException {
+        if (Thread.interrupted())
+            throw new InterruptedException();
+        return tryAcquire(arg) ||
+            doAcquireNanos(arg, nanosTimeout);
+    }
+
+    //获取超时逻辑
+ private boolean doAcquireNanos(int arg, long nanosTimeout)
+            throws InterruptedException {
+        if (nanosTimeout &lt;= 0L) //参数校验
+            return false;
+    //  获取超时的纳秒值
+        final long deadline = System.nanoTime() + nanosTimeout;
+        final Node node = addWaiter(Node.EXCLUSIVE);//构造节点
+        boolean failed = true;
+        try {//自旋获取同步状态
+            for (;;) {
+                final Node p = node.predecessor();
+                if (p == head &amp;&amp; tryAcquire(arg)) {
+                    setHead(node);
+                    p.next = null; // help GC
+                    failed = false;
+                    return true;
+                }
+    //在正常获取同步状态的逻辑上加入超时校验
+                nanosTimeout = deadline - System.nanoTime();
+                if (nanosTimeout &lt;= 0L)
+                    return false;
+                if (shouldParkAfterFailedAcquire(p, node) &amp;&amp;
+                    nanosTimeout &gt; spinForTimeoutThreshold)
+                    LockSupport.parkNanos(this, nanosTimeout);
+                if (Thread.interrupted())
+                    throw new InterruptedException();
+            }
+        } finally {
+            if (failed)
+                cancelAcquire(node);
+        }
+    }
+</code></pre>
+
+<p>方法在自旋过程中，当节点的前驱节点为头节点时尝试获取同步状态，如果获取成功则从该方法返回，这个过程和独占式同步获取的过程类似。</p>
+
+<p>但是在同步状态获取失败的处理上有所不同。如果当前线程获取同步状态失败，则判断是否超时（nanosTimeout小于等于0表示已经超时），如果没有超时，重新计算超时间隔nanosTimeout，然后使当前线程等待nanosTimeout纳秒（当已到设置的超时时间，该线程会从<code>LockSupport.parkNanos(Objectblocker,long nanos)</code>方法返回）。</p>
+
+<p>如果nanosTimeout小于等于<strong>spinForTimeoutThreshold（1000纳秒）</strong>时，将不会使该线程进行超时等待，而是进入快速的自旋过程。原因在于，非常短的超时等待无法做到十分精确，如果这时再进行超时等待，相反会让nanosTimeout的超时从整体上表现得反而不精确。因此，在超时非常短的场景下，同步器会进入无条件的快速自旋。</p>
+
+<p><strong>独占式超时获取同步状态流程如图</strong></p>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/10175660-6ee22896a8f7079b.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="超时流程图" /></p>
+
+<h1 id="3-共享锁实现">3 共享锁实现</h1>
+
+<p>共享式获取与独占式获取最主要的区别在于同一时刻能否有多个线程同时获取到同步状态。</p>
+
+<h3 id="3-1-共享式同步状态获取">3.1 共享式同步状态获取</h3>
+
+<p>AQS提供<code>acquireShared(int arg)</code>方法共享式获取同步状态：</p>
+
+<pre><code>:::java
+ public final void acquireShared(int arg) {
+        if (tryAcquireShared(arg) &lt; 0)
+    //获取失败，自旋获取同步状态
+            doAcquireShared(arg);
+    }
+</code></pre>
+
+<p>首先判断自定义的<code>tryAcquireShared(arg)</code>是否获取到同步状态，如果获取失败，则进入<code>doAcquireShared(arg)</code>方法</p>
+
+<pre><code>:::java
+ private void doAcquireShared(int arg) {
+    //构造共享节点
+        final Node node = addWaiter(Node.SHARED);
+        boolean failed = true;
+        try {
+            boolean interrupted = false;
+    //自旋方式获取同步状态
+            for (;;) {
+    // 获取节点的前驱节点
+                final Node p = node.predecessor();
+                if (p == head) {//如果前驱节点是同步队列头节点则尝试获取同步状态
+                    int r = tryAcquireShared(arg);
+                    if (r &gt;= 0) {//获取同步状态成功
+                        setHeadAndPropagate(node, r); //同步队列头设置为当前节点
+                        p.next = null; // help GC
+                        if (interrupted)
+                            selfInterrupt();
+                        failed = false;
+                        return;
+                    }
+                }
+    //获取失败后是否需要阻塞线程
+                if (shouldParkAfterFailedAcquire(p, node) &amp;&amp;
+                    parkAndCheckInterrupt())
+                    interrupted = true;
+            }
+        } finally {
+            if (failed) //如果当前节点中断异常则从同步队列中移除
+                cancelAcquire(node);
+        }
+    }
+</code></pre>
+
+<p>在<code>acquireShared(int arg)</code>方法中，同步器调用<code>tryAcquireShared(int arg)</code>方法尝试获取同步状态，tryAcquireShared(int arg)方法返回值为int类型，当返回值大于等于0时，表示能够获取到同步状态。</p>
+
+<p>因此，在共享式获取的自旋过程中，成功获取到同步状态并退出自旋的条件就是<code>tryAcquireShared(int arg)</code>方法返回值大于等于0。可以看到，在<code>doAcquireShared(int arg)</code>方法的自旋过程中，如果当前节点的前驱为头节点时，尝试获取同步状态，如果返回值大于等于0，表示该次获取同步状态成功并从自旋过程中退出。</p>
+
+<h3 id="3-2-共享式同步状态释放">3.2 共享式同步状态释放</h3>
+
+<p>获取同步状态后，需要调用<code>release(int arg)</code>方法释放同步状态，方法如下：</p>
+
+<pre><code>:::java
+ public final boolean releaseShared(int arg) {
+        if (tryReleaseShared(arg)) {//自定义ryReleaseShared方法中释放同步状态成功
+            doReleaseShared();
+            return true;
+        }
+        return false;
+    }
+
+private void doReleaseShared() {
+        for (;;) {
+            Node h = head;
+            if (h != null &amp;&amp; h != tail) {
+                int ws = h.waitStatus;
+                if (ws == Node.SIGNAL) {
+                    if (!compareAndSetWaitStatus(h, Node.SIGNAL, 0))
+                        continue;            // loop to recheck cases
+                    unparkSuccessor(h); //设置状态成功唤醒后继节点
+                }
+                else if (ws == 0 &amp;&amp;
+                         !compareAndSetWaitStatus(h, 0, Node.PROPAGATE))
+                    continue;                // loop on failed CAS
+            }
+            if (h == head)                   // loop if head changed
+                break;
+        }
+    }
+</code></pre>
+
+<p>该方法在释放同步状态之后，将会唤醒后续处于等待状态的节点。对于能够支持多个线程同时访问的并发组件（比如Semaphore），它和独占式主要区别在于<code>tryReleaseShared(int arg)</code>方法必须确保同步状态（或者资源数）线程安全释放，一般是通过循环和CAS来保证的，因为释放同步状态的操作会同时来自多个线程。</p>
+
+<h3 id="3-3-中断和超时">3.3 中断和超时</h3>
+
+<p>超时中断的方法和独占锁的方法类似，省略</p>
+
+<p>#Reference
+java并发编程艺术</p>
+
+
+        </div>
+
+    </div>
+
+    
+    <nav id="article-nav">
+
+        
+        <div id="article-nav-newer" class="article-nav-title">
+            <a href="https://nicky-chen.github.io/2018/08/07/cache-redis-optimize/">
+                Redis注意事项及常见优化
+            </a>
+        </div>
+        
+
+        
+        <div id="article-nav-older" class="article-nav-title">
+            <a href="https://nicky-chen.github.io/2018/08/01/cache-redis-slowlog/">
+                Redis之慢查询日志
+            </a>
+        </div>
+        
+
+    </nav>
+    
+
+
+</article>
+
+<div id="toc" class="toc-article" >
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc">
+        <nav id="TableOfContents">
+<ul>
+<li><a href="#1-同步队列">1 同步队列</a>
+<ul>
+<li>
+<ul>
+<li><a href="#1-1-入队操作">1.1 入队操作</a></li>
+<li><a href="#1-2-获取同步状态">1.2 获取同步状态</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#2-独占锁实现">2 独占锁实现</a>
+<ul>
+<li>
+<ul>
+<li><a href="#2-1-同步状态获取">2.1 同步状态获取</a></li>
+<li><a href="#2-2-同步状态释放">2.2 同步状态释放</a></li>
+<li><a href="#2-3-独占式获取响应中断">2.3 独占式获取响应中断</a></li>
+<li><a href="#2-4-独占式超时获取">2.4 独占式超时获取</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#3-共享锁实现">3 共享锁实现</a>
+<ul>
+<li>
+<ul>
+<li><a href="#3-1-共享式同步状态获取">3.1 共享式同步状态获取</a></li>
+<li><a href="#3-2-共享式同步状态释放">3.2 共享式同步状态释放</a></li>
+<li><a href="#3-3-中断和超时">3.3 中断和超时</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+    </ol>
+</div>
+<style>
+    
+    .left-col .switch-btn {
+        display: none;
+    }
+
+    .left-col .switch-area {
+        display: none;
+    }
+    
+
+
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录" >
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function () {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    
+    
+    
+        
+    
+</script>
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_more" data-cmd="more"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+        <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+        <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config = {
+            "common": {
+                "bdSnsKey": {},
+                "bdText": "",
+                "bdMini": "2",
+                "bdMiniList": false,
+                "bdPic": "",
+                "bdStyle": "0",
+                "bdSize": "24"
+            }, "share": {}
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '//bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+</div>
+
+
+
+
+<div style="margin-left: 30px;margin-right: 30px;background: white;padding-left: 30px;padding-right: 30px">
+    <div class="comments">
+        <h3>COMMENTS</h3>
+        <script type="text/javascript">
+            (function() {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                dsq.setAttribute('data-timestamp', +new Date());
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <div id="disqus_thread"></div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="scroll" id="post-nav-button">
+
+    
+    <a href="https://nicky-chen.github.io/2018/08/07/cache-redis-optimize/" title="上一篇: Redis注意事项及常见优化">
+        <i class="fa fa-angle-left"></i>
+    </a>
+    
+
+
+    <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+
+    
+    <a href="https://nicky-chen.github.io/2018/08/01/cache-redis-slowlog/" title="下一篇: Redis之慢查询日志">
+        <i class="fa fa-angle-right"></i>
+    </a>
+    
+
+</div>
+
+
+<ul class="post-list toc-article">
+    
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2019/05/03/apt_lombok_implement/" target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/25/spring-springmvc/" target="_blank">Spring之动手实现SpringMVC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/22/java-methodhandler/" target="_blank">Java反射优化之方法句柄</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/16/spring-bean-ioc/" target="_blank">Spring之动手实现IOC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/12/spring-bean-lifecycle/" target="_blank">Spring之Bean加载-解析-生命周期</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/09/aqs-condition/" target="_blank">并发基础之Condition(等待队列)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/07/cache-redis-optimize/" target="_blank">Redis注意事项及常见优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/04/aqs_chapter02/" target="_blank">并发基础之AQS同步器（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/01/cache-redis-slowlog/" target="_blank">Redis之慢查询日志</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/31/aqs_chapter01/" target="_blank">并发基础之AQS同步器（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/16/junit-codeanalysis/" target="_blank">初窥门径之JUnit源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/13/java-securitymanager/" target="_blank">Java安全之SecurityManager</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/29/responsibility-chain/" target="_blank">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/25/jndi-introdution/" target="_blank">JNDI知识摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/17/architect/" target="_blank">技术图谱</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/07/singletion/" target="_blank">设计模式之单例模式终极版【克隆-序列化-反射】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/02/fail-fast-safe/" target="_blank">Fail-Fast和Fail-Safe机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/27/adapter/" target="_blank">实际项目运用之Adapter模式（适配器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/18/template/" target="_blank">设计模式之Template模式（模版模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/14/synchronized-principle/" target="_blank">synchronized实现原理及锁优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/13/juc-tree-info/" target="_blank">JUC知识点总结</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/06/strategy/" target="_blank">实际项目运用之Strategy模式（策略模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/05/04/volatile-feature/" target="_blank">volatile关键字原理实现及应用</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/28/high-event/" target="_blank">MYSQL高级特性之【Event事件】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/27/process-fun/" target="_blank">MYSQL高级特性之【存储过程与函数】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/21/string-builder-question/" target="_blank">字符串拼接的疑惑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/17/exception-introduce/" target="_blank">Java异常处理-原理及优化建议</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/03/thread-jmm-happens-before/" target="_blank">java内存模型之[JMM][重排序][happens-before]</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/28/decorator/" target="_blank">实际项目运用之Decorator模式（装饰器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/21/binary-operation/" target="_blank">java中位运算技巧</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/20/classloader-chapter02/" target="_blank">ClassLoader类加载分析（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/13/introspector/" target="_blank">Java 内省(Introspector)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/08/classloader-chapter01/" target="_blank">ClassLoader类加载分析（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/12/19/builder/" target="_blank">设计模式之builder模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/12/07/builder-factory/" target="_blank">设计模式之factory模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/11/03/recursive-lock/" target="_blank">可重入锁</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/03/17/book_list/" target="_blank">阅读书单</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/02/19/open_source/" target="_blank">开源项目</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/02/19/tools/" target="_blank">在线工具</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    
+</ul>
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    $(".post-list").addClass("toc-article");
+    $(".post-list-item a").attr("target", "_blank");
+    $("#post-nav-button > a:nth-child(2)").click(function () {
+        $(".fa-bars, .fa-times").toggle();
+        $(".post-list").toggle(300);
+        if ($(".toc").length > 0) {
+            $("#toc, #tocButton").toggle(200, function () {
+                if ($(".switch-area").is(":visible")) {
+                    $("#toc, .switch-btn, .switch-area").toggle();
+                    $("#tocButton").attr("value", valueHide);
+                }
+            })
+        }
+        else {
+            $(".switch-btn, .switch-area").fadeToggle(300);
+        }
+    })
+</script>
+
+
+<script>
+
+</script>
+
+
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2019 nicky_chin
+            </div>
+            <div class="footer-right">
+                <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >本站到访数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量:
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chen.github.io/js/GithubRepoWidget.js"></script>
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chen.github.io/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  5 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-119892182-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i &lt; all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+<script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>
