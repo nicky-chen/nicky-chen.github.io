@@ -42,6 +42,20 @@ MethodType
     </item>
     
     <item>
+      <title>框架基础之SPI机制</title>
+      <link>https://nicky-chen.github.io/2018/07/05/spi-introduction/</link>
+      <pubDate>Thu, 05 Jul 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/07/05/spi-introduction/</guid>
+      <description>1 定义 SPI 的全名为 Service Provider Interface ，用于接口寻找服务实现类
+实现方式 &amp;gt;标准制定者制定接口 不同厂商编写针对于该接口的实现类，并在jar的“classpath:META-INF/services/全接口名称”文件中指定相应的实现类全类名 开发者直接引入相应的jar，就可以实现为接口自动寻找实现类的功能
+2 案例实现 比如我们经常看到的缓存类Cache,现在有非常多的缓存框架都会去实现这个接口
+标准接口
+public interface Cache { String getName(); &amp;lt;T&amp;gt; T get(Object key, Class&amp;lt;T&amp;gt; type); void put(Object key, Object value); void evict(Object key); void clear(); }  厂商的具体接口实现
+public class ConcurrentMapCache implements Cache { private final String name; private final ConcurrentMap&amp;lt;Object, Object&amp;gt; store; public ConcurrentMapCache() { this(&amp;quot;defaultMapCache&amp;quot;); } public ConcurrentMapCache(String name) { this(name, new ConcurrentHashMap&amp;lt;&amp;gt;(256), true); } public ConcurrentMapCache(String name, ConcurrentMap&amp;lt;Object, Object&amp;gt; store, boolean allowNullValues) { this.</description>
+    </item>
+    
+    <item>
       <title>JNDI知识摘要</title>
       <link>https://nicky-chen.github.io/2018/06/25/jndi-introdution/</link>
       <pubDate>Mon, 25 Jun 2018 11:18:15 +0800</pubDate>
@@ -120,6 +134,19 @@ public class FileDemo { private static void divideFun(int a, int b) { b = a - b;
 　例如类Use :
 public class User { private String name; private String address; public String getName() { return name; } public void setName(String name) { this.name = name; } public String getAddress() { return address; } public void setAddress(String address) { this.address = address; } }  　在类User中有属性 name, 那我们可以通过 getName,setName来得到其值或者设置新的值。通过 getName/setName来访问 name属性，这就是默认的规则。 Java JDK中提供了一套 API 用来访问某个属性的 getter/setter 方法，这就是内省。
 　JDK内省类库：</description>
+    </item>
+    
+    <item>
+      <title>自定义序列化之Externalizable接口</title>
+      <link>https://nicky-chen.github.io/2017/01/23/externalizable-interface/</link>
+      <pubDate>Mon, 23 Jan 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2017/01/23/externalizable-interface/</guid>
+      <description>Externalizable简介 Externalizable是一种优先级要高于 Serializable 的序列化机制接口， 这个接口提供了writeExternal()和readExternal()方法用于指定序列化哪些属性。
+Externalizable接口与Serializable接口区别 * 1 Serializable序列化时不会调用默认的构造器，而Externalizable序列化时会调用默认构造器 * 2 transient关键字对Externalizable无效
+代码事例
+公共抽象实体类AbstractDO
+public abstract class AbstractDO implements Externalizable { private static final long serialVersionUID = -1679770357930200297L; private Long id; private Date createTime; private Date updateTime; public Long getId() { return id; } public void setId(Long id) { this.id = id; } public Date getCreateTime() { return createTime; } public void setCreateTime(Date createTime) { this.createTime = createTime; } public Date getUpdateTime() { return updateTime; } public void setUpdateTime(Date updateTime) { this.</description>
     </item>
     
   </channel>

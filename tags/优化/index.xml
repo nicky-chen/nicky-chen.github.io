@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>优化 on 南乡清水</title>
+    <link>https://nicky-chen.github.io/tags/%E4%BC%98%E5%8C%96/</link>
+    <description>Recent content in 优化 on 南乡清水</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>All rights reserved - 2018</copyright>
+    <lastBuildDate>Tue, 12 Sep 2017 11:18:15 +0800</lastBuildDate>
+    
+	<atom:link href="https://nicky-chen.github.io/tags/%E4%BC%98%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>库级优化之SHOW GLOBAL STATUS</title>
+      <link>https://nicky-chen.github.io/2017/09/12/show-global-status/</link>
+      <pubDate>Tue, 12 Sep 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2017/09/12/show-global-status/</guid>
+      <description>慢查询
+//查询慢线程情况 show global status like &#39;%slow%&#39; +---------------------+-------+ | Variable_name | Value | +---------------------+-------+ | Slow_launch_threads | 1 | | Slow_queries | 100 | +---------------------+-------+ 如果Slow_launch_threads值较大，说明有些东西正在延迟连接的新线程 //查询慢查询日志是否开启 show variables like &#39;%slow%&#39; +---------------------+--------------------------------------+ | Variable_name | Value | +---------------------+--------------------------------------+ |log_slow_admin_statements| ON | |log_slow_slave_statements| OFF | | slow_launch_time | 2 | | slow_query_log | ON | | slow_query_log_file | /home/mysql/mysql/slow_query.log | +---------------------+--------------------------------------+ log_slow_admin_statements表示是否将慢管理语句例如ANALYZE TABLE和ALTER TABLE等记入慢查询日志 log_slow_slave_statements 表示是否管理分区慢查询记录，一般不会去选择分区，所以不考虑  配置中一定要开启慢查询，这对服务器性能损耗并不大，如上面的打印结果得知：超过2秒即为慢查询，一共有100条慢查询 。当然我们在后台也可以做sql拦截记录，定制化慢查询语句。通常，可以通过mybatis插件拦截耗时sql打印日志
+连接数
+//mysql的最大连接数 show global status like &#39;max_connections&#39;; +-----------------+-------+ | Variable_name | Value | +-----------------+-------+ | max_connections | 500 | +-----------------+-------+ 常见的问题&amp;quot;MYSQL: ERROR 1040: Too many connections&amp;quot;的异常情况，造成这种情况的一种原因是用户访问量过高, MySQL服务器抗不住也有可能是最大连接数设置的过小，需要注意 //服务器响应的最大连接数 show global status like &#39;max_used_connections&#39;; +----------------------+-------+ | Variable_name | Value | +----------------------+-------+ | Max_used_connections | 450 | +----------------------+-------+  设置的最大连接数是500，而响应的连接数是498，max_used_connections / max_connections * 100% = 90% （理想值 ≈ 85%）。</description>
+    </item>
+    
+  </channel>
+</rss>

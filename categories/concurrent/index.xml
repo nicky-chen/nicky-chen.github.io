@@ -131,5 +131,21 @@ int i = 0; boolean flag = false; i = 1; //语句1 flag = true; //语句2  　上
  public class SubService { ReentrantLock lock = new ReentrantLock(); public void subService1() { lock.lock(); System.out.println(&amp;quot;thread = &amp;quot; + Thread.currentThread().getId() + &amp;quot; --subService1&amp;quot;); subService2(); lock.unlock(); } public synchronized void subService2() { System.out.println(&amp;quot;thread = &amp;quot; + Thread.currentThread().getId() + &amp;quot; --subService2&amp;quot;); } } public class Service extends SubService { public synchronized void service1(){ System.out.println(&amp;quot;thread = &amp;quot; + Thread.currentThread().getId() + &amp;quot; --service1&amp;quot;); service2(); } public synchronized void service2() { System.</description>
     </item>
     
+    <item>
+      <title>多线程之线程通信摘要</title>
+      <link>https://nicky-chen.github.io/2017/05/16/thread-communication/</link>
+      <pubDate>Tue, 16 May 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2017/05/16/thread-communication/</guid>
+      <description>首先我们要知道进程之间的通讯方式有哪些？
+管道( pipe ) #消息队列( message queue ) #共享内存( shared memory ) ：#套接字( socket ) 等等&amp;ndash; 线程的通讯方式：
+1 wait/notify 机制 wait()方法和notify()方法是Object类提供的方法，而在使用的条件就是当前线程必须有自己的监听器
+否则就是抛出异常，我们可以使用jvm提供的内置锁 synchronized 关键字来配合使用；注意如果有多个
+线程等待，当某一线程发起唤醒操作，会随机唤醒一个线程，而非所有线程，如果想唤醒所有线程，可以使用
+notifyAll()方法
+下面是 启动一个等待线程和一个通知线程的例子
+public class MyThread1 extends Thread { private Object lock; public MyThread1(Object lock) { this.lock = lock; } @Override public void run() { try { synchronized (lock) { System.out.println(&amp;quot;wait start time = &amp;quot; + System.currentTimeMillis()); lock.wait(); System.out.println(&amp;quot;wait end time = &amp;quot; + System.</description>
+    </item>
+    
   </channel>
 </rss>

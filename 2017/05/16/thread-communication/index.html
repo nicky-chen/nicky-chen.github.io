@@ -18,7 +18,7 @@
         };
     </script>
 
-    <title></title>
+    <title>多线程之线程通信摘要</title>
     <link rel="icon" href="https://nicky-chen.github.io/img/favicon.ico">
 
     <link rel="stylesheet" href="https://nicky-chen.github.io/css/style.css">
@@ -141,19 +141,29 @@
                         
                             <a href="https://nicky-chen.github.io/tags/junit" style="font-size: 12px;" class="color3">Junit</a>
                         
-                            <a href="https://nicky-chen.github.io/tags/redis" style="font-size: 12px;" class="color2">Redis</a>
+                            <a href="https://nicky-chen.github.io/tags/redis" style="font-size: 12px;" class="color3">Redis</a>
                         
-                            <a href="https://nicky-chen.github.io/tags/spring-base" style="font-size: 12px;" class="color4">Spring-Base</a>
+                            <a href="https://nicky-chen.github.io/tags/spring-base" style="font-size: 12px;" class="color2">Spring-Base</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">优化</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color2">分布式id方案</a>
                         
                             <a href="https://nicky-chen.github.io/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color4">创建型</a>
                         
-                            <a href="https://nicky-chen.github.io/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">基础</a>
+                            <a href="https://nicky-chen.github.io/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">基础</a>
                         
-                            <a href="https://nicky-chen.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color2">多线程</a>
+                            <a href="https://nicky-chen.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color1">多线程</a>
                         
-                            <a href="https://nicky-chen.github.io/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color1">思维导图</a>
+                            <a href="https://nicky-chen.github.io/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color2">思维导图</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color4">数据结构</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">框架基础</a>
                         
                             <a href="https://nicky-chen.github.io/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color1">源码</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color3">理论</a>
                         
                             <a href="https://nicky-chen.github.io/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color1">结构型</a>
                         
@@ -254,8 +264,8 @@
             <article id="post-js-android" class="article article-type-post" itemscope="" itemprop="blogPost">
 
     <div class="article-meta">
-        <a href="https://nicky-chen.github.io/1/01/01/" class="article-date">
-            <time datetime="0001-01-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">0001-01-01</time>
+        <a href="https://nicky-chen.github.io/2017/05/16/thread-communication/" class="article-date">
+            <time datetime="2017-05-16 11:18:15 &#43;0800 CST" itemprop="datePublished">2017-05-16</time>
         </a>
     </div>
 
@@ -268,7 +278,7 @@
 
 
             <h1 class="article-title" itemprop="name">
-                <a class="article-title" href="https://nicky-chen.github.io/1/01/01/"></a>
+                <a class="article-title" href="https://nicky-chen.github.io/2017/05/16/thread-communication/">多线程之线程通信摘要</a>
             </h1>
 
 
@@ -277,7 +287,24 @@
         <div class="article-info article-info-post">
 
             
+            <div class="article-category tagcloud">
+                
+                <a class="article-category-link" href="https://nicky-chen.github.io/categories/concurrent/" style="font-size: 12px;">concurrent</a>
+                
+            </div>
+            
 
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/%e5%9f%ba%e7%a1%80/"
+                           style="font-size: 12px;">基础</a>
+                    </li>
+                    
+                </ul>
+            </div>
             
 
             <div class="clearfix"></div>
@@ -286,244 +313,269 @@
 
         <div class="article-entry" itemprop="articleBody">
 
-            <p>Title: 框架基础之SPI机制
-Date: 2018-07-05 19:22
-Tags: 框架基础
-Category: java-base
-Slug: spi-introduction</p>
+            
 
-<p>#1 定义</p>
+<p>首先我们要知道进程之间的通讯方式有哪些？</p>
 
-<p><strong>SPI</strong> 的全名为 <em>Service Provider Interface</em> ，用于接口寻找服务实现类</p>
+<h1 id="管道-pipe-消息队列-message-queue-共享内存-shared-memory-套接字-socket-等等">管道( pipe )  #消息队列( message queue ) #共享内存( shared memory ) ：#套接字( socket ) 等等&ndash;</h1>
 
-<p><strong>实现方式</strong>
-&gt;标准制定者制定接口
-不同厂商编写针对于该接口的实现类，并在jar的“classpath:META-INF/services/全接口名称”文件中指定相应的实现类全类名
-开发者直接引入相应的jar，就可以实现为接口自动寻找实现类的功能</p>
+<p>线程的通讯方式：</p>
 
-<p>#2 案例实现</p>
+<h3 id="1-wait-notify-机制">1 wait/notify 机制</h3>
 
-<p>比如我们经常看到的缓存类Cache,现在有非常多的缓存框架都会去实现这个接口</p>
+<p>wait()方法和notify()方法是Object类提供的方法，而在使用的条件就是当前线程必须有自己的监听器</p>
 
-<p><em>标准接口</em></p>
+<p>否则就是抛出异常，我们可以使用jvm提供的内置锁 synchronized 关键字来配合使用；注意如果有多个</p>
 
-<pre><code>:::java
-public interface Cache {
+<p>线程等待，当某一线程发起唤醒操作，会随机唤醒一个线程，而非所有线程，如果想唤醒所有线程，可以使用</p>
 
-    String getName();
+<p>notifyAll()方法</p>
 
-    &lt;T&gt; T get(Object key, Class&lt;T&gt; type);
+<p>下面是 启动一个等待线程和一个通知线程的例子</p>
 
-    void put(Object key, Object value);
+<pre><code>public class MyThread1 extends Thread {  
+  
+    private Object lock;  
+  
+    public MyThread1(Object lock) {  
+        this.lock = lock;  
+    }  
+  
+    @Override  
+    public void run() {  
+        try {  
+            synchronized (lock) {  
+                System.out.println(&quot;wait start time = &quot; + System.currentTimeMillis());  
+                lock.wait();  
+                System.out.println(&quot;wait end time = &quot; + System.currentTimeMillis());  
+            }  
+        } catch (InterruptedException e) {  
+            e.printStackTrace();  
+        }  
+    }  
+}  
+</code></pre>
 
-    void evict(Object key);
+<pre><code>public class MyThread2 extends Thread {  
+  
+    private Object lock;  
+  
+    public MyThread2(Object lock) {  
+        this.lock = lock;  
+    }  
+  
+    @Override  
+    public void run() {  
+        try {  
+            synchronized (lock) {  
+                System.out.println(&quot;notify start time = &quot; + System.currentTimeMillis());  
+                lock.notify();  
+                System.out.println(&quot;notify end time = &quot; + System.currentTimeMillis());  
+            }  
+  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        }  
+    }  
+}  
 
-    void clear();
+</code></pre>
 
+<pre><code>public class Test1 {  
+  
+    public static void main(String[] args) throws Exception {  
+        Object lock = new Object();  
+        MyThread1 thread1 = new MyThread1(lock);  
+        thread1.start();  
+        TimeUnit.SECONDS.sleep(3);  
+        MyThread2 thread2 = new MyThread2(lock);  
+        thread2.start();  }
 }
 </code></pre>
 
-<p><em>厂商的具体接口实现</em></p>
+<p>先启动一个等待线程，然后启动唤醒线程</p>
 
-<pre><code>:::java
-public class ConcurrentMapCache implements Cache {
+<p>测试结果如下：
+wait start time = 1515326744453
+notify start time = 1515326747453
+notify end time = 1515326747453
+wait end time = 1515326747453</p>
 
-    private final String name;
+<p>这样两线程之间就完成了通信，代码的关键是注册了同一把锁，在这个对象锁中我们可以理解有两种队列，即 等待队列和就绪队列，对象调用wait方法，则标记线程信息进入等待队列并释放锁，调用notify方法则 队列中的线程进入就绪队列竞争获取锁，这种方式其实可以理解为是内存共享</p>
 
-    private final ConcurrentMap&lt;Object, Object&gt; store;
+<h3 id="2生产者-消费者模式">2生产者/消费者模式</h3>
 
-    public ConcurrentMapCache() {
-        this(&quot;defaultMapCache&quot;);
-    }
+<p>比如常用的消息队列bolckingqueue都是基于生产者消费者模型实现的。其本质上是基于wait/notify机制实现的</p>
 
-    public ConcurrentMapCache(String name) {
-        this(name, new ConcurrentHashMap&lt;&gt;(256), true);
-    }
+<p>例如我们通过wait/notify的方式实现这种模式</p>
 
-    public ConcurrentMapCache(String name, ConcurrentMap&lt;Object, Object&gt; store, boolean allowNullValues) {
-        this.name = name;
-        this.store = store;
-    }
-
-
-    @Override
-    public final String getName() {
-        return this.name;
-    }
-
-    @Override
-    public &lt;T&gt; T get(Object key, Class&lt;T&gt; type) {
-        Object value = this.store.get(key);
-        if (value != null &amp;&amp; type != null &amp;&amp; !type.isInstance(value)) {
-            throw new IllegalStateException(&quot;Cached value is not of required type [&quot; + type.getName() + &quot;]: &quot; + value);
-        }
-        return (T) value;
-    }
-
-    @Override
-    public void put(Object key, Object value) {
-        this.store.putIfAbsent(key, value);
-    }
-
-    @Override
-    public void evict(Object key) {
-        this.store.remove(key);
-    }
-
-    @Override
-    public void clear() {
-        this.store.clear();
-    }
-
-}
+<pre><code>public class C {  
+  
+    private Object lock;  
+  
+    C(Object lock) {  
+        this.lock = lock;  
+  
+    }  
+  
+    public void getValue() {  
+  
+        try {  
+            synchronized (lock) {  
+                if (ValueObject.value.equals(&quot;&quot;)) {  
+                    lock.wait();  
+                }  
+                System.out.println(&quot;get value = &quot; + ValueObject.value);  
+                ValueObject.value = &quot;&quot;;  
+                lock.notify();  
+                System.out.println(&quot;c notify&quot;);  
+            }  
+        } catch (InterruptedException e) {  
+            e.printStackTrace();  
+        }  
+    }  
+  
+}  
 </code></pre>
 
-<p>注意:<strong>一定要有默认无参构造器，否则之后无法通过SPI机制实例化对象</strong></p>
+<pre><code>public class ThreadP extends Thread {  
+  
+    private P p;  
+  
+    public ThreadP(P p) {  
+        this.p = p;  
+    }  
+  
+    @Override public void run() {  
+        while (true) {  
+            p.setValue();  
+        }  
+    }  
+}  
 
-<p><strong>配置地址</strong></p>
+public class ThreadC extends Thread {  
+  
+    private C c;  
+  
+    public ThreadC(C c) {  
+        this.c = c;  
+    }  
+  
+    @Override public void run() {  
+        while (true){  
+            c.getValue();  
+        }  
+    }  
+}  
 
-<p><img src="https://upload-images.jianshu.io/upload_images/10175660-80ce95ea81d45952.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="配置文件" /></p>
+public class ValueObject {  
+  
+    public static String value = &quot;&quot;;  
+  
+}  
 
-<blockquote>
-<p>在resouce下的META-INF\services文件下的spi.Cache文件内容是服务类的全限命名：spi.ConcurrentMapCache</p>
-</blockquote>
-
-<p>打包jar并引入到项目</p>
-
-<p><strong>测试</strong></p>
-
-<pre><code>:::java
-public class CacheSpiTest {
-
-    public static void main(String[] args) {
-
-        ServiceLoader&lt;Cache&gt; serviceLoader = ServiceLoader.load(Cache.class);
-        Iterator&lt;Cache&gt; iterator = serviceLoader.iterator();
-        while (iterator.hasNext()) {
-            Cache cache = iterator.next();
-            System.out.println(cache.getName());
-            cache.put(&quot;user&quot;, &quot;nana&quot;);
-            System.out.println(cache.get(&quot;user&quot;, String.class));
-        }
-    }
-}
+public class Test {  
+  
+    public static void main(String[] args) {  
+        String lock = new String(&quot;&quot;);  
+        P p = new P(lock);  
+        C c = new C(lock);  
+        ThreadP threadP = new ThreadP(p);  
+        ThreadC threadC = new ThreadC(c);  
+        threadP.start();  
+        threadC.start();  
+  
+    }  
 </code></pre>
 
-<p>打印结果：</p>
+<p>结果是：会不停读取生存者线程中的数据，并把它变成空字符串</p>
 
-<pre><code>defaultMapCache
-nana
+<p>这是1对1的生产者消费者模型简单实现</p>
+
+<h3 id="3-管道">3 管道</h3>
+
+<p>java中有提供管道流这种api ，重点是四个类</p>
+
+<p>PipedInputStream
+PipedOutputStream
+PipedWriter
+PipedRead</p>
+
+<p>上述四个类可用于管道字节流和字符流的实现，
+我们通过字符流的方式 实现线程之间的通信
+如下</p>
+
+<pre><code>public class WriteData {  
+  
+    public void writeMethod(PipedWriter writer) {  
+  
+        try {  
+            StringBuilder data = new StringBuilder();  
+            System.out.println(&quot;write : &quot; );  
+            for (int i = 0; i &lt; 20; i++) {  
+                data.append(i);  
+                writer.write(&quot;&quot; + i);  
+            }  
+            System.out.println(&quot;write data = &quot; + data);  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        }  
+    }  
+  
+}  
+
+public class ReadData {  
+  
+    public void readMethod(PipedReader reader) {  
+        StringBuilder d = new StringBuilder();  
+        try {  
+            System.out.println(&quot;read : &quot;);  
+            char[] buffer = new char[5];  
+            int readLength;  
+  
+            while ((readLength = reader.read(buffer)) !=-1) {  
+                String data = new String(buffer, 0 ,readLength);  
+                d.append(data);  
+            }  
+            reader.close();  
+        } catch (Exception e) {  
+  
+        }finally {  
+            System.out.println(&quot;result data = &quot; + d);  
+        }  
+    }  
+  
+}  
+
+public class Run {  
+  
+    public static void main(String[] args) throws Exception {  
+        WriteData writeData = new WriteData();  
+        ReadData readData = new ReadData();  
+        PipedReader reader = new PipedReader();  
+        PipedWriter writer = new PipedWriter();  
+       // reader.connect(writer);  
+        writer.connect(reader);  
+        new Thread(() -&gt; writeData.writeMethod(writer)).start();  
+        TimeUnit.SECONDS.sleep(2);  
+        new Thread(() -&gt; readData.readMethod(reader)).start();  
+  
+    }  
+  
 </code></pre>
 
-<p>说明获取到了定制接口的实现类对象</p>
+<p>结果如下</p>
 
-<p>通过上述例子，我们知道<code>ServiceLoader</code>是用于通过接口获取接口实现类的工具</p>
+<p>write :
+write data = 012345678910111213141516171819
+read :
+result data = 012345678910111213141516171819</p>
 
-<p>#3 SPI机制源码分析</p>
+<p>线程之间完成了通信</p>
 
-<p>###3.1 load加载过程</p>
+<p>其他线程通信方式比如 java socket方式等也可以实现，这里不再叙述</p>
 
-<p>ServiceLoader成员变量</p>
-
-<pre><code>:::java
-//SPI约定获取扩展接口路径的文件
-private static final String PREFIX = &quot;META-INF/services/&quot;;
-//基础约定接口
-private final Class&lt;S&gt; service;
-
-private final ClassLoader loader;
-//权限控制上下文
-private final AccessControlContext acc;
-//厂商接口实现类的实例化对象集合
-private LinkedHashMap&lt;String,S&gt; providers = new LinkedHashMap&lt;&gt;();//以初始化的顺序缓存&lt;接口全名称, 实现类实例&gt;
-//懒加载迭代器
-private LazyIterator lookupIterator
-</code></pre>
-
-<p><code>load()</code>初始化</p>
-
-<pre><code>:::java
-   public void reload() {
-        providers.clear();
-        lookupIterator = new LazyIterator(service, loader);
-    }
-
-    private ServiceLoader(Class&lt;S&gt; svc, ClassLoader cl) {
-        service = Objects.requireNonNull(svc, &quot;Service interface cannot be null&quot;);
-        loader = (cl == null) ? ClassLoader.getSystemClassLoader() : cl;
-        acc = (System.getSecurityManager() != null) ? AccessController.getContext() : null;
-        reload();
-    }
-</code></pre>
-
-<p><code>load()</code> 方法并没有实例化具体实现类，而是加载需要实例化的对象路径</p>
-
-<p>###3.2 实例化过程</p>
-
-<pre><code>:::java
- Class&lt;S&gt; service;//通用接口
- ClassLoader loader;//类加载器
-Enumeration&lt;URL&gt; configs = null;//厂商接口文件URL的集合
- Iterator&lt;String&gt; pending = null;//接口具体实现的路径类名列表
-
-  public boolean hasNext() {
-            if (acc == null) {//访问控制上下文是否为空
-                return hasNextService();
-            } else {
-                PrivilegedAction&lt;Boolean&gt; action = new PrivilegedAction&lt;Boolean&gt;() {
-                    public Boolean run() { return hasNextService(); }
-                };
-                return AccessController.doPrivileged(action, acc);
-            }
-        }
-
-        public S next() {
-            if (acc == null) {
-                return nextService();
-            } else {
-                PrivilegedAction&lt;S&gt; action = new PrivilegedAction&lt;S&gt;() {
-                    public S run() { return nextService(); }
-                };
-                return AccessController.doPrivileged(action, acc);
-            }
-        }
-</code></pre>
-
-<p><code>hasNext()</code> : 先从provider中查找，如果有，返回true；如果没有，通过<em>LazyIterator</em> 来进行查找. 在 <code>hasNext()</code> 方法中会获取当前需要实例化的类名 <strong>nextName</strong> ，然后在 <code>next()</code> 方法中具体实例化</p>
-
-<p><code>next()</code>: 先从provider中直接获取，如果有，返回实现类对象实例；如果没有，通过<em>LazyIterator</em> 中 <code>nextService()</code> 来进行获取</p>
-
-<pre><code>:::java
- private S nextService() {
-            if (!hasNextService()) //获取nextName 需要加载的类名
-                throw new NoSuchElementException();
-            String cn = nextName;
-            nextName = null;
-            Class&lt;?&gt; c = null;
-            try {
-                c = Class.forName(cn, false, loader);
-            } catch (ClassNotFoundException x) {
-                fail(service,
-                     &quot;Provider &quot; + cn + &quot; not found&quot;);
-            }
-            if (!service.isAssignableFrom(c)) {
-                fail(service,
-                     &quot;Provider &quot; + cn  + &quot; not a subtype&quot;);
-            }
-            try {
-                S p = service.cast(c.newInstance()); //初始化类并类型转换成Cache对象
-                providers.put(cn, p); 放入实例化对象集合中
-                return p;
-            } catch (Throwable x) {
-                fail(service,
-                     &quot;Provider &quot; + cn + &quot; could not be instantiated&quot;, x);
-            }
-            throw new Error();          // This cannot happen
-        }
-
-</code></pre>
-
-<p>上述代码主要是延迟实例化类，然后缓存进集合，方便下次直接使用</p>
+<p>知识点来源： java多线程编程核心技术</p>
 
 
         </div>
@@ -535,16 +587,16 @@ Enumeration&lt;URL&gt; configs = null;//厂商接口文件URL的集合
 
         
         <div id="article-nav-newer" class="article-nav-title">
-            <a href="https://nicky-chen.github.io/1/01/01/">
-                
+            <a href="https://nicky-chen.github.io/2017/06/13/optimize-picture/">
+                后端开发需要了解的mysql优化方向
             </a>
         </div>
         
 
         
         <div id="article-nav-older" class="article-nav-title">
-            <a href="https://nicky-chen.github.io/1/01/01/">
-                
+            <a href="https://nicky-chen.github.io/2017/05/07/design-rule/">
+                数据库设计三范式和反范式
             </a>
         </div>
         
@@ -558,7 +610,19 @@ Enumeration&lt;URL&gt; configs = null;//厂商接口文件URL的集合
 <div id="toc" class="toc-article" >
     <strong class="toc-title">文章目录</strong>
     <ol class="toc">
-        
+        <nav id="TableOfContents">
+<ul>
+<li><a href="#管道-pipe-消息队列-message-queue-共享内存-shared-memory-套接字-socket-等等">管道( pipe )  #消息队列( message queue ) #共享内存( shared memory ) ：#套接字( socket ) 等等&ndash;</a>
+<ul>
+<li>
+<ul>
+<li><a href="#1-wait-notify-机制">1 wait/notify 机制</a></li>
+<li><a href="#2生产者-消费者模式">2生产者/消费者模式</a></li>
+<li><a href="#3-管道">3 管道</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
     </ol>
 </div>
 <style>
@@ -663,7 +727,7 @@ Enumeration&lt;URL&gt; configs = null;//厂商接口文件URL的集合
 <div class="scroll" id="post-nav-button">
 
     
-    <a href="https://nicky-chen.github.io/1/01/01/" title="上一篇: ">
+    <a href="https://nicky-chen.github.io/2017/06/13/optimize-picture/" title="上一篇: 后端开发需要了解的mysql优化方向">
         <i class="fa fa-angle-left"></i>
     </a>
     
@@ -673,7 +737,7 @@ Enumeration&lt;URL&gt; configs = null;//厂商接口文件URL的集合
 
 
     
-    <a href="https://nicky-chen.github.io/1/01/01/" title="下一篇: ">
+    <a href="https://nicky-chen.github.io/2017/05/07/design-rule/" title="下一篇: 数据库设计三范式和反范式">
         <i class="fa fa-angle-right"></i>
     </a>
     
@@ -685,6 +749,16 @@ Enumeration&lt;URL&gt; configs = null;//厂商接口文件URL的集合
     
     
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2019/05/03/apt_lombok_implement/" target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/12/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/11/17/btree-info/" target="_blank">数据结构之BTree和B&#43;Tree(多路平衡查找树 )</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/10/15/id-redis/" target="_blank">分布式全局序列ID方案之Redis优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/09/25/id-flicker/" target="_blank">分布式全局序列ID方案之Flicker优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/09/19/id-snowflake/" target="_blank">分布式全局序列ID方案之Snowflake算法</a></li>
     
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/08/25/spring-springmvc/" target="_blank">Spring之动手实现SpringMVC功能</a></li>
     
@@ -704,17 +778,19 @@ Enumeration&lt;URL&gt; configs = null;//厂商接口文件URL的集合
     
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/31/aqs_chapter01/" target="_blank">并发基础之AQS同步器（一）</a></li>
     
-    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
-    
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/16/junit-codeanalysis/" target="_blank">初窥门径之JUnit源码分析</a></li>
     
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/13/java-securitymanager/" target="_blank">Java安全之SecurityManager</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/07/05/spi-introduction/" target="_blank">框架基础之SPI机制</a></li>
     
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/29/responsibility-chain/" target="_blank">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
     
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/25/jndi-introdution/" target="_blank">JNDI知识摘要</a></li>
     
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/17/architect/" target="_blank">技术图谱</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/13/distribution-knowledge/" target="_blank">分布式项目知识要点</a></li>
     
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/06/07/singletion/" target="_blank">设计模式之单例模式终极版【克隆-序列化-反射】</a></li>
     
@@ -736,6 +812,8 @@ Enumeration&lt;URL&gt; configs = null;//厂商接口文件URL的集合
     
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/27/process-fun/" target="_blank">MYSQL高级特性之【存储过程与函数】</a></li>
     
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/25/cap-base-flp/" target="_blank">分布式之【CAP理论、BASE理论 、FLP不可能定理】</a></li>
+    
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/21/string-builder-question/" target="_blank">字符串拼接的疑惑</a></li>
     
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/17/exception-introduce/" target="_blank">Java异常处理-原理及优化建议</a></li>
@@ -743,6 +821,8 @@ Enumeration&lt;URL&gt; configs = null;//厂商接口文件URL的集合
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/04/03/thread-jmm-happens-before/" target="_blank">java内存模型之[JMM][重排序][happens-before]</a></li>
     
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/28/decorator/" target="_blank">实际项目运用之Decorator模式（装饰器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/26/interface-idempotency/" target="_blank">接口设计的幂等性考虑</a></li>
     
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2018/03/21/binary-operation/" target="_blank">java中位运算技巧</a></li>
     
@@ -758,37 +838,21 @@ Enumeration&lt;URL&gt; configs = null;//厂商接口文件URL的集合
     
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/11/03/recursive-lock/" target="_blank">可重入锁</a></li>
     
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/09/12/show-global-status/" target="_blank">库级优化之SHOW GLOBAL STATUS</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/06/13/optimize-picture/" target="_blank">后端开发需要了解的mysql优化方向</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/05/16/thread-communication/" target="_blank">多线程之线程通信摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/05/07/design-rule/" target="_blank">数据库设计三范式和反范式</a></li>
+    
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/03/17/book_list/" target="_blank">阅读书单</a></li>
     
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/02/19/open_source/" target="_blank">开源项目</a></li>
     
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/02/19/tools/" target="_blank">在线工具</a></li>
     
-    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
-    
-    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
-    
-    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
-    
-    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
-    
-    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
-    
-    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
-    
-    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
-    
-    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
-    
-    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
-    
-    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
-    
-    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
-    
-    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
-    
-    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/1/01/01/" target="_blank"></a></li>
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chen.github.io/2017/01/23/externalizable-interface/" target="_blank">自定义序列化之Externalizable接口</a></li>
     
 </ul>
 

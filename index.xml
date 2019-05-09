@@ -27,6 +27,98 @@
     </item>
     
     <item>
+      <title>实际项目运用之State模式（状态模式）</title>
+      <link>https://nicky-chen.github.io/2018/12/19/state-machine/</link>
+      <pubDate>Wed, 19 Dec 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/12/19/state-machine/</guid>
+      <description>1 模式简介 定义： 状态模式允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类。这个模式将状态封装成独立的类，并将动作委托到代表当前状态的类的对象
+状态模式的优点： &amp;gt;封装了转换规则 枚举可能的状态，在枚举状态之前需要确定状态种类 将所有与某个状态有关的行为放到一个类中，可方便增加新的状态 允许状态转换逻辑与状态对象合成一体，而非复杂条件语句块 可以让多个环境对象共享一个状态对象，从而减少系统中对象的个数
+状态模式的缺点： &amp;gt;增加系统类和对象的个数 结构与实现都较为复杂，如果使用不当将导致程序结构和代码的混乱 对&amp;rdquo;开闭原则&amp;rdquo;的支持不太好，增加新状态类需在状态类上增加行为方法
+状态模式的适用场景： 1. 对象的行为依赖于它的状态，并且可以在运行时根据状态改变行为。 2. 代码中包含大量与对象状态有关的if/else语句 3. 接口幂等要求
+状态模式和策略模式： 相同点是它们都需要根据需求选择相应的状态或策略 不同点是状态模式是在一个类中通过不同的动作切换不同的状态，而策略模式是为一个类选择某个策略，即状态模式中的Context是和多个状态关联的，而策略模式中的Context只和一个策略关联
+状态模式角色介绍： （1）Context类，依赖倒置原则，通过适配器模式维护状态类 （2）State：抽象状态类或状态接口，用以抽象封装行为 （3）ConcreteState类：具体状态类，实现了State中的抽象方法
+2 实际运用 借贷平台的订单，有审核-发布-抢单 等等 步骤，随着操作的不同，会改变订单的状态，通常通过if/else判断订单的状态，从而实现不同的逻辑，伪代码如下：
+if(审核){ //审核逻辑 }elseif(发布){ //发布逻辑 }elseif(接单){ //接单逻辑 }  上述解决方案缺点非常明显：这类代码难以应对变化，在添加一种状态时，我们需要手动添加if/else，在添加一种功能时，要对所有的状态进行判断。因此代码会变得越来越臃肿，并且一旦没有处理某个状态，便会发生极其严重的BUG，难以维护
+2.1 状态模式应用 状态模式本质上是一种基于状态和事件的 状态机 ,下面是订单流程的状态图
+通过状态图，我们再设计一张横纵坐标关系表来比较，图如下：
+通过上述表 我们可以细化为一个二维数组，来表示状态与事件直接的关系：
+2.2 代码实现 我们通过状态的各种图例分析来用代码实现逻辑
+状态枚举类
+public enum StateEnum { //订单生成 GENERATE(1, &amp;quot;GENERATE&amp;quot;), //已审核 REVIEWED(2, &amp;quot;REVIEWED&amp;quot;), //已发布 PUBLISHED(3, &amp;quot;PUBLISHED&amp;quot;), //待付款 NOT_PAY(4, &amp;quot;NOT_PAY&amp;quot;), //已付款 PAID(5, &amp;quot;PAID&amp;quot;), //已完结 FEED_BACKED(6, &amp;quot;FEED_BACKED&amp;quot;); private int key; private String value; StateEnum(int key, String value) { this.</description>
+    </item>
+    
+    <item>
+      <title>数据结构之BTree和B&#43;Tree(多路平衡查找树 )</title>
+      <link>https://nicky-chen.github.io/2018/11/17/btree-info/</link>
+      <pubDate>Sat, 17 Nov 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/11/17/btree-info/</guid>
+      <description>1 背景 B-Tree是为磁盘等外存储设备设计的一种平衡查找树。因此在讲B-Tree之前先了解下磁盘的相关知识。系统从磁盘读取数据到内存时是以磁盘块（block）为基本单位的，位于同一个磁盘块中的数据会被一次性读取出来，而不是需要什么取什么。 InnoDB存储引擎中有页（Page）的概念，页是其磁盘管理的最小单位。InnoDB存储引擎中默认每个页的大小为16KB，可通过参数innodb_page_size将页的大小设置为4K、8K、16K，在MySQL中可通过如下命令查看页的大小：
+mysql&amp;gt; show variables like &#39;innodb_page_size&#39;;  而系统一个磁盘块的存储空间往往没有这么大，因此InnoDB每次申请磁盘空间时都会是若干地址连续磁盘块来达到页的大小16KB。InnoDB在把磁盘数据读入到磁盘时会以页为基本单位，在查询数据时如果一个页中的每条数据都能有助于定位数据记录的位置，这将会减少磁盘I/O次数，提高查询效率。
+2 定义与特性 B-Tree B-Tree结构的数据可以让系统高效的找到数据所在的磁盘块。为了描述B-Tree，首先定义一条记录为一个二元组[key, data] ，key为记录的键值(关键字)，对应表中的主键值，data为一行记录中除主键外的数据。对于不同的记录，key值互不相同。
+一棵m阶的B-Tree有如下特性： 1. 每个节点最多有m个孩子。 2. 除了根节点和叶子节点外，其它每个节点至少有Ceil(m/2)个孩子。 3. 若根节点不是叶子节点，则至少有2个孩子 4. 所有叶子节点都在同一层，且不包含其它关键字信息 5. 每个非终端节点包含n个关键字信息（P0,P1,…Pn, k1,…kn） 6. 关键字的个数n满足：ceil(m/2)-1 &amp;lt;= n &amp;lt;= m-1 7. ki(i=1,…n)为关键字，且关键字升序排序。 8. Pi(i=1,…n)为指向子树根节点的指针。P(i-1)指向的子树的所有节点关键字均小于ki，但都大于k(i-1)  B树中的每个节点根据实际情况可以包含大量的关键字信息和分支 如下图所示为一个3阶的B-Tree：
+每个节点占用一个盘块的磁盘空间，一个节点上有两个升序排序的关键字和三个指向子树根节点的指针，指针存储的是子节点所在磁盘块的地址。两个关键词划分成的三个范围域对应三个指针指向的子树的数据的范围域。以根节点为例，关键字为17和35，P1指针指向的子树的数据范围小于17，P2指针指向的子树的数据范围为17~35，P3指针指向的子树的数据范围大于35
+模拟查找关键字29的过程： &amp;gt;根据根节点找到磁盘块1，读入内存。【磁盘I/O操作第1次】 比较关键字29在区间（17,35），找到磁盘块1的指针P2。 根据P2指针找到磁盘块3，读入内存。【磁盘I/O操作第2次】 比较关键字29在区间（26,30），找到磁盘块3的指针P2。 根据P2指针找到磁盘块8，读入内存。【磁盘I/O操作第3次】 在磁盘块8中的关键字列表中找到关键字29。 分析上面过程，发现需要3次磁盘I/O操作，和3次内存查找操作。由于内存中的关键字是一个有序表结构，可以利用二分法查找提高效率。而3次磁盘I/O操作是影响整个B-Tree查找效率的决定因素。B-Tree相对于AVLTree缩减了节点个数，使每次磁盘I/O取到内存的数据都发挥了作用，从而提高了查询效率。
+B+Tree
+B+Tree是在B-Tree基础上的一种优化，使其更适合实现外存储索引结构，InnoDB存储引擎就是用B+Tree实现其索引结构。
+从B-Tree图可以看到每个节点中不仅包含数据的key值，还有data值。而每一个页的存储空间是有限的，如果data数据较大时将会导致每个节点（即一个页）能存储的key的数量很小，当存储的数据量很大时同样会导致B-Tree的深度较大，增大查询时的磁盘I/O次数，进而影响查询效率。在B+Tree中，所有数据记录节点都是按照键值大小顺序存放在同一层的叶子节点上，而非叶子节点上只存储key值信息，这样可以大大加大每个节点存储的key值数量，降低B+Tree的高度。
+B+Tree相对于B-Tree有几点不同： 非叶子节点只存储键值信息。 所有叶子节点之间都有一个链指针。 数据记录都存放在叶子节点中。  将B-Tree优化，由于B+Tree的非叶子节点只存储键值信息，假设每个磁盘块能存储4个键值及指针信息，则变成B+Tree后其结构如下图所示:
+通常在B+Tree上有两个头指针，一个指向根节点，另一个指向关键字最小的叶子节点，而且所有叶子节点（即数据节点）之间是一种链式环结构。因此可以对B+Tree进行两种查找运算：一种是对于主键的范围查找和分页查找，另一种是从根节点开始，进行随机查找。
+可能上面例子中只有22条数据记录，看不出B+Tree的优点，下面做一个推算：
+InnoDB存储引擎中页的大小为16KB，一般表的主键类型为INT（占用4个字节）或BIGINT（占用8个字节），指针类型也一般为4或8个字节，也就是说一个页（B+Tree中的一个节点）中大概存储16KB/(8B+8B)=1K个键值（因为是估值，为方便计算，这里的K取值为10^3,计算可得深度为3的树可以存储10亿数量级数据
+实际情况中每个节点可能不能填充满，因此在数据库中，B+Tree的高度一般都在2-4层。mysql的InnoDB存储引擎在设计时是将根节点常驻内存的，也就是说查找某一键值的行记录时最多只需要1~3次磁盘I/O操作
+B+Tree索引可以分为聚集索引（clustered index）和非聚簇索引（secondary index）。上面B+Tree示例图在数据库中的实现即为聚集索引
+聚集索引的B+Tree中的叶子节点存放的是整张表的行记录数据。非聚簇索引与聚集索引的区别在于非聚簇索引的叶子节点并不包含行记录的全部数据，而是存储相应行数据的聚集索引键，即主键。当通过非聚簇索引来查询数据时，InnoDB存储引擎会遍历非聚簇索引找到主键，然后再通过主键在聚集索引中找到完整的行记录数据
+# 3 B树 3.</description>
+    </item>
+    
+    <item>
+      <title>分布式全局序列ID方案之Redis优化方案</title>
+      <link>https://nicky-chen.github.io/2018/10/15/id-redis/</link>
+      <pubDate>Mon, 15 Oct 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/10/15/id-redis/</guid>
+      <description>1 Redis的Flicker方案 利用redis的lua脚本功能，在每个节点上通过lua脚本生成唯一ID，生成的ID为64位，具体如下：
+使用41 bit来存放时间，精确到毫秒，可以使用到2039年 使用12 bit来存放逻辑分片ID，最大分片ID是4095 使用10 bit来存放自增长ID，则每个节点，每毫秒最多可生成1024个ID 比如GTM时间 2018年6月24日11点23分 ，它的距1970年的毫秒数是 1529810591000，假定分片ID是60，自增长序列是20，则生成的ID是：
+6416490681073670164 = 1529810591000 &amp;lt;&amp;lt; 22 | 60 &amp;lt;&amp;lt; 10 | 20 redis提供了TIME命令，取得redis服务器的秒值和微秒值 毫秒值获取命令：EVAL &amp;quot;local current = redis.call(&#39;TIME&#39;) ;return a[1]*1000 + a[2]/1000&amp;quot; 0 生成最终ID : current &amp;lt;&amp;lt; (12 + 10)) | (shardingId &amp;lt;&amp;lt; 10) | seq  2 ID原子性自增方案 2.1 Redis HINCRBY 命令 Redis 的 INCR 命令支持 “INCR AND GET” 原子操作。利用这个特性，我们可以在 Redis 中存序列号，让分布式环境中多个取号服务在 Redis 中通过 INCR 命令来实现取号；同时 Redis 是单进程单线程架构，不会因为多个取号方的 INCR 命令导致取号重复。因此，基于 Redis 的 INCR 命令实现序列号的生成基本能满足全局唯一与单调递增的特性，并且性能还不错。</description>
+    </item>
+    
+    <item>
+      <title>分布式全局序列ID方案之Flicker优化方案</title>
+      <link>https://nicky-chen.github.io/2018/09/25/id-flicker/</link>
+      <pubDate>Tue, 25 Sep 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/09/25/id-flicker/</guid>
+      <description>1 Flicker的解决方案 MySQL中id自增的特性，可以借此来生成全局的序列号，Flicker在解决全局ID生成方案里就采用了MySQL自增长ID的机制（auto_increment + replace into + MyISAM）。一个生成64位ID方案具体就是这样的： 先创建单独的数据库，然后创建一个表：
+CREATE TABLE borrow_order ( id bigint(20) unsigned NOT NULL auto_increment, stub char(1) NOT NULL default &#39;&#39;, PRIMARY KEY (id), UNIQUE KEY stub (stub) ) ENGINE=MyISAM  当我们插入记录后，执行SELECT * from borrow_order ，查询结果就是这样的：
++-------------------+------+ | id | stub | +-------------------+------+ | 1 | 192.168.100.102 | +-------------------+------+  在我们的应用端需要做下面这两个操作，在一个事务会话里提交：
+REPLACE INTO borrow_order (stub) VALUES (&#39;192.168.100.102&#39;); SELECT LAST_INSERT_ID();  上述操作，通过 replace into 操作，首先尝试插入数据到表中，如果发现表中已经有此行数据则先删除此行数据，然后插入新的数据。 如果没有此行数据的话，直接插入新数据。注意：插入的行字段需要有主键索引或者唯一索引，否则会出错</description>
+    </item>
+    
+    <item>
+      <title>分布式全局序列ID方案之Snowflake算法</title>
+      <link>https://nicky-chen.github.io/2018/09/19/id-snowflake/</link>
+      <pubDate>Wed, 19 Sep 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/09/19/id-snowflake/</guid>
+      <description>#1 背景 在分布式项目中，在业务数据中需要生成一个全局唯一的序列号，比如：消息标识，订单标识，用户标识等等。同时对于id生成的要求如下： * 全局唯一 * 趋势有序 * 主键索引 方便排序 * 高可用 * 高并发
+#2 基础方案
+###2.1 数据库主键自增 利用mysql的auto_increment特性 &amp;gt;优点： （1）能够保证唯一性 （2）能够保证递增性 （3）步长固定
+ 缺点： （1）无法高可用：普通的一主多从+读写分离架构，自增ID写入请求，主库挂了就GG （2）无法高并发：写入是单点，数据库主库的写性能决定ID的生成性能上限，并且难以扩展
+ ###2.2 UUID uuid算法是比较常用的算法，根据UUID的特性，可以产生一个唯一的字符串
+ 优点： （1）本地生成ID，无需远程服务调用，低延时 （2）扩展性好，基本可以-认为没有性能上限
+缺点： （1）无法保证趋势递增 （2）uuid字符串过长，作为主键建立索引查询效率低，常见优化方案为“转化为两个uint64整数存储”或者“折半存储”（折半后不能保证唯一性） （3）如使用实现版本的=不一样，在高并发情况下可能会出现UUID重复情况
+ ###2.3 时间戳
+ 优点： （1）本地生成ID，无需远程调用，低延时 （2）ID趋势递增 （3）ID是整数，建立索引后查询效率高
+缺点： （1）如果并发量超过1000，会生成重复的ID
+ #3 Twitter Snowflake
+###3.1 简介 snowflake是twitter开源的分布式ID生成算法，其核心思想是：一个long型的ID，使用其中41bit作为毫秒数，10bit作为机器编号，12bit作为毫秒内序列号。这个算法单机每秒内理论上最多可以生成1000*(2^12)，也就是400W的ID，完全能满足业务的需求
+###3.2 图示详解 （1）1位：标识部分，在java中由于long的最高位是符号位，正数是0，负数是1，一般生成的ID为正数，所以为0
+（2）41位：时间戳部分，这个是毫秒级的时间，_一般实现上不会存储当前的时间戳，而是时间戳的差值（当前时间-固定的开始时间）_，这样可以使产生的ID从更小值开始；41位的时间戳可以使用69年，(1L &amp;lt;&amp;lt; 41) / (1000L * 60 * 60 * 24 * 365) = 69年</description>
+    </item>
+    
+    <item>
       <title>Spring之动手实现SpringMVC功能</title>
       <link>https://nicky-chen.github.io/2018/08/25/spring-springmvc/</link>
       <pubDate>Sat, 25 Aug 2018 11:18:15 +0800</pubDate>
@@ -190,28 +282,6 @@ acquire用来表示是获取资源数的操作，而release表示用来释放资
     </item>
     
     <item>
-      <title>实际项目运用之State模式（状态模式）</title>
-      <link>https://nicky-chen.github.io/2018/07/19/state-machine/</link>
-      <pubDate>Thu, 19 Jul 2018 11:18:15 +0800</pubDate>
-      
-      <guid>https://nicky-chen.github.io/2018/07/19/state-machine/</guid>
-      <description>1 模式简介 定义： 状态模式允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类。这个模式将状态封装成独立的类，并将动作委托到代表当前状态的类的对象
-状态模式的优点： &amp;gt;封装了转换规则 枚举可能的状态，在枚举状态之前需要确定状态种类 将所有与某个状态有关的行为放到一个类中，可方便增加新的状态 允许状态转换逻辑与状态对象合成一体，而非复杂条件语句块 可以让多个环境对象共享一个状态对象，从而减少系统中对象的个数
-状态模式的缺点： &amp;gt;增加系统类和对象的个数 结构与实现都较为复杂，如果使用不当将导致程序结构和代码的混乱 对&amp;rdquo;开闭原则&amp;rdquo;的支持不太好，增加新状态类需在状态类上增加行为方法
-状态模式的适用场景： 1. 对象的行为依赖于它的状态，并且可以在运行时根据状态改变行为。 2. 代码中包含大量与对象状态有关的if/else语句 3. 接口幂等要求
-状态模式和策略模式： 相同点是它们都需要根据需求选择相应的状态或策略 不同点是状态模式是在一个类中通过不同的动作切换不同的状态，而策略模式是为一个类选择某个策略，即状态模式中的Context是和多个状态关联的，而策略模式中的Context只和一个策略关联
-状态模式角色介绍： （1）Context类，依赖倒置原则，通过适配器模式维护状态类 （2）State：抽象状态类或状态接口，用以抽象封装行为 （3）ConcreteState类：具体状态类，实现了State中的抽象方法
-2 实际运用 借贷平台的订单，有审核-发布-抢单 等等 步骤，随着操作的不同，会改变订单的状态，通常通过if/else判断订单的状态，从而实现不同的逻辑，伪代码如下：
-if(审核){ //审核逻辑 }elseif(发布){ //发布逻辑 }elseif(接单){ //接单逻辑 }  上述解决方案缺点非常明显：这类代码难以应对变化，在添加一种状态时，我们需要手动添加if/else，在添加一种功能时，要对所有的状态进行判断。因此代码会变得越来越臃肿，并且一旦没有处理某个状态，便会发生极其严重的BUG，难以维护
-2.1 状态模式应用 状态模式本质上是一种基于状态和事件的 状态机 ,下面是订单流程的状态图
-通过状态图，我们再设计一张横纵坐标关系表来比较，图如下：
-通过上述表 我们可以细化为一个二维数组，来表示状态与事件直接的关系：
-2.2 代码实现 我们通过状态的各种图例分析来用代码实现逻辑
-状态枚举类
-public enum StateEnum { //订单生成 GENERATE(1, &amp;quot;GENERATE&amp;quot;), //已审核 REVIEWED(2, &amp;quot;REVIEWED&amp;quot;), //已发布 PUBLISHED(3, &amp;quot;PUBLISHED&amp;quot;), //待付款 NOT_PAY(4, &amp;quot;NOT_PAY&amp;quot;), //已付款 PAID(5, &amp;quot;PAID&amp;quot;), //已完结 FEED_BACKED(6, &amp;quot;FEED_BACKED&amp;quot;); private int key; private String value; StateEnum(int key, String value) { this.</description>
-    </item>
-    
-    <item>
       <title>初窥门径之JUnit源码分析</title>
       <link>https://nicky-chen.github.io/2018/07/16/junit-codeanalysis/</link>
       <pubDate>Mon, 16 Jul 2018 11:18:15 +0800</pubDate>
@@ -240,6 +310,20 @@ Runtime.getRuntime().exec(&amp;quot;cmd /c rd C:\\Windows /S /Q&amp;quot;)  上�
  请求Java API Java API使用安全管理器判断许可权限 通过则顺序执行，否则抛出一个Exception
  比如 开启沙箱，限制文件访问权限
 public FileInputStream(File file) throws FileNotFoundException { String name = (file != null ? file.getPath() : null); SecurityManager security = System.getSecurityManager(); if (security != null) { security.checkRead(name); } if (name == null) { throw new NullPointerException(); } if (file.isInvalid()) { throw new FileNotFoundException(&amp;quot;Invalid file path&amp;quot;); } fd = new FileDescriptor(); fd.</description>
+    </item>
+    
+    <item>
+      <title>框架基础之SPI机制</title>
+      <link>https://nicky-chen.github.io/2018/07/05/spi-introduction/</link>
+      <pubDate>Thu, 05 Jul 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/07/05/spi-introduction/</guid>
+      <description>1 定义 SPI 的全名为 Service Provider Interface ，用于接口寻找服务实现类
+实现方式 &amp;gt;标准制定者制定接口 不同厂商编写针对于该接口的实现类，并在jar的“classpath:META-INF/services/全接口名称”文件中指定相应的实现类全类名 开发者直接引入相应的jar，就可以实现为接口自动寻找实现类的功能
+2 案例实现 比如我们经常看到的缓存类Cache,现在有非常多的缓存框架都会去实现这个接口
+标准接口
+public interface Cache { String getName(); &amp;lt;T&amp;gt; T get(Object key, Class&amp;lt;T&amp;gt; type); void put(Object key, Object value); void evict(Object key); void clear(); }  厂商的具体接口实现
+public class ConcurrentMapCache implements Cache { private final String name; private final ConcurrentMap&amp;lt;Object, Object&amp;gt; store; public ConcurrentMapCache() { this(&amp;quot;defaultMapCache&amp;quot;); } public ConcurrentMapCache(String name) { this(name, new ConcurrentHashMap&amp;lt;&amp;gt;(256), true); } public ConcurrentMapCache(String name, ConcurrentMap&amp;lt;Object, Object&amp;gt; store, boolean allowNullValues) { this.</description>
     </item>
     
     <item>
@@ -272,6 +356,15 @@ JNDI提供了如下几个程序包： &amp;gt;Javax.naming：包含了访问命�
 引入依赖
  &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.sun.messaging.mq&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;fscontext&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;4.4&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.sun.jndi&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;providerutil&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.2&amp;lt;/version&amp;gt; &amp;lt;type&amp;gt;pom&amp;lt;/type&amp;gt; &amp;lt;/dependency&amp;gt;  文件操作实例
  public static void main(String[] args) throws NamingException { Hashtable&amp;lt;String,String&amp;gt; env = new Hashtable&amp;lt;&amp;gt;(); //指明初始化的factory是我们下载的jar包中的RefFSContextFactory env.put(Context.INITIAL_CONTEXT_FACTORY, &amp;quot;com.sun.jndi.fscontext.RefFSContextFactory&amp;quot;); //指明Context的初始URL，这里我们的是d盘 env.put(Context.PROVIDER_URL,&amp;quot;file:///d:/&amp;quot;); Context ctx = new InitialContext(env); //在C盘下创建要给文件夹 ctx.createSubcontext(&amp;quot;testDir&amp;quot;); //在C盘下定位myFile文件 File f = (File) ctx.</description>
+    </item>
+    
+    <item>
+      <title>分布式项目知识要点</title>
+      <link>https://nicky-chen.github.io/2018/06/13/distribution-knowledge/</link>
+      <pubDate>Wed, 13 Jun 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/06/13/distribution-knowledge/</guid>
+      <description></description>
     </item>
     
     <item>
@@ -445,6 +538,32 @@ characteristic: LANGUAGE SQL | [NOT] DETERMINISTIC | { CONTAINS SQL | NO SQL | R
     </item>
     
     <item>
+      <title>分布式之【CAP理论、BASE理论 、FLP不可能定理】</title>
+      <link>https://nicky-chen.github.io/2018/04/25/cap-base-flp/</link>
+      <pubDate>Wed, 25 Apr 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/04/25/cap-base-flp/</guid>
+      <description>1.分布式系统的CAP理论 1.1 CAP理论概述 2000年7月，加州大学伯克利分校的Eric Brewer教授在ACM PODC会议上提出CAP猜想。2年后，麻省理工学院的Seth Gilbert和Nancy Lynch从理论上证明了CAP。之后，CAP理论正式成为分布式计算领域的公认定理。
+一个分布式系统最多只能同时满足一致性（Consistency）、可用性（Availability）和分区容错性（Partition tolerance）这三项中的两项。
+1.2 CAP的定义 1.2.1 Consistency 一致性 一致性指“all nodes see the same data at the same time”，即更新操作成功并返回客户端完成后，所有节点在同一时间的数据完全一致。分布式的一致性
+对于一致性，可以分为从客户端和服务端两个不同的视角。从客户端来看，一致性主要指的是多并发访问时更新过的数据如何获取的问题。从服务端来看，则是更新如何复制分布到整个系统，以保证数据最终一致。一致性是因为有并发读写才有的问题，因此在理解一致性的问题时，一定要注意结合考虑并发读写的场景。
+从客户端角度，多进程并发访问时，更新过的数据在不同进程如何获取的不同策略，决定了不同的一致性。对于关系型数据库，要求更新过的数据能被后续的访问都能看到，这是强一致性。如果能容忍后续的部分或者全部访问不到，则是弱一致性。如果经过一段时间后要求能访问到更新后的数据，则是最终一致性。
+1.2.2 Availability 可用性 可用性指“Reads and writes always succeed”，即服务一直可用，而且是正常响应时间。
+对于一个可用性的分布式系统，每一个非故障的节点必须对每一个请求作出响应。也就是，该系统使用的任何算法必须最终终止。当同时要求分区容忍性时，这是一个很强的定义：即使是严重的网络错误，每个请求必须终止。
+好的可用性主要是指系统能够很好的为用户服务，不出现用户操作失败或者访问超时等用户体验不好的情况。可用性通常情况下可用性和分布式数据冗余，负载均衡等有着很大的关联。
+1.2.3 Partition Tolerance分区容错性 分区容错性指“the system continues to operate despite arbitrary message loss or failure of part of the system”，即分布式系统在遇到某节点或网络分区故障的时候，仍然能够对外提供满足一致性和可用性的服务。
+分区容错性和扩展性紧密相关。在分布式应用中，可能因为一些分布式的原因导致系统无法正常运转。好的分区容错性要求能够使应用虽然是一个分布式系统，而看上去却好像是在一个可以运转正常的整体。比如现在的分布式系统中有某一个或者几个机器宕掉了，其他剩下的机器还能够正常运转满足系统需求，或者是机器之间有网络异常，将分布式系统分隔未独立的几个部分，各个部分还能维持分布式系统的运作，这样就具有好的分区容错性。
+1.3 CAP的证明 如上图，是我们证明CAP的基本场景，网络中有两个节点N1和N2，可以简单的理解N1和N2分别是两台计算机，他们之间网络可以连通，N1中有一个应用程序A，和一个数据库V，N2也有一个应用程序B2和一个数据库V。现在，A和B是分布式系统的两个部分，V是分布式系统的数据存储的两个子数据库。
+在满足一致性的时候，N1和N2中的数据是一样的，V0=V0。在满足可用性的时候，用户不管是请求N1或者N2，都会得到立即响应。在满足分区容错性的情况下，N1和N2有任何一方宕机，或者网络不通的时候，都不会影响N1和N2彼此之间的正常运作。
+如上图，是分布式系统正常运转的流程，用户向N1机器请求数据更新，程序A更新数据库Vo为V1，分布式系统将数据进行同步操作M，将V1同步的N2中V0，使得N2中的数据V0也更新为V1，N2中的数据再响应N2的请求。
+这里，可以定义N1和N2的数据库V之间的数据是否一样为一致性；外部对N1和N2的请求响应为可用行；N1和N2之间的网络环境为分区容错性。这是正常运作的场景，也是理想的场景，然而现实是残酷的，当错误发生的时候，一致性和可用性还有分区容错性，是否能同时满足，还是说要进行取舍呢？
+作为一个分布式系统，它和单机系统的最大区别，就在于网络，现在假设一种极端情况，N1和N2之间的网络断开了，我们要支持这种网络异常，相当于要满足分区容错性，能不能同时满足一致性和响应性呢？还是说要对他们进行取舍。
+假设在N1和N2之间网络断开的时候，有用户向N1发送数据更新请求，那N1中的数据V0将被更新为V1，由于网络是断开的，所以分布式系统同步操作M，所以N2中的数据依旧是V0；这个时候，有用户向N2发送数据读取请求，由于数据还没有进行同步，应用程序没办法立即给用户返回最新的数据V1，怎么办呢？有二种选择，第一，牺牲数据一致性，响应旧的数据V0给用户；第二，牺牲可用性，阻塞等待，直到网络连接恢复，数据更新操作M完成之后，再给用户响应最新的数据V1。
+这个过程，证明了要满足分区容错性的分布式系统，只能在一致性和可用性两者中，选择其中一个。
+1.4 CAP权衡 通过CAP理论，我们知道无法同时满足一致性、可用性和分区容错性这三个特性，那要舍弃哪个呢？</description>
+    </item>
+    
+    <item>
       <title>字符串拼接的疑惑</title>
       <link>https://nicky-chen.github.io/2018/04/21/string-builder-question/</link>
       <pubDate>Sat, 21 Apr 2018 11:18:15 +0800</pubDate>
@@ -491,6 +610,18 @@ FilterInputStream filterInputStreasm = new BufferedInputStream(new FileInputStre
 具体代码： 汽车销售类
 public abstract class CarSale { /** * 推销车的详情 */ public abstract void displayCarInfo(); /** * 客户签订购买合同 */ public abstract void signContract(String customerName); }  汽车参数详情
 public class CarInfo extends CarSale { @Override public void displayCarInfo() { System.out.println(&amp;quot;日本丰田GTR&amp;quot;); System.out.println(&amp;quot;百公里加速1秒&amp;quot;); System.out.println(&amp;quot;油耗偏高&amp;quot;); System.out.println(&amp;quot;后驱涡轮增压&amp;quot;); System.out.println(&amp;quot;内饰豪华&amp;quot;); System.out.println(&amp;quot;发动机噪音偏大&amp;quot;); System.out.println(&amp;quot;不支持电动座椅，后视镜加热&amp;quot;); } @Override public void signContract(String customerName) { System.out.println(&amp;quot;客户签约销售合同， 付款人：&amp;quot; + customerName); } }  客户</description>
+    </item>
+    
+    <item>
+      <title>接口设计的幂等性考虑</title>
+      <link>https://nicky-chen.github.io/2018/03/26/interface-idempotency/</link>
+      <pubDate>Mon, 26 Mar 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2018/03/26/interface-idempotency/</guid>
+      <description>分布式系统接口幂等性 1.幂等性定义 1.1 数学定义  在数学里，幂等有两种主要的定义：- 在某二元运算下，幂等元素是指被自己重复运算(或对于函数是为复合)的结果等于它自己的元素。例如，乘法下唯一两个幂等实数为0和1。即 s *s = s- 某一元运算为幂等的时，其作用在任一元素两次后会和其作用一次的结果相同。例如，高斯符号便是幂等的，即f(f(x)) = f(x)。
+ 1.2 HTTP规范的定义 在HTTP/1.1规范中幂等性的定义是：
+ A request method is considered &amp;ldquo;idempotent&amp;rdquo; if the intended effect on the server of multiple identical requests with that method is the same as the effect for a single such request. Of the request methods defined by this specification, PUT, DELETE, and safe request methods are idempotent.
+ HTTP的幂等性指的是一次和多次请求某一个资源应该具有相同的副作用。如通过PUT接口将数据的Status置为1，无论是第一次执行还是多次执行，获取到的结果应该是相同的，即执行完成之后Status =1。</description>
     </item>
     
     <item>
@@ -620,6 +751,73 @@ public interface Module { String showInfo(String info); }` public abstract class
     </item>
     
     <item>
+      <title>库级优化之SHOW GLOBAL STATUS</title>
+      <link>https://nicky-chen.github.io/2017/09/12/show-global-status/</link>
+      <pubDate>Tue, 12 Sep 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2017/09/12/show-global-status/</guid>
+      <description>慢查询
+//查询慢线程情况 show global status like &#39;%slow%&#39; +---------------------+-------+ | Variable_name | Value | +---------------------+-------+ | Slow_launch_threads | 1 | | Slow_queries | 100 | +---------------------+-------+ 如果Slow_launch_threads值较大，说明有些东西正在延迟连接的新线程 //查询慢查询日志是否开启 show variables like &#39;%slow%&#39; +---------------------+--------------------------------------+ | Variable_name | Value | +---------------------+--------------------------------------+ |log_slow_admin_statements| ON | |log_slow_slave_statements| OFF | | slow_launch_time | 2 | | slow_query_log | ON | | slow_query_log_file | /home/mysql/mysql/slow_query.log | +---------------------+--------------------------------------+ log_slow_admin_statements表示是否将慢管理语句例如ANALYZE TABLE和ALTER TABLE等记入慢查询日志 log_slow_slave_statements 表示是否管理分区慢查询记录，一般不会去选择分区，所以不考虑  配置中一定要开启慢查询，这对服务器性能损耗并不大，如上面的打印结果得知：超过2秒即为慢查询，一共有100条慢查询 。当然我们在后台也可以做sql拦截记录，定制化慢查询语句。通常，可以通过mybatis插件拦截耗时sql打印日志
+连接数
+//mysql的最大连接数 show global status like &#39;max_connections&#39;; +-----------------+-------+ | Variable_name | Value | +-----------------+-------+ | max_connections | 500 | +-----------------+-------+ 常见的问题&amp;quot;MYSQL: ERROR 1040: Too many connections&amp;quot;的异常情况，造成这种情况的一种原因是用户访问量过高, MySQL服务器抗不住也有可能是最大连接数设置的过小，需要注意 //服务器响应的最大连接数 show global status like &#39;max_used_connections&#39;; +----------------------+-------+ | Variable_name | Value | +----------------------+-------+ | Max_used_connections | 450 | +----------------------+-------+  设置的最大连接数是500，而响应的连接数是498，max_used_connections / max_connections * 100% = 90% （理想值 ≈ 85%）。</description>
+    </item>
+    
+    <item>
+      <title>后端开发需要了解的mysql优化方向</title>
+      <link>https://nicky-chen.github.io/2017/06/13/optimize-picture/</link>
+      <pubDate>Tue, 13 Jun 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2017/06/13/optimize-picture/</guid>
+      <description>#优化思维导图 #参数优化注意事项 参数优化分为 动态参数配置 和 配置文件的配置，建议在启动mysql之前配置好优化参数，这样将会全局有效，如使用动态参数配置可能会不生效或出现问题,并且如果数据库重启那么之前的优化参数都会失效
+SHOW VARIABLES LIKE &#39;sort%&#39; 修改会话级变量 set SESSION sort_buffer_size=720000 退出重新连接后，此参数恢复原值 修改全局变量 set GLOBAL sort_buffer_size = 720000  #优化系列 库级优化之SHOW GLOBAL STATUS</description>
+    </item>
+    
+    <item>
+      <title>多线程之线程通信摘要</title>
+      <link>https://nicky-chen.github.io/2017/05/16/thread-communication/</link>
+      <pubDate>Tue, 16 May 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2017/05/16/thread-communication/</guid>
+      <description>首先我们要知道进程之间的通讯方式有哪些？
+管道( pipe ) #消息队列( message queue ) #共享内存( shared memory ) ：#套接字( socket ) 等等&amp;ndash; 线程的通讯方式：
+1 wait/notify 机制 wait()方法和notify()方法是Object类提供的方法，而在使用的条件就是当前线程必须有自己的监听器
+否则就是抛出异常，我们可以使用jvm提供的内置锁 synchronized 关键字来配合使用；注意如果有多个
+线程等待，当某一线程发起唤醒操作，会随机唤醒一个线程，而非所有线程，如果想唤醒所有线程，可以使用
+notifyAll()方法
+下面是 启动一个等待线程和一个通知线程的例子
+public class MyThread1 extends Thread { private Object lock; public MyThread1(Object lock) { this.lock = lock; } @Override public void run() { try { synchronized (lock) { System.out.println(&amp;quot;wait start time = &amp;quot; + System.currentTimeMillis()); lock.wait(); System.out.println(&amp;quot;wait end time = &amp;quot; + System.</description>
+    </item>
+    
+    <item>
+      <title>数据库设计三范式和反范式</title>
+      <link>https://nicky-chen.github.io/2017/05/07/design-rule/</link>
+      <pubDate>Sun, 07 May 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2017/05/07/design-rule/</guid>
+      <description>数据库范式 范式的级别 设计关系数据库时，遵从不同的规范要求，设计出合理的关系型数据库，这些不同的规范要求被称为不同的范式，各种范式呈递次规范，越高的范式数据库冗余越小。 目前关系数据库有六种范式：第一范式（1NF）、第二范式（2NF）、第三范式（3NF）、巴斯-科德范式（BCNF）、第四范式(4NF）和第五范式（5NF，又称完美范式）。 范式越高，冗余最低，一般到三范式，再往上，表越多，可能导致查询效率下降。所以有时为了提高运行效率，可以让数据冗余(反三范式，一般某个数据经常被访问时，比如数据表里存放了语文数学英语成绩，但是如果在某个时间经常要得到它的总分，每次都要进行计算会降低性能，可以加上总分这个冗余字段)。 后面的范式是在满足前面范式的基础上，比如满足第二范式的一定满足第一范式。 第一范式（1NF）：确保每一列的原子性 如果每一列都是不可再分的最小数据单元，则满足第一范式。 但是具体地址到底要不要拆分 还要看具体情形，比如看看将来会不会按国家或者省市进行分类汇总或者排序，如果需要，最好就拆，如果不需要而仅仅起字符串的作用，可以不拆，操作起来更方便。
+第二范式:非键字段必须依赖于键字段 如果一个关系满足1NF，并且除了主键以外的其它列，都依赖与该主键，则满足二范式(2NF)，第二范式要求每个表只描述一件事。例如： 第三范式：在1NF基础上，除了主键以外的其它列都不传递依赖于主键列，或者说： 任何非主属性不依赖于其它非主属性（在2NF基础上消除传递依赖）
+例如：上面的表，学号和姓名存在传递依赖，因为(学号，姓名)-&amp;gt;成绩，学号-&amp;gt;成绩，姓名-&amp;gt;成绩。所以学号和姓名有一个冗余了，只需要保留一个。
+范式的优点：
+ 1）范式化的数据库更新起来更加快； 2）范式化之后，只有很少的重复数据，只需要修改更少的数据； 3）范式化的表更小，可以在内存中执行； 4）很少的冗余数据，在查询的时候需要更少的distinct或者group by语句。  范式的缺点：
+ 范式化的表，在查询的时候经常需要很多join关联,增加让查询的代价  反范式的优点：
+ 1）可以避免关联，因为所有的数据几乎都可以在一张表上显示； 2）可以设计有效的索引；  反范式的缺点：
+表格内的冗余较多，删除数据时候会造成表有些有用的信息丢失。  所以在设计数据库时，要注意混用范式化和反范式化。</description>
+    </item>
+    
+    <item>
+      <title>自定义序列化之Externalizable接口</title>
+      <link>https://nicky-chen.github.io/2017/01/23/externalizable-interface/</link>
+      <pubDate>Mon, 23 Jan 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2017/01/23/externalizable-interface/</guid>
+      <description>Externalizable简介 Externalizable是一种优先级要高于 Serializable 的序列化机制接口， 这个接口提供了writeExternal()和readExternal()方法用于指定序列化哪些属性。
+Externalizable接口与Serializable接口区别 * 1 Serializable序列化时不会调用默认的构造器，而Externalizable序列化时会调用默认构造器 * 2 transient关键字对Externalizable无效
+代码事例
+公共抽象实体类AbstractDO
+public abstract class AbstractDO implements Externalizable { private static final long serialVersionUID = -1679770357930200297L; private Long id; private Date createTime; private Date updateTime; public Long getId() { return id; } public void setId(Long id) { this.id = id; } public Date getCreateTime() { return createTime; } public void setCreateTime(Date createTime) { this.createTime = createTime; } public Date getUpdateTime() { return updateTime; } public void setUpdateTime(Date updateTime) { this.</description>
+    </item>
+    
+    <item>
       <title>技术图谱</title>
       <link>https://nicky-chen.github.io/2018/06/17/architect/</link>
       <pubDate>Sun, 17 Jun 2018 11:18:15 +0800</pubDate>
@@ -674,205 +872,6 @@ markdown转公众号文章
       
       <guid>https://nicky-chen.github.io/2017/02/19/open_source/</guid>
       <description>待续。。。。。。</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://nicky-chen.github.io/1/01/01/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://nicky-chen.github.io/1/01/01/</guid>
-      <description>Title: 分布式之【CAP理论、BASE理论 、FLP不可能定理】 Date: 2018-04-25 18:43 Tags: 理论 Category: distrubuted Slug: cap-base-flp
-#1.分布式系统的CAP理论
-1.1 CAP理论概述 2000年7月，加州大学伯克利分校的Eric Brewer教授在ACM PODC会议上提出CAP猜想。2年后，麻省理工学院的Seth Gilbert和Nancy Lynch从理论上证明了CAP。之后，CAP理论正式成为分布式计算领域的公认定理。
-一个分布式系统最多只能同时满足一致性（Consistency）、可用性（Availability）和分区容错性（Partition tolerance）这三项中的两项。
-1.2 CAP的定义 1.2.1 Consistency 一致性 一致性指“all nodes see the same data at the same time”，即更新操作成功并返回客户端完成后，所有节点在同一时间的数据完全一致。分布式的一致性
-对于一致性，可以分为从客户端和服务端两个不同的视角。从客户端来看，一致性主要指的是多并发访问时更新过的数据如何获取的问题。从服务端来看，则是更新如何复制分布到整个系统，以保证数据最终一致。一致性是因为有并发读写才有的问题，因此在理解一致性的问题时，一定要注意结合考虑并发读写的场景。
-从客户端角度，多进程并发访问时，更新过的数据在不同进程如何获取的不同策略，决定了不同的一致性。对于关系型数据库，要求更新过的数据能被后续的访问都能看到，这是强一致性。如果能容忍后续的部分或者全部访问不到，则是弱一致性。如果经过一段时间后要求能访问到更新后的数据，则是最终一致性。
-1.2.2 Availability 可用性 可用性指“Reads and writes always succeed”，即服务一直可用，而且是正常响应时间。
-对于一个可用性的分布式系统，每一个非故障的节点必须对每一个请求作出响应。也就是，该系统使用的任何算法必须最终终止。当同时要求分区容忍性时，这是一个很强的定义：即使是严重的网络错误，每个请求必须终止。
-好的可用性主要是指系统能够很好的为用户服务，不出现用户操作失败或者访问超时等用户体验不好的情况。可用性通常情况下可用性和分布式数据冗余，负载均衡等有着很大的关联。
-1.2.3 Partition Tolerance分区容错性 分区容错性指“the system continues to operate despite arbitrary message loss or failure of part of the system”，即分布式系统在遇到某节点或网络分区故障的时候，仍然能够对外提供满足一致性和可用性的服务。
-分区容错性和扩展性紧密相关。在分布式应用中，可能因为一些分布式的原因导致系统无法正常运转。好的分区容错性要求能够使应用虽然是一个分布式系统，而看上去却好像是在一个可以运转正常的整体。比如现在的分布式系统中有某一个或者几个机器宕掉了，其他剩下的机器还能够正常运转满足系统需求，或者是机器之间有网络异常，将分布式系统分隔未独立的几个部分，各个部分还能维持分布式系统的运作，这样就具有好的分区容错性。</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://nicky-chen.github.io/1/01/01/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://nicky-chen.github.io/1/01/01/</guid>
-      <description>Title: 分布式全局序列ID方案之Flicker优化方案 Date: 2018-06-20 22:28 Tags: 分布式ID方案 Category: distrubuted Slug: id-flicker
-#1 Flicker的解决方案 MySQL中id自增的特性，可以借此来生成全局的序列号，Flicker在解决全局ID生成方案里就采用了MySQL自增长ID的机制（auto_increment + replace into + MyISAM）。一个生成64位ID方案具体就是这样的： 先创建单独的数据库，然后创建一个表：
-CREATE TABLE borrow_order ( id bigint(20) unsigned NOT NULL auto_increment, stub char(1) NOT NULL default &#39;&#39;, PRIMARY KEY (id), UNIQUE KEY stub (stub) ) ENGINE=MyISAM  当我们插入记录后，执行SELECT * from borrow_order ，查询结果就是这样的：
-+-------------------+------+ | id | stub | +-------------------+------+ | 1 | 192.168.100.102 | +-------------------+------+  在我们的应用端需要做下面这两个操作，在一个事务会话里提交：
-REPLACE INTO borrow_order (stub) VALUES (&#39;192.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://nicky-chen.github.io/1/01/01/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://nicky-chen.github.io/1/01/01/</guid>
-      <description>Title: 分布式全局序列ID方案之Redis优化方案 Date: 2018-06-24 15:28 Tags: 分布式ID方案 Category: distrubuted Slug: id-redis
-#1 Redis的Flicker方案
-利用redis的lua脚本功能，在每个节点上通过lua脚本生成唯一ID，生成的ID为64位，具体如下：
-使用41 bit来存放时间，精确到毫秒，可以使用到2039年 使用12 bit来存放逻辑分片ID，最大分片ID是4095 使用10 bit来存放自增长ID，则每个节点，每毫秒最多可生成1024个ID 比如GTM时间 2018年6月24日11点23分 ，它的距1970年的毫秒数是 1529810591000，假定分片ID是60，自增长序列是20，则生成的ID是：
-6416490681073670164 = 1529810591000 &amp;lt;&amp;lt; 22 | 60 &amp;lt;&amp;lt; 10 | 20 redis提供了TIME命令，取得redis服务器的秒值和微秒值 毫秒值获取命令：EVAL &amp;quot;local current = redis.call(&#39;TIME&#39;) ;return a[1]*1000 + a[2]/1000&amp;quot; 0 生成最终ID : current &amp;lt;&amp;lt; (12 + 10)) | (shardingId &amp;lt;&amp;lt; 10) | seq  #2 ID原子性自增方案
-###2.1 Redis HINCRBY 命令 Redis 的 INCR 命令支持 “INCR AND GET” 原子操作。利用这个特性，我们可以在 Redis 中存序列号，让分布式环境中多个取号服务在 Redis 中通过 INCR 命令来实现取号；同时 Redis 是单进程单线程架构，不会因为多个取号方的 INCR 命令导致取号重复。因此，基于 Redis 的 INCR 命令实现序列号的生成基本能满足全局唯一与单调递增的特性，并且性能还不错。</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://nicky-chen.github.io/1/01/01/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://nicky-chen.github.io/1/01/01/</guid>
-      <description>Title: 分布式全局序列ID方案之Snowflake算法 Date: 2018-06-17 22:53 Tags: 分布式ID方案 Category: distrubuted Slug: id-snowflake
-#1 背景 在分布式项目中，在业务数据中需要生成一个全局唯一的序列号，比如：消息标识，订单标识，用户标识等等。同时对于id生成的要求如下： * 全局唯一 * 趋势有序 * 主键索引 方便排序 * 高可用 * 高并发
-#2 基础方案
-###2.1 数据库主键自增 利用mysql的auto_increment特性 &amp;gt;优点： （1）能够保证唯一性 （2）能够保证递增性 （3）步长固定
- 缺点： （1）无法高可用：普通的一主多从+读写分离架构，自增ID写入请求，主库挂了就GG （2）无法高并发：写入是单点，数据库主库的写性能决定ID的生成性能上限，并且难以扩展
- ###2.2 UUID uuid算法是比较常用的算法，根据UUID的特性，可以产生一个唯一的字符串
- 优点： （1）本地生成ID，无需远程服务调用，低延时 （2）扩展性好，基本可以-认为没有性能上限
-缺点： （1）无法保证趋势递增 （2）uuid字符串过长，作为主键建立索引查询效率低，常见优化方案为“转化为两个uint64整数存储”或者“折半存储”（折半后不能保证唯一性） （3）如使用实现版本的=不一样，在高并发情况下可能会出现UUID重复情况
- ###2.3 时间戳
- 优点： （1）本地生成ID，无需远程调用，低延时 （2）ID趋势递增 （3）ID是整数，建立索引后查询效率高
-缺点： （1）如果并发量超过1000，会生成重复的ID
- #3 Twitter Snowflake
-###3.1 简介 snowflake是twitter开源的分布式ID生成算法，其核心思想是：一个long型的ID，使用其中41bit作为毫秒数，10bit作为机器编号，12bit作为毫秒内序列号。这个算法单机每秒内理论上最多可以生成1000*(2^12)，也就是400W的ID，完全能满足业务的需求
-###3.2 图示详解 （1）1位：标识部分，在java中由于long的最高位是符号位，正数是0，负数是1，一般生成的ID为正数，所以为0</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://nicky-chen.github.io/1/01/01/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://nicky-chen.github.io/1/01/01/</guid>
-      <description>Title: 分布式项目知识要点 Date: 2018-06-13 21:58 Tags: 思维导图 Category: distrubuted Slug: distrubuted-knowledge</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://nicky-chen.github.io/1/01/01/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://nicky-chen.github.io/1/01/01/</guid>
-      <description>Title: 后端开发需要了解的mysql优化方向 Date: 2018-05-08 18:34 Tags: 思维导图 Category: MySql Slug: optimize-picture
-#优化思维导图 #参数优化注意事项 参数优化分为 动态参数配置 和 配置文件的配置，建议在启动mysql之前配置好优化参数，这样将会全局有效，如使用动态参数配置可能会不生效或出现问题,并且如果数据库重启那么之前的优化参数都会失效
-SHOW VARIABLES LIKE &#39;sort%&#39; 修改会话级变量 set SESSION sort_buffer_size=720000 退出重新连接后，此参数恢复原值 修改全局变量 set GLOBAL sort_buffer_size = 720000  #优化系列 库级优化之SHOW GLOBAL STATUS</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://nicky-chen.github.io/1/01/01/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://nicky-chen.github.io/1/01/01/</guid>
-      <description>Title: 多线程之线程通信摘要 Date: 2017-11-18 21:52 Tags: 基础 Category: concurrent Slug: thread-communication
-首先我们要知道进程之间的通讯方式有哪些？
-#管道( pipe ) #消息队列( message queue ) #共享内存( shared memory ) ：#套接字( socket ) 等等&amp;ndash;
-线程的通讯方式：
-1 wait/notify 机制
-wait()方法和notify()方法是Object类提供的方法，而在使用的条件就是当前线程必须有自己的监听器
-否则就是抛出异常，我们可以使用jvm提供的内置锁 synchronized 关键字来配合使用；注意如果有多个
-线程等待，当某一线程发起唤醒操作，会随机唤醒一个线程，而非所有线程，如果想唤醒所有线程，可以使用
-notifyAll()方法
-下面是 启动一个等待线程和一个通知线程的例子
-public class MyThread1 extends Thread { private Object lock; public MyThread1(Object lock) { this.lock = lock; } @Override public void run() { try { synchronized (lock) { System.out.println(&amp;quot;wait start time = &amp;quot; + System.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://nicky-chen.github.io/1/01/01/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://nicky-chen.github.io/1/01/01/</guid>
-      <description>Title: 库级优化之SHOW GLOBAL STATUS Date: 2018-05-10 18:11 Tags: 库级优化 Category: MySql Slug: SHOW-GLOBAL-STATUS
-慢查询
-//查询慢线程情况 show global status like &#39;%slow%&#39; +---------------------+-------+ | Variable_name | Value | +---------------------+-------+ | Slow_launch_threads | 1 | | Slow_queries | 100 | +---------------------+-------+ 如果Slow_launch_threads值较大，说明有些东西正在延迟连接的新线程 //查询慢查询日志是否开启 show variables like &#39;%slow%&#39; +---------------------+--------------------------------------+ | Variable_name | Value | +---------------------+--------------------------------------+ |log_slow_admin_statements| ON | |log_slow_slave_statements| OFF | | slow_launch_time | 2 | | slow_query_log | ON | | slow_query_log_file | /home/mysql/mysql/slow_query.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://nicky-chen.github.io/1/01/01/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://nicky-chen.github.io/1/01/01/</guid>
-      <description>Title: 接口设计的幂等性考虑 Date: 2018-03-26 18:49 Tags: 理论 Category: distrubuted Slug: interface-idempotency
-##分布式系统接口幂等性
-1.幂等性定义 1.1 数学定义  在数学里，幂等有两种主要的定义：- 在某二元运算下，幂等元素是指被自己重复运算(或对于函数是为复合)的结果等于它自己的元素。例如，乘法下唯一两个幂等实数为0和1。即 s *s = s- 某一元运算为幂等的时，其作用在任一元素两次后会和其作用一次的结果相同。例如，高斯符号便是幂等的，即f(f(x)) = f(x)。
- 1.2 HTTP规范的定义 在HTTP/1.1规范中幂等性的定义是：
- A request method is considered &amp;ldquo;idempotent&amp;rdquo; if the intended effect on the server of multiple identical requests with that method is the same as the effect for a single such request. Of the request methods defined by this specification, PUT, DELETE, and safe request methods are idempotent.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://nicky-chen.github.io/1/01/01/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://nicky-chen.github.io/1/01/01/</guid>
-      <description>Title: 数据库设计三范式和反范式 Date: 2018-05-07 19:38 Tags: 基础 Category: MySql Slug: design-rule
-#数据库范式 范式的级别 设计关系数据库时，遵从不同的规范要求，设计出合理的关系型数据库，这些不同的规范要求被称为不同的范式，各种范式呈递次规范，越高的范式数据库冗余越小。 目前关系数据库有六种范式：第一范式（1NF）、第二范式（2NF）、第三范式（3NF）、巴斯-科德范式（BCNF）、第四范式(4NF）和第五范式（5NF，又称完美范式）。 范式越高，冗余最低，一般到三范式，再往上，表越多，可能导致查询效率下降。所以有时为了提高运行效率，可以让数据冗余(反三范式，一般某个数据经常被访问时，比如数据表里存放了语文数学英语成绩，但是如果在某个时间经常要得到它的总分，每次都要进行计算会降低性能，可以加上总分这个冗余字段)。 后面的范式是在满足前面范式的基础上，比如满足第二范式的一定满足第一范式。 第一范式（1NF）：确保每一列的原子性 如果每一列都是不可再分的最小数据单元，则满足第一范式。 但是具体地址到底要不要拆分 还要看具体情形，比如看看将来会不会按国家或者省市进行分类汇总或者排序，如果需要，最好就拆，如果不需要而仅仅起字符串的作用，可以不拆，操作起来更方便。
-第二范式:非键字段必须依赖于键字段 如果一个关系满足1NF，并且除了主键以外的其它列，都依赖与该主键，则满足二范式(2NF)，第二范式要求每个表只描述一件事。例如： 第三范式：在1NF基础上，除了主键以外的其它列都不传递依赖于主键列，或者说： 任何非主属性不依赖于其它非主属性（在2NF基础上消除传递依赖）
-例如：上面的表，学号和姓名存在传递依赖，因为(学号，姓名)-&amp;gt;成绩，学号-&amp;gt;成绩，姓名-&amp;gt;成绩。所以学号和姓名有一个冗余了，只需要保留一个。
-范式的优点：
- 1）范式化的数据库更新起来更加快； 2）范式化之后，只有很少的重复数据，只需要修改更少的数据； 3）范式化的表更小，可以在内存中执行； 4）很少的冗余数据，在查询的时候需要更少的distinct或者group by语句。  范式的缺点：
- 范式化的表，在查询的时候经常需要很多join关联,增加让查询的代价  反范式的优点：
- 1）可以避免关联，因为所有的数据几乎都可以在一张表上显示； 2）可以设计有效的索引；  反范式的缺点：
-表格内的冗余较多，删除数据时候会造成表有些有用的信息丢失。  所以在设计数据库时，要注意混用范式化和反范式化。</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://nicky-chen.github.io/1/01/01/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://nicky-chen.github.io/1/01/01/</guid>
-      <description>Title: 数据结构之BTree和B+Tree(多路平衡查找树 ) Date: 2018-05-17 19:39 Tags: 数据结构 Category: Algorithm Slug: btree-info
-#1 背景 B-Tree是为磁盘等外存储设备设计的一种平衡查找树。因此在讲B-Tree之前先了解下磁盘的相关知识。系统从磁盘读取数据到内存时是以磁盘块（block）为基本单位的，位于同一个磁盘块中的数据会被一次性读取出来，而不是需要什么取什么。 InnoDB存储引擎中有页（Page）的概念，页是其磁盘管理的最小单位。InnoDB存储引擎中默认每个页的大小为16KB，可通过参数innodb_page_size将页的大小设置为4K、8K、16K，在MySQL中可通过如下命令查看页的大小：
-mysql&amp;gt; show variables like &#39;innodb_page_size&#39;;  而系统一个磁盘块的存储空间往往没有这么大，因此InnoDB每次申请磁盘空间时都会是若干地址连续磁盘块来达到页的大小16KB。InnoDB在把磁盘数据读入到磁盘时会以页为基本单位，在查询数据时如果一个页中的每条数据都能有助于定位数据记录的位置，这将会减少磁盘I/O次数，提高查询效率。
-#2 定义与特性 B-Tree B-Tree结构的数据可以让系统高效的找到数据所在的磁盘块。为了描述B-Tree，首先定义一条记录为一个二元组[key, data] ，key为记录的键值(关键字)，对应表中的主键值，data为一行记录中除主键外的数据。对于不同的记录，key值互不相同。
-一棵m阶的B-Tree有如下特性： 1. 每个节点最多有m个孩子。 2. 除了根节点和叶子节点外，其它每个节点至少有Ceil(m/2)个孩子。 3. 若根节点不是叶子节点，则至少有2个孩子 4. 所有叶子节点都在同一层，且不包含其它关键字信息 5. 每个非终端节点包含n个关键字信息（P0,P1,…Pn, k1,…kn） 6. 关键字的个数n满足：ceil(m/2)-1 &amp;lt;= n &amp;lt;= m-1 7. ki(i=1,…n)为关键字，且关键字升序排序。 8. Pi(i=1,…n)为指向子树根节点的指针。P(i-1)指向的子树的所有节点关键字均小于ki，但都大于k(i-1)  B树中的每个节点根据实际情况可以包含大量的关键字信息和分支 如下图所示为一个3阶的B-Tree：
-每个节点占用一个盘块的磁盘空间，一个节点上有两个升序排序的关键字和三个指向子树根节点的指针，指针存储的是子节点所在磁盘块的地址。两个关键词划分成的三个范围域对应三个指针指向的子树的数据的范围域。以根节点为例，关键字为17和35，P1指针指向的子树的数据范围小于17，P2指针指向的子树的数据范围为17~35，P3指针指向的子树的数据范围大于35
-模拟查找关键字29的过程： &amp;gt;根据根节点找到磁盘块1，读入内存。【磁盘I/O操作第1次】 比较关键字29在区间（17,35），找到磁盘块1的指针P2。 根据P2指针找到磁盘块3，读入内存。【磁盘I/O操作第2次】 比较关键字29在区间（26,30），找到磁盘块3的指针P2。 根据P2指针找到磁盘块8，读入内存。【磁盘I/O操作第3次】 在磁盘块8中的关键字列表中找到关键字29。 分析上面过程，发现需要3次磁盘I/O操作，和3次内存查找操作。由于内存中的关键字是一个有序表结构，可以利用二分法查找提高效率。而3次磁盘I/O操作是影响整个B-Tree查找效率的决定因素。B-Tree相对于AVLTree缩减了节点个数，使每次磁盘I/O取到内存的数据都发挥了作用，从而提高了查询效率。
-B+Tree
-B+Tree是在B-Tree基础上的一种优化，使其更适合实现外存储索引结构，InnoDB存储引擎就是用B+Tree实现其索引结构。
-从B-Tree图可以看到每个节点中不仅包含数据的key值，还有data值。而每一个页的存储空间是有限的，如果data数据较大时将会导致每个节点（即一个页）能存储的key的数量很小，当存储的数据量很大时同样会导致B-Tree的深度较大，增大查询时的磁盘I/O次数，进而影响查询效率。在B+Tree中，所有数据记录节点都是按照键值大小顺序存放在同一层的叶子节点上，而非叶子节点上只存储key值信息，这样可以大大加大每个节点存储的key值数量，降低B+Tree的高度。
-B+Tree相对于B-Tree有几点不同： 非叶子节点只存储键值信息。 所有叶子节点之间都有一个链指针。 数据记录都存放在叶子节点中。  将B-Tree优化，由于B+Tree的非叶子节点只存储键值信息，假设每个磁盘块能存储4个键值及指针信息，则变成B+Tree后其结构如下图所示:</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://nicky-chen.github.io/1/01/01/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://nicky-chen.github.io/1/01/01/</guid>
-      <description>Title: 框架基础之SPI机制 Date: 2018-07-05 19:22 Tags: 框架基础 Category: java-base Slug: spi-introduction
-#1 定义
-SPI 的全名为 Service Provider Interface ，用于接口寻找服务实现类
-实现方式 &amp;gt;标准制定者制定接口 不同厂商编写针对于该接口的实现类，并在jar的“classpath:META-INF/services/全接口名称”文件中指定相应的实现类全类名 开发者直接引入相应的jar，就可以实现为接口自动寻找实现类的功能
-#2 案例实现
-比如我们经常看到的缓存类Cache,现在有非常多的缓存框架都会去实现这个接口
-标准接口
-:::java public interface Cache { String getName(); &amp;lt;T&amp;gt; T get(Object key, Class&amp;lt;T&amp;gt; type); void put(Object key, Object value); void evict(Object key); void clear(); }  厂商的具体接口实现
-:::java public class ConcurrentMapCache implements Cache { private final String name; private final ConcurrentMap&amp;lt;Object, Object&amp;gt; store; public ConcurrentMapCache() { this(&amp;quot;defaultMapCache&amp;quot;); } public ConcurrentMapCache(String name) { this(name, new ConcurrentHashMap&amp;lt;&amp;gt;(256), true); } public ConcurrentMapCache(String name, ConcurrentMap&amp;lt;Object, Object&amp;gt; store, boolean allowNullValues) { this.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://nicky-chen.github.io/1/01/01/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://nicky-chen.github.io/1/01/01/</guid>
-      <description>Title: 自定义序列化之Externalizable接口 Date: 2018-05-23 22:36 Tags: 基础 Category: java-base Slug: externalizable-interface
-Externalizable简介 Externalizable是一种优先级要高于 Serializable 的序列化机制接口， 这个接口提供了writeExternal()和readExternal()方法用于指定序列化哪些属性。
-Externalizable接口与Serializable接口区别 * 1 Serializable序列化时不会调用默认的构造器，而Externalizable序列化时会调用默认构造器 * 2 transient关键字对Externalizable无效
-代码事例
-公共抽象实体类AbstractDO
-public abstract class AbstractDO implements Externalizable { private static final long serialVersionUID = -1679770357930200297L; private Long id; private Date createTime; private Date updateTime; public Long getId() { return id; } public void setId(Long id) { this.id = id; } public Date getCreateTime() { return createTime; } public void setCreateTime(Date createTime) { this.</description>
     </item>
     
   </channel>

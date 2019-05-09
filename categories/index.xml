@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
-    <lastBuildDate>Tue, 07 Aug 2018 11:18:15 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 17 Nov 2018 11:18:15 +0800</lastBuildDate>
     
 	<atom:link href="https://nicky-chen.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Algorithm</title>
+      <link>https://nicky-chen.github.io/categories/algorithm/</link>
+      <pubDate>Sat, 17 Nov 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/categories/algorithm/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Cache</title>
@@ -42,9 +51,18 @@
     <item>
       <title>Design Pattern</title>
       <link>https://nicky-chen.github.io/categories/design-pattern/</link>
-      <pubDate>Thu, 19 Jul 2018 11:18:15 +0800</pubDate>
+      <pubDate>Wed, 19 Dec 2018 11:18:15 +0800</pubDate>
       
       <guid>https://nicky-chen.github.io/categories/design-pattern/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Distribution</title>
+      <link>https://nicky-chen.github.io/categories/distribution/</link>
+      <pubDate>Mon, 15 Oct 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/categories/distribution/</guid>
       <description></description>
     </item>
     

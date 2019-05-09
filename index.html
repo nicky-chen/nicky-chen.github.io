@@ -140,27 +140,37 @@
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
                         
-                            <a href="https://nicky-chen.github.io/tags/junit" style="font-size: 12px;" class="color2">Junit</a>
+                            <a href="https://nicky-chen.github.io/tags/junit" style="font-size: 12px;" class="color3">Junit</a>
                         
-                            <a href="https://nicky-chen.github.io/tags/redis" style="font-size: 12px;" class="color1">Redis</a>
+                            <a href="https://nicky-chen.github.io/tags/redis" style="font-size: 12px;" class="color3">Redis</a>
                         
                             <a href="https://nicky-chen.github.io/tags/spring-base" style="font-size: 12px;" class="color3">Spring-Base</a>
                         
+                            <a href="https://nicky-chen.github.io/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">优化</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color4">分布式id方案</a>
+                        
                             <a href="https://nicky-chen.github.io/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color3">创建型</a>
                         
-                            <a href="https://nicky-chen.github.io/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color3">基础</a>
+                            <a href="https://nicky-chen.github.io/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">基础</a>
                         
-                            <a href="https://nicky-chen.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color1">多线程</a>
+                            <a href="https://nicky-chen.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color2">多线程</a>
                         
                             <a href="https://nicky-chen.github.io/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color4">思维导图</a>
                         
-                            <a href="https://nicky-chen.github.io/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color4">源码</a>
+                            <a href="https://nicky-chen.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color3">数据结构</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">框架基础</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color2">源码</a>
+                        
+                            <a href="https://nicky-chen.github.io/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color1">理论</a>
                         
                             <a href="https://nicky-chen.github.io/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color3">结构型</a>
                         
-                            <a href="https://nicky-chen.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color4">行为型</a>
+                            <a href="https://nicky-chen.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color3">行为型</a>
                         
-                            <a href="https://nicky-chen.github.io/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">锁优化</a>
+                            <a href="https://nicky-chen.github.io/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">锁优化</a>
                         
                     </div>
                 </section>
@@ -313,6 +323,368 @@
 
             <p class="article-more-link">
                 <a href="https://nicky-chen.github.io/2019/05/03/apt_lombok_implement/">more &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chen.github.io/2018/12/19/state-machine/" class="article-date">
+            <time datetime="2018-12-19 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-12-19</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chen.github.io/2018/12/19/state-machine/">实际项目运用之State模式（状态模式）</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 模式简介 定义： 状态模式允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类。这个模式将状态封装成独立的类，并将动作委托到代表当前状态的类的对象
+状态模式的优点： &gt;封装了转换规则 枚举可能的状态，在枚举状态之前需要确定状态种类 将所有与某个状态有关的行为放到一个类中，可方便增加新的状态 允许状态转换逻辑与状态对象合成一体，而非复杂条件语句块 可以让多个环境对象共享一个状态对象，从而减少系统中对象的个数
+状态模式的缺点： &gt;增加系统类和对象的个数 结构与实现都较为复杂，如果使用不当将导致程序结构和代码的混乱 对&rdquo;开闭原则&rdquo;的支持不太好，增加新状态类需在状态类上增加行为方法
+状态模式的适用场景： 1. 对象的行为依赖于它的状态，并且可以在运行时根据状态改变行为。 2. 代码中包含大量与对象状态有关的if/else语句 3. 接口幂等要求
+状态模式和策略模式： 相同点是它们都需要根据需求选择相应的状态或策略 不同点是状态模式是在一个类中通过不同的动作切换不同的状态，而策略模式是为一个类选择某个策略，即状态模式中的Context是和多个状态关联的，而策略模式中的Context只和一个策略关联
+状态模式角色介绍： （1）Context类，依赖倒置原则，通过适配器模式维护状态类 （2）State：抽象状态类或状态接口，用以抽象封装行为 （3）ConcreteState类：具体状态类，实现了State中的抽象方法
+2 实际运用 借贷平台的订单，有审核-发布-抢单 等等 步骤，随着操作的不同，会改变订单的状态，通常通过if/else判断订单的状态，从而实现不同的逻辑，伪代码如下：
+if(审核){ //审核逻辑 }elseif(发布){ //发布逻辑 }elseif(接单){ //接单逻辑 }  上述解决方案缺点非常明显：这类代码难以应对变化，在添加一种状态时，我们需要手动添加if/else，在添加一种功能时，要对所有的状态进行判断。因此代码会变得越来越臃肿，并且一旦没有处理某个状态，便会发生极其严重的BUG，难以维护
+2.1 状态模式应用 状态模式本质上是一种基于状态和事件的 状态机 ,下面是订单流程的状态图
+通过状态图，我们再设计一张横纵坐标关系表来比较，图如下：
+通过上述表 我们可以细化为一个二维数组，来表示状态与事件直接的关系：
+2.2 代码实现 我们通过状态的各种图例分析来用代码实现逻辑
+状态枚举类
+public enum StateEnum { //订单生成 GENERATE(1, &quot;GENERATE&quot;), //已审核 REVIEWED(2, &quot;REVIEWED&quot;), //已发布 PUBLISHED(3, &quot;PUBLISHED&quot;), //待付款 NOT_PAY(4, &quot;NOT_PAY&quot;), //已付款 PAID(5, &quot;PAID&quot;), //已完结 FEED_BACKED(6, &quot;FEED_BACKED&quot;); private int key; private String value; StateEnum(int key, String value) { this.
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chen.github.io/categories/design-pattern/" style="font-size: 12px;">design-pattern</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/%e8%a1%8c%e4%b8%ba%e5%9e%8b/"
+                           style="font-size: 12px;">行为型</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chen.github.io/2018/12/19/state-machine/">more &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chen.github.io/2018/11/17/btree-info/" class="article-date">
+            <time datetime="2018-11-17 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-11-17</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chen.github.io/2018/11/17/btree-info/">数据结构之BTree和B&#43;Tree(多路平衡查找树 )</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 背景 B-Tree是为磁盘等外存储设备设计的一种平衡查找树。因此在讲B-Tree之前先了解下磁盘的相关知识。系统从磁盘读取数据到内存时是以磁盘块（block）为基本单位的，位于同一个磁盘块中的数据会被一次性读取出来，而不是需要什么取什么。 InnoDB存储引擎中有页（Page）的概念，页是其磁盘管理的最小单位。InnoDB存储引擎中默认每个页的大小为16KB，可通过参数innodb_page_size将页的大小设置为4K、8K、16K，在MySQL中可通过如下命令查看页的大小：
+mysql&gt; show variables like 'innodb_page_size';  而系统一个磁盘块的存储空间往往没有这么大，因此InnoDB每次申请磁盘空间时都会是若干地址连续磁盘块来达到页的大小16KB。InnoDB在把磁盘数据读入到磁盘时会以页为基本单位，在查询数据时如果一个页中的每条数据都能有助于定位数据记录的位置，这将会减少磁盘I/O次数，提高查询效率。
+2 定义与特性 B-Tree B-Tree结构的数据可以让系统高效的找到数据所在的磁盘块。为了描述B-Tree，首先定义一条记录为一个二元组[key, data] ，key为记录的键值(关键字)，对应表中的主键值，data为一行记录中除主键外的数据。对于不同的记录，key值互不相同。
+一棵m阶的B-Tree有如下特性： 1. 每个节点最多有m个孩子。 2. 除了根节点和叶子节点外，其它每个节点至少有Ceil(m/2)个孩子。 3. 若根节点不是叶子节点，则至少有2个孩子 4. 所有叶子节点都在同一层，且不包含其它关键字信息 5. 每个非终端节点包含n个关键字信息（P0,P1,…Pn, k1,…kn） 6. 关键字的个数n满足：ceil(m/2)-1 &lt;= n &lt;= m-1 7. ki(i=1,…n)为关键字，且关键字升序排序。 8. Pi(i=1,…n)为指向子树根节点的指针。P(i-1)指向的子树的所有节点关键字均小于ki，但都大于k(i-1)  B树中的每个节点根据实际情况可以包含大量的关键字信息和分支 如下图所示为一个3阶的B-Tree：
+每个节点占用一个盘块的磁盘空间，一个节点上有两个升序排序的关键字和三个指向子树根节点的指针，指针存储的是子节点所在磁盘块的地址。两个关键词划分成的三个范围域对应三个指针指向的子树的数据的范围域。以根节点为例，关键字为17和35，P1指针指向的子树的数据范围小于17，P2指针指向的子树的数据范围为17~35，P3指针指向的子树的数据范围大于35
+模拟查找关键字29的过程： &gt;根据根节点找到磁盘块1，读入内存。【磁盘I/O操作第1次】 比较关键字29在区间（17,35），找到磁盘块1的指针P2。 根据P2指针找到磁盘块3，读入内存。【磁盘I/O操作第2次】 比较关键字29在区间（26,30），找到磁盘块3的指针P2。 根据P2指针找到磁盘块8，读入内存。【磁盘I/O操作第3次】 在磁盘块8中的关键字列表中找到关键字29。 分析上面过程，发现需要3次磁盘I/O操作，和3次内存查找操作。由于内存中的关键字是一个有序表结构，可以利用二分法查找提高效率。而3次磁盘I/O操作是影响整个B-Tree查找效率的决定因素。B-Tree相对于AVLTree缩减了节点个数，使每次磁盘I/O取到内存的数据都发挥了作用，从而提高了查询效率。
+B+Tree
+B+Tree是在B-Tree基础上的一种优化，使其更适合实现外存储索引结构，InnoDB存储引擎就是用B+Tree实现其索引结构。
+从B-Tree图可以看到每个节点中不仅包含数据的key值，还有data值。而每一个页的存储空间是有限的，如果data数据较大时将会导致每个节点（即一个页）能存储的key的数量很小，当存储的数据量很大时同样会导致B-Tree的深度较大，增大查询时的磁盘I/O次数，进而影响查询效率。在B+Tree中，所有数据记录节点都是按照键值大小顺序存放在同一层的叶子节点上，而非叶子节点上只存储key值信息，这样可以大大加大每个节点存储的key值数量，降低B+Tree的高度。
+B+Tree相对于B-Tree有几点不同： 非叶子节点只存储键值信息。 所有叶子节点之间都有一个链指针。 数据记录都存放在叶子节点中。  将B-Tree优化，由于B+Tree的非叶子节点只存储键值信息，假设每个磁盘块能存储4个键值及指针信息，则变成B+Tree后其结构如下图所示:
+通常在B+Tree上有两个头指针，一个指向根节点，另一个指向关键字最小的叶子节点，而且所有叶子节点（即数据节点）之间是一种链式环结构。因此可以对B+Tree进行两种查找运算：一种是对于主键的范围查找和分页查找，另一种是从根节点开始，进行随机查找。
+可能上面例子中只有22条数据记录，看不出B+Tree的优点，下面做一个推算：
+InnoDB存储引擎中页的大小为16KB，一般表的主键类型为INT（占用4个字节）或BIGINT（占用8个字节），指针类型也一般为4或8个字节，也就是说一个页（B+Tree中的一个节点）中大概存储16KB/(8B+8B)=1K个键值（因为是估值，为方便计算，这里的K取值为10^3,计算可得深度为3的树可以存储10亿数量级数据
+实际情况中每个节点可能不能填充满，因此在数据库中，B+Tree的高度一般都在2-4层。mysql的InnoDB存储引擎在设计时是将根节点常驻内存的，也就是说查找某一键值的行记录时最多只需要1~3次磁盘I/O操作
+B+Tree索引可以分为聚集索引（clustered index）和非聚簇索引（secondary index）。上面B+Tree示例图在数据库中的实现即为聚集索引
+聚集索引的B+Tree中的叶子节点存放的是整张表的行记录数据。非聚簇索引与聚集索引的区别在于非聚簇索引的叶子节点并不包含行记录的全部数据，而是存储相应行数据的聚集索引键，即主键。当通过非聚簇索引来查询数据时，InnoDB存储引擎会遍历非聚簇索引找到主键，然后再通过主键在聚集索引中找到完整的行记录数据
+# 3 B树 3.
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chen.github.io/categories/algorithm/" style="font-size: 12px;">Algorithm</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84/"
+                           style="font-size: 12px;">数据结构</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chen.github.io/2018/11/17/btree-info/">more &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chen.github.io/2018/10/15/id-redis/" class="article-date">
+            <time datetime="2018-10-15 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-10-15</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chen.github.io/2018/10/15/id-redis/">分布式全局序列ID方案之Redis优化方案</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 Redis的Flicker方案 利用redis的lua脚本功能，在每个节点上通过lua脚本生成唯一ID，生成的ID为64位，具体如下：
+使用41 bit来存放时间，精确到毫秒，可以使用到2039年 使用12 bit来存放逻辑分片ID，最大分片ID是4095 使用10 bit来存放自增长ID，则每个节点，每毫秒最多可生成1024个ID 比如GTM时间 2018年6月24日11点23分 ，它的距1970年的毫秒数是 1529810591000，假定分片ID是60，自增长序列是20，则生成的ID是：
+6416490681073670164 = 1529810591000 &lt;&lt; 22 | 60 &lt;&lt; 10 | 20 redis提供了TIME命令，取得redis服务器的秒值和微秒值 毫秒值获取命令：EVAL &quot;local current = redis.call('TIME') ;return a[1]*1000 + a[2]/1000&quot; 0 生成最终ID : current &lt;&lt; (12 + 10)) | (shardingId &lt;&lt; 10) | seq  2 ID原子性自增方案 2.1 Redis HINCRBY 命令 Redis 的 INCR 命令支持 “INCR AND GET” 原子操作。利用这个特性，我们可以在 Redis 中存序列号，让分布式环境中多个取号服务在 Redis 中通过 INCR 命令来实现取号；同时 Redis 是单进程单线程架构，不会因为多个取号方的 INCR 命令导致取号重复。因此，基于 Redis 的 INCR 命令实现序列号的生成基本能满足全局唯一与单调递增的特性，并且性能还不错。
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chen.github.io/categories/distribution/" style="font-size: 12px;">distribution</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/%e5%88%86%e5%b8%83%e5%bc%8fid%e6%96%b9%e6%a1%88/"
+                           style="font-size: 12px;">分布式ID方案</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chen.github.io/2018/10/15/id-redis/">more &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chen.github.io/2018/09/25/id-flicker/" class="article-date">
+            <time datetime="2018-09-25 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-09-25</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chen.github.io/2018/09/25/id-flicker/">分布式全局序列ID方案之Flicker优化方案</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 Flicker的解决方案 MySQL中id自增的特性，可以借此来生成全局的序列号，Flicker在解决全局ID生成方案里就采用了MySQL自增长ID的机制（auto_increment + replace into + MyISAM）。一个生成64位ID方案具体就是这样的： 先创建单独的数据库，然后创建一个表：
+CREATE TABLE borrow_order ( id bigint(20) unsigned NOT NULL auto_increment, stub char(1) NOT NULL default '', PRIMARY KEY (id), UNIQUE KEY stub (stub) ) ENGINE=MyISAM  当我们插入记录后，执行SELECT * from borrow_order ，查询结果就是这样的：
++-------------------+------+ | id | stub | +-------------------+------+ | 1 | 192.168.100.102 | +-------------------+------+  在我们的应用端需要做下面这两个操作，在一个事务会话里提交：
+REPLACE INTO borrow_order (stub) VALUES ('192.168.100.102'); SELECT LAST_INSERT_ID();  上述操作，通过 replace into 操作，首先尝试插入数据到表中，如果发现表中已经有此行数据则先删除此行数据，然后插入新的数据。 如果没有此行数据的话，直接插入新数据。注意：插入的行字段需要有主键索引或者唯一索引，否则会出错
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chen.github.io/categories/distribution/" style="font-size: 12px;">distribution</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/%e5%88%86%e5%b8%83%e5%bc%8fid%e6%96%b9%e6%a1%88/"
+                           style="font-size: 12px;">分布式ID方案</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chen.github.io/2018/09/25/id-flicker/">more &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chen.github.io/2018/09/19/id-snowflake/" class="article-date">
+            <time datetime="2018-09-19 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-09-19</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chen.github.io/2018/09/19/id-snowflake/">分布式全局序列ID方案之Snowflake算法</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            #1 背景 在分布式项目中，在业务数据中需要生成一个全局唯一的序列号，比如：消息标识，订单标识，用户标识等等。同时对于id生成的要求如下： * 全局唯一 * 趋势有序 * 主键索引 方便排序 * 高可用 * 高并发
+#2 基础方案
+###2.1 数据库主键自增 利用mysql的auto_increment特性 &gt;优点： （1）能够保证唯一性 （2）能够保证递增性 （3）步长固定
+ 缺点： （1）无法高可用：普通的一主多从+读写分离架构，自增ID写入请求，主库挂了就GG （2）无法高并发：写入是单点，数据库主库的写性能决定ID的生成性能上限，并且难以扩展
+ ###2.2 UUID uuid算法是比较常用的算法，根据UUID的特性，可以产生一个唯一的字符串
+ 优点： （1）本地生成ID，无需远程服务调用，低延时 （2）扩展性好，基本可以-认为没有性能上限
+缺点： （1）无法保证趋势递增 （2）uuid字符串过长，作为主键建立索引查询效率低，常见优化方案为“转化为两个uint64整数存储”或者“折半存储”（折半后不能保证唯一性） （3）如使用实现版本的=不一样，在高并发情况下可能会出现UUID重复情况
+ ###2.3 时间戳
+ 优点： （1）本地生成ID，无需远程调用，低延时 （2）ID趋势递增 （3）ID是整数，建立索引后查询效率高
+缺点： （1）如果并发量超过1000，会生成重复的ID
+ #3 Twitter Snowflake
+###3.1 简介 snowflake是twitter开源的分布式ID生成算法，其核心思想是：一个long型的ID，使用其中41bit作为毫秒数，10bit作为机器编号，12bit作为毫秒内序列号。这个算法单机每秒内理论上最多可以生成1000*(2^12)，也就是400W的ID，完全能满足业务的需求
+###3.2 图示详解 （1）1位：标识部分，在java中由于long的最高位是符号位，正数是0，负数是1，一般生成的ID为正数，所以为0
+（2）41位：时间戳部分，这个是毫秒级的时间，_一般实现上不会存储当前的时间戳，而是时间戳的差值（当前时间-固定的开始时间）_，这样可以使产生的ID从更小值开始；41位的时间戳可以使用69年，(1L &lt;&lt; 41) / (1000L * 60 * 60 * 24 * 365) = 69年
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chen.github.io/categories/distribution/" style="font-size: 12px;">distribution</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/%e5%88%86%e5%b8%83%e5%bc%8fid%e6%96%b9%e6%a1%88/"
+                           style="font-size: 12px;">分布式ID方案</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chen.github.io/2018/09/19/id-snowflake/">more &gt;&gt;</a>
             </p>
 
             <div class="clearfix"></div>
@@ -595,373 +967,6 @@ Spring中创建Bean的方式有三种：
 
             <p class="article-more-link">
                 <a href="https://nicky-chen.github.io/2018/08/12/spring-bean-lifecycle/">more &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chen.github.io/2018/08/09/aqs-condition/" class="article-date">
-            <time datetime="2018-08-09 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-09</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chen.github.io/2018/08/09/aqs-condition/">并发基础之Condition(等待队列)</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            1 定义 Condition是在AQS中配合使用的wait/nofity线程通信协调工具类，我们可以称之为等待队列
-Condition定义了等待/通知两种类型的方法，当前线程调用这些方法时，需要提前获取到Condition对象关联的锁。Condition对象是调用Lock对象的newCondition()方法创建出来的，换句话说，Condition是依赖Lock对象。
-Condition与Object中监视器方法不同点 &gt;condition可以有多个等待队列 monitor只有一个队列在对象头中 condition的等待可以自定义超时时间 conditon的signal 是唤醒等待队列头部的线程节点， Object的notify是随机唤醒 condition对象的属性对开发者透明
-2 Condition使用 demo代码如下
-public class MyService { private Lock lock = new ReentrantLock(); private Condition condition = lock.newCondition(); public void await() { try { lock.lock(); System.out.println(&quot;A&quot;); condition.await(); System.out.println(&quot;B&quot;); } catch (InterruptedException e) { e.printStackTrace(); }finally { lock.unlock(); System.out.println(&quot;锁释放了&quot;); } } public void signal() { try { lock.lock(); condition.signal(); System.out.println(&quot;唤醒时间 ：&quot; + System.currentTimeMillis()); } catch (Exception e) { e.
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chen.github.io/categories/concurrent/" style="font-size: 12px;">concurrent</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/%e5%a4%9a%e7%ba%bf%e7%a8%8b/"
-                           style="font-size: 12px;">多线程</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chen.github.io/2018/08/09/aqs-condition/">more &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chen.github.io/2018/08/07/cache-redis-optimize/" class="article-date">
-            <time datetime="2018-08-07 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-07</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chen.github.io/2018/08/07/cache-redis-optimize/">Redis注意事项及常见优化</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            1 键值设计 1.1 key名设计  (1)【建议】: 可读性和可管理性  以业务名(或数据库名)为前缀(防止key冲突)，用冒号分隔，比如业务名:表名:id
-roborder:user:1:amount   (2)【建议】：简洁性  保证语义的前提下，控制key的长度，当key较多时，内存占用也不容忽视，例如：
-user:{uid}:friends:messages:{mid} 简化为 u:{uid}:fr:m:{mid}。   (3)【强制】：不要包含特殊字符  反例：包含空格、换行、单双引号以及其他转义字符
-1.2 value设计  (1)【强制】：拒绝bigkey(防止网卡流量、慢查询)  string类型控制在10KB以内，hash、list、set、zset元素个数不要超过5000。
-反例：一个包含200万个元素的list。
-非字符串的bigkey，不要使用del删除，使用hscan、sscan、zscan方式渐进式删除，同时要注意防止bigkey过期时间自动删除问题(例如一个200万的zset设置1小时过期，会触发del操作，造成阻塞，而且该操作不会不出现在慢查询中(latency可查))
- (2)【推荐】：选择适合的数据类型。  例如：实体类型(要合理控制和使用数据结构内存编码优化配置,例如ziplist，但也要注意节省内存和性能之间的平衡)
-反例：
-set user:1:name tom set user:1:age 19 set user:1:favor football  正例:
-hmset user:1 name tom age 19 favor football   (3)【推荐】：控制key的生命周期，redis不是垃圾桶。  建议使用expire设置过期时间(条件允许可以打散过期时间，防止集中过期)，不过期的数据重点关注idletime。同时设置时间的时候注意原子性操作，否则可能出现死锁情况
- (4)【推荐】hash，set，zset，list 存储过多的元素优化 可以将这些元素分拆，通过hash取模的方式 正常存取流程是 hget(hashKey, field) ; hset(hashKey, field, value) 现在，固定一个桶的数量，比如 100， 每次存取的时候，先在本地计算field的hash值，模除 100， 确定了该field落在哪个key上。  newHashKey = hashKey + hash(field) % 10000; hset (newHashKey, field, value) ; hget(newHashKey, field)  set, zset, list 也可以类似上述做法,如果对于顺序有严格要求的则不试用
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chen.github.io/categories/cache/" style="font-size: 12px;">cache</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/redis/"
-                           style="font-size: 12px;">redis</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chen.github.io/2018/08/07/cache-redis-optimize/">more &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chen.github.io/2018/08/04/aqs_chapter02/" class="article-date">
-            <time datetime="2018-08-04 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-04</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chen.github.io/2018/08/04/aqs_chapter02/">并发基础之AQS同步器（二）</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            在AQS同步器组件原理分析前，我们需要了解同步队列这个概念，了解同步队列中节点的入队和出队的流程，CHL同步队列的由来，可以参考我之前的文章： 并发基础之AQS同步器（一）
-1 同步队列 同步器依赖内部的同步队列（一个FIFO双向队列）来完成同步状态的管理，当前线程获取同步状态失败时，同步器会将当前线程以及等待状态等信息构造成为一个节点（Node）并将其加入同步队列，同时会阻塞当前线程，当同步状态释放时，会把首节点中的线程唤醒，使其再次尝试获取同步状态
-FIFO队列Node对象的具体实现如下：
-static final class Node { static final Node SHARED = new Node(); static final Node EXCLUSIVE = null; static final int CANCELLED = 1; static final int SIGNAL = -1; static final int CONDITION = -2; static final int PROPAGATE = -3; volatile int waitStatus; volatile Node prev; volatile Node next; volatile Thread thread; Node nextWaiter; .final boolean isShared() { return nextWaiter == SHARED; } final Node predecessor() throws NullPointerException { Node p = prev; if (p == null) throw new NullPointerException(); else return p; } Node() { } Node(Thread thread, Node mode) { this.
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chen.github.io/categories/concurrent/" style="font-size: 12px;">concurrent</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/%e5%a4%9a%e7%ba%bf%e7%a8%8b/"
-                           style="font-size: 12px;">多线程</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chen.github.io/2018/08/04/aqs_chapter02/">more &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chen.github.io/2018/08/01/cache-redis-slowlog/" class="article-date">
-            <time datetime="2018-08-01 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-01</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chen.github.io/2018/08/01/cache-redis-slowlog/">Redis之慢查询日志</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            Redis提供了5种数据结构,但除此之外,Redis还提供了注入慢查询分析,Redis Shell、Pipeline、事务、与Lua脚本、Bitmaps、HyperLogLog、PubSub、GEO等附加功能,这些功能可以在某些场景发挥很重要的作用.
- 慢查询分析 许多存储系统(如:MySQL)提供慢查询日志帮助开发与运维人员定位系统存在的慢操作.所谓慢查询日志就是系统在命令执行前后计算每条命令的执行时间,当超过预设阈值,就将这条命令的相关信息(例如:发生时间,耗时,命令的详细信息)记录到慢查询日志中,Redis也提供了类似的功能.
-Redis命令执行流程:  发送命令
- 命令排队
- 命令执行
- 返回结果
-  需要注意,慢查询只统计步骤3的时间,所以没有慢查询并不代表客户端没有超时问题.
-1) 慢查询的两个配置参数 对于慢查询功能,需要明确两件事:
- 预设阈值怎么设置?
- 慢查询记录存放在那?
-  Redis提供了slowlog-log-slower-than和slowlog-max-len配置来解决这两个问题.从字面意思就可以看出,slowlog-log-slower-than就是这个预设阈值,它的单位是毫秒(1秒=1000000微秒)默认值是10000,假如执行了一条&rdquo;很慢&rdquo;的命令(例如key *),如果执行时间超过10000微秒,那么它将被记录在慢查询日志中.
- 如果slowlog-log-slower-than=0会记录所有命令,slowlog-log-slower-than&lt;0对于任何命令都不会进行记录.
- 从字面意思看,slowlog-max-len只是说明了慢查询日志最多存储多少条,并没有说明存放在哪里?实际上Redis使用了一个列表来存储慢查询日志,slowlog-max-len就是列表的最大长度.一个新的命令满足慢查询条件时被插入到这个列表中,当慢查询日志列表已处于其最大长度时,最早插入的一个命令将从列表中移出,例如slowlog-max-len设置长度为64.当有第65条慢查询日志插入的话,那么队头的第一条数据就出列,第65条慢查询就会入列.
-在Redis中有两种修改配置的方法,一种是修改配置文件,另一种是使用config set命令动态修改.例如下面使用config set命令将slowlog-log-slower-than设置为20000微妙.slowlog-max-len设置为1024:
- config set slowlog-log-slower-than 20000 config set slowlog-max-len 1024 config rewrite  如果需要将Redis将配置持久化到本地配置文件,要执行config rewrite命令.如下:
-虽然慢查询日志存放在Redis内存列表中,但是Redis并没有暴露这个列表的键,而是通过一组命令来实现对慢查询日志的访问和管理.
-(1) 获取慢查询日志
-slowlog get [n]  参数n可以指定条数.
-例:
- 127.0.0.1:6370&gt; slowlog get 1) 1) (integer) 666 2) (integer) 1456786500 3) (integer) 11615 4) 1) &quot;BGREWRITEAOF&quot; 2) 1) (integer) 665 2) (integer) 1456718400 3) (integer) 12006 4) 1) &quot;SETEX&quot; 2) &quot;video_info_200&quot; 3) &quot;300&quot; 4) &quot;2&quot; .
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chen.github.io/categories/cache/" style="font-size: 12px;">cache</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/redis/"
-                           style="font-size: 12px;">redis</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chen.github.io/2018/08/01/cache-redis-slowlog/">more &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chen.github.io/2018/07/31/aqs_chapter01/" class="article-date">
-            <time datetime="2018-07-31 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-07-31</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chen.github.io/2018/07/31/aqs_chapter01/">并发基础之AQS同步器（一）</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            1 AQS同步器 队列同步器AbstractQueuedSynchronizer，是用来构建锁或者其他同步组件的基础框架，它使用了一个int成员变量表示同步状态，通过内置的FIFO队列来完成资源获取线程的排队工作，并发包的作者（Doug Lea）期望它能够成为实现大部分同步需求的基础。
-同步器的主要使用方式是继承，子类通过继承同步器并实现它的抽象方法来管理同步状态，在抽象方法的实现过程中免不了要对同步状态进行更改，这时就需要使用同步器提供的3个方法 &gt;getState() setState(int newState) compareAndSetState(int expect,int update)
-来进行操作，因为它们能够保证状态的改变是安全的。这样就可以方便实现不同类型的同步组件（ReentrantLock、ReentrantReadWriteLock和CountDownLatch等）
-核心操作方式：
-场景1：阻塞直到获取指定资源数
-场景2：可中断限时等待直到获取指定资源数
-场景3：直接尝试获取指定资源数
-场景4：释放指定资源数
-上述四个步骤又都可以分为 共享（share）操作和独占（exclusive） 操作两种，如果AQS设计的足够好，则所有的容器类只需要控制资源数目、获取的资源量和释放的资源量即可
-下图（独占和共享的方法调用）：
-acquire用来表示是获取资源数的操作，而release表示用来释放资源数的操作，不带Shared表示是独占的操作。如果我们没有实现红色圆角矩形框的方法却间接调用了，将会抛出著名的UnsupportedOperationException异常。
-2 队列同步器的接口 同步器的设计是基于模板方法模式 模板方法将会调用使用者重写的方法 重写同步器指定的方法时，需要使用同步器提供的如下3个方法来访问或修改同步状态。 * getState()：获取当前同步状态。 * setState(int newState)：设置当前同步状态。 * compareAndSetState(int expect,int update)：使用CAS设置当前状态，该方法能够保证状态设置的原子性。
-独占锁操作方法说明如下：
-共享锁操作方法如下：
-同步器提供的模板方法基本上分为3类： &gt;独占式获取与释放同步状态 共享式获取与释放 同步状态和查询同步队列中的等待线程情况
-自定义同步组件将使用同步器提供的模板方法来实现自己的同步语义。只有掌握了同步器的工作原理才能更加深入地理解并发包中其他的并发组件
-自定义同步组件 :::java public class Mutex implements Lock { public static void main(String[] args) { Mutex mutex = new Mutex(); CountDownLatch latch = new CountDownLatch(1); Test test = new Test(); ExecutorService pool = Executors.
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chen.github.io/categories/concurrent/" style="font-size: 12px;">concurrent</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chen.github.io/tags/%e5%a4%9a%e7%ba%bf%e7%a8%8b/"
-                           style="font-size: 12px;">多线程</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chen.github.io/2018/07/31/aqs_chapter01/">more &gt;&gt;</a>
             </p>
 
             <div class="clearfix"></div>

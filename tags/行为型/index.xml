@@ -7,17 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
-    <lastBuildDate>Thu, 19 Jul 2018 11:18:15 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 19 Dec 2018 11:18:15 +0800</lastBuildDate>
     
 	<atom:link href="https://nicky-chen.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>实际项目运用之State模式（状态模式）</title>
-      <link>https://nicky-chen.github.io/2018/07/19/state-machine/</link>
-      <pubDate>Thu, 19 Jul 2018 11:18:15 +0800</pubDate>
+      <link>https://nicky-chen.github.io/2018/12/19/state-machine/</link>
+      <pubDate>Wed, 19 Dec 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/07/19/state-machine/</guid>
+      <guid>https://nicky-chen.github.io/2018/12/19/state-machine/</guid>
       <description>1 模式简介 定义： 状态模式允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类。这个模式将状态封装成独立的类，并将动作委托到代表当前状态的类的对象
 状态模式的优点： &amp;gt;封装了转换规则 枚举可能的状态，在枚举状态之前需要确定状态种类 将所有与某个状态有关的行为放到一个类中，可方便增加新的状态 允许状态转换逻辑与状态对象合成一体，而非复杂条件语句块 可以让多个环境对象共享一个状态对象，从而减少系统中对象的个数
 状态模式的缺点： &amp;gt;增加系统类和对象的个数 结构与实现都较为复杂，如果使用不当将导致程序结构和代码的混乱 对&amp;rdquo;开闭原则&amp;rdquo;的支持不太好，增加新状态类需在状态类上增加行为方法

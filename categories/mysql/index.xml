@@ -55,5 +55,43 @@ proc_parameter指定存储过程的参数列表，列表形式如下：
 characteristic: LANGUAGE SQL | [NOT] DETERMINISTIC | { CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA } | SQL SECURITY { DEFINER | INVOKER } | COMMENT &#39;string&#39; routine_body: Valid SQL procedure statement or statements  LANGUAGE SQL ：说明routine_body部分是由SQL语句组成的，当前系统支持的语言为SQL，SQL是LANGUAGE特性的唯一值</description>
     </item>
     
+    <item>
+      <title>库级优化之SHOW GLOBAL STATUS</title>
+      <link>https://nicky-chen.github.io/2017/09/12/show-global-status/</link>
+      <pubDate>Tue, 12 Sep 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2017/09/12/show-global-status/</guid>
+      <description>慢查询
+//查询慢线程情况 show global status like &#39;%slow%&#39; +---------------------+-------+ | Variable_name | Value | +---------------------+-------+ | Slow_launch_threads | 1 | | Slow_queries | 100 | +---------------------+-------+ 如果Slow_launch_threads值较大，说明有些东西正在延迟连接的新线程 //查询慢查询日志是否开启 show variables like &#39;%slow%&#39; +---------------------+--------------------------------------+ | Variable_name | Value | +---------------------+--------------------------------------+ |log_slow_admin_statements| ON | |log_slow_slave_statements| OFF | | slow_launch_time | 2 | | slow_query_log | ON | | slow_query_log_file | /home/mysql/mysql/slow_query.log | +---------------------+--------------------------------------+ log_slow_admin_statements表示是否将慢管理语句例如ANALYZE TABLE和ALTER TABLE等记入慢查询日志 log_slow_slave_statements 表示是否管理分区慢查询记录，一般不会去选择分区，所以不考虑  配置中一定要开启慢查询，这对服务器性能损耗并不大，如上面的打印结果得知：超过2秒即为慢查询，一共有100条慢查询 。当然我们在后台也可以做sql拦截记录，定制化慢查询语句。通常，可以通过mybatis插件拦截耗时sql打印日志
+连接数
+//mysql的最大连接数 show global status like &#39;max_connections&#39;; +-----------------+-------+ | Variable_name | Value | +-----------------+-------+ | max_connections | 500 | +-----------------+-------+ 常见的问题&amp;quot;MYSQL: ERROR 1040: Too many connections&amp;quot;的异常情况，造成这种情况的一种原因是用户访问量过高, MySQL服务器抗不住也有可能是最大连接数设置的过小，需要注意 //服务器响应的最大连接数 show global status like &#39;max_used_connections&#39;; +----------------------+-------+ | Variable_name | Value | +----------------------+-------+ | Max_used_connections | 450 | +----------------------+-------+  设置的最大连接数是500，而响应的连接数是498，max_used_connections / max_connections * 100% = 90% （理想值 ≈ 85%）。</description>
+    </item>
+    
+    <item>
+      <title>后端开发需要了解的mysql优化方向</title>
+      <link>https://nicky-chen.github.io/2017/06/13/optimize-picture/</link>
+      <pubDate>Tue, 13 Jun 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2017/06/13/optimize-picture/</guid>
+      <description>#优化思维导图 #参数优化注意事项 参数优化分为 动态参数配置 和 配置文件的配置，建议在启动mysql之前配置好优化参数，这样将会全局有效，如使用动态参数配置可能会不生效或出现问题,并且如果数据库重启那么之前的优化参数都会失效
+SHOW VARIABLES LIKE &#39;sort%&#39; 修改会话级变量 set SESSION sort_buffer_size=720000 退出重新连接后，此参数恢复原值 修改全局变量 set GLOBAL sort_buffer_size = 720000  #优化系列 库级优化之SHOW GLOBAL STATUS</description>
+    </item>
+    
+    <item>
+      <title>数据库设计三范式和反范式</title>
+      <link>https://nicky-chen.github.io/2017/05/07/design-rule/</link>
+      <pubDate>Sun, 07 May 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chen.github.io/2017/05/07/design-rule/</guid>
+      <description>数据库范式 范式的级别 设计关系数据库时，遵从不同的规范要求，设计出合理的关系型数据库，这些不同的规范要求被称为不同的范式，各种范式呈递次规范，越高的范式数据库冗余越小。 目前关系数据库有六种范式：第一范式（1NF）、第二范式（2NF）、第三范式（3NF）、巴斯-科德范式（BCNF）、第四范式(4NF）和第五范式（5NF，又称完美范式）。 范式越高，冗余最低，一般到三范式，再往上，表越多，可能导致查询效率下降。所以有时为了提高运行效率，可以让数据冗余(反三范式，一般某个数据经常被访问时，比如数据表里存放了语文数学英语成绩，但是如果在某个时间经常要得到它的总分，每次都要进行计算会降低性能，可以加上总分这个冗余字段)。 后面的范式是在满足前面范式的基础上，比如满足第二范式的一定满足第一范式。 第一范式（1NF）：确保每一列的原子性 如果每一列都是不可再分的最小数据单元，则满足第一范式。 但是具体地址到底要不要拆分 还要看具体情形，比如看看将来会不会按国家或者省市进行分类汇总或者排序，如果需要，最好就拆，如果不需要而仅仅起字符串的作用，可以不拆，操作起来更方便。
+第二范式:非键字段必须依赖于键字段 如果一个关系满足1NF，并且除了主键以外的其它列，都依赖与该主键，则满足二范式(2NF)，第二范式要求每个表只描述一件事。例如： 第三范式：在1NF基础上，除了主键以外的其它列都不传递依赖于主键列，或者说： 任何非主属性不依赖于其它非主属性（在2NF基础上消除传递依赖）
+例如：上面的表，学号和姓名存在传递依赖，因为(学号，姓名)-&amp;gt;成绩，学号-&amp;gt;成绩，姓名-&amp;gt;成绩。所以学号和姓名有一个冗余了，只需要保留一个。
+范式的优点：
+ 1）范式化的数据库更新起来更加快； 2）范式化之后，只有很少的重复数据，只需要修改更少的数据； 3）范式化的表更小，可以在内存中执行； 4）很少的冗余数据，在查询的时候需要更少的distinct或者group by语句。  范式的缺点：
+ 范式化的表，在查询的时候经常需要很多join关联,增加让查询的代价  反范式的优点：
+ 1）可以避免关联，因为所有的数据几乎都可以在一张表上显示； 2）可以设计有效的索引；  反范式的缺点：
+表格内的冗余较多，删除数据时候会造成表有些有用的信息丢失。  所以在设计数据库时，要注意混用范式化和反范式化。</description>
+    </item>
+    
   </channel>
 </rss>
