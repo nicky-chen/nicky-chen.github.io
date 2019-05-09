@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="119c48ed-5227-48e3-b916-4f239060df21" name="Revert: 加入相关文章和导航" comment="fix: 分享问题">
-      <change afterPath="$PROJECT_DIR$/66eb9d80f3286c2c541ee3a02987f952.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BingSiteAuth.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/baidu_verify_hQv78SaWqG.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/google69c9f2bd4612e0c7.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="119c48ed-5227-48e3-b916-4f239060df21" name="Revert: 加入相关文章和导航" comment="fix: 分享问题" />
     <list id="b5937023-c407-40d8-b7aa-bcba4a685ed0" name="Default" comment="" />
     <ignored path=".idea/vcs.xml" />
     <ignored path=".idea/inspectionProfiles/profiles_settings.xml" />
@@ -105,6 +99,15 @@
         </counts>
       </usages-collector>
     </session>
+    <session id="-553256802">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="1" />
+          <entry key="project.open.time.1" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+    </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
@@ -194,7 +197,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" fullScreen="true">
     <option name="y" value="23" />
     <option name="width" value="1440" />
     <option name="height" value="877" />
@@ -207,7 +210,6 @@
     <panes>
       <pane id="AndroidView" />
       <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -224,12 +226,14 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1557314138831" />
+    <property name="ignore_missing_gitignore" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.import" />
   </component>
@@ -326,6 +330,7 @@
       <workItem from="1557306763456" duration="1769000" />
       <workItem from="1557313972015" duration="95000" />
       <workItem from="1557314070324" duration="125000" />
+      <workItem from="1557367034076" duration="7000" />
     </task>
     <task id="LOCAL-00013" summary="网站图标">
       <created>1527586699272</created>
@@ -674,13 +679,13 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13453000" />
+    <option name="totallyTimeSpent" value="13460000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3118741" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.31616595" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="JRebel" order="3" side_tool="true" />
@@ -822,13 +827,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/1/01/01/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="10" column="2" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/1/01/01/index.html" />
     <entry file="file://$PROJECT_DIR$/static/api/img/share/icons_0_24.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
