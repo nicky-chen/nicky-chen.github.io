@@ -820,7 +820,11 @@ public abstract class AbstractDO implements Externalizable { private static fina
       <pubDate>Sun, 17 Jun 2018 11:18:15 +0800</pubDate>
       
       <guid>https://nicky-chen.github.io/2018/06/17/architect/</guid>
-      <description>《后端架构师技术图谱》  数据结构  队列 集合 链表、数组 字典、关联数组 栈 树  二叉树 完全二叉树 平衡二叉树 二叉查找树（BST） 红黑树 B-，B+，B*树 LSM 树  BitSet  常用算法  排序、查找算法  选择排序 冒泡排序 插入排序 快速排序 归并排序 希尔排序 堆排序 计数排序 桶排序 基数排序 二分查找 Java 中的排序工具  布隆过滤器 字符串比较  KMP 算法  深度优先、广度优先 贪心算法 回溯算法 剪枝算法 动态规划 朴素贝叶斯 推荐算法 最小生成树算法 最短路径算法  并发  Java 并发 多线程 线程安全 一致性、事务  事务 ACID 特性 事务的隔离级别 MVCC  锁  Java中的锁和同步类 公平锁 &amp;amp; 非公平锁 悲观锁 乐观锁 &amp;amp; CAS ABA 问题 CopyOnWrite容器 RingBuffer 可重入锁 &amp;amp; 不可重入锁 互斥锁 &amp;amp; 共享锁 死锁   操作系统  计算机原理 CPU  多级缓存  进程 线程 协程 Linux  设计模式  设计模式的六大原则 23种常见设计模式 应用场景 单例模式 责任链模式 MVC IOC AOP UML 微服务思想  康威定律   运维 &amp;amp; 统计 &amp;amp; 技术支持  常规监控 APM 统计分析 持续集成(CI/CD)  Jenkins 环境分离  自动化运维  Ansible puppet chef  测试  TDD 理论 单元测试 压力测试 全链路压测 A/B 、灰度、蓝绿测试  虚拟化  KVM Xen OpenVZ  容器技术  Docker  云技术  OpenStack  DevOps 文档管理  中间件  Web Server  Nginx OpenResty Apache Httpd Tomcat  架构原理 调优方案  Jetty  缓存  本地缓存  客户端缓存 服务端缓存  Web缓存 Memcached Redis  架构 回收策略  Tair  消息队列  消息总线 消息的顺序 RabbitMQ RocketMQ ActiveMQ Kafka Redis 消息推送 ZeroMQ  定时调度  单机定时调度 分布式定时调度  RPC  Dubbo Thrift gRPC  数据库中间件  Sharding Jdbc  日志系统  日志搜集  配置中心 API 网关  网络  协议  OSI 七层协议 TCP/IP HTTP HTTP2.</description>
+      <description>《后端架构师技术图谱》 数据结构 队列  《java队列——queue详细分析》
+ 非阻塞队列：ConcurrentLinkedQueue(无界线程安全)，采用CAS机制（compareAndSwapObject原子操作）。 阻塞队列：ArrayBlockingQueue(有界)、LinkedBlockingQueue（无界）、DelayQueue、PriorityBlockingQueue，采用锁机制；使用 ReentrantLock 锁。  《LinkedList、ConcurrentLinkedQueue、LinkedBlockingQueue对比分析》
+  集合  《Java Set集合的详解》  链表、数组  《Java集合详解&amp;ndash;什么是List》  字典、关联数组  《Java map 详解 - 用法、遍历、排序、常用API等》  栈  《java数据结构与算法之栈（Stack）设计与实现》 《Java Stack 类》 《java stack的详细实现分析》  Stack 是线程安全的。 内部使用数组保存数据，不够时翻倍。   树 二叉树 每个节点最多有两个叶子节点。 * 《二叉树》
+完全二叉树  《完全二叉树》  叶节点只能出现在最下层和次下层，并且最下面一层的结点都集中在该层最左边的若干位置的二叉树。   平衡二叉树 左右两个子树的高度差的绝对值不超过1，并且左右两个子树都是一棵平衡二叉树。 * 《浅谈数据结构-平衡二叉树》 * 《浅谈算法和数据结构: 八 平衡查找树之2-3树》
+二叉查找树（BST） 二叉查找树（Binary Search Tree），也称有序二叉树（ordered binary tree）,排序二叉树（sorted binary tree）。</description>
     </item>
     
     <item>
