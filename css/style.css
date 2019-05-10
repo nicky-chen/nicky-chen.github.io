@@ -1032,13 +1032,13 @@ a {
     background: url("/img/TiddlyWiki.png") center no-repeat #6283dd;
 }
 
-#header .header-nav .social .简书:before {
+#header .header-nav .social .wechat:before {
     content: '\f18a';
     color: transparent;
 }
 
-#header .header-nav .social #简书 {
-    background: url("/img/简书.png") center no-repeat #e99888;
+#header .header-nav .social #wechat {
+    background: url("/img/wechat.png") center no-repeat #e99888;
 }
 
 #header .header-nav .social .SegmentFault:before {
