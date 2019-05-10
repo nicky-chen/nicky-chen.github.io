@@ -59,7 +59,7 @@ acquire用来表示是获取资源数的操作，而release表示用来释放资
 共享锁操作方法如下：
 同步器提供的模板方法基本上分为3类： &amp;gt;独占式获取与释放同步状态 共享式获取与释放 同步状态和查询同步队列中的等待线程情况
 自定义同步组件将使用同步器提供的模板方法来实现自己的同步语义。只有掌握了同步器的工作原理才能更加深入地理解并发包中其他的并发组件
-自定义同步组件 :::java public class Mutex implements Lock { public static void main(String[] args) { Mutex mutex = new Mutex(); CountDownLatch latch = new CountDownLatch(1); Test test = new Test(); ExecutorService pool = Executors.</description>
+自定义同步组件 public class Mutex implements Lock { public static void main(String[] args) { Mutex mutex = new Mutex(); CountDownLatch latch = new CountDownLatch(1); Test test = new Test(); ExecutorService pool = Executors.</description>
     </item>
     
   </channel>
