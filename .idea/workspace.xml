@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b5937023-c407-40d8-b7aa-bcba4a685ed0" name="Default" comment="fix: 修改wechat">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="b5937023-c407-40d8-b7aa-bcba4a685ed0" name="Default" comment="fix: 修改归档地址" />
     <ignored path=".idea/vcs.xml" />
     <ignored path=".idea/inspectionProfiles/profiles_settings.xml" />
     <ignored path=".idea/dictionaries/cx520.xml" />
@@ -103,10 +101,10 @@
     <session id="-553256802">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="13" />
-          <entry key="project.open.time.1" value="12" />
+          <entry key="project.closed" value="14" />
+          <entry key="project.open.time.1" value="13" />
           <entry key="project.open.time.8" value="1" />
-          <entry key="project.opened" value="13" />
+          <entry key="project.opened" value="14" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -125,12 +123,12 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="txt" value="39" />
+          <entry key="txt" value="46" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="39" />
+          <entry key="PLAIN_TEXT" value="46" />
         </counts>
       </usages-collector>
     </session>
@@ -211,9 +209,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="AndroidView" />
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -230,6 +226,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="AndroidView" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -345,13 +343,7 @@
       <workItem from="1557465182914" duration="643000" />
       <workItem from="1557710945192" duration="2000" />
       <workItem from="1557712728428" duration="71000" />
-    </task>
-    <task id="LOCAL-00020" summary="Fail-Fast">
-      <created>1527939326481</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1527939326481</updated>
+      <workItem from="1558101020671" duration="308000" />
     </task>
     <task id="LOCAL-00021" summary="fail fast safe">
       <created>1527939490616</created>
@@ -689,16 +681,23 @@
       <option name="project" value="LOCAL" />
       <updated>1557465017394</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="fix: 修改归档地址">
+      <created>1558101143990</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1558101143991</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16195000" />
+    <option name="totallyTimeSpent" value="16503000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="6" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.3683834" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.37339056" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="JRebel" order="3" side_tool="true" />
@@ -775,7 +774,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix(sitemap.xml): 站点地图更新&#10;&#10;格式问题" />
     <MESSAGE value="feat(SPI机制文章):" />
     <MESSAGE value="java 安全和架构师图谱" />
     <MESSAGE value="sitemap" />
@@ -800,7 +798,8 @@
     <MESSAGE value="fix: 加入微信公众号" />
     <MESSAGE value="fix: 修改图片源" />
     <MESSAGE value="fix: 修改wechat" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: 修改wechat" />
+    <MESSAGE value="fix: 修改归档地址" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: 修改归档地址" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="editorHistoryManager">
