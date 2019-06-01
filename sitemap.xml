@@ -10,6 +10,13 @@
   </url>
   
   <url>
+    <loc>https://nicky-chen.github.io/2019/02/15/filter/</loc>
+    <lastmod>2019-02-15T11:18:15+08:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://nicky-chen.github.io/2018/12/19/state-machine/</loc>
     <lastmod>2018-12-19T11:18:15+08:00</lastmod>
     <changefreq>monthly</changefreq>
@@ -410,7 +417,7 @@
   
   <url>
     <loc>https://nicky-chen.github.io/categories/design-pattern/</loc>
-    <lastmod>2018-12-19T11:18:15+08:00</lastmod>
+    <lastmod>2019-02-15T11:18:15+08:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0</priority>
   </url>
@@ -571,7 +578,7 @@
   
   <url>
     <loc>https://nicky-chen.github.io/tags/%E7%BB%93%E6%9E%84%E5%9E%8B/</loc>
-    <lastmod>2018-05-27T11:18:15+08:00</lastmod>
+    <lastmod>2019-02-15T11:18:15+08:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0</priority>
   </url>
