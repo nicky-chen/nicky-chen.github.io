@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>多线程 on 南乡清水</title>
-    <link>https://nicky-chen.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/</link>
+    <link>http://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/</link>
     <description>Recent content in 多线程 on 南乡清水</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
     <lastBuildDate>Thu, 09 Aug 2018 11:18:15 +0800</lastBuildDate>
     
-	<atom:link href="https://nicky-chen.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>并发基础之Condition(等待队列)</title>
-      <link>https://nicky-chen.github.io/2018/08/09/aqs-condition/</link>
+      <link>http://nicky-chin.cn/2018/08/09/aqs-condition/</link>
       <pubDate>Thu, 09 Aug 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/08/09/aqs-condition/</guid>
+      <guid>http://nicky-chin.cn/2018/08/09/aqs-condition/</guid>
       <description>1 定义 Condition是在AQS中配合使用的wait/nofity线程通信协调工具类，我们可以称之为等待队列
 Condition定义了等待/通知两种类型的方法，当前线程调用这些方法时，需要提前获取到Condition对象关联的锁。Condition对象是调用Lock对象的newCondition()方法创建出来的，换句话说，Condition是依赖Lock对象。
 Condition与Object中监视器方法不同点 &amp;gt;condition可以有多个等待队列 monitor只有一个队列在对象头中 condition的等待可以自定义超时时间 conditon的signal 是唤醒等待队列头部的线程节点， Object的notify是随机唤醒 condition对象的属性对开发者透明
@@ -27,10 +27,10 @@ public class MyService { private Lock lock = new ReentrantLock(); private Condit
     
     <item>
       <title>并发基础之AQS同步器（二）</title>
-      <link>https://nicky-chen.github.io/2018/08/04/aqs_chapter02/</link>
+      <link>http://nicky-chin.cn/2018/08/04/aqs_chapter02/</link>
       <pubDate>Sat, 04 Aug 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/08/04/aqs_chapter02/</guid>
+      <guid>http://nicky-chin.cn/2018/08/04/aqs_chapter02/</guid>
       <description>在AQS同步器组件原理分析前，我们需要了解同步队列这个概念，了解同步队列中节点的入队和出队的流程，CHL同步队列的由来，可以参考我之前的文章： 并发基础之AQS同步器（一）
 1 同步队列 同步器依赖内部的同步队列（一个FIFO双向队列）来完成同步状态的管理，当前线程获取同步状态失败时，同步器会将当前线程以及等待状态等信息构造成为一个节点（Node）并将其加入同步队列，同时会阻塞当前线程，当同步状态释放时，会把首节点中的线程唤醒，使其再次尝试获取同步状态
 FIFO队列Node对象的具体实现如下：
@@ -39,10 +39,10 @@ static final class Node { static final Node SHARED = new Node(); static final No
     
     <item>
       <title>并发基础之AQS同步器（一）</title>
-      <link>https://nicky-chen.github.io/2018/07/31/aqs_chapter01/</link>
+      <link>http://nicky-chin.cn/2018/07/31/aqs_chapter01/</link>
       <pubDate>Tue, 31 Jul 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/07/31/aqs_chapter01/</guid>
+      <guid>http://nicky-chin.cn/2018/07/31/aqs_chapter01/</guid>
       <description>1 AQS同步器 队列同步器AbstractQueuedSynchronizer，是用来构建锁或者其他同步组件的基础框架，它使用了一个int成员变量表示同步状态，通过内置的FIFO队列来完成资源获取线程的排队工作，并发包的作者（Doug Lea）期望它能够成为实现大部分同步需求的基础。
 同步器的主要使用方式是继承，子类通过继承同步器并实现它的抽象方法来管理同步状态，在抽象方法的实现过程中免不了要对同步状态进行更改，这时就需要使用同步器提供的3个方法 &amp;gt;getState() setState(int newState) compareAndSetState(int expect,int update)
 来进行操作，因为它们能够保证状态的改变是安全的。这样就可以方便实现不同类型的同步组件（ReentrantLock、ReentrantReadWriteLock和CountDownLatch等）

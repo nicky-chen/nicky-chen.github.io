@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Junit on 南乡清水</title>
-    <link>https://nicky-chen.github.io/tags/junit/</link>
+    <link>http://nicky-chin.cn/tags/junit/</link>
     <description>Recent content in Junit on 南乡清水</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
     <lastBuildDate>Mon, 16 Jul 2018 11:18:15 +0800</lastBuildDate>
     
-	<atom:link href="https://nicky-chen.github.io/tags/junit/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://nicky-chin.cn/tags/junit/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>初窥门径之JUnit源码分析</title>
-      <link>https://nicky-chen.github.io/2018/07/16/junit-codeanalysis/</link>
+      <link>http://nicky-chin.cn/2018/07/16/junit-codeanalysis/</link>
       <pubDate>Mon, 16 Jul 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/07/16/junit-codeanalysis/</guid>
+      <guid>http://nicky-chin.cn/2018/07/16/junit-codeanalysis/</guid>
       <description>#1 源码分析流程 对于阅读源码有兴趣的同学，可以按以下步骤进行：
  了解框架架构图 了解各包包含功能点 选择需要功能点入手 了解 数据流和控制流 画 类图 和 时序图 复盘  2 Junit架构详解 2.1 包功能概述 通过分析JUnit-3.8.1的源代码文件可以看到，JUnit的源码被分散在6个package中，这个6个package分别为： junit.awtui 、 junit.swingui 、 junit.textui 、 junit.extensions 、 junit.framework 、 junit.runner 具体的文件分布图如下：
 其中 junit.awtui 、 junit.swingui 、 junit.textui 这三个package是有关JUnit运行时的入口程序以及运行结果显示界面的 junit.runner中则包含了支持单元测试运行的一些基础类以及自己的类加载器 junit.framework 包含有编写一般JUnit单元测试类必须组件 junit.extensions则是对framework包在功能上的一些必要功能点的扩展

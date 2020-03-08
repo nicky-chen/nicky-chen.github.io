@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>框架基础 on 南乡清水</title>
-    <link>https://nicky-chen.github.io/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80/</link>
+    <link>http://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80/</link>
     <description>Recent content in 框架基础 on 南乡清水</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
     <lastBuildDate>Thu, 05 Jul 2018 11:18:15 +0800</lastBuildDate>
     
-	<atom:link href="https://nicky-chen.github.io/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>框架基础之SPI机制</title>
-      <link>https://nicky-chen.github.io/2018/07/05/spi-introduction/</link>
+      <link>http://nicky-chin.cn/2018/07/05/spi-introduction/</link>
       <pubDate>Thu, 05 Jul 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/07/05/spi-introduction/</guid>
+      <guid>http://nicky-chin.cn/2018/07/05/spi-introduction/</guid>
       <description>1 定义 SPI 的全名为 Service Provider Interface ，用于接口寻找服务实现类
 实现方式 &amp;gt;标准制定者制定接口 不同厂商编写针对于该接口的实现类，并在jar的“classpath:META-INF/services/全接口名称”文件中指定相应的实现类全类名 开发者直接引入相应的jar，就可以实现为接口自动寻找实现类的功能
 2 案例实现 比如我们经常看到的缓存类Cache,现在有非常多的缓存框架都会去实现这个接口

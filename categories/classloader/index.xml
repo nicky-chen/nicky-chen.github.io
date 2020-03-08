@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Classloader on 南乡清水</title>
-    <link>https://nicky-chen.github.io/categories/classloader/</link>
+    <link>http://nicky-chin.cn/categories/classloader/</link>
     <description>Recent content in Classloader on 南乡清水</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
     <lastBuildDate>Tue, 20 Mar 2018 11:18:15 +0800</lastBuildDate>
     
-	<atom:link href="https://nicky-chen.github.io/categories/classloader/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://nicky-chin.cn/categories/classloader/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>ClassLoader类加载分析（二）</title>
-      <link>https://nicky-chen.github.io/2018/03/20/classloader-chapter02/</link>
+      <link>http://nicky-chin.cn/2018/03/20/classloader-chapter02/</link>
       <pubDate>Tue, 20 Mar 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/03/20/classloader-chapter02/</guid>
+      <guid>http://nicky-chin.cn/2018/03/20/classloader-chapter02/</guid>
       <description>一、JVM 提供的 Classloader 1.1 BootstrapClassloader 引导类加载器，又称启动类加载器，是最顶层的类加载器，主要用来加载Java核心类，如rt.jar、resources.jar、charsets.jar等，Sun的JVM中，执行java的命令中使用-Xbootclasspath选项或使用- D选项指定sun.boot.class.path系统属性值可以指定附加的类，它不是 java.lang.ClassLoader的子类，而是由JVM自身实现的该类c 语言实现，Java程序访问不到该加载器。通过下面代码可以查看该加载器加载了哪些jar包
 public class MainClass { public static void main(String[] args) throws ClassNotFoundException { URL[] urls = sun.misc.Launcher.getBootstrapClassPath().getURLs(); Arrays.stream(urls).map(URL::toExternalForm).forEach(System.out::println); } }  执行结果： file:/C:/java/jdk1.8.0_74/jre/lib/resources.jar file:/C:/java/jdk1.8.0_74/jre/lib/rt.jar file:/C:/java/jdk1.8.0_74/jre/lib/sunrsasign.jar file:/C:/java/jdk1.8.0_74/jre/lib/jsse.jar file:/C:/java/jdk1.8.0_74/jre/lib/jce.jar file:/C:/java/jdk1.8.0_74/jre/lib/charsets.jar file:/C:/java/jdk1.8.0_74/jre/lib/jfr.jar file:/C:/java/jdk1.8.0_74/jre/classes， 写到这里大家应该都知道，我们并没有在classpath里面指定这些类的路径，为啥还是能被加载到jvm并使用起来了吧，因为这些是bootstarp来加载的。
 1.2 ExtClassloader 扩展类加载器，主要负责加载Java的扩展类库，默认加载JAVA_HOME/jre/lib/ext/目下的所有jar包或者由java.ext.dirs系统属性指定的jar包。放入这个目录下的jar包对所有AppClassloader都是可见的（后面会知道ExtClassloader是AppClassloader的父加载器)。那么ext都是在那些地方加载类内：
@@ -30,10 +30,10 @@ public class Launcher { private static Launcher launcher = new Launcher(); priva
     
     <item>
       <title>ClassLoader类加载分析（一）</title>
-      <link>https://nicky-chen.github.io/2018/03/08/classloader-chapter01/</link>
+      <link>http://nicky-chin.cn/2018/03/08/classloader-chapter01/</link>
       <pubDate>Thu, 08 Mar 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/03/08/classloader-chapter01/</guid>
+      <guid>http://nicky-chin.cn/2018/03/08/classloader-chapter01/</guid>
       <description>一、什么是Classloader 一个Java程序要想运行起来，首先需要经过编译生成 .class文件，然后创建一个运行环境（jvm）来加载字节码文件到内存运行，而.class 文件是怎样被加载中jvm 中的就是Java Classloader所做的事情。 那么.class文件什么时候会被类加载器加载到jvm中运行那？比如执行new操作时候，当我们使用Class.forName(“包路径+类名”)，Class.forName(“包路径+类名”,classloader),classloader.loadclass(“包路径+类名”);时候就触发了类加载器去类加载对应的路径去查找*.class,并创建Class对象。
 类的加载过程 类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：
 1、装载

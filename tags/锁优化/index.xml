@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>锁优化 on 南乡清水</title>
-    <link>https://nicky-chen.github.io/tags/%E9%94%81%E4%BC%98%E5%8C%96/</link>
+    <link>http://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96/</link>
     <description>Recent content in 锁优化 on 南乡清水</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
     <lastBuildDate>Mon, 14 May 2018 11:18:15 +0800</lastBuildDate>
     
-	<atom:link href="https://nicky-chen.github.io/tags/%E9%94%81%E4%BC%98%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>synchronized实现原理及锁优化</title>
-      <link>https://nicky-chen.github.io/2018/05/14/synchronized-principle/</link>
+      <link>http://nicky-chin.cn/2018/05/14/synchronized-principle/</link>
       <pubDate>Mon, 14 May 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/05/14/synchronized-principle/</guid>
+      <guid>http://nicky-chin.cn/2018/05/14/synchronized-principle/</guid>
       <description>1.引言 并发编程中synchronized是重量级锁，但随着JVM1.6对synchronized进行优化后，有些情况下它并不那么重，本文介绍了Java SE1.6中为了减少获得锁和释放锁带来的性能消耗而引入的偏向锁和轻量级锁，以及锁的存储结构和升级过程。
 2.术语定义 CAS(Compare and Swap): 比较并交换。用于在硬件层面上提供原子性操作。在 Intel 处理器中，比较并交换通过指令cmpxchg实现。比较是否和给定的数值一致，如果一致则修改，不一致则不修改。
 3.同步的基础 Java中的每一个对象都可以作为锁。 对于同步方法，锁是当前实例对象。 对于静态同步方法，锁是当前对象的Class对象。 对于同步方法块，锁是synchonized括号里配置的对象。
@@ -28,10 +28,10 @@ public class SyncTest { private static double a = 1; public synchronized void pl
     
     <item>
       <title>volatile关键字原理实现及应用</title>
-      <link>https://nicky-chen.github.io/2018/05/04/volatile-feature/</link>
+      <link>http://nicky-chin.cn/2018/05/04/volatile-feature/</link>
       <pubDate>Fri, 04 May 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/05/04/volatile-feature/</guid>
+      <guid>http://nicky-chin.cn/2018/05/04/volatile-feature/</guid>
       <description>1.并发编程中的三个概念 在并发编程中, 需要了解线程的三个概念：原子性，可见性，有序性：
 1.1.原子性
  原子性：即一个操作或者多个操作 要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。

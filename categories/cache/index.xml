@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Cache on 南乡清水</title>
-    <link>https://nicky-chen.github.io/categories/cache/</link>
+    <link>http://nicky-chin.cn/categories/cache/</link>
     <description>Recent content in Cache on 南乡清水</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
     <lastBuildDate>Tue, 07 Aug 2018 11:18:15 +0800</lastBuildDate>
     
-	<atom:link href="https://nicky-chen.github.io/categories/cache/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://nicky-chin.cn/categories/cache/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Redis注意事项及常见优化</title>
-      <link>https://nicky-chen.github.io/2018/08/07/cache-redis-optimize/</link>
+      <link>http://nicky-chin.cn/2018/08/07/cache-redis-optimize/</link>
       <pubDate>Tue, 07 Aug 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/08/07/cache-redis-optimize/</guid>
+      <guid>http://nicky-chin.cn/2018/08/07/cache-redis-optimize/</guid>
       <description>1 键值设计 1.1 key名设计  (1)【建议】: 可读性和可管理性  以业务名(或数据库名)为前缀(防止key冲突)，用冒号分隔，比如业务名:表名:id
 roborder:user:1:amount   (2)【建议】：简洁性  保证语义的前提下，控制key的长度，当key较多时，内存占用也不容忽视，例如：
 user:{uid}:friends:messages:{mid} 简化为 u:{uid}:fr:m:{mid}。   (3)【强制】：不要包含特殊字符  反例：包含空格、换行、单双引号以及其他转义字符
@@ -33,10 +33,10 @@ hmset user:1 name tom age 19 favor football   (3)【推荐】：控制key的生�
     
     <item>
       <title>Redis之慢查询日志</title>
-      <link>https://nicky-chen.github.io/2018/08/01/cache-redis-slowlog/</link>
+      <link>http://nicky-chin.cn/2018/08/01/cache-redis-slowlog/</link>
       <pubDate>Wed, 01 Aug 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/08/01/cache-redis-slowlog/</guid>
+      <guid>http://nicky-chin.cn/2018/08/01/cache-redis-slowlog/</guid>
       <description>Redis提供了5种数据结构,但除此之外,Redis还提供了注入慢查询分析,Redis Shell、Pipeline、事务、与Lua脚本、Bitmaps、HyperLogLog、PubSub、GEO等附加功能,这些功能可以在某些场景发挥很重要的作用.
  慢查询分析 许多存储系统(如:MySQL)提供慢查询日志帮助开发与运维人员定位系统存在的慢操作.所谓慢查询日志就是系统在命令执行前后计算每条命令的执行时间,当超过预设阈值,就将这条命令的相关信息(例如:发生时间,耗时,命令的详细信息)记录到慢查询日志中,Redis也提供了类似的功能.
 Redis命令执行流程:  发送命令

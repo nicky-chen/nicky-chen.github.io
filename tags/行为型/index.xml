@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>行为型 on 南乡清水</title>
-    <link>https://nicky-chen.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/</link>
+    <link>http://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/</link>
     <description>Recent content in 行为型 on 南乡清水</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
     <lastBuildDate>Wed, 19 Dec 2018 11:18:15 +0800</lastBuildDate>
     
-	<atom:link href="https://nicky-chen.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>实际项目运用之State模式（状态模式）</title>
-      <link>https://nicky-chen.github.io/2018/12/19/state-machine/</link>
+      <link>http://nicky-chin.cn/2018/12/19/state-machine/</link>
       <pubDate>Wed, 19 Dec 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/12/19/state-machine/</guid>
+      <guid>http://nicky-chin.cn/2018/12/19/state-machine/</guid>
       <description>1 模式简介 定义： 状态模式允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类。这个模式将状态封装成独立的类，并将动作委托到代表当前状态的类的对象
 状态模式的优点： &amp;gt;封装了转换规则 枚举可能的状态，在枚举状态之前需要确定状态种类 将所有与某个状态有关的行为放到一个类中，可方便增加新的状态 允许状态转换逻辑与状态对象合成一体，而非复杂条件语句块 可以让多个环境对象共享一个状态对象，从而减少系统中对象的个数
 状态模式的缺点： &amp;gt;增加系统类和对象的个数 结构与实现都较为复杂，如果使用不当将导致程序结构和代码的混乱 对&amp;rdquo;开闭原则&amp;rdquo;的支持不太好，增加新状态类需在状态类上增加行为方法
@@ -36,10 +36,10 @@ public enum StateEnum { //订单生成 GENERATE(1, &amp;quot;GENERATE&amp;quot;)
     
     <item>
       <title>实际项目运用之Responsibility-Chain模式（责任链模式）</title>
-      <link>https://nicky-chen.github.io/2018/06/29/responsibility-chain/</link>
+      <link>http://nicky-chin.cn/2018/06/29/responsibility-chain/</link>
       <pubDate>Fri, 29 Jun 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/06/29/responsibility-chain/</guid>
+      <guid>http://nicky-chin.cn/2018/06/29/responsibility-chain/</guid>
       <description>1 模式概要 1.1 简介  责任链模式为请求创建一个接收者对象链，每个接收者都包含对另一个接收者的引用，如果一个对象不能处理该请求，那么它会把请求传给下一个接收者，依此类推 责任链模式避免了请求的发送者和接收者耦合在一起，让多个对象都有可能接收请求，将这些对象连成一条链，并且沿着这条链传递请求，直到有对象处理它为止  1.2 责任链模式优缺点 优点 &amp;gt;降低耦合度。它将请求的发送者和接收者解耦 简化了对象，使得对象不需要知道链的结构 增强给对象指派职责的灵活性，允许动态地新增或者删除责任链 增加新的请求处理类方便
 缺点 &amp;gt;不能保证请求一定被接收； 系统性能将受到一定影响，调试时不方便，可能会造成循环调用
 2 模式结构 2.1 对象定义 *Handler（抽象处理者）*： 定义一个处理请求的接口，提供对后续处理者的引用 *ConcreteHandler（具体处理者）*： 抽象处理者的子类，处理用户请求，可选将请求处理掉还是传给下家；在具体处理者中可以访问链中下一个对象，以便请求的转发
@@ -51,10 +51,10 @@ public abstract class Handler { protected Handler nextHandler; // 下一个责�
     
     <item>
       <title>设计模式之Template模式（模版模式）</title>
-      <link>https://nicky-chen.github.io/2018/05/18/template/</link>
+      <link>http://nicky-chin.cn/2018/05/18/template/</link>
       <pubDate>Fri, 18 May 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/05/18/template/</guid>
+      <guid>http://nicky-chin.cn/2018/05/18/template/</guid>
       <description>1 模式简介 1.1 模版方法模式的定义： 模版方法模式在一个方法中定义一个算法的骨架，而将一些步骤延迟到子类中。模版方法使得子类可以在不改变算法结构的情况下，重新定义算法中的某些步骤。
 1.2 结构 1.3 模式的组成
 抽象类（AbstractClass）: 定义抽象的原语操作（primitive operation） ，具体的子类将重定义它们以实现一个算法， 实现一个模板方法,定义一个算法的骨架。该模板方法不仅调用原语操作，也调用定义。 具体子类 （ConcreteClass）: 实现原语操作以完成算法中与特定子类相关的步骤。
@@ -68,10 +68,10 @@ public abstract class Handler { protected Handler nextHandler; // 下一个责�
     
     <item>
       <title>实际项目运用之Strategy模式（策略模式）</title>
-      <link>https://nicky-chen.github.io/2018/05/06/strategy/</link>
+      <link>http://nicky-chin.cn/2018/05/06/strategy/</link>
       <pubDate>Sun, 06 May 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/05/06/strategy/</guid>
+      <guid>http://nicky-chin.cn/2018/05/06/strategy/</guid>
       <description>1. 策略模式概要 策略模式是对算法的包装，是把使用算法的责任和算法本身分割开来，委派给不同的对象管理。策略模式通常把一个系列的算法包装到一系列的策略类里面，作为一个抽象策略类的子类。用一句话来说，就是：“准备一组算法，并将每一个算法封装起来，使得它们可以互换”。 下面就以一个示意性的实现讲解策略模式实例的结构。 　这个模式涉及到三个角色：
 　● 环境(Context)角色：持有一个Strategy的引用。
 　● 抽象策略(Strategy)角色：这是一个抽象角色，通常由一个接口或抽象类实现。此角色给出所有的具体策略类所需的接口。
