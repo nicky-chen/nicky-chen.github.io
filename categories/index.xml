@@ -2,112 +2,112 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on 南乡清水</title>
-    <link>http://nicky-chin.cn/categories/</link>
+    <link>https://nicky-chin.cn/categories/</link>
     <description>Recent content in Categories on 南乡清水</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
     <lastBuildDate>Sat, 17 Nov 2018 11:18:15 +0800</lastBuildDate>
     
-	<atom:link href="http://nicky-chin.cn/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://nicky-chin.cn/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Algorithm</title>
-      <link>http://nicky-chin.cn/categories/algorithm/</link>
+      <link>https://nicky-chin.cn/categories/algorithm/</link>
       <pubDate>Sat, 17 Nov 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/categories/algorithm/</guid>
+      <guid>https://nicky-chin.cn/categories/algorithm/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Cache</title>
-      <link>http://nicky-chin.cn/categories/cache/</link>
+      <link>https://nicky-chin.cn/categories/cache/</link>
       <pubDate>Tue, 07 Aug 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/categories/cache/</guid>
+      <guid>https://nicky-chin.cn/categories/cache/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Classloader</title>
-      <link>http://nicky-chin.cn/categories/classloader/</link>
+      <link>https://nicky-chin.cn/categories/classloader/</link>
       <pubDate>Tue, 20 Mar 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/categories/classloader/</guid>
+      <guid>https://nicky-chin.cn/categories/classloader/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Concurrent</title>
-      <link>http://nicky-chin.cn/categories/concurrent/</link>
+      <link>https://nicky-chin.cn/categories/concurrent/</link>
       <pubDate>Thu, 09 Aug 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/categories/concurrent/</guid>
+      <guid>https://nicky-chin.cn/categories/concurrent/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Design Pattern</title>
-      <link>http://nicky-chin.cn/categories/design-pattern/</link>
+      <link>https://nicky-chin.cn/categories/design-pattern/</link>
       <pubDate>Fri, 15 Feb 2019 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/categories/design-pattern/</guid>
+      <guid>https://nicky-chin.cn/categories/design-pattern/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Distribution</title>
-      <link>http://nicky-chin.cn/categories/distribution/</link>
+      <link>https://nicky-chin.cn/categories/distribution/</link>
       <pubDate>Mon, 15 Oct 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/categories/distribution/</guid>
+      <guid>https://nicky-chin.cn/categories/distribution/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Java Base</title>
-      <link>http://nicky-chin.cn/categories/java-base/</link>
+      <link>https://nicky-chin.cn/categories/java-base/</link>
       <pubDate>Fri, 03 May 2019 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/categories/java-base/</guid>
+      <guid>https://nicky-chin.cn/categories/java-base/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Mysql</title>
-      <link>http://nicky-chin.cn/categories/mysql/</link>
+      <link>https://nicky-chin.cn/categories/mysql/</link>
       <pubDate>Sat, 28 Apr 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/categories/mysql/</guid>
+      <guid>https://nicky-chin.cn/categories/mysql/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Security</title>
-      <link>http://nicky-chin.cn/categories/security/</link>
+      <link>https://nicky-chin.cn/categories/security/</link>
       <pubDate>Fri, 13 Jul 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/categories/security/</guid>
+      <guid>https://nicky-chin.cn/categories/security/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Source Code</title>
-      <link>http://nicky-chin.cn/categories/source-code/</link>
+      <link>https://nicky-chin.cn/categories/source-code/</link>
       <pubDate>Mon, 16 Jul 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/categories/source-code/</guid>
+      <guid>https://nicky-chin.cn/categories/source-code/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Spring</title>
-      <link>http://nicky-chin.cn/categories/spring/</link>
+      <link>https://nicky-chin.cn/categories/spring/</link>
       <pubDate>Sat, 25 Aug 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/categories/spring/</guid>
+      <guid>https://nicky-chin.cn/categories/spring/</guid>
       <description></description>
     </item>
     

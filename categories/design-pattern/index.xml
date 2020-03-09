@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Design Pattern on 南乡清水</title>
-    <link>http://nicky-chin.cn/categories/design-pattern/</link>
+    <link>https://nicky-chin.cn/categories/design-pattern/</link>
     <description>Recent content in Design Pattern on 南乡清水</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
     <lastBuildDate>Fri, 15 Feb 2019 11:18:15 +0800</lastBuildDate>
     
-	<atom:link href="http://nicky-chin.cn/categories/design-pattern/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://nicky-chin.cn/categories/design-pattern/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>实际项目运用之Filter模式（过滤器模式）</title>
-      <link>http://nicky-chin.cn/2019/02/15/filter/</link>
+      <link>https://nicky-chin.cn/2019/02/15/filter/</link>
       <pubDate>Fri, 15 Feb 2019 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/2019/02/15/filter/</guid>
+      <guid>https://nicky-chin.cn/2019/02/15/filter/</guid>
       <description>1 模式简介 1.1 定义 过滤器模式（Filter）也叫条件模式（Criteria），这种模式允许开发人员使用不同的标准来过滤一组对象，通过逻辑运算以解耦的方式把它们连接起来。当我们想要选择满足一个或多个条件的对象子集时，此设计模式非常有用。它属于结构模式。
 1.2 优点  它提供了一种根据特定条件过滤对象的方法
 我们可以随时添加新过滤器，而不会影响客户端的代码
@@ -31,10 +31,10 @@ public interface Filter { public void execute(String request); }  Authentication
     
     <item>
       <title>实际项目运用之State模式（状态模式）</title>
-      <link>http://nicky-chin.cn/2018/12/19/state-machine/</link>
+      <link>https://nicky-chin.cn/2018/12/19/state-machine/</link>
       <pubDate>Wed, 19 Dec 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/2018/12/19/state-machine/</guid>
+      <guid>https://nicky-chin.cn/2018/12/19/state-machine/</guid>
       <description>1 模式简介 定义： 状态模式允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类。这个模式将状态封装成独立的类，并将动作委托到代表当前状态的类的对象
 状态模式的优点： &amp;gt;封装了转换规则 枚举可能的状态，在枚举状态之前需要确定状态种类 将所有与某个状态有关的行为放到一个类中，可方便增加新的状态 允许状态转换逻辑与状态对象合成一体，而非复杂条件语句块 可以让多个环境对象共享一个状态对象，从而减少系统中对象的个数
 状态模式的缺点： &amp;gt;增加系统类和对象的个数 结构与实现都较为复杂，如果使用不当将导致程序结构和代码的混乱 对&amp;rdquo;开闭原则&amp;rdquo;的支持不太好，增加新状态类需在状态类上增加行为方法
@@ -53,10 +53,10 @@ public enum StateEnum { //订单生成 GENERATE(1, &amp;quot;GENERATE&amp;quot;)
     
     <item>
       <title>实际项目运用之Responsibility-Chain模式（责任链模式）</title>
-      <link>http://nicky-chin.cn/2018/06/29/responsibility-chain/</link>
+      <link>https://nicky-chin.cn/2018/06/29/responsibility-chain/</link>
       <pubDate>Fri, 29 Jun 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/2018/06/29/responsibility-chain/</guid>
+      <guid>https://nicky-chin.cn/2018/06/29/responsibility-chain/</guid>
       <description>1 模式概要 1.1 简介  责任链模式为请求创建一个接收者对象链，每个接收者都包含对另一个接收者的引用，如果一个对象不能处理该请求，那么它会把请求传给下一个接收者，依此类推 责任链模式避免了请求的发送者和接收者耦合在一起，让多个对象都有可能接收请求，将这些对象连成一条链，并且沿着这条链传递请求，直到有对象处理它为止  1.2 责任链模式优缺点 优点 &amp;gt;降低耦合度。它将请求的发送者和接收者解耦 简化了对象，使得对象不需要知道链的结构 增强给对象指派职责的灵活性，允许动态地新增或者删除责任链 增加新的请求处理类方便
 缺点 &amp;gt;不能保证请求一定被接收； 系统性能将受到一定影响，调试时不方便，可能会造成循环调用
 2 模式结构 2.1 对象定义 *Handler（抽象处理者）*： 定义一个处理请求的接口，提供对后续处理者的引用 *ConcreteHandler（具体处理者）*： 抽象处理者的子类，处理用户请求，可选将请求处理掉还是传给下家；在具体处理者中可以访问链中下一个对象，以便请求的转发
@@ -68,10 +68,10 @@ public abstract class Handler { protected Handler nextHandler; // 下一个责�
     
     <item>
       <title>设计模式之单例模式终极版【克隆-序列化-反射】</title>
-      <link>http://nicky-chin.cn/2018/06/07/singletion/</link>
+      <link>https://nicky-chin.cn/2018/06/07/singletion/</link>
       <pubDate>Thu, 07 Jun 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/2018/06/07/singletion/</guid>
+      <guid>https://nicky-chin.cn/2018/06/07/singletion/</guid>
       <description>1 基本内容 1.1 概念 单例模式，是指在任何时候，该类只能被实例化一次，在任何时候，访问该类的对象，对象都是同一个。只要是程序员都会使用到，甚至都不能算是设计模式。但是在我们使用中也需要了解一下单例特性和使用场景
 1.2 模式优缺点 单例模式有以下优点： &amp;gt;使用单例模式可以严格的控制用户怎样以及如何访问它 节约系统资源，提高系统的性能
 单例模式有以下缺点： &amp;gt;不易扩展 单例类职责过重，在一定程度上违背了“单一职责原则” 如实例化对象长时间未使用，会GC回收，导致对象状态的丢失
@@ -81,10 +81,10 @@ public abstract class Handler { protected Handler nextHandler; // 下一个责�
     
     <item>
       <title>实际项目运用之Adapter模式（适配器模式）</title>
-      <link>http://nicky-chin.cn/2018/05/27/adapter/</link>
+      <link>https://nicky-chin.cn/2018/05/27/adapter/</link>
       <pubDate>Sun, 27 May 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/2018/05/27/adapter/</guid>
+      <guid>https://nicky-chin.cn/2018/05/27/adapter/</guid>
       <description>1. 模式简介 适配器模式解决的问题：让原本因为接口不兼容而不能一起工作的类可以一起工作
 适配器模式中有三种角色：
  目标接口Target：用户期望的类，可以是接口，也可以是抽象类或具体类； 需要适配的类Adaptee：当前系统中有的类； 适配器Adapter：在现有接口和目标接口之间的“适配者”  适配器模式的优点：
@@ -103,10 +103,10 @@ public class Adapter implements Target { private Adaptee adaptee = new Adaptee()
     
     <item>
       <title>设计模式之Template模式（模版模式）</title>
-      <link>http://nicky-chin.cn/2018/05/18/template/</link>
+      <link>https://nicky-chin.cn/2018/05/18/template/</link>
       <pubDate>Fri, 18 May 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/2018/05/18/template/</guid>
+      <guid>https://nicky-chin.cn/2018/05/18/template/</guid>
       <description>1 模式简介 1.1 模版方法模式的定义： 模版方法模式在一个方法中定义一个算法的骨架，而将一些步骤延迟到子类中。模版方法使得子类可以在不改变算法结构的情况下，重新定义算法中的某些步骤。
 1.2 结构 1.3 模式的组成
 抽象类（AbstractClass）: 定义抽象的原语操作（primitive operation） ，具体的子类将重定义它们以实现一个算法， 实现一个模板方法,定义一个算法的骨架。该模板方法不仅调用原语操作，也调用定义。 具体子类 （ConcreteClass）: 实现原语操作以完成算法中与特定子类相关的步骤。
@@ -120,10 +120,10 @@ public class Adapter implements Target { private Adaptee adaptee = new Adaptee()
     
     <item>
       <title>实际项目运用之Strategy模式（策略模式）</title>
-      <link>http://nicky-chin.cn/2018/05/06/strategy/</link>
+      <link>https://nicky-chin.cn/2018/05/06/strategy/</link>
       <pubDate>Sun, 06 May 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/2018/05/06/strategy/</guid>
+      <guid>https://nicky-chin.cn/2018/05/06/strategy/</guid>
       <description>1. 策略模式概要 策略模式是对算法的包装，是把使用算法的责任和算法本身分割开来，委派给不同的对象管理。策略模式通常把一个系列的算法包装到一系列的策略类里面，作为一个抽象策略类的子类。用一句话来说，就是：“准备一组算法，并将每一个算法封装起来，使得它们可以互换”。 下面就以一个示意性的实现讲解策略模式实例的结构。 　这个模式涉及到三个角色：
 　● 环境(Context)角色：持有一个Strategy的引用。
 　● 抽象策略(Strategy)角色：这是一个抽象角色，通常由一个接口或抽象类实现。此角色给出所有的具体策略类所需的接口。
@@ -136,10 +136,10 @@ public class ConcreteStrategyA implements Strategy { @Override public void algor
     
     <item>
       <title>实际项目运用之Decorator模式（装饰器模式）</title>
-      <link>http://nicky-chin.cn/2018/03/28/decorator/</link>
+      <link>https://nicky-chin.cn/2018/03/28/decorator/</link>
       <pubDate>Wed, 28 Mar 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/2018/03/28/decorator/</guid>
+      <guid>https://nicky-chin.cn/2018/03/28/decorator/</guid>
       <description>1 概述 在项目中，经常因一些新增需求，导致同一业务的变更，如果所在类继承关系如下：Parent、Child、Grandparent，那么要在Child类上增强些功能怎么办？给Child类增加方法？那会对Grandparent产生什么影响？该如何去处理？看完本文，你会找到你的答案。
 JavaIO中，像下面的嵌套语句很常见，为什么要怎样定义呢？理解装饰模式后，你会找到答案。
 FilterInputStream filterInputStreasm = new BufferedInputStream(new FileInputStream(new File(&amp;quot;/user/a&amp;quot;)));  1.1案例 例如下面一个功能需求，4s店的汽车销售向客户推销自家品牌的产品，我们用代码实现，关系如下：
@@ -150,10 +150,10 @@ public class CarInfo extends CarSale { @Override public void displayCarInfo() { 
     
     <item>
       <title>设计模式之builder模式</title>
-      <link>http://nicky-chin.cn/2017/12/19/builder/</link>
+      <link>https://nicky-chin.cn/2017/12/19/builder/</link>
       <pubDate>Tue, 19 Dec 2017 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/2017/12/19/builder/</guid>
+      <guid>https://nicky-chin.cn/2017/12/19/builder/</guid>
       <description>建造者模式也叫生成器模式，和抽象工厂模式相似，也是一种构建复杂对象的模式。
 建造者模式中的角色分类：  抽象建造者Builder：接口类型，用于规范各个产品的组成部分；  具体建造者ConcreteBuilder：实现Builder中的所有方法，返回一个产品实例；  指导者Director：指挥建造者制造相应的产品  产品Product：用户最终看到的复杂对象。
 假设我们有一个向客户发送新年祝福邮件的需求，而邮件内容可以是纯文档的，也可以是有动画的，也可以是有音频的，可以动态的添加个组件
@@ -164,10 +164,10 @@ public interface Module { String showInfo(String info); }` public abstract class
     
     <item>
       <title>设计模式之factory模式</title>
-      <link>http://nicky-chin.cn/2017/12/07/builder-factory/</link>
+      <link>https://nicky-chin.cn/2017/12/07/builder-factory/</link>
       <pubDate>Thu, 07 Dec 2017 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/2017/12/07/builder-factory/</guid>
+      <guid>https://nicky-chin.cn/2017/12/07/builder-factory/</guid>
       <description>定义：工厂模式通俗意义上讲就是一个多产品的流程化工厂，每个工厂生产同一系列相关性的组件
 分类：
 按工厂职能划分可以分为三类：  简单工厂模式（Simple Factory）  工厂方法模式（Factory Method）  抽象工厂方法（Abstract Factory）

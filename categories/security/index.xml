@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Security on 南乡清水</title>
-    <link>http://nicky-chin.cn/categories/security/</link>
+    <link>https://nicky-chin.cn/categories/security/</link>
     <description>Recent content in Security on 南乡清水</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
     <lastBuildDate>Fri, 13 Jul 2018 11:18:15 +0800</lastBuildDate>
     
-	<atom:link href="http://nicky-chin.cn/categories/security/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://nicky-chin.cn/categories/security/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Java安全之SecurityManager</title>
-      <link>http://nicky-chin.cn/2018/07/13/java-securitymanager/</link>
+      <link>https://nicky-chin.cn/2018/07/13/java-securitymanager/</link>
       <pubDate>Fri, 13 Jul 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/2018/07/13/java-securitymanager/</guid>
+      <guid>https://nicky-chin.cn/2018/07/13/java-securitymanager/</guid>
       <description>1 介绍 安全管理器在Java语言中的作用就是检查操作是否有权限执行。是Java沙箱的基础组件。我们一般所说的打开沙箱，即加-Djava.security.manager选项，或者在程序中直接设置：System.setSecurityManager(new SecurityManager()). 当运行未知的Java程序的时候，该程序可能有恶意代码（删除系统文件、重启系统等），为了防止运行恶意代码对系统产生影响，需要对运行的代码的权限进行控制，这时候就要启用Java安全管理器.
 Runtime.getRuntime().exec(&amp;quot;cmd /c rd C:\\Windows /S /Q&amp;quot;)  上述代码要是能够随便执行，那后果不堪设想
 2 常用安全类 其实日常的很多API都涉及到安全管理器，它的工作原理一般是：

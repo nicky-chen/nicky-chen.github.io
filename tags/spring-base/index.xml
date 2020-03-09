@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Spring Base on 南乡清水</title>
-    <link>http://nicky-chin.cn/tags/spring-base/</link>
+    <link>https://nicky-chin.cn/tags/spring-base/</link>
     <description>Recent content in Spring Base on 南乡清水</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
     <lastBuildDate>Sat, 25 Aug 2018 11:18:15 +0800</lastBuildDate>
     
-	<atom:link href="http://nicky-chin.cn/tags/spring-base/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://nicky-chin.cn/tags/spring-base/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Spring之动手实现SpringMVC功能</title>
-      <link>http://nicky-chin.cn/2018/08/25/spring-springmvc/</link>
+      <link>https://nicky-chin.cn/2018/08/25/spring-springmvc/</link>
       <pubDate>Sat, 25 Aug 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/2018/08/25/spring-springmvc/</guid>
+      <guid>https://nicky-chin.cn/2018/08/25/spring-springmvc/</guid>
       <description>1 简介 SpringMVC大家应该耳熟能详，只要是做Java网站开发的小伙伴，都会使用的框架。SpringMVC以 DispatcherServlet 为核心，负责协调和组织不同组件以完成请求处理并返回响应的工作，实现了MVC模式。接下来我们从 该框架的流程 来整理设计思路，最后自己实现一个mvc框架.
 2 SpringMVC运行流程 springmvc的流程如下：
 API说明
@@ -37,10 +37,10 @@ protected void onRefresh(ApplicationContext context) { initStrategies(context); 
     
     <item>
       <title>Spring之动手实现IOC功能</title>
-      <link>http://nicky-chin.cn/2018/08/16/spring-bean-ioc/</link>
+      <link>https://nicky-chin.cn/2018/08/16/spring-bean-ioc/</link>
       <pubDate>Thu, 16 Aug 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/2018/08/16/spring-bean-ioc/</guid>
+      <guid>https://nicky-chin.cn/2018/08/16/spring-bean-ioc/</guid>
       <description>1 背景 我们经常在使用Spring生态中的组件，我们在潜移默化的DI和IOC的思想下，来创建和使用Bean对象，使用过 @Component @ComponentScan @Autowired @Bean @Configuration 等等的注解，所以了解Spring容器是如何创建和管理Bean,是我们必需掌握的技能。 下面我们通过手写DI和IOC的方式来加深对Spring的理解。
 #2 依赖注入 DI，Dependency Injection，即依赖注入。具体含义表示组件之间的依赖关系由容器在应用系统运行期来决定，也就是由容器动态地将某种依赖关系的目标对象实例注入到应用系统中的各个关联的组件之中。对象只提供普通的方法让容器去决定依赖关系。
 Spring中创建Bean的方式有三种：
@@ -53,10 +53,10 @@ Spring中创建Bean的方式有三种：
     
     <item>
       <title>Spring之Bean加载-解析-生命周期</title>
-      <link>http://nicky-chin.cn/2018/08/12/spring-bean-lifecycle/</link>
+      <link>https://nicky-chin.cn/2018/08/12/spring-bean-lifecycle/</link>
       <pubDate>Sun, 12 Aug 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/2018/08/12/spring-bean-lifecycle/</guid>
+      <guid>https://nicky-chin.cn/2018/08/12/spring-bean-lifecycle/</guid>
       <description>1 概要 使用Spring框架，我们需要了解Bean的创建加载过程，需要熟悉Bean是如何获取和使用的。 下面我们通过分析下Spring加载XML文件的过程来分析Bean的数据流。 当前调试的Spring 版本是最新的 4.1.0 release 版本
 调试代码主入口
  ApplicationContext context = new ClassPathXmlApplicationContext(&amp;quot;consumer.xml&amp;quot;); System.out.println(&amp;quot;Consumer Started&amp;quot;); ConsumerBean bean = context.getBean(ConsumerBean.class); String secretKey = bean.getProperties().getProperty(&amp;quot;SecretKey&amp;quot;); System.out.println(secretKey);  2 解析过程 创建 ClassPathXmlApplicationContext对象，会调用refresh()方法

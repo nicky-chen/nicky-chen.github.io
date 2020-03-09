@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>理论 on 南乡清水</title>
-    <link>http://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA/</link>
+    <link>https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA/</link>
     <description>Recent content in 理论 on 南乡清水</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
     <lastBuildDate>Wed, 25 Apr 2018 11:18:15 +0800</lastBuildDate>
     
-	<atom:link href="http://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>分布式之【CAP理论、BASE理论 、FLP不可能定理】</title>
-      <link>http://nicky-chin.cn/2018/04/25/cap-base-flp/</link>
+      <link>https://nicky-chin.cn/2018/04/25/cap-base-flp/</link>
       <pubDate>Wed, 25 Apr 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/2018/04/25/cap-base-flp/</guid>
+      <guid>https://nicky-chin.cn/2018/04/25/cap-base-flp/</guid>
       <description>1.分布式系统的CAP理论 1.1 CAP理论概述 2000年7月，加州大学伯克利分校的Eric Brewer教授在ACM PODC会议上提出CAP猜想。2年后，麻省理工学院的Seth Gilbert和Nancy Lynch从理论上证明了CAP。之后，CAP理论正式成为分布式计算领域的公认定理。
 一个分布式系统最多只能同时满足一致性（Consistency）、可用性（Availability）和分区容错性（Partition tolerance）这三项中的两项。
 1.2 CAP的定义 1.2.1 Consistency 一致性 一致性指“all nodes see the same data at the same time”，即更新操作成功并返回客户端完成后，所有节点在同一时间的数据完全一致。分布式的一致性
@@ -40,10 +40,10 @@
     
     <item>
       <title>接口设计的幂等性考虑</title>
-      <link>http://nicky-chin.cn/2018/03/26/interface-idempotency/</link>
+      <link>https://nicky-chin.cn/2018/03/26/interface-idempotency/</link>
       <pubDate>Mon, 26 Mar 2018 11:18:15 +0800</pubDate>
       
-      <guid>http://nicky-chin.cn/2018/03/26/interface-idempotency/</guid>
+      <guid>https://nicky-chin.cn/2018/03/26/interface-idempotency/</guid>
       <description>分布式系统接口幂等性 1.幂等性定义 1.1 数学定义  在数学里，幂等有两种主要的定义：- 在某二元运算下，幂等元素是指被自己重复运算(或对于函数是为复合)的结果等于它自己的元素。例如，乘法下唯一两个幂等实数为0和1。即 s *s = s- 某一元运算为幂等的时，其作用在任一元素两次后会和其作用一次的结果相同。例如，高斯符号便是幂等的，即f(f(x)) = f(x)。
  1.2 HTTP规范的定义 在HTTP/1.1规范中幂等性的定义是：
  A request method is considered &amp;ldquo;idempotent&amp;rdquo; if the intended effect on the server of multiple identical requests with that method is the same as the effect for a single such request. Of the request methods defined by this specification, PUT, DELETE, and safe request methods are idempotent.
