@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Mysql on 南乡清水</title>
-    <link>https://nicky-chen.github.io/categories/mysql/</link>
+    <link>https://nicky-chin.cn/categories/mysql/</link>
     <description>Recent content in Mysql on 南乡清水</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
     <lastBuildDate>Sat, 28 Apr 2018 11:18:15 +0800</lastBuildDate>
     
-	<atom:link href="https://nicky-chen.github.io/categories/mysql/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://nicky-chin.cn/categories/mysql/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>MYSQL高级特性之【Event事件】</title>
-      <link>https://nicky-chen.github.io/2018/04/28/high-event/</link>
+      <link>https://nicky-chin.cn/2018/04/28/high-event/</link>
       <pubDate>Sat, 28 Apr 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/04/28/high-event/</guid>
+      <guid>https://nicky-chin.cn/2018/04/28/high-event/</guid>
       <description>一、基本概念 mysql5.1版本开始引进event概念。event既“时间触发器”，与triggers的事件触发不同，event类似与linux crontab计划任务，用于时间触发。通过单独或调用存储过程使用，在某一特定的时间点，触发相关的SQL语句或存储过程。
 二、适用范围 对于每隔一段时间就有固定需求的操作，如创建表，删除数据等操作，可以使用event来处理。
 例如：使用event在每月的1日凌晨1点自动创建下个月需要使用的三张表。
@@ -37,10 +37,10 @@ CREATE EVENT [IF NOT EXISTS] ---------------------------------------------*标�
     
     <item>
       <title>MYSQL高级特性之【存储过程与函数】</title>
-      <link>https://nicky-chen.github.io/2018/04/27/process-fun/</link>
+      <link>https://nicky-chin.cn/2018/04/27/process-fun/</link>
       <pubDate>Fri, 27 Apr 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/04/27/process-fun/</guid>
+      <guid>https://nicky-chin.cn/2018/04/27/process-fun/</guid>
       <description>一、定义 存储程序可以分为存储过程和函数。
 1.1 存储过程的定义 存储过程（Stored Procedure）是一组为了完成特定功能的SQL语句集。存储过程在数据库中经过第一次编译后再次调用不需要再次编译，用户通过指定存储过程的名字并给出参数（如果该存储过程带有参数）来执行它。
 1.2 函数的定义 存储函数（简称函数）在本质上与存储过程没有区别。
@@ -57,10 +57,10 @@ characteristic: LANGUAGE SQL | [NOT] DETERMINISTIC | { CONTAINS SQL | NO SQL | R
     
     <item>
       <title>库级优化之SHOW GLOBAL STATUS</title>
-      <link>https://nicky-chen.github.io/2017/09/12/show-global-status/</link>
+      <link>https://nicky-chin.cn/2017/09/12/show-global-status/</link>
       <pubDate>Tue, 12 Sep 2017 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2017/09/12/show-global-status/</guid>
+      <guid>https://nicky-chin.cn/2017/09/12/show-global-status/</guid>
       <description>慢查询
 //查询慢线程情况 show global status like &#39;%slow%&#39; +---------------------+-------+ | Variable_name | Value | +---------------------+-------+ | Slow_launch_threads | 1 | | Slow_queries | 100 | +---------------------+-------+ 如果Slow_launch_threads值较大，说明有些东西正在延迟连接的新线程 //查询慢查询日志是否开启 show variables like &#39;%slow%&#39; +---------------------+--------------------------------------+ | Variable_name | Value | +---------------------+--------------------------------------+ |log_slow_admin_statements| ON | |log_slow_slave_statements| OFF | | slow_launch_time | 2 | | slow_query_log | ON | | slow_query_log_file | /home/mysql/mysql/slow_query.log | +---------------------+--------------------------------------+ log_slow_admin_statements表示是否将慢管理语句例如ANALYZE TABLE和ALTER TABLE等记入慢查询日志 log_slow_slave_statements 表示是否管理分区慢查询记录，一般不会去选择分区，所以不考虑  配置中一定要开启慢查询，这对服务器性能损耗并不大，如上面的打印结果得知：超过2秒即为慢查询，一共有100条慢查询 。当然我们在后台也可以做sql拦截记录，定制化慢查询语句。通常，可以通过mybatis插件拦截耗时sql打印日志
 连接数
@@ -69,20 +69,20 @@ characteristic: LANGUAGE SQL | [NOT] DETERMINISTIC | { CONTAINS SQL | NO SQL | R
     
     <item>
       <title>后端开发需要了解的mysql优化方向</title>
-      <link>https://nicky-chen.github.io/2017/06/13/optimize-picture/</link>
+      <link>https://nicky-chin.cn/2017/06/13/optimize-picture/</link>
       <pubDate>Tue, 13 Jun 2017 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2017/06/13/optimize-picture/</guid>
+      <guid>https://nicky-chin.cn/2017/06/13/optimize-picture/</guid>
       <description>#优化思维导图 #参数优化注意事项 参数优化分为 动态参数配置 和 配置文件的配置，建议在启动mysql之前配置好优化参数，这样将会全局有效，如使用动态参数配置可能会不生效或出现问题,并且如果数据库重启那么之前的优化参数都会失效
 SHOW VARIABLES LIKE &#39;sort%&#39; 修改会话级变量 set SESSION sort_buffer_size=720000 退出重新连接后，此参数恢复原值 修改全局变量 set GLOBAL sort_buffer_size = 720000  #优化系列 库级优化之SHOW GLOBAL STATUS</description>
     </item>
     
     <item>
       <title>数据库设计三范式和反范式</title>
-      <link>https://nicky-chen.github.io/2017/05/07/design-rule/</link>
+      <link>https://nicky-chin.cn/2017/05/07/design-rule/</link>
       <pubDate>Sun, 07 May 2017 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2017/05/07/design-rule/</guid>
+      <guid>https://nicky-chin.cn/2017/05/07/design-rule/</guid>
       <description>数据库范式 范式的级别 设计关系数据库时，遵从不同的规范要求，设计出合理的关系型数据库，这些不同的规范要求被称为不同的范式，各种范式呈递次规范，越高的范式数据库冗余越小。 目前关系数据库有六种范式：第一范式（1NF）、第二范式（2NF）、第三范式（3NF）、巴斯-科德范式（BCNF）、第四范式(4NF）和第五范式（5NF，又称完美范式）。 范式越高，冗余最低，一般到三范式，再往上，表越多，可能导致查询效率下降。所以有时为了提高运行效率，可以让数据冗余(反三范式，一般某个数据经常被访问时，比如数据表里存放了语文数学英语成绩，但是如果在某个时间经常要得到它的总分，每次都要进行计算会降低性能，可以加上总分这个冗余字段)。 后面的范式是在满足前面范式的基础上，比如满足第二范式的一定满足第一范式。 第一范式（1NF）：确保每一列的原子性 如果每一列都是不可再分的最小数据单元，则满足第一范式。 但是具体地址到底要不要拆分 还要看具体情形，比如看看将来会不会按国家或者省市进行分类汇总或者排序，如果需要，最好就拆，如果不需要而仅仅起字符串的作用，可以不拆，操作起来更方便。
 第二范式:非键字段必须依赖于键字段 如果一个关系满足1NF，并且除了主键以外的其它列，都依赖与该主键，则满足二范式(2NF)，第二范式要求每个表只描述一件事。例如： 第三范式：在1NF基础上，除了主键以外的其它列都不传递依赖于主键列，或者说： 任何非主属性不依赖于其它非主属性（在2NF基础上消除传递依赖）
 例如：上面的表，学号和姓名存在传递依赖，因为(学号，姓名)-&amp;gt;成绩，学号-&amp;gt;成绩，姓名-&amp;gt;成绩。所以学号和姓名有一个冗余了，只需要保留一个。

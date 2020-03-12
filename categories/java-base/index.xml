@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Java Base on 南乡清水</title>
-    <link>https://nicky-chen.github.io/categories/java-base/</link>
+    <link>https://nicky-chin.cn/categories/java-base/</link>
     <description>Recent content in Java Base on 南乡清水</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
     <lastBuildDate>Fri, 03 May 2019 11:18:15 +0800</lastBuildDate>
     
-	<atom:link href="https://nicky-chen.github.io/categories/java-base/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://nicky-chin.cn/categories/java-base/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</title>
-      <link>https://nicky-chen.github.io/2019/05/03/apt_lombok_implement/</link>
+      <link>https://nicky-chin.cn/2019/05/03/apt_lombok_implement/</link>
       <pubDate>Fri, 03 May 2019 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2019/05/03/apt_lombok_implement/</guid>
+      <guid>https://nicky-chin.cn/2019/05/03/apt_lombok_implement/</guid>
       <description>1 Lombok原理  1 APT(Annotation Processing Tool )注解处理器 2 javac api处理AST(抽象语法树)
  大致原理如下图所示：
 上面是网上找的图，如想具体分析lombok的实现，可以从 LombokProcessor 和AnnotationProcessor 这两个类的process 方法入手
@@ -28,10 +28,10 @@
     
     <item>
       <title>Java反射优化之方法句柄</title>
-      <link>https://nicky-chen.github.io/2018/08/22/java-methodhandler/</link>
+      <link>https://nicky-chin.cn/2018/08/22/java-methodhandler/</link>
       <pubDate>Wed, 22 Aug 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/08/22/java-methodhandler/</guid>
+      <guid>https://nicky-chin.cn/2018/08/22/java-methodhandler/</guid>
       <description>1 简介 java7中为间接调用方法引入了新的api，即 方法句柄
 方法句柄中包含两个重要的类，MethodHandle和MethodType
 MethodHandle
@@ -43,10 +43,10 @@ MethodType
     
     <item>
       <title>框架基础之SPI机制</title>
-      <link>https://nicky-chen.github.io/2018/07/05/spi-introduction/</link>
+      <link>https://nicky-chin.cn/2018/07/05/spi-introduction/</link>
       <pubDate>Thu, 05 Jul 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/07/05/spi-introduction/</guid>
+      <guid>https://nicky-chin.cn/2018/07/05/spi-introduction/</guid>
       <description>1 定义 SPI 的全名为 Service Provider Interface ，用于接口寻找服务实现类
 实现方式 &amp;gt;标准制定者制定接口 不同厂商编写针对于该接口的实现类，并在jar的“classpath:META-INF/services/全接口名称”文件中指定相应的实现类全类名 开发者直接引入相应的jar，就可以实现为接口自动寻找实现类的功能
 2 案例实现 比如我们经常看到的缓存类Cache,现在有非常多的缓存框架都会去实现这个接口
@@ -57,10 +57,10 @@ public class ConcurrentMapCache implements Cache { private final String name; pr
     
     <item>
       <title>JNDI知识摘要</title>
-      <link>https://nicky-chen.github.io/2018/06/25/jndi-introdution/</link>
+      <link>https://nicky-chin.cn/2018/06/25/jndi-introdution/</link>
       <pubDate>Mon, 25 Jun 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/06/25/jndi-introdution/</guid>
+      <guid>https://nicky-chin.cn/2018/06/25/jndi-introdution/</guid>
       <description>#1 什么是JNDI？ JNDI(Java Naming and Directory Interface,Java命名和目录接口)是SUN公司提供的一种标准的Java命名系统接口，JNDI提供统一的客户端API，通过不同的访问提供者接口JNDI服务供应接口(SPI)的实现，由管理者将JNDI API映射为特定的命名服务和目录系统，使得Java应用程序可以和这些命名服务和目录服务之间进行交互
 通过JNDI可以实现对象的创建与托管,和对象的使用过程完全解耦
 比如:在application的底层创建对象,并将对象bind到特定的context中,对象的创建过程或者&amp;rdquo;查找&amp;rdquo;方式只有此底层模块支持,外部程序不可见.对于对象的使用者(调用者)只能通过JNDI的方式获取对象,对象使用者无法直接创建对象等
@@ -74,10 +74,10 @@ JNDI提供了如下几个程序包： &amp;gt;Javax.naming：包含了访问命�
     
     <item>
       <title>Fail-Fast和Fail-Safe机制</title>
-      <link>https://nicky-chen.github.io/2018/06/02/fail-fast-safe/</link>
+      <link>https://nicky-chin.cn/2018/06/02/fail-fast-safe/</link>
       <pubDate>Sat, 02 Jun 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/06/02/fail-fast-safe/</guid>
+      <guid>https://nicky-chin.cn/2018/06/02/fail-fast-safe/</guid>
       <description>1 Fail-Fast 1.1 fail-fast定义 fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件 例如：当某一个线程A通过iterator去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出ConcurrentModificationException异常，产生fail-fast事件
 1.2 Iterator与fast-fail机制 1.2.1 Iterator的好处 java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。 比如下面的 ArrayList 和 ImmutableList 遍历的例子：
  public class IteratorTest { public static List&amp;lt;Integer&amp;gt; list = Lists.newArrayList(1, 10, 11, 18, -1, 20, 99); public static ImmutableList&amp;lt;Integer&amp;gt; integerList = ImmutableList.copyOf(list); public static void main(String[] args) { Iterator&amp;lt;Integer&amp;gt; iterator1 = list.iterator(); while (iterator1.hasNext()) { System.out.println(iterator1.next()); } Iterator&amp;lt;Integer&amp;gt; iterator2 = integerList.iterator(); while (iterator2.hasNext()) { System.out.println(iterator2.next()); } }  我们去遍历的时候并不需要关心内部细节，但实际上ImmutableList是一个固定容量的list,不能进行 remove 和 add 方法的操作</description>
@@ -85,20 +85,20 @@ JNDI提供了如下几个程序包： &amp;gt;Javax.naming：包含了访问命�
     
     <item>
       <title>字符串拼接的疑惑</title>
-      <link>https://nicky-chen.github.io/2018/04/21/string-builder-question/</link>
+      <link>https://nicky-chin.cn/2018/04/21/string-builder-question/</link>
       <pubDate>Sat, 21 Apr 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/04/21/string-builder-question/</guid>
+      <guid>https://nicky-chin.cn/2018/04/21/string-builder-question/</guid>
       <description>最近没事在玩ASM框架，于是乎想将业务代码中的PO对象中的toString方法 在编译期间，自动转换了基于StringBuilder 拼接的代码。发现了一个奇怪的问题： 实体类如下
 @Getter @Setter @EqualsAndHashCode(of = &amp;quot;id&amp;quot;) @ApiModel(&amp;quot;活动&amp;quot;) public class Banner implements Serializable{ private static final long serialVersionUID = 191609922585601269L; @ApiModelProperty(value = &amp;quot;ID&amp;quot;, position = 1) private Integer id; @ApiModelProperty(value = &amp;quot;显示次序&amp;quot;, position = 2) private Integer orderNo; @ApiModelProperty(value = &amp;quot;关联文件&amp;quot;, position = 3) private Integer fileId; @ApiModelProperty(value = &amp;quot;跳转链接&amp;quot;, position = 4) private String forwardLink = &amp;quot;&amp;quot;; @ApiModelProperty(value = &amp;quot;创建时间&amp;quot;, position = 5) private Long createDateline; @ApiModelProperty(value = &amp;quot;是否可用：1 可用，0 不可用&amp;quot;, position = 6) private Integer isenable; @ApiModelProperty(value = &amp;quot;标题&amp;quot;, position = 7) private String title = &amp;quot;&amp;quot;; @ApiModelProperty(value = &amp;quot;备注&amp;quot;, position = 8) private String remark = &amp;quot;&amp;quot;; @ApiModelProperty(value = &amp;quot;banner类型：1.</description>
     </item>
     
     <item>
       <title>Java异常处理-原理及优化建议</title>
-      <link>https://nicky-chen.github.io/2018/04/17/exception-introduce/</link>
+      <link>https://nicky-chin.cn/2018/04/17/exception-introduce/</link>
       <pubDate>Tue, 17 Apr 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/04/17/exception-introduce/</guid>
+      <guid>https://nicky-chin.cn/2018/04/17/exception-introduce/</guid>
       <description>1 异常层次结构 异常指不期而至的各种状况，如：文件找不到、网络连接失败、非法参数等。异常是一个事件，它发生在程序运行期间，干扰了正常的指令流程。Java通 过API中Throwable类的众多子类描述各种不同的异常。因而，Java异常都是对象，是Throwable子类的实例，描述了出现在一段编码中的 错误条件。当条件生成时，错误将引发异常。 Java异常类层次结构图： 在 Java 中，所有的异常都有一个共同的祖先 Throwable（可抛出）。Throwable 指定代码中可用异常传播机制通过 Java 应用程序传输的任何问题的共性。 Throwable： 有两个重要的子类：*Exception（异常）和 Error（错误）*，二者都是 Java 异常处理的重要子类，各自都包含大量子类。 Error（错误）:是程序无法处理的错误，表示运行应用程序中较严重问题。大多数错误与代码编写者执行的操作无关，而表示代码运行时 JVM（Java 虚拟机）出现的问题。例如，Java虚拟机运行错误（Virtual MachineError），当 JVM 不再有继续执行操作所需的内存资源时，将出现 OutOfMemoryError。这些异常发生时，Java虚拟机（JVM）一般会选择线程终止。这些错误表示故障发生于虚拟机自身、或者发生在虚拟机试图执行应用时，如Java虚拟机运行错误（Virtual MachineError）、类定义错误（NoClassDefFoundError）等。这些错误是不可查的，因为它们在应用程序的控制和处理能力之 外，而且绝大多数是程序运行时不允许出现的状况。对于设计合理的应用程序来说，即使确实发生了错误，本质上也不应该试图去处理它所引起的异常状况。在 Java中，错误通过Error的子类描述。
 Exception（异常）:是程序本身可以处理的异常。 Exception 类有一个重要的子类 RuntimeException。RuntimeException 类及其子类表示“JVM 常用操作”引发的错误。例如，若试图使用空值对象引用、除数为零或数组越界，则分别引发运行时异常（NullPointerException、ArithmeticException）和 ArrayIndexOutOfBoundException。
 通常，Java的异常(包括Exception和Error)分为可查的异常（checked exceptions）和不可查的异常（unchecked exceptions）。
@@ -110,10 +110,10 @@ public class FileDemo { private static void divideFun(int a, int b) { b = a - b;
     
     <item>
       <title>java中位运算技巧</title>
-      <link>https://nicky-chen.github.io/2018/03/21/binary-operation/</link>
+      <link>https://nicky-chin.cn/2018/03/21/binary-operation/</link>
       <pubDate>Wed, 21 Mar 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/03/21/binary-operation/</guid>
+      <guid>https://nicky-chin.cn/2018/03/21/binary-operation/</guid>
       <description>位运算符主要针对二进制，它包括了：“与”、“非”、“或”、“异或”。
 运算符 含义 描述 【&amp;amp;】 按位与 如果两个相应的二进制位都为1，则该位的结果值为1，否则为0 【|】按位或 两个相应的二进制位中只要有一个为1，该位的结果值为1 【^】 按位异或 若参加运算的两个二进制位值相同则为0，否则为1 【~】 取反 ~是一元运算符，用来对一个二进制数按位取反，即将0变1，将1变0 【&amp;lt;&amp;lt;】 左移 用来将一个数的各二进制位全部左移N位，右补0 【&amp;gt;&amp;gt;】右移 将一个数的各二进制位右移N位，移到右端的低位被舍弃，对于无符号数，高位补0
 1、“按位与”运算符（&amp;amp;） 按位与是指：参加运算的两个数据，按二进制位进行“与”运算。如果两个相应的二进制位都为１，则该位的结果值为1；否则为0。内存储存数据的基本单位是字节（Byte），一个字节由8个位（bit)所组成。位是用以描述电脑数据量的最小单位。二进制系统中，每个0或1就是一个位。将11（2）补足成一个字节，则是00000011（2），5的二进制编码是101（2），将其补足成一个字节，则是00000101（2） 按位与运算： 00000011(2) &amp;amp;00000101(2) 00000001(2) 由此可知3&amp;amp;5=1 按位与的用途： （1）清零 若想对一个存储单元清零，即使其全部二进制位为0，只要找一个二进制数，其中各个位符合一下条件： 原来的数中为1的位，新数中相应位为0。然后使二者进行&amp;amp;运算，即可达到清零目的。 例：原数为43，即00101011（2），另找一个数，设它为148，即10010100（2），将两者按位与运算： 00101011（2） &amp;amp;10010100（2） 00000000（2）
@@ -125,10 +125,10 @@ public class FileDemo { private static void divideFun(int a, int b) { b = a - b;
     
     <item>
       <title>Java 内省(Introspector)</title>
-      <link>https://nicky-chen.github.io/2018/03/13/introspector/</link>
+      <link>https://nicky-chin.cn/2018/03/13/introspector/</link>
       <pubDate>Tue, 13 Mar 2018 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2018/03/13/introspector/</guid>
+      <guid>https://nicky-chin.cn/2018/03/13/introspector/</guid>
       <description>内省(Introspector) 是Java 语言对 JavaBean 类属性、事件的一种缺省处理方法。
 　JavaBean是一种特殊的类，主要用于传递数据信息，这种类中的方法主要用于访问私有的字段，且方法名符合某种命名规则。如果在两个模块之间传递信息，可以将信息封装进JavaBean中，这种对象称为“值对象”(Value Object)，或“VO”。方法比较少。这些信息储存在类的私有变量中，通过set()、get()获得。
 　例如类Use :
@@ -138,10 +138,10 @@ public class User { private String name; private String address; public String g
     
     <item>
       <title>自定义序列化之Externalizable接口</title>
-      <link>https://nicky-chen.github.io/2017/01/23/externalizable-interface/</link>
+      <link>https://nicky-chin.cn/2017/01/23/externalizable-interface/</link>
       <pubDate>Mon, 23 Jan 2017 11:18:15 +0800</pubDate>
       
-      <guid>https://nicky-chen.github.io/2017/01/23/externalizable-interface/</guid>
+      <guid>https://nicky-chin.cn/2017/01/23/externalizable-interface/</guid>
       <description>Externalizable简介 Externalizable是一种优先级要高于 Serializable 的序列化机制接口， 这个接口提供了writeExternal()和readExternal()方法用于指定序列化哪些属性。
 Externalizable接口与Serializable接口区别 * 1 Serializable序列化时不会调用默认的构造器，而Externalizable序列化时会调用默认构造器 * 2 transient关键字对Externalizable无效
 代码事例
