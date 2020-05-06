@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
-    <lastBuildDate>Fri, 03 May 2019 11:18:15 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 02 Mar 2020 14:18:15 +0800</lastBuildDate>
     
 	<atom:link href="https://nicky-chin.cn/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>float浮点小数的设计及精度问题</title>
+      <link>https://nicky-chin.cn/2020/03/02/float-precision/</link>
+      <pubDate>Mon, 02 Mar 2020 14:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2020/03/02/float-precision/</guid>
+      <description>1 浮点计算问题  public class Oct2Bin { public static void main(String[] args) { double a = 0.1d; double b = 0.2d; System.out.println(a + b); } }   结果为0.30000000000000004，而非0.3
+ 2 小数计算丢精度原因 2.1 十进制小数转换为二进制小数方法 十进制小数转换成二进制小数采用&amp;rdquo;乘2取整，顺序排列&amp;rdquo;法。具体做法是：用2乘十进制小数，可以得到积，将积的整数部分取出，再用2乘余下的小数 部分，又得到一个积，再将积的整数部分取出，如此进行，直到积中的小数部分为零，或者达到所要求的精度为止。 然后把取出的整数部分按顺序排列起来，先取的整数作为二进制小数的高位有效位，后取的整数作为低位有效位。
+2.2 、0.3背后丢精度的原因  0.3 x 2 = 0.6 ------取整数部分 0 0.6 x 2 = 1.2 ------取整数部分 1 0.2 x 2 = 0.4 ------取整数部分 0 0.4 x 2 = 0.8 ------取整数部分 0 0.8 x 2 = 1.</description>
+    </item>
     
     <item>
       <title>基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</title>
