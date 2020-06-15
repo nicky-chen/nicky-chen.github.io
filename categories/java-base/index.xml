@@ -18,9 +18,7 @@
       <pubDate>Mon, 02 Mar 2020 14:18:15 +0800</pubDate>
       
       <guid>https://nicky-chin.cn/2020/03/02/float-precision/</guid>
-      <description>1 浮点计算问题  public class Oct2Bin { public static void main(String[] args) { double a = 0.1d; double b = 0.2d; System.out.println(a + b); } }   结果为0.30000000000000004，而非0.3
- 2 小数计算丢精度原因 2.1 十进制小数转换为二进制小数方法 十进制小数转换成二进制小数采用&amp;rdquo;乘2取整，顺序排列&amp;rdquo;法。具体做法是：用2乘十进制小数，可以得到积，将积的整数部分取出，再用2乘余下的小数 部分，又得到一个积，再将积的整数部分取出，如此进行，直到积中的小数部分为零，或者达到所要求的精度为止。 然后把取出的整数部分按顺序排列起来，先取的整数作为二进制小数的高位有效位，后取的整数作为低位有效位。
-2.2 、0.3背后丢精度的原因  0.3 x 2 = 0.6 ------取整数部分 0 0.6 x 2 = 1.2 ------取整数部分 1 0.2 x 2 = 0.4 ------取整数部分 0 0.4 x 2 = 0.8 ------取整数部分 0 0.8 x 2 = 1.</description>
+      <description>1 浮点计算问题  public class Oct2Bin { public static void main(String[] args) { double a = 0.</description>
     </item>
     
     <item>
@@ -31,10 +29,7 @@
       <guid>https://nicky-chin.cn/2019/05/03/apt_lombok_implement/</guid>
       <description>1 Lombok原理  1 APT(Annotation Processing Tool )注解处理器 2 javac api处理AST(抽象语法树)
  大致原理如下图所示：
-上面是网上找的图，如想具体分析lombok的实现，可以从 LombokProcessor 和AnnotationProcessor 这两个类的process 方法入手
-2 自己实现Lombok 2.1 创建Data注解 @Documented @Retention(RetentionPolicy.SOURCE) @Target({ElementType.TYPE}) public @interface Data { }  该Data注解只能在编译期的时候获取到，在运行期是无法获取到的
-2.2 自定义注解处理器 通过实现Processor接口可以自定义注解处理器，这里我们采用更简单的方法通过继承AbstractProcessor类实现自定义注解处理器。实现抽象方法process处理我们想要的功能
-2.2.1 APT简单介绍 @SupportedAnnotationTypes({&amp;quot;com.nicky.lombok.annotation.Data&amp;quot;}) @SupportedSourceVersion(SourceVersion.RELEASE_8) public class DataProcessor extends AbstractProcessor { @Override public synchronized void init(ProcessingEnvironment processingEnv) { } @Override public boolean process(Set&amp;lt;? extends TypeElement&amp;gt; annotations, RoundEnvironment roundEnv) { } }  @SupportedAnnotationTypes 注解表示哪些注解需要注解处理器处理，可以多个注解校验 @SupportedSourceVersion 注解 用于指定jdk使用版本</description>
+上面是网上找的图，如想具体分析lombok的实现，可以从 LombokProcessor 和AnnotationProcessor 这两个类的process 方法入手</description>
     </item>
     
     <item>
@@ -49,7 +44,7 @@ MethodHandle
 通过句柄我们可以直接调用该句柄所引用的底层方法。从作用上来看，方法句柄类似于反射中的Method类，是对要执行的方法的一个引用，我们也是通过它来调用底层方法，它调用时有两个方法 invoke和invokeExact，后者要求参数类型与底层方法的参数完全匹配，前者则在有出入时做修改如包装类型。
 MethodType
 方法签名不可变对象，是对方法的一个映射，包含返回值和参数类型。在lookup时也是通过它来寻找的。 每个方法句柄都有一个MethodType实例，用来指明方法的返回类型和参数类型。
-2 简单使用 2.1 demo测试 public class MethodHandleDemo { public static void main(String[] args) throws Throwable{ //参数为返回值类型、参数类型 单个参数 MethodType methodType = MethodType.methodType(void.class, String.class); //声明定义方法句柄，通过lookup对象得到方法句柄，参数为方法所在的类、方法的名称、所匹配的方法签名 MethodHandle methodHandle = MethodHandles.lookup().findVirtual(Test.class, &amp;quot;testMethod&amp;quot;, methodType); //调用底层方法 methodHandle.invoke(Test.class.newInstance(), &amp;quot;hello, world&amp;quot;); //多个参数 MethodHandle testMethod = MethodHandles.lookup().findVirtual(Test.class, &amp;quot;testMethod&amp;quot;, MethodType.methodType(Object.class, String.class, int.class)); testMethod.invoke(Test.class.newInstance(), &amp;quot;aa&amp;quot;, 1); MethodType f3 = MethodType.methodType(Object.class, int.class, int.class); //查找静态方法 MethodHandle aStatic = MethodHandles.lookup().findStatic(Test.class, &amp;quot;add&amp;quot;, f3); //使用invokeExact调用时，参数类型和返回值类型必须与方法签名的一致 aStatic.</description>
+2 简单使用 2.1 demo测试 public class MethodHandleDemo { public static void main(String[] args) throws Throwable{ //参数为返回值类型、参数类型 单个参数 MethodType methodType = MethodType.</description>
     </item>
     
     <item>
@@ -60,10 +55,7 @@ MethodType
       <guid>https://nicky-chin.cn/2018/07/05/spi-introduction/</guid>
       <description>1 定义 SPI 的全名为 Service Provider Interface ，用于接口寻找服务实现类
 实现方式 &amp;gt;标准制定者制定接口 不同厂商编写针对于该接口的实现类，并在jar的“classpath:META-INF/services/全接口名称”文件中指定相应的实现类全类名 开发者直接引入相应的jar，就可以实现为接口自动寻找实现类的功能
-2 案例实现 比如我们经常看到的缓存类Cache,现在有非常多的缓存框架都会去实现这个接口
-标准接口
-public interface Cache { String getName(); &amp;lt;T&amp;gt; T get(Object key, Class&amp;lt;T&amp;gt; type); void put(Object key, Object value); void evict(Object key); void clear(); }  厂商的具体接口实现
-public class ConcurrentMapCache implements Cache { private final String name; private final ConcurrentMap&amp;lt;Object, Object&amp;gt; store; public ConcurrentMapCache() { this(&amp;quot;defaultMapCache&amp;quot;); } public ConcurrentMapCache(String name) { this(name, new ConcurrentHashMap&amp;lt;&amp;gt;(256), true); } public ConcurrentMapCache(String name, ConcurrentMap&amp;lt;Object, Object&amp;gt; store, boolean allowNullValues) { this.</description>
+2 案例实现 比如我们经常看到的缓存类Cache,现在有非常多的缓存框架都会去实现这个接口</description>
     </item>
     
     <item>
@@ -75,12 +67,7 @@ public class ConcurrentMapCache implements Cache { private final String name; pr
       <description>#1 什么是JNDI？ JNDI(Java Naming and Directory Interface,Java命名和目录接口)是SUN公司提供的一种标准的Java命名系统接口，JNDI提供统一的客户端API，通过不同的访问提供者接口JNDI服务供应接口(SPI)的实现，由管理者将JNDI API映射为特定的命名服务和目录系统，使得Java应用程序可以和这些命名服务和目录服务之间进行交互
 通过JNDI可以实现对象的创建与托管,和对象的使用过程完全解耦
 比如:在application的底层创建对象,并将对象bind到特定的context中,对象的创建过程或者&amp;rdquo;查找&amp;rdquo;方式只有此底层模块支持,外部程序不可见.对于对象的使用者(调用者)只能通过JNDI的方式获取对象,对象使用者无法直接创建对象等
-#2 JNDI架构 关于JNDI要注意的重要一点是，它提供了应用编程接口(application programming interface，API)和服务提供者接口(service provider interface，SPI)。这一点的真正含义是，要让应用与命名服务或目录服务交互，必须有这个服务的JNDI服务提供者，这正是JNDI SPI发挥作用的地方。服务提供者基本上是一组类，这些类为各种具体的命名和目录服务实现了JNDI接口—很像JDBC驱动为各种具体的数据库系统实现了JDBC接口一样。作为一个应用开发者，我们不必操心JNDI SPI的具体实现。只需要确认要使用的某一个命名或目录服务都有服务提供者。
-JNDI提供了如下几个程序包： &amp;gt;Javax.naming：包含了访问命名服务的类和接口。例如，它定义了Context接口，这是命名服务执行查询的入口。 Javax.naming.directory：对命名包的扩充，提供了访问目录服务的类和接口。例如，它为属性增加了新的类，提供了表示目录上下文的DirContext接口，定义了检查和更新目录对象的属性的方法。 Javax.naming.event：提供了对访问命名和目录服务时的事件通知的支持。例如，定义了NamingEvent类，这个类用来表示命名/目录服务产生的事件，定义了侦听NamingEvents的NamingListener接口。 Javax.naming.ldap：这个包提供了对LDAP 版本3扩充的操作和控制的支持，通用包javax.naming.directory没有包含这些操作和控制。 Javax.naming.spi：这个包提供了一个方法，通过javax.naming和有关包动态增加对访问命名和目录服务的支持。这个包是为有兴趣创建服务提供者的开发者提供的。
-#3 案例
-引入依赖
- &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.sun.messaging.mq&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;fscontext&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;4.4&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.sun.jndi&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;providerutil&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.2&amp;lt;/version&amp;gt; &amp;lt;type&amp;gt;pom&amp;lt;/type&amp;gt; &amp;lt;/dependency&amp;gt;  文件操作实例
- public static void main(String[] args) throws NamingException { Hashtable&amp;lt;String,String&amp;gt; env = new Hashtable&amp;lt;&amp;gt;(); //指明初始化的factory是我们下载的jar包中的RefFSContextFactory env.put(Context.INITIAL_CONTEXT_FACTORY, &amp;quot;com.sun.jndi.fscontext.RefFSContextFactory&amp;quot;); //指明Context的初始URL，这里我们的是d盘 env.put(Context.PROVIDER_URL,&amp;quot;file:///d:/&amp;quot;); Context ctx = new InitialContext(env); //在C盘下创建要给文件夹 ctx.createSubcontext(&amp;quot;testDir&amp;quot;); //在C盘下定位myFile文件 File f = (File) ctx.</description>
+#2 JNDI架构 关于JNDI要注意的重要一点是，它提供了应用编程接口(application programming interface，API)和服务提供者接口(service provider interface，SPI)。这一点的真正含义是，要让应用与命名服务或目录服务交互，必须有这个服务的JNDI服务提供者，这正是JNDI SPI发挥作用的地方。服务提供者基本上是一组类，这些类为各种具体的命名和目录服务实现了JNDI接口—很像JDBC驱动为各种具体的数据库系统实现了JDBC接口一样。作为一个应用开发者，我们不必操心JNDI SPI的具体实现。只需要确认要使用的某一个命名或目录服务都有服务提供者。</description>
     </item>
     
     <item>
@@ -90,8 +77,7 @@ JNDI提供了如下几个程序包： &amp;gt;Javax.naming：包含了访问命�
       
       <guid>https://nicky-chin.cn/2018/06/02/fail-fast-safe/</guid>
       <description>1 Fail-Fast 1.1 fail-fast定义 fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件 例如：当某一个线程A通过iterator去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出ConcurrentModificationException异常，产生fail-fast事件
-1.2 Iterator与fast-fail机制 1.2.1 Iterator的好处 java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。 比如下面的 ArrayList 和 ImmutableList 遍历的例子：
- public class IteratorTest { public static List&amp;lt;Integer&amp;gt; list = Lists.newArrayList(1, 10, 11, 18, -1, 20, 99); public static ImmutableList&amp;lt;Integer&amp;gt; integerList = ImmutableList.copyOf(list); public static void main(String[] args) { Iterator&amp;lt;Integer&amp;gt; iterator1 = list.iterator(); while (iterator1.hasNext()) { System.out.println(iterator1.next()); } Iterator&amp;lt;Integer&amp;gt; iterator2 = integerList.iterator(); while (iterator2.hasNext()) { System.out.println(iterator2.next()); } }  我们去遍历的时候并不需要关心内部细节，但实际上ImmutableList是一个固定容量的list,不能进行 remove 和 add 方法的操作</description>
+1.2 Iterator与fast-fail机制 1.2.1 Iterator的好处 java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。 比如下面的 ArrayList 和 ImmutableList 遍历的例子：</description>
     </item>
     
     <item>
@@ -110,13 +96,7 @@ JNDI提供了如下几个程序包： &amp;gt;Javax.naming：包含了访问命�
       <pubDate>Tue, 17 Apr 2018 11:18:15 +0800</pubDate>
       
       <guid>https://nicky-chin.cn/2018/04/17/exception-introduce/</guid>
-      <description>1 异常层次结构 异常指不期而至的各种状况，如：文件找不到、网络连接失败、非法参数等。异常是一个事件，它发生在程序运行期间，干扰了正常的指令流程。Java通 过API中Throwable类的众多子类描述各种不同的异常。因而，Java异常都是对象，是Throwable子类的实例，描述了出现在一段编码中的 错误条件。当条件生成时，错误将引发异常。 Java异常类层次结构图： 在 Java 中，所有的异常都有一个共同的祖先 Throwable（可抛出）。Throwable 指定代码中可用异常传播机制通过 Java 应用程序传输的任何问题的共性。 Throwable： 有两个重要的子类：*Exception（异常）和 Error（错误）*，二者都是 Java 异常处理的重要子类，各自都包含大量子类。 Error（错误）:是程序无法处理的错误，表示运行应用程序中较严重问题。大多数错误与代码编写者执行的操作无关，而表示代码运行时 JVM（Java 虚拟机）出现的问题。例如，Java虚拟机运行错误（Virtual MachineError），当 JVM 不再有继续执行操作所需的内存资源时，将出现 OutOfMemoryError。这些异常发生时，Java虚拟机（JVM）一般会选择线程终止。这些错误表示故障发生于虚拟机自身、或者发生在虚拟机试图执行应用时，如Java虚拟机运行错误（Virtual MachineError）、类定义错误（NoClassDefFoundError）等。这些错误是不可查的，因为它们在应用程序的控制和处理能力之 外，而且绝大多数是程序运行时不允许出现的状况。对于设计合理的应用程序来说，即使确实发生了错误，本质上也不应该试图去处理它所引起的异常状况。在 Java中，错误通过Error的子类描述。
-Exception（异常）:是程序本身可以处理的异常。 Exception 类有一个重要的子类 RuntimeException。RuntimeException 类及其子类表示“JVM 常用操作”引发的错误。例如，若试图使用空值对象引用、除数为零或数组越界，则分别引发运行时异常（NullPointerException、ArithmeticException）和 ArrayIndexOutOfBoundException。
-通常，Java的异常(包括Exception和Error)分为可查的异常（checked exceptions）和不可查的异常（unchecked exceptions）。
- 运行时异常：都是RuntimeException类及其子类异常，如NullPointerException(空指针异常)、IndexOutOfBoundsException(下标越界异常)等，这些异常是不检查异常，程序中可以选择捕获处理，也可以不处理。这些异常一般是由程序逻辑错误引起的，程序应该从逻辑角度尽可能避免这类异常的发生。 运行时异常的特点是Java编译器不会检查它，也就是说，当程序中可能出现这类异常，即使没有用try-catch语句捕获它，也没有用throws子句声明抛出它，也会编译通过。
-非运行时异常 （编译异常）：是RuntimeException以外的异常，类型上都属于Exception类及其子类。从程序语法角度讲是必须进行处理的异常，如果不处理，程序就不能编译通过。如IOException、SQLException等以及用户自定义的Exception异常，一般情况下不自定义检查异常。
- 2 JVM字节码分析异常处理机制 我们都知道 try、catch、finally语句块的执行顺序: 接下来我们从字节码的角度加深对异常机制的理解， 我们先反编译如下代码：
-public class FileDemo { private static void divideFun(int a, int b) { b = a - b; } public static void main(String[] args) { int a = 1; int b = 3; try { b = a + b; FilterInputStream filterInputStream = new BufferedInputStream(new FileInputStream(&amp;quot;d:/a&amp;quot;)); } catch (FileNotFoundException e) { System.</description>
+      <description>1 异常层次结构 异常指不期而至的各种状况，如：文件找不到、网络连接失败、非法参数等。异常是一个事件，它发生在程序运行期间，干扰了正常的指令流程。Java通 过API中Throwable类的众多子类描述各种不同的异常。因而，Java异常都是对象，是Throwable子类的实例，描述了出现在一段编码中的 错误条件。当条件生成时，错误将引发异常。 Java异常类层次结构图： 在 Java 中，所有的异常都有一个共同的祖先 Throwable（可抛出）。Throwable 指定代码中可用异常传播机制通过 Java 应用程序传输的任何问题的共性。 Throwable： 有两个重要的子类：*Exception（异常）和 Error（错误）*，二者都是 Java 异常处理的重要子类，各自都包含大量子类。 Error（错误）:是程序无法处理的错误，表示运行应用程序中较严重问题。大多数错误与代码编写者执行的操作无关，而表示代码运行时 JVM（Java 虚拟机）出现的问题。例如，Java虚拟机运行错误（Virtual MachineError），当 JVM 不再有继续执行操作所需的内存资源时，将出现 OutOfMemoryError。这些异常发生时，Java虚拟机（JVM）一般会选择线程终止。这些错误表示故障发生于虚拟机自身、或者发生在虚拟机试图执行应用时，如Java虚拟机运行错误（Virtual MachineError）、类定义错误（NoClassDefFoundError）等。这些错误是不可查的，因为它们在应用程序的控制和处理能力之 外，而且绝大多数是程序运行时不允许出现的状况。对于设计合理的应用程序来说，即使确实发生了错误，本质上也不应该试图去处理它所引起的异常状况。在 Java中，错误通过Error的子类描述。</description>
     </item>
     
     <item>
@@ -126,12 +106,7 @@ public class FileDemo { private static void divideFun(int a, int b) { b = a - b;
       
       <guid>https://nicky-chin.cn/2018/03/21/binary-operation/</guid>
       <description>位运算符主要针对二进制，它包括了：“与”、“非”、“或”、“异或”。
-运算符 含义 描述 【&amp;amp;】 按位与 如果两个相应的二进制位都为1，则该位的结果值为1，否则为0 【|】按位或 两个相应的二进制位中只要有一个为1，该位的结果值为1 【^】 按位异或 若参加运算的两个二进制位值相同则为0，否则为1 【~】 取反 ~是一元运算符，用来对一个二进制数按位取反，即将0变1，将1变0 【&amp;lt;&amp;lt;】 左移 用来将一个数的各二进制位全部左移N位，右补0 【&amp;gt;&amp;gt;】右移 将一个数的各二进制位右移N位，移到右端的低位被舍弃，对于无符号数，高位补0
-1、“按位与”运算符（&amp;amp;） 按位与是指：参加运算的两个数据，按二进制位进行“与”运算。如果两个相应的二进制位都为１，则该位的结果值为1；否则为0。内存储存数据的基本单位是字节（Byte），一个字节由8个位（bit)所组成。位是用以描述电脑数据量的最小单位。二进制系统中，每个0或1就是一个位。将11（2）补足成一个字节，则是00000011（2），5的二进制编码是101（2），将其补足成一个字节，则是00000101（2） 按位与运算： 00000011(2) &amp;amp;00000101(2) 00000001(2) 由此可知3&amp;amp;5=1 按位与的用途： （1）清零 若想对一个存储单元清零，即使其全部二进制位为0，只要找一个二进制数，其中各个位符合一下条件： 原来的数中为1的位，新数中相应位为0。然后使二者进行&amp;amp;运算，即可达到清零目的。 例：原数为43，即00101011（2），另找一个数，设它为148，即10010100（2），将两者按位与运算： 00101011（2） &amp;amp;10010100（2） 00000000（2）
-（2）取一个数中某些指定位 若有一个整数a(2byte),想要取其中的低字节，只需要将a与8个1按位与即可。 a 00101100 10101100 b 00000000 11111111 c 00000000 10101100 （3）保留指定位： 与一个数进行“按位与”运算，此数在该位取1. 例如：有一数84，即01010100（2），想把其中从左边算起的第3，4，5，7，8位保留下来，运算如下： 01010100(2) &amp;amp;00111011(2) 00010000(2) 即：a=84,b=59 c=a&amp;amp;b=16
-2、“按位或”运算符（|） 两个相应的二进制位中只要有一个为1，该位的结果值为1。借用逻辑学中或运算的话来说就是，一真为真 。 例如：60（8）|17（8）,将八进制60与八进制17进行按位或运算。 00110000 |00001111 00111111
-应用：按位或运算常用来对一个数据的某些位定值为1。例如：如果想使一个数a的低4位改为1，则只需要将a与17（8）进行按位或运算即可。
-３、异或 例如：ａ＝３，即11（2）；ｂ＝４，即100（2）。 想将ａ和ｂ的值互换，可以用以下赋值语句实现： ａ＝a∧b; ｂ＝b∧a; ａ＝a∧b; ａ＝011(2) （∧）ｂ＝100(2) ａ＝111(2)（a∧b的结果，a已变成７） （∧）ｂ＝100(2) ｂ＝011(2)（b∧a的结果，b已变成３） （∧）ａ＝111(2)</description>
+运算符 含义 描述 【&amp;amp;】 按位与 如果两个相应的二进制位都为1，则该位的结果值为1，否则为0 【|】按位或 两个相应的二进制位中只要有一个为1，该位的结果值为1 【^】 按位异或 若参加运算的两个二进制位值相同则为0，否则为1 【~】 取反 ~是一元运算符，用来对一个二进制数按位取反，即将0变1，将1变0 【&amp;lt;&amp;lt;】 左移 用来将一个数的各二进制位全部左移N位，右补0 【&amp;gt;&amp;gt;】右移 将一个数的各二进制位右移N位，移到右端的低位被舍弃，对于无符号数，高位补0</description>
     </item>
     
     <item>
@@ -143,8 +118,7 @@ public class FileDemo { private static void divideFun(int a, int b) { b = a - b;
       <description>内省(Introspector) 是Java 语言对 JavaBean 类属性、事件的一种缺省处理方法。
 　JavaBean是一种特殊的类，主要用于传递数据信息，这种类中的方法主要用于访问私有的字段，且方法名符合某种命名规则。如果在两个模块之间传递信息，可以将信息封装进JavaBean中，这种对象称为“值对象”(Value Object)，或“VO”。方法比较少。这些信息储存在类的私有变量中，通过set()、get()获得。
 　例如类Use :
-public class User { private String name; private String address; public String getName() { return name; } public void setName(String name) { this.name = name; } public String getAddress() { return address; } public void setAddress(String address) { this.address = address; } }  　在类User中有属性 name, 那我们可以通过 getName,setName来得到其值或者设置新的值。通过 getName/setName来访问 name属性，这就是默认的规则。 Java JDK中提供了一套 API 用来访问某个属性的 getter/setter 方法，这就是内省。
-　JDK内省类库：</description>
+public class User { private String name; private String address; public String getName() { return name; } public void setName(String name) { this.</description>
     </item>
     
     <item>
@@ -157,7 +131,7 @@ public class User { private String name; private String address; public String g
 Externalizable接口与Serializable接口区别 * 1 Serializable序列化时不会调用默认的构造器，而Externalizable序列化时会调用默认构造器 * 2 transient关键字对Externalizable无效
 代码事例
 公共抽象实体类AbstractDO
-public abstract class AbstractDO implements Externalizable { private static final long serialVersionUID = -1679770357930200297L; private Long id; private Date createTime; private Date updateTime; public Long getId() { return id; } public void setId(Long id) { this.id = id; } public Date getCreateTime() { return createTime; } public void setCreateTime(Date createTime) { this.createTime = createTime; } public Date getUpdateTime() { return updateTime; } public void setUpdateTime(Date updateTime) { this.</description>
+public abstract class AbstractDO implements Externalizable { private static final long serialVersionUID = -1679770357930200297L; private Long id; private Date createTime; private Date updateTime; public Long getId() { return id; } public void setId(Long id) { this.</description>
     </item>
     
   </channel>

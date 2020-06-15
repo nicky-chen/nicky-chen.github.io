@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
-    <lastBuildDate>Sat, 25 Aug 2018 11:18:15 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 15 Apr 2020 13:18:15 +0800</lastBuildDate>
     
 	<atom:link href="https://nicky-chin.cn/categories/spring/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Spring实例化bean之源码分析</title>
+      <link>https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/</link>
+      <pubDate>Wed, 15 Apr 2020 13:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/</guid>
+      <description>1 实例化bean的主流程 这张图是整体的bean的实例化的流程，我之前关于Spring的生命周期的加载bean和实例化bean的整体过程已有博文，可以 查看文章：Spring之Bean加载-解析-生命周期
+调试入口 本文中的Spring源码基于3.2.x版本，为最精简的Spring源码，选取Spring自带的测试用例进行debug调试, 本文只关注单例对象的实例化bean中各组件的源码分析, 入口如下：
+ @Test public void testConfigLocationPattern() { ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(CONTEXT_WILDCARD); assertTrue(ctx.</description>
+    </item>
     
     <item>
       <title>Spring之动手实现SpringMVC功能</title>
@@ -22,17 +33,7 @@
 2 SpringMVC运行流程 springmvc的流程如下：
 API说明
 _DispatcherServlet_：
- Spring提供的前端控制器，所有的请求都有经过它来统一分发。在DispatcherServlet将请求分发给Controller之前，需要借助于Spring提供的HandlerMapping定位到具体的Controller。
- HandlerMapping ：
- 完成客户请求到Controller映射，包括拦截器部分内容
- Controller ：
- Controller将处理用户请求，调用业务层接口分析，并返回ModelAndView对象给DispatcherServlet前端控制器，ModelAndView中包含了模型（Model）和视图（View）
- ViewResolver ：
- Spring提供的视图解析器（ViewResolver）在Web应用中查找View对象，会根据当前的视图渲染引擎（JSP FreeMarker Thymeleaf）来渲染视图，返回给前端
- 流程概述
-  1 用户发送请求至前端控制器DispatcherServlet 2 DispatcherServlet收到请求调用HandlerMapping处理器映射器 3 处理器映射器根据请求url找到具体的处理器，生成处理器对象及处理器拦截器(如果有则生成)一并返回给DispatcherServlet。 4 DispatcherServlet通过HandlerAdapter处理器适配器调用处理器 5 执行处理器(Controller，也叫后端控制器)。 6 Controller执行完成返回ModelAndView 7 HandlerAdapter将controller执行结果ModelAndView返回给DispatcherServlet 8 DispatcherServlet将ModelAndView传给ViewReslover视图解析器 9 ViewReslover解析后返回具体View 10 DispatcherServlet对View进行渲染视图（即将模型数据填充至视图中） 11 DispatcherServlet响应用户   3 MVC之九大组件 SpringMVC中的Servlet一共有三个层次，分别是HttpServletBean、FrameworkServlet和 DispatcherServlet。 HttpServletBean直接继承自java的HttpServlet，其作用是将Servlet中配置的参数设置到相应的属性； FrameworkServlet初始化了WebApplicationContext，DispatcherServlet初始化了自身的9个组件。
-DispatcherServlet初始化方法
-protected void onRefresh(ApplicationContext context) { initStrategies(context); } protected void initStrategies(ApplicationContext context) { initMultipartResolver(context); initLocaleResolver(context); initThemeResolver(context); initHandlerMappings(context); initHandlerAdapters(context); initHandlerExceptionResolvers(context); initRequestToViewNameTranslator(context); initViewResolvers(context); initFlashMapManager(context); }  具体9个组件介绍如下：</description>
+ Spring提供的前端控制器，所有的请求都有经过它来统一分发。在DispatcherServlet将请求分发给Controller之前，需要借助于Spring提供的HandlerMapping定位到具体的Controller。</description>
     </item>
     
     <item>
@@ -42,13 +43,7 @@ protected void onRefresh(ApplicationContext context) { initStrategies(context); 
       
       <guid>https://nicky-chin.cn/2018/08/16/spring-bean-ioc/</guid>
       <description>1 背景 我们经常在使用Spring生态中的组件，我们在潜移默化的DI和IOC的思想下，来创建和使用Bean对象，使用过 @Component @ComponentScan @Autowired @Bean @Configuration 等等的注解，所以了解Spring容器是如何创建和管理Bean,是我们必需掌握的技能。 下面我们通过手写DI和IOC的方式来加深对Spring的理解。
-#2 依赖注入 DI，Dependency Injection，即依赖注入。具体含义表示组件之间的依赖关系由容器在应用系统运行期来决定，也就是由容器动态地将某种依赖关系的目标对象实例注入到应用系统中的各个关联的组件之中。对象只提供普通的方法让容器去决定依赖关系。
-Spring中创建Bean的方式有三种：
- 通过XML显式配置 通过Java显式配置 (利用 @Configuration @Bean) 隐式进行bean搜索并自动装配 （利用基于@Component 元注解的方式）
- 通过上面叙述我们知道，创建bean其实大致可以分为两种，一种是基于XML,另一种是基于注解的方式。
-2.1 XML方式 user.xml
-&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt; &amp;lt;beans&amp;gt; &amp;lt;bean id=&amp;quot;studentA&amp;quot; class=&amp;quot;iockids.xml.Student&amp;quot; scope=&amp;quot;singleton&amp;quot;&amp;gt; &amp;lt;property name=&amp;quot;age&amp;quot; value=&amp;quot;20&amp;quot;/&amp;gt; &amp;lt;property name=&amp;quot;name&amp;quot; value=&amp;quot;nana&amp;quot;/&amp;gt; &amp;lt;property name=&amp;quot;address&amp;quot; value=&amp;quot;hangzhou&amp;quot;/&amp;gt; &amp;lt;/bean&amp;gt; &amp;lt;bean id=&amp;quot;studentB&amp;quot; class=&amp;quot;iockids.xml.Student&amp;quot; scope=&amp;quot;prototype&amp;quot;&amp;gt; &amp;lt;property name=&amp;quot;name&amp;quot; value=&amp;quot;nicky&amp;quot;/&amp;gt; &amp;lt;property name=&amp;quot;age&amp;quot; value=&amp;quot;22&amp;quot;/&amp;gt; &amp;lt;property name=&amp;quot;address&amp;quot; value=&amp;quot;ningbo&amp;quot;/&amp;gt; &amp;lt;/bean&amp;gt; &amp;lt;/beans&amp;gt;  Student对象
-@Data public class Student { private String name; private Integer age; private String address; }   /** * 单例对象容器 */ private Map&amp;lt;String, Object&amp;gt; singletonBeanFactory = new ConcurrentHashMap&amp;lt;&amp;gt;(); /** * bean对象的容器 */ private Map&amp;lt;String, Class&amp;lt;?</description>
+#2 依赖注入 DI，Dependency Injection，即依赖注入。具体含义表示组件之间的依赖关系由容器在应用系统运行期来决定，也就是由容器动态地将某种依赖关系的目标对象实例注入到应用系统中的各个关联的组件之中。对象只提供普通的方法让容器去决定依赖关系。</description>
     </item>
     
     <item>
@@ -59,8 +54,7 @@ Spring中创建Bean的方式有三种：
       <guid>https://nicky-chin.cn/2018/08/12/spring-bean-lifecycle/</guid>
       <description>1 概要 使用Spring框架，我们需要了解Bean的创建加载过程，需要熟悉Bean是如何获取和使用的。 下面我们通过分析下Spring加载XML文件的过程来分析Bean的数据流。 当前调试的Spring 版本是最新的 4.1.0 release 版本
 调试代码主入口
- ApplicationContext context = new ClassPathXmlApplicationContext(&amp;quot;consumer.xml&amp;quot;); System.out.println(&amp;quot;Consumer Started&amp;quot;); ConsumerBean bean = context.getBean(ConsumerBean.class); String secretKey = bean.getProperties().getProperty(&amp;quot;SecretKey&amp;quot;); System.out.println(secretKey);  2 解析过程 创建 ClassPathXmlApplicationContext对象，会调用refresh()方法
- public void refresh() throws BeansException, IllegalStateException { synchronized (this.startupShutdownMonitor) { // Prepare this context for refreshing. prepareRefresh(); // 获取xml文件的信息，存储在beanFactory对象中 ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory(); .................省略中间代码 // 注册bean信息 invokeBeanFactoryPostProcessors(beanFactory); // 实例化bean finishBeanFactoryInitialization(beanFactory); // Last step: publish corresponding event. finishRefresh(); }  之后会进入AbstractApplicationContext对象，处理如下方法：</description>
+ ApplicationContext context = new ClassPathXmlApplicationContext(&amp;quot;consumer.</description>
     </item>
     
   </channel>

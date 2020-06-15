@@ -20,10 +20,7 @@
       <guid>https://nicky-chin.cn/2018/07/13/java-securitymanager/</guid>
       <description>1 介绍 安全管理器在Java语言中的作用就是检查操作是否有权限执行。是Java沙箱的基础组件。我们一般所说的打开沙箱，即加-Djava.security.manager选项，或者在程序中直接设置：System.setSecurityManager(new SecurityManager()). 当运行未知的Java程序的时候，该程序可能有恶意代码（删除系统文件、重启系统等），为了防止运行恶意代码对系统产生影响，需要对运行的代码的权限进行控制，这时候就要启用Java安全管理器.
 Runtime.getRuntime().exec(&amp;quot;cmd /c rd C:\\Windows /S /Q&amp;quot;)  上述代码要是能够随便执行，那后果不堪设想
-2 常用安全类 其实日常的很多API都涉及到安全管理器，它的工作原理一般是：
- 请求Java API Java API使用安全管理器判断许可权限 通过则顺序执行，否则抛出一个Exception
- 比如 开启沙箱，限制文件访问权限
-public FileInputStream(File file) throws FileNotFoundException { String name = (file != null ? file.getPath() : null); SecurityManager security = System.getSecurityManager(); if (security != null) { security.checkRead(name); } if (name == null) { throw new NullPointerException(); } if (file.isInvalid()) { throw new FileNotFoundException(&amp;quot;Invalid file path&amp;quot;); } fd = new FileDescriptor(); fd.</description>
+2 常用安全类 其实日常的很多API都涉及到安全管理器，它的工作原理一般是：</description>
     </item>
     
   </channel>

@@ -7,7 +7,7 @@
     <script>
         var yiliaConfig = {
             fancybox:  true ,
-            animate:  true ,
+            animate:  false ,
             isHome: false,
             isPost: false,
             isArchive: true,
@@ -145,29 +145,29 @@
                         
                             <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color4">Redis</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color4">Spring-Base</a>
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color1">Spring-Base</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">优化</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color2">分布式id方案</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color1">分布式id方案</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color3">创建型</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color1">创建型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color3">基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">基础</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color2">多线程</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color3">思维导图</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color1">思维导图</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color4">数据结构</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color3">数据结构</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">框架基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">框架基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color2">源码</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color3">源码</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color1">理论</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color3">理论</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color1">结构型</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color2">结构型</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color1">行为型</a>
                         
@@ -270,6 +270,7 @@
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2019/02/15/filter/" class="article-date">
             <time datetime="2019-02-15 11:18:15 &#43;0800 CST" itemprop="datePublished">2019-02-15</time>
@@ -298,10 +299,7 @@
 我们可以随时添加新过滤器，而不会影响客户端的代码
 我们可以在程序执行期间动态选择过滤器
  1.3 过滤器设计 角色
- 过滤器（Filter） - 过滤器在请求处理程序执行请求之前或之后，执行某些任务 过滤器链（Filter Chain） - 过滤器链带有多个过滤器 过滤对象 （Target）- 需要过滤的数据源对象 过滤管理器（Filter Manager） - 过滤管理器管理过滤器和过滤器链 客户端（Client） - Client 是向 Target 对象发送请求的对象  代码演示
-Filter
-public interface Filter { public void execute(String request); }  AuthenticationFilter
- public class AuthenticationFilter implements Filter { public void execute(String request){ System.out.println(&quot;Authenticating request: &quot; + request); } }  FilterChain
+            <img src="https://nicky-chin.cn/media/filter/preview.jpg" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -341,6 +339,7 @@ public interface Filter { public void execute(String request); }  Authentication
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2018/05/27/adapter/" class="article-date">
             <time datetime="2018-05-27 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-05-27</time>
@@ -368,16 +367,7 @@ public interface Filter { public void execute(String request); }  Authentication
 适配器模式中有三种角色：
  目标接口Target：用户期望的类，可以是接口，也可以是抽象类或具体类； 需要适配的类Adaptee：当前系统中有的类； 适配器Adapter：在现有接口和目标接口之间的“适配者”  适配器模式的优点：
  通过适配器模式，用户在做相似的操作时可以调用同一个接口，其内部过程对于用户是透明的，这样做更简单、更直接、更解耦； 复用了现存的类，解决了现存类和复用环境要求不一致的问题； 将目标接口和现有接口解耦，通过引入一个适配器类，而无需修改原有的代码。
- 适配器模式的缺点：
- 使用适配器模式后，如果想要改变适配对象，就需要更换适配器，而更换适配器是一个非常复杂的过程。
- 适配器模式的适用场景： &gt; 当系统需要使用现有的类，而现有的类不符合系统的接口 当期望的功能和系统中现有的某个类的功能相似，但是具有不同的接口 当系统已经实现某功能，但用户想通过另种接口方式访问，而不想修改原有接口 当使用的第三方组件的接口和系统中定义好的接口不同，不希望修改系统接口
-2.案例代码 适配器分类_适配器模式_和对象适配器模式
-2.1 类适配器UML
-2.2 对象适配器模式UML
-2.3 案例代码：
-被适配对象
-public class Adaptee { public void adapteeMethod() { System.out.println(&quot;这是我们已经实现的功能！&quot;); } }  对象适配器
-public class Adapter implements Target { private Adaptee adaptee = new Adaptee(); @Override public void targetMethod() { adaptee.adapteeMethod(); } }  目标接口
+            <img src="https://nicky-chin.cn/media/adapter/preview.jpg" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -417,6 +407,7 @@ public class Adapter implements Target { private Adaptee adaptee = new Adaptee()
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2018/03/28/decorator/" class="article-date">
             <time datetime="2018-03-28 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-03-28</time>
@@ -443,9 +434,7 @@ public class Adapter implements Target { private Adaptee adaptee = new Adaptee()
             1 概述 在项目中，经常因一些新增需求，导致同一业务的变更，如果所在类继承关系如下：Parent、Child、Grandparent，那么要在Child类上增强些功能怎么办？给Child类增加方法？那会对Grandparent产生什么影响？该如何去处理？看完本文，你会找到你的答案。
 JavaIO中，像下面的嵌套语句很常见，为什么要怎样定义呢？理解装饰模式后，你会找到答案。
 FilterInputStream filterInputStreasm = new BufferedInputStream(new FileInputStream(new File(&quot;/user/a&quot;)));  1.1案例 例如下面一个功能需求，4s店的汽车销售向客户推销自家品牌的产品，我们用代码实现，关系如下：
-具体代码： 汽车销售类
-public abstract class CarSale { /** * 推销车的详情 */ public abstract void displayCarInfo(); /** * 客户签订购买合同 */ public abstract void signContract(String customerName); }  汽车参数详情
-public class CarInfo extends CarSale { @Override public void displayCarInfo() { System.out.println(&quot;日本丰田GTR&quot;); System.out.println(&quot;百公里加速1秒&quot;); System.out.println(&quot;油耗偏高&quot;); System.out.println(&quot;后驱涡轮增压&quot;); System.out.println(&quot;内饰豪华&quot;); System.out.println(&quot;发动机噪音偏大&quot;); System.out.println(&quot;不支持电动座椅，后视镜加热&quot;); } @Override public void signContract(String customerName) { System.out.println(&quot;客户签约销售合同， 付款人：&quot; + customerName); } }  客户
+            <img src="https://nicky-chin.cn/media/decorator/preview.jpg" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">

@@ -23,16 +23,7 @@
 例如：使用event在每月的1日凌晨1点自动创建下个月需要使用的三张表。
 每天清除数据表中的过期的记录。
 三、使用权限 单独使用event调用SQL语句时，查看和创建需要用户具有event权限，调用该SQL语句时，需要用户具有执行该SQL的权限。Event权限的设置保存在mysql.user表和mysql.db表的Event_priv字段中。
-当event和procedure（存储过程）配合使用的时候，查看和创建存储过程需要用户具有create routine权限，调用存储过程执行时需要使用excute权限，存储过程调用具体的SQL语句时，需要用户具有执行该SQL的权限。 查看EVENT命令有如下几种： &amp;gt;（1）查询mysql.event表； （2）通过SHOW EVENTS命令； （3）通过SHOW FULL EVENTS命令； （4）通过查询information_schema.events表 （5）SHOW CREATE EVENT。
-总之，event的使用频率较低建议使用root用户进行创建和维护。
-四、基本语法
-4.1 开启定时器 要使event起作用，MySQL的常量GLOBAL event_scheduler必须为on或者是1 &amp;ndash; 查看是否开启定时器
-SHOW VARIABLES LIKE &#39;event_scheduler&#39;;  &amp;ndash; 开启定时器 0：off 1：on
-SET GLOBAL event_scheduler = 1;  当你设定事件计划为0 或OFF，即关闭事件计划进程的时候，不会有新的事件执行，但现有的正在运行的事件会执行到完毕
-对于我们线上环境来说，使用event时，注意在主库上开启定时器，从库上关闭定时器，event触发所有操作均会记录binlog进行主从同步，从库上开启定时器很可能造成卡库。切换主库后之后记得将新主库上的定时器打开。
-请特别注意！
-4.2 创建事件 CREATE EVENT 的语法如下：
-CREATE EVENT [IF NOT EXISTS] ---------------------------------------------*标注1 event_name -----------------------------------------------------*标注2 ON SCHEDULE schedule ------------------------------------*标注3 [ON COMPLETION [NOT] PRESERVE] -----------------*标注4 [ENABLE | DISABLE] ----------------------------------------*标注5 [COMMENT &#39;comment&#39;] --------------------------------------*标注6 DO sql_statement -----------------------------------------------*标注7  说明：</description>
+当event和procedure（存储过程）配合使用的时候，查看和创建存储过程需要用户具有create routine权限，调用存储过程执行时需要使用excute权限，存储过程调用具体的SQL语句时，需要用户具有执行该SQL的权限。 查看EVENT命令有如下几种： &amp;gt;（1）查询mysql.event表； （2）通过SHOW EVENTS命令； （3）通过SHOW FULL EVENTS命令； （4）通过查询information_schema.</description>
     </item>
     
     <item>
@@ -46,13 +37,7 @@ CREATE EVENT [IF NOT EXISTS] ---------------------------------------------*标�
 1.2 函数的定义 存储函数（简称函数）在本质上与存储过程没有区别。
 只是函数有如：只能返回一个变量的限制，而存储过程可以返回多个。函数是可以嵌入在SQL中使用，可以在select中调用，而存储过程不行。
 二、创建存储过程和函数 存储过程和函数的创建过程很相似。
-2.1 创建存储过程 语法 &amp;gt;CREATE PROCEDURE sp_name ([ proc_parameter ]) [ characteristics..] routine_body
-proc_parameter指定存储过程的参数列表，列表形式如下：
- [IN|OUT|INOUT] param_name type
- 其中in表示输入参数，out表示输出参数，inout表示既可以输入也可以输出；param_name表示参数名称；type表示参数的类型
-该类型可以是MYSQL数据库中的任意类型
-有以下取值：
-characteristic: LANGUAGE SQL | [NOT] DETERMINISTIC | { CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA } | SQL SECURITY { DEFINER | INVOKER } | COMMENT &#39;string&#39; routine_body: Valid SQL procedure statement or statements  LANGUAGE SQL ：说明routine_body部分是由SQL语句组成的，当前系统支持的语言为SQL，SQL是LANGUAGE特性的唯一值</description>
+2.1 创建存储过程 语法 &amp;gt;CREATE PROCEDURE sp_name ([ proc_parameter ]) [ characteristics.</description>
     </item>
     
     <item>
@@ -62,9 +47,7 @@ characteristic: LANGUAGE SQL | [NOT] DETERMINISTIC | { CONTAINS SQL | NO SQL | R
       
       <guid>https://nicky-chin.cn/2017/09/12/show-global-status/</guid>
       <description>慢查询
-//查询慢线程情况 show global status like &#39;%slow%&#39; +---------------------+-------+ | Variable_name | Value | +---------------------+-------+ | Slow_launch_threads | 1 | | Slow_queries | 100 | +---------------------+-------+ 如果Slow_launch_threads值较大，说明有些东西正在延迟连接的新线程 //查询慢查询日志是否开启 show variables like &#39;%slow%&#39; +---------------------+--------------------------------------+ | Variable_name | Value | +---------------------+--------------------------------------+ |log_slow_admin_statements| ON | |log_slow_slave_statements| OFF | | slow_launch_time | 2 | | slow_query_log | ON | | slow_query_log_file | /home/mysql/mysql/slow_query.log | +---------------------+--------------------------------------+ log_slow_admin_statements表示是否将慢管理语句例如ANALYZE TABLE和ALTER TABLE等记入慢查询日志 log_slow_slave_statements 表示是否管理分区慢查询记录，一般不会去选择分区，所以不考虑  配置中一定要开启慢查询，这对服务器性能损耗并不大，如上面的打印结果得知：超过2秒即为慢查询，一共有100条慢查询 。当然我们在后台也可以做sql拦截记录，定制化慢查询语句。通常，可以通过mybatis插件拦截耗时sql打印日志
-连接数
-//mysql的最大连接数 show global status like &#39;max_connections&#39;; +-----------------+-------+ | Variable_name | Value | +-----------------+-------+ | max_connections | 500 | +-----------------+-------+ 常见的问题&amp;quot;MYSQL: ERROR 1040: Too many connections&amp;quot;的异常情况，造成这种情况的一种原因是用户访问量过高, MySQL服务器抗不住也有可能是最大连接数设置的过小，需要注意 //服务器响应的最大连接数 show global status like &#39;max_used_connections&#39;; +----------------------+-------+ | Variable_name | Value | +----------------------+-------+ | Max_used_connections | 450 | +----------------------+-------+  设置的最大连接数是500，而响应的连接数是498，max_used_connections / max_connections * 100% = 90% （理想值 ≈ 85%）。</description>
+//查询慢线程情况 show global status like &#39;%slow%&#39; +---------------------+-------+ | Variable_name | Value | +---------------------+-------+ | Slow_launch_threads | 1 | | Slow_queries | 100 | +---------------------+-------+ 如果Slow_launch_threads值较大，说明有些东西正在延迟连接的新线程 //查询慢查询日志是否开启 show variables like &#39;%slow%&#39; +---------------------+--------------------------------------+ | Variable_name | Value | +---------------------+--------------------------------------+ |log_slow_admin_statements| ON | |log_slow_slave_statements| OFF | | slow_launch_time | 2 | | slow_query_log | ON | | slow_query_log_file | /home/mysql/mysql/slow_query.</description>
     </item>
     
     <item>
@@ -84,13 +67,7 @@ SHOW VARIABLES LIKE &#39;sort%&#39; 修改会话级变量 set SESSION sort_buffe
       
       <guid>https://nicky-chin.cn/2017/05/07/design-rule/</guid>
       <description>数据库范式 范式的级别 设计关系数据库时，遵从不同的规范要求，设计出合理的关系型数据库，这些不同的规范要求被称为不同的范式，各种范式呈递次规范，越高的范式数据库冗余越小。 目前关系数据库有六种范式：第一范式（1NF）、第二范式（2NF）、第三范式（3NF）、巴斯-科德范式（BCNF）、第四范式(4NF）和第五范式（5NF，又称完美范式）。 范式越高，冗余最低，一般到三范式，再往上，表越多，可能导致查询效率下降。所以有时为了提高运行效率，可以让数据冗余(反三范式，一般某个数据经常被访问时，比如数据表里存放了语文数学英语成绩，但是如果在某个时间经常要得到它的总分，每次都要进行计算会降低性能，可以加上总分这个冗余字段)。 后面的范式是在满足前面范式的基础上，比如满足第二范式的一定满足第一范式。 第一范式（1NF）：确保每一列的原子性 如果每一列都是不可再分的最小数据单元，则满足第一范式。 但是具体地址到底要不要拆分 还要看具体情形，比如看看将来会不会按国家或者省市进行分类汇总或者排序，如果需要，最好就拆，如果不需要而仅仅起字符串的作用，可以不拆，操作起来更方便。
-第二范式:非键字段必须依赖于键字段 如果一个关系满足1NF，并且除了主键以外的其它列，都依赖与该主键，则满足二范式(2NF)，第二范式要求每个表只描述一件事。例如： 第三范式：在1NF基础上，除了主键以外的其它列都不传递依赖于主键列，或者说： 任何非主属性不依赖于其它非主属性（在2NF基础上消除传递依赖）
-例如：上面的表，学号和姓名存在传递依赖，因为(学号，姓名)-&amp;gt;成绩，学号-&amp;gt;成绩，姓名-&amp;gt;成绩。所以学号和姓名有一个冗余了，只需要保留一个。
-范式的优点：
- 1）范式化的数据库更新起来更加快； 2）范式化之后，只有很少的重复数据，只需要修改更少的数据； 3）范式化的表更小，可以在内存中执行； 4）很少的冗余数据，在查询的时候需要更少的distinct或者group by语句。  范式的缺点：
- 范式化的表，在查询的时候经常需要很多join关联,增加让查询的代价  反范式的优点：
- 1）可以避免关联，因为所有的数据几乎都可以在一张表上显示； 2）可以设计有效的索引；  反范式的缺点：
-表格内的冗余较多，删除数据时候会造成表有些有用的信息丢失。  所以在设计数据库时，要注意混用范式化和反范式化。</description>
+第二范式:非键字段必须依赖于键字段 如果一个关系满足1NF，并且除了主键以外的其它列，都依赖与该主键，则满足二范式(2NF)，第二范式要求每个表只描述一件事。例如： 第三范式：在1NF基础上，除了主键以外的其它列都不传递依赖于主键列，或者说： 任何非主属性不依赖于其它非主属性（在2NF基础上消除传递依赖）</description>
     </item>
     
   </channel>
