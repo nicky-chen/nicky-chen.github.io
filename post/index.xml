@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
-    <lastBuildDate>Wed, 15 Apr 2020 13:18:15 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 23 Apr 2020 19:58:15 +0800</lastBuildDate>
     
 	<atom:link href="https://nicky-chin.cn/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>生产-消费模型之虚假唤醒</title>
+      <link>https://nicky-chin.cn/2020/04/23/spurious-wakeup/</link>
+      <pubDate>Thu, 23 Apr 2020 19:58:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2020/04/23/spurious-wakeup/</guid>
+      <description>1 何为虚假唤醒 当线程从等待状态中被唤醒时，只是发现未满足其正在等待的条件时，就会发生虚假唤醒。 之所以称其为虚假的，是因为该线程似乎无缘无故被唤醒。 虚假唤醒不会无缘无故发生，通常是因为在发起唤醒号和等待线程最终运行之间的临界时间内，线程不再满足竞态条件。
+2 java中的例子  public class SpuriousWakeupRWLock { private static final CustomQueue CUSTOM_LIST = new CustomQueue(); public static void main(String[] args) throws Exception { for (int i = 0; i &amp;lt; 8; i++) { Thread consumer = new Thread(() -&amp;gt; { try { CUSTOM_LIST.</description>
+    </item>
     
     <item>
       <title>Spring实例化bean之源码分析</title>
