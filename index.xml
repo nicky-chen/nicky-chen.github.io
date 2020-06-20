@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
-    <lastBuildDate>Thu, 23 Apr 2020 19:58:15 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 03 May 2020 11:18:15 +0800</lastBuildDate>
     
 	<atom:link href="https://nicky-chin.cn/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Transaction源码解析之事务的配置解析</title>
+      <link>https://nicky-chin.cn/2020/05/03/spring-transaction-config/</link>
+      <pubDate>Sun, 03 May 2020 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2020/05/03/spring-transaction-config/</guid>
+      <description>1 事务配置 关于Spring的事务，大家每天都会遇见或者用到，为了更好的理解Transaction的原理机制，我们从源码角度来解析，本文的调试源码基于Spring-3.2.x版本进行调试。
+1.1 配置 配置XML文件annotationTransactionNamespaceHandlerTests.xml
+&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt; &amp;lt;beans xmlns=&amp;quot;http://www.springframework.org/schema/beans&amp;quot; xmlns:xsi=&amp;quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot; xmlns:aop=&amp;quot;http://www.springframework.org/schema/aop&amp;quot; xmlns:context=&amp;quot;http://www.springframework.org/schema/context&amp;quot; xmlns:tx=&amp;quot;http://www.</description>
+    </item>
     
     <item>
       <title>生产-消费模型之虚假唤醒</title>
