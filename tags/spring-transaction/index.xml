@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
-    <lastBuildDate>Sun, 03 May 2020 11:18:15 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 11 May 2020 12:18:15 +0800</lastBuildDate>
     
 	<atom:link href="https://nicky-chin.cn/tags/spring-transaction/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Transaction源码解析之事务预处理</title>
+      <link>https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/</link>
+      <pubDate>Mon, 11 May 2020 12:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/</guid>
+      <description>1 调试源码 接上篇Transaction源码解析之事务的配置解析
+我们调用相应的service类,来调试具体的事务处理流程，测试代码如下:
+public void testInvokeTransactional() throws Exception { TransactionalTestBean testBean = getTestBean(); CallCountingTransactionManager ptm = (CallCountingTransactionManager) context.</description>
+    </item>
     
     <item>
       <title>Transaction源码解析之事务的配置解析</title>
