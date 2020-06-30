@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
-    <lastBuildDate>Mon, 11 May 2020 12:18:15 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 19 May 2020 13:39:15 +0800</lastBuildDate>
     
 	<atom:link href="https://nicky-chin.cn/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Transaction源码解析之事务提交与回滚</title>
+      <link>https://nicky-chin.cn/2020/05/19/spring-transaction-commit/</link>
+      <pubDate>Tue, 19 May 2020 13:39:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2020/05/19/spring-transaction-commit/</guid>
+      <description>1 事务还原 1.1 调试demo 我们使用常用的业务代码来做调试：
+@Service(&amp;#34;personService&amp;#34;) public class PersonServiceImpl implements IPersonService { @Override @Transactional(propagation = Propagation.</description>
+    </item>
     
     <item>
       <title>Transaction源码解析之事务预处理</title>
@@ -24,7 +34,7 @@ public void testInvokeTransactional() throws Exception { TransactionalTestBean t
     </item>
     
     <item>
-      <title>Transaction源码解析之事务的配置解析</title>
+      <title>Transaction源码解析之事务配置解析</title>
       <link>https://nicky-chin.cn/2020/05/03/spring-transaction-config/</link>
       <pubDate>Sun, 03 May 2020 11:18:15 +0800</pubDate>
       

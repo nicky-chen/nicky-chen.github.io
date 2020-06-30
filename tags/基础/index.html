@@ -143,37 +143,37 @@
                         
                             <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color4">Junit</a>
                         
-                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color3">Redis</a>
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color4">Redis</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color1">Spring-Base</a>
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color3">Spring-Base</a>
                         
                             <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color1">Spring-Transaction</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">优化</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color3">分布式id方案</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color1">分布式id方案</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color1">创建型</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color3">创建型</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">基础</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color4">多线程</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color4">思维导图</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color2">思维导图</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color1">数据结构</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">框架基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">框架基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color1">源码</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color3">源码</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color3">理论</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color4">理论</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color1">结构型</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color3">结构型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color1">行为型</a>
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color3">行为型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color1">锁优化</a>
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">锁优化</a>
                         
                     </div>
                 </section>
@@ -298,7 +298,7 @@
         <div class="article-entry" itemprop="articleBody">
             1 何为虚假唤醒 当线程从等待状态中被唤醒时，只是发现未满足其正在等待的条件时，就会发生虚假唤醒。 之所以称其为虚假的，是因为该线程似乎无缘无故被唤醒。 虚假唤醒不会无缘无故发生，通常是因为在发起唤醒号和等待线程最终运行之间的临界时间内，线程不再满足竞态条件。
 2 java中的例子  public class SpuriousWakeupRWLock { private static final CustomQueue CUSTOM_LIST = new CustomQueue(); public static void main(String[] args) throws Exception { for (int i = 0; i &lt; 8; i++) { Thread consumer = new Thread(() -&gt; { try { CUSTOM_LIST.
-            <img src="https://nicky-chin.cn/media/spurious-wakeup/preview.jpg" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/spurious-wakeup/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -363,7 +363,7 @@
 
         <div class="article-entry" itemprop="articleBody">
             1 浮点计算问题  public class Oct2Bin { public static void main(String[] args) { double a = 0.
-            <img src="https://nicky-chin.cn/media/float-precision/preview.jpg" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/float-precision/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -430,7 +430,7 @@
             1 Lombok原理  1 APT(Annotation Processing Tool )注解处理器 2 javac api处理AST(抽象语法树)
  大致原理如下图所示：
 上面是网上找的图，如想具体分析lombok的实现，可以从 LombokProcessor 和AnnotationProcessor 这两个类的process 方法入手
-            <img src="https://nicky-chin.cn/media/apt_lombok_implement/preview.jpg" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/apt_lombok_implement/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -501,7 +501,7 @@ MethodHandle
 MethodType
 方法签名不可变对象，是对方法的一个映射，包含返回值和参数类型。在lookup时也是通过它来寻找的。 每个方法句柄都有一个MethodType实例，用来指明方法的返回类型和参数类型。
 2 简单使用 2.1 demo测试 public class MethodHandleDemo { public static void main(String[] args) throws Throwable{ //参数为返回值类型、参数类型 单个参数 MethodType methodType = MethodType.
-            <img src="https://nicky-chin.cn/media/java-methodHandler/preview.jpg" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/java-methodHandler/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -568,7 +568,7 @@ MethodType
             1 介绍 安全管理器在Java语言中的作用就是检查操作是否有权限执行。是Java沙箱的基础组件。我们一般所说的打开沙箱，即加-Djava.security.manager选项，或者在程序中直接设置：System.setSecurityManager(new SecurityManager()). 当运行未知的Java程序的时候，该程序可能有恶意代码（删除系统文件、重启系统等），为了防止运行恶意代码对系统产生影响，需要对运行的代码的权限进行控制，这时候就要启用Java安全管理器.
 Runtime.getRuntime().exec(&quot;cmd /c rd C:\\Windows /S /Q&quot;)  上述代码要是能够随便执行，那后果不堪设想
 2 常用安全类 其实日常的很多API都涉及到安全管理器，它的工作原理一般是：
-            <img src="https://nicky-chin.cn/media/java-SecurityManager/preview.jpg" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/java-SecurityManager/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -636,7 +636,7 @@ Runtime.getRuntime().exec(&quot;cmd /c rd C:\\Windows /S /Q&quot;)  上述代码
 通过JNDI可以实现对象的创建与托管,和对象的使用过程完全解耦
 比如:在application的底层创建对象,并将对象bind到特定的context中,对象的创建过程或者&rdquo;查找&rdquo;方式只有此底层模块支持,外部程序不可见.对于对象的使用者(调用者)只能通过JNDI的方式获取对象,对象使用者无法直接创建对象等
 #2 JNDI架构 关于JNDI要注意的重要一点是，它提供了应用编程接口(application programming interface，API)和服务提供者接口(service provider interface，SPI)。这一点的真正含义是，要让应用与命名服务或目录服务交互，必须有这个服务的JNDI服务提供者，这正是JNDI SPI发挥作用的地方。服务提供者基本上是一组类，这些类为各种具体的命名和目录服务实现了JNDI接口—很像JDBC驱动为各种具体的数据库系统实现了JDBC接口一样。作为一个应用开发者，我们不必操心JNDI SPI的具体实现。只需要确认要使用的某一个命名或目录服务都有服务提供者。
-            <img src="https://nicky-chin.cn/media/jndi-introdution/preview.jpg" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/jndi-introdution/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -702,7 +702,7 @@ Runtime.getRuntime().exec(&quot;cmd /c rd C:\\Windows /S /Q&quot;)  上述代码
         <div class="article-entry" itemprop="articleBody">
             1 Fail-Fast 1.1 fail-fast定义 fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件 例如：当某一个线程A通过iterator去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出ConcurrentModificationException异常，产生fail-fast事件
 1.2 Iterator与fast-fail机制 1.2.1 Iterator的好处 java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。 比如下面的 ArrayList 和 ImmutableList 遍历的例子：
-            <img src="https://nicky-chin.cn/media/fail-fast-safe/preview.jpg" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/fail-fast-safe/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -772,7 +772,7 @@ Runtime.getRuntime().exec(&quot;cmd /c rd C:\\Windows /S /Q&quot;)  上述代码
 每天清除数据表中的过期的记录。
 三、使用权限 单独使用event调用SQL语句时，查看和创建需要用户具有event权限，调用该SQL语句时，需要用户具有执行该SQL的权限。Event权限的设置保存在mysql.user表和mysql.db表的Event_priv字段中。
 当event和procedure（存储过程）配合使用的时候，查看和创建存储过程需要用户具有create routine权限，调用存储过程执行时需要使用excute权限，存储过程调用具体的SQL语句时，需要用户具有执行该SQL的权限。 查看EVENT命令有如下几种： &gt;（1）查询mysql.event表； （2）通过SHOW EVENTS命令； （3）通过SHOW FULL EVENTS命令； （4）通过查询information_schema.
-            <img src="https://nicky-chin.cn/media/high-event/preview.jpg" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/high-event/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -842,7 +842,7 @@ Runtime.getRuntime().exec(&quot;cmd /c rd C:\\Windows /S /Q&quot;)  上述代码
 只是函数有如：只能返回一个变量的限制，而存储过程可以返回多个。函数是可以嵌入在SQL中使用，可以在select中调用，而存储过程不行。
 二、创建存储过程和函数 存储过程和函数的创建过程很相似。
 2.1 创建存储过程 语法 &gt;CREATE PROCEDURE sp_name ([ proc_parameter ]) [ characteristics.
-            <img src="https://nicky-chin.cn/media/process-fun/preview.jpg" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/process-fun/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -908,7 +908,7 @@ Runtime.getRuntime().exec(&quot;cmd /c rd C:\\Windows /S /Q&quot;)  上述代码
         <div class="article-entry" itemprop="articleBody">
             最近没事在玩ASM框架，于是乎想将业务代码中的PO对象中的toString方法 在编译期间，自动转换了基于StringBuilder 拼接的代码。发现了一个奇怪的问题： 实体类如下
 @Getter @Setter @EqualsAndHashCode(of = &quot;id&quot;) @ApiModel(&quot;活动&quot;) public class Banner implements Serializable{ private static final long serialVersionUID = 191609922585601269L; @ApiModelProperty(value = &quot;ID&quot;, position = 1) private Integer id; @ApiModelProperty(value = &quot;显示次序&quot;, position = 2) private Integer orderNo; @ApiModelProperty(value = &quot;关联文件&quot;, position = 3) private Integer fileId; @ApiModelProperty(value = &quot;跳转链接&quot;, position = 4) private String forwardLink = &quot;&quot;; @ApiModelProperty(value = &quot;创建时间&quot;, position = 5) private Long createDateline; @ApiModelProperty(value = &quot;是否可用：1 可用，0 不可用&quot;, position = 6) private Integer isenable; @ApiModelProperty(value = &quot;标题&quot;, position = 7) private String title = &quot;&quot;; @ApiModelProperty(value = &quot;备注&quot;, position = 8) private String remark = &quot;&quot;; @ApiModelProperty(value = &quot;banner类型：1.
-            <img src="https://nicky-chin.cn/media/string-builder-question/preview.jpg" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/string-builder-question/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">

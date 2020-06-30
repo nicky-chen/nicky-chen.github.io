@@ -141,21 +141,21 @@
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
                         
-                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color1">Junit</a>
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color2">Junit</a>
                         
-                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color3">Redis</a>
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color1">Redis</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color3">Spring-Base</a>
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color4">Spring-Base</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color1">Spring-Transaction</a>
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color4">Spring-Transaction</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">优化</a>
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">优化</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color1">分布式id方案</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color2">分布式id方案</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color1">创建型</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color2">创建型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">基础</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color3">多线程</a>
                         
@@ -163,15 +163,15 @@
                         
                             <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color3">数据结构</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color3">框架基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">框架基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color4">源码</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color3">源码</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color1">理论</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color4">理论</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color2">结构型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color4">行为型</a>
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color1">行为型</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">锁优化</a>
                         
@@ -299,7 +299,7 @@
             1 Redis的Flicker方案 利用redis的lua脚本功能，在每个节点上通过lua脚本生成唯一ID，生成的ID为64位，具体如下：
 使用41 bit来存放时间，精确到毫秒，可以使用到2039年 使用12 bit来存放逻辑分片ID，最大分片ID是4095 使用10 bit来存放自增长ID，则每个节点，每毫秒最多可生成1024个ID 比如GTM时间 2018年6月24日11点23分 ，它的距1970年的毫秒数是 1529810591000，假定分片ID是60，自增长序列是20，则生成的ID是：
 6416490681073670164 = 1529810591000 &lt;&lt; 22 | 60 &lt;&lt; 10 | 20 redis提供了TIME命令，取得redis服务器的秒值和微秒值 毫秒值获取命令：EVAL &quot;local current = redis.
-            <img src="https://nicky-chin.cn/media/id-redis/preview.jpg" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/id-redis/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -365,7 +365,7 @@
         <div class="article-entry" itemprop="articleBody">
             1 Flicker的解决方案 MySQL中id自增的特性，可以借此来生成全局的序列号，Flicker在解决全局ID生成方案里就采用了MySQL自增长ID的机制（auto_increment + replace into + MyISAM）。一个生成64位ID方案具体就是这样的： 先创建单独的数据库，然后创建一个表：
 CREATE TABLE borrow_order ( id bigint(20) unsigned NOT NULL auto_increment, stub char(1) NOT NULL default '', PRIMARY KEY (id), UNIQUE KEY stub (stub) ) ENGINE=MyISAM  当我们插入记录后，执行SELECT * from borrow_order ，查询结果就是这样的：
-            <img src="https://nicky-chin.cn/media/id-flicker/preview.jpg" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/id-flicker/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -430,7 +430,7 @@ CREATE TABLE borrow_order ( id bigint(20) unsigned NOT NULL auto_increment, stub
 
         <div class="article-entry" itemprop="articleBody">
             1 背景 在分布式项目中，在业务数据中需要生成一个全局唯一的序列号，比如：消息标识，订单标识，用户标识等等。同时对于id生成的要求如下： * 全局唯一 * 趋势有序 * 主键索引 方便排序 * 高可用 * 高并发
-            <img src="https://nicky-chin.cn/media/id-snowflake/preview.jpg" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/id-snowflake/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
