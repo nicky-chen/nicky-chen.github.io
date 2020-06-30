@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  false ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+
+    <title>Transaction源码解析之事务预处理</title>
+    <link rel="icon" href="https://nicky-chin.cn/img/favicon.ico">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
+
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
+
+    
+    
+    <link rel="stylesheet" href="https://nicky-chin.cn/highlight/styles/darcula.css">
+    <script src="https://nicky-chin.cn/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chin.cn/" class="profilepic">
+            <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chin.cn/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系&amp;留言</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="wechat"><a class="wechat" target="_blank" href="https://raw.githubusercontent.com/nicky-chen/pic_store/master/qrcode_wechat.jpg" title="wechat"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color4">Junit</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color2">Redis</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color3">Spring-Base</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color2">Spring-Transaction</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">优化</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color4">分布式id方案</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color3">创建型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color3">基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color3">多线程</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color3">思维导图</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color4">数据结构</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">框架基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color1">源码</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color4">理论</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color4">结构型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color3">行为型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chin.cn/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chin.cn/" class="profilepic">
+                <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系&amp;留言</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="wechat"><a class="wechat" target="_blank" href="https://raw.githubusercontent.com/nicky-chen/pic_store/master/qrcode_wechat.jpg" title="wechat"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+            <article id="post-js-android" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/" class="article-date">
+            <time datetime="2020-05-11 12:18:15 &#43;0800 CST" itemprop="datePublished">2020-05-11</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 class="article-title" itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/">Transaction源码解析之事务预处理</a>
+            </h1>
+
+
+        </header>
+
+        <div class="article-info article-info-post">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="article-category-link" href="https://nicky-chin.cn/categories/spring/" style="font-size: 12px;">spring</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/spring-transaction/"
+                           style="font-size: 12px;">spring-transaction</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="article-entry" itemprop="articleBody">
+
+            
+
+<h1 id="1-调试源码">1 调试源码</h1>
+
+<p>接上篇<a href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/">Transaction源码解析之事务的配置解析</a></p>
+
+<p>我们调用相应的service类,来调试具体的事务处理流程，测试代码如下:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">testInvokeTransactional</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> Exception <span style="color:#f92672">{</span>
+		TransactionalTestBean testBean <span style="color:#f92672">=</span> getTestBean<span style="color:#f92672">();</span>
+		CallCountingTransactionManager ptm <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>CallCountingTransactionManager<span style="color:#f92672">)</span> context<span style="color:#f92672">.</span><span style="color:#a6e22e">getBean</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;transactionManager&#34;</span><span style="color:#f92672">);</span>
+
+		<span style="color:#75715e">// try with transactional
+</span><span style="color:#75715e"></span>		assertEquals<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Should not have any started transactions&#34;</span><span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> ptm<span style="color:#f92672">.</span><span style="color:#a6e22e">begun</span><span style="color:#f92672">);</span>
+		testBean<span style="color:#f92672">.</span><span style="color:#a6e22e">findAllFoos</span><span style="color:#f92672">();</span>
+		assertEquals<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Should have 1 started transaction&#34;</span><span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> ptm<span style="color:#f92672">.</span><span style="color:#a6e22e">begun</span><span style="color:#f92672">);</span>
+		assertEquals<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Should have 1 committed transaction&#34;</span><span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> ptm<span style="color:#f92672">.</span><span style="color:#a6e22e">commits</span><span style="color:#f92672">);</span>
+
+		<span style="color:#75715e">// try with non-transaction
+</span><span style="color:#75715e"></span>		testBean<span style="color:#f92672">.</span><span style="color:#a6e22e">doSomething</span><span style="color:#f92672">();</span>
+		assertEquals<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Should not have started another transaction&#34;</span><span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> ptm<span style="color:#f92672">.</span><span style="color:#a6e22e">begun</span><span style="color:#f92672">);</span>
+
+		<span style="color:#75715e">// try with exceptional
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+			testBean<span style="color:#f92672">.</span><span style="color:#a6e22e">exceptional</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;foo&#34;</span><span style="color:#f92672">));</span>
+			fail<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Should NEVER get here&#34;</span><span style="color:#f92672">);</span>
+		<span style="color:#f92672">}</span>
+		<span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable throwable<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			assertEquals<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Should have another started transaction&#34;</span><span style="color:#f92672">,</span> 2<span style="color:#f92672">,</span> ptm<span style="color:#f92672">.</span><span style="color:#a6e22e">begun</span><span style="color:#f92672">);</span>
+			assertEquals<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Should have 1 rolled back transaction&#34;</span><span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> ptm<span style="color:#f92672">.</span><span style="color:#a6e22e">rollbacks</span><span style="color:#f92672">);</span>
+
+		<span style="color:#f92672">}</span>
+	<span style="color:#f92672">}</span></code></pre></div>
+<h1 id="2-事务执行流程">2 事务执行流程</h1>
+
+<h2 id="2-1-cglibaopproxy动态代理">2.1 CglibAopProxy动态代理</h2>
+
+<p>业务类没有实现接口，所以 <strong>TransactionalTestBean</strong> 会走Cglib动态代理，具体流程在<code>DynamicAdvisedInterceptor.intercept</code> 方法中 :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> Object <span style="color:#a6e22e">intercept</span><span style="color:#f92672">(</span>Object proxy<span style="color:#f92672">,</span> Method method<span style="color:#f92672">,</span> Object<span style="color:#f92672">[]</span> args<span style="color:#f92672">,</span> MethodProxy methodProxy<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Throwable <span style="color:#f92672">{</span>
+			Object oldProxy <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+			<span style="color:#66d9ef">boolean</span> setProxyContext <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+			Class<span style="color:#f92672">&lt;?&gt;</span> targetClass <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+			Object target <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+			<span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+			    <span style="color:#75715e">// 是否需要暴露代理对象
+</span><span style="color:#75715e"></span>				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">advised</span><span style="color:#f92672">.</span><span style="color:#a6e22e">exposeProxy</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+           <span style="color:#75715e">// 基于threadLocal暴露代理对象
+</span><span style="color:#75715e"></span>					oldProxy <span style="color:#f92672">=</span> AopContext<span style="color:#f92672">.</span><span style="color:#a6e22e">setCurrentProxy</span><span style="color:#f92672">(</span>proxy<span style="color:#f92672">);</span>
+					setProxyContext <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+				<span style="color:#f92672">}</span>
+                <span style="color:#75715e">// 目标对象
+</span><span style="color:#75715e"></span>                target <span style="color:#f92672">=</span> getTarget<span style="color:#f92672">();</span>
+				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>target <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+					targetClass <span style="color:#f92672">=</span> target<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">();</span>
+				<span style="color:#f92672">}</span>
+                <span style="color:#75715e">// 获取拦截器链
+</span><span style="color:#75715e"></span>                List<span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;</span> chain <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">advised</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getInterceptorsAndDynamicInterceptionAdvice</span><span style="color:#f92672">(</span>method<span style="color:#f92672">,</span> targetClass<span style="color:#f92672">);</span>
+				Object retVal<span style="color:#f92672">;</span>
+                <span style="color:#75715e">// 如果没有拦截器链，则直接调用目标类的方法
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>chain<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> Modifier<span style="color:#f92672">.</span><span style="color:#a6e22e">isPublic</span><span style="color:#f92672">(</span>method<span style="color:#f92672">.</span><span style="color:#a6e22e">getModifiers</span><span style="color:#f92672">()))</span> <span style="color:#f92672">{</span>
+
+					retVal <span style="color:#f92672">=</span> methodProxy<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>target<span style="color:#f92672">,</span> args<span style="color:#f92672">);</span>
+				<span style="color:#f92672">}</span>
+				<span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                    <span style="color:#75715e">// 构造CglibMethodInvocation，递归调用拦截器链
+</span><span style="color:#75715e"></span>                    retVal <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> CglibMethodInvocation<span style="color:#f92672">(</span>proxy<span style="color:#f92672">,</span> target<span style="color:#f92672">,</span> method<span style="color:#f92672">,</span> args<span style="color:#f92672">,</span> targetClass<span style="color:#f92672">,</span> chain<span style="color:#f92672">,</span> methodProxy<span style="color:#f92672">).</span><span style="color:#a6e22e">proceed</span><span style="color:#f92672">();</span>
+				<span style="color:#f92672">}</span>
+                <span style="color:#75715e">// 返回实施增强之后的调用结果
+</span><span style="color:#75715e"></span>                retVal <span style="color:#f92672">=</span> processReturnType<span style="color:#f92672">(</span>proxy<span style="color:#f92672">,</span> target<span style="color:#f92672">,</span> method<span style="color:#f92672">,</span> retVal<span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">return</span> retVal<span style="color:#f92672">;</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>target <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+					releaseTarget<span style="color:#f92672">(</span>target<span style="color:#f92672">);</span>
+				<span style="color:#f92672">}</span>
+				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>setProxyContext<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+					<span style="color:#75715e">// Restore old proxy.
+</span><span style="color:#75715e"></span>					AopContext<span style="color:#f92672">.</span><span style="color:#a6e22e">setCurrentProxy</span><span style="color:#f92672">(</span>oldProxy<span style="color:#f92672">);</span>
+				<span style="color:#f92672">}</span>
+			<span style="color:#f92672">}</span>
+		<span style="color:#f92672">}</span></code></pre></div>
+<h2 id="2-2-获取拦截器">2.2 获取拦截器</h2>
+
+<p>获取拦截器的方法<code>List&lt;Object&gt; chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass)</code></p>
+
+<p><strong>遍历所有Advisor，获得MethodInterceptor</strong></p>
+
+<p>根据Spring的定义，Advice可以是一个MethodInterceptor，也可以是类似于Aspectj的before, after通知。转换由DefaultAdvisorAdapterRegistry.getInterceptors完成:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Override</span>
+<span style="color:#66d9ef">public</span> MethodInterceptor<span style="color:#f92672">[]</span> <span style="color:#a6e22e">getInterceptors</span><span style="color:#f92672">(</span>Advisor advisor<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> UnknownAdviceTypeException <span style="color:#f92672">{</span>
+    List<span style="color:#f92672">&lt;</span>MethodInterceptor<span style="color:#f92672">&gt;</span> interceptors <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>MethodInterceptor<span style="color:#f92672">&gt;(</span>3<span style="color:#f92672">);</span>
+    Advice advice <span style="color:#f92672">=</span> advisor<span style="color:#f92672">.</span><span style="color:#a6e22e">getAdvice</span><span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>advice <span style="color:#66d9ef">instanceof</span> MethodInterceptor<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        interceptors<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">((</span>MethodInterceptor<span style="color:#f92672">)</span> advice<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>AdvisorAdapter adapter <span style="color:#f92672">:</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">adapters</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>adapter<span style="color:#f92672">.</span><span style="color:#a6e22e">supportsAdvice</span><span style="color:#f92672">(</span>advice<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            interceptors<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>adapter<span style="color:#f92672">.</span><span style="color:#a6e22e">getInterceptor</span><span style="color:#f92672">(</span>advisor<span style="color:#f92672">));</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>interceptors<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> UnknownAdviceTypeException<span style="color:#f92672">(</span>advisor<span style="color:#f92672">.</span><span style="color:#a6e22e">getAdvice</span><span style="color:#f92672">());</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> interceptors<span style="color:#f92672">.</span><span style="color:#a6e22e">toArray</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> MethodInterceptor<span style="color:#f92672">[</span>interceptors<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()]);</span>
+<span style="color:#f92672">}</span></code></pre></div>
+<p>AdvisorAdapter接口用以支持用户自定义的Advice类型，并将自定义的类型转为拦截器。默认adapters含有<strong>MethodBeforeAdviceAdapter、AfterReturningAdviceAdapter和ThrowsAdviceAdapter</strong>三种类型，用以分别支持<strong>MethodBeforeAdvice、AfterReturningAdvice和ThrowsAdvice</strong></p>
+
+<h2 id="2-3-拦截器链执行">2.3 拦截器链执行</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CglibMethodInvocation</span> <span style="color:#66d9ef">extends</span> ReflectiveMethodInvocation <span style="color:#f92672">{</span>
+
+		<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> MethodProxy methodProxy<span style="color:#f92672">;</span>
+
+		<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> protectedMethod<span style="color:#f92672">;</span>
+
+		<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">CglibMethodInvocation</span><span style="color:#f92672">(</span>Object proxy<span style="color:#f92672">,</span> Object target<span style="color:#f92672">,</span> Method method<span style="color:#f92672">,</span> Object<span style="color:#f92672">[]</span> arguments<span style="color:#f92672">,</span>
+				Class<span style="color:#f92672">&lt;?&gt;</span> targetClass<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;</span> interceptorsAndDynamicMethodMatchers<span style="color:#f92672">,</span> MethodProxy methodProxy<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+			<span style="color:#66d9ef">super</span><span style="color:#f92672">(</span>proxy<span style="color:#f92672">,</span> target<span style="color:#f92672">,</span> method<span style="color:#f92672">,</span> arguments<span style="color:#f92672">,</span> targetClass<span style="color:#f92672">,</span> interceptorsAndDynamicMethodMatchers<span style="color:#f92672">);</span>
+			<span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">methodProxy</span> <span style="color:#f92672">=</span> methodProxy<span style="color:#f92672">;</span>
+			<span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">protectedMethod</span> <span style="color:#f92672">=</span> Modifier<span style="color:#f92672">.</span><span style="color:#a6e22e">isProtected</span><span style="color:#f92672">(</span>method<span style="color:#f92672">.</span><span style="color:#a6e22e">getModifiers</span><span style="color:#f92672">());</span>
+		<span style="color:#f92672">}</span>
+
+		<span style="color:#75715e">/**
+</span><span style="color:#75715e">		 * Gives a marginal performance improvement versus using reflection to
+</span><span style="color:#75715e">		 * invoke the target when invoking public methods.
+</span><span style="color:#75715e">		 */</span>
+		<span style="color:#a6e22e">@Override</span>
+		<span style="color:#66d9ef">protected</span> Object <span style="color:#a6e22e">invokeJoinpoint</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> Throwable <span style="color:#f92672">{</span>
+			<span style="color:#75715e">// 如果是protect的访问修饰符就执行原生的反射方法
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">protectedMethod</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">invokeJoinpoint</span><span style="color:#f92672">();</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#75715e">// 否则执行代理
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+				<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">methodProxy</span><span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">target</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">arguments</span><span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+		<span style="color:#f92672">}</span>
+	<span style="color:#f92672">}</span>
+
+<span style="color:#a6e22e">@Override</span>
+<span style="color:#66d9ef">public</span> Object <span style="color:#a6e22e">proceed</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> Throwable <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">currentInterceptorIndex</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">interceptorsAndDynamicMethodMatchers</span><span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//拦截器执行完毕，调用原本的方法
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> invokeJoinpoint<span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+    Object interceptorOrInterceptionAdvice <span style="color:#f92672">=</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">interceptorsAndDynamicMethodMatchers</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(++</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">currentInterceptorIndex</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>interceptorOrInterceptionAdvice <span style="color:#66d9ef">instanceof</span> InterceptorAndDynamicMethodMatcher<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        InterceptorAndDynamicMethodMatcher dm <span style="color:#f92672">=</span>
+                <span style="color:#f92672">(</span>InterceptorAndDynamicMethodMatcher<span style="color:#f92672">)</span> interceptorOrInterceptionAdvice<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dm<span style="color:#f92672">.</span><span style="color:#a6e22e">methodMatcher</span><span style="color:#f92672">.</span><span style="color:#a6e22e">matches</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">method</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">targetClass</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">arguments</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> dm<span style="color:#f92672">.</span><span style="color:#a6e22e">interceptor</span><span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// Dynamic matching failed.
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> proceed<span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//调用拦截器的invoke方法
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">((</span>MethodInterceptor<span style="color:#f92672">)</span> interceptorOrInterceptionAdvice<span style="color:#f92672">).</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span></code></pre></div>
+<p>通过<code>ReflectiveMethodInvocation.proceed</code>方法，会执行拦截器截器的<code>invoke</code>方法，执行完所有的拦截器方法，最终调用本身方法，这里注意如果本身方法是<strong>protect</strong>访问控制域，则不走代理方法，走本身方法</p>
+
+<h1 id="3-事务拦截器">3 事务拦截器</h1>
+
+<h2 id="3-1-事务基础组件">3.1 事务基础组件</h2>
+
+<p>关于事务相关的拦截器，只需要关注<strong>TransactionInterceptor</strong> 即可，通过<code>invoke</code>方法:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Override</span>
+<span style="color:#66d9ef">public</span> Object <span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> MethodInvocation invocation<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Throwable <span style="color:#f92672">{</span>
+    Class<span style="color:#f92672">&lt;?&gt;</span> targetClass <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>invocation<span style="color:#f92672">.</span><span style="color:#a6e22e">getThis</span><span style="color:#f92672">()</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">?</span> 
+             AopUtils<span style="color:#f92672">.</span><span style="color:#a6e22e">getTargetClass</span><span style="color:#f92672">(</span>invocation<span style="color:#f92672">.</span><span style="color:#a6e22e">getThis</span><span style="color:#f92672">())</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+    <span style="color:#75715e">// Adapt to TransactionAspectSupport&#39;s invokeWithinTransaction...
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> invokeWithinTransaction<span style="color:#f92672">(</span>invocation<span style="color:#f92672">.</span><span style="color:#a6e22e">getMethod</span><span style="color:#f92672">(),</span> targetClass<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> InvocationCallback<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#a6e22e">@Override</span>
+        <span style="color:#66d9ef">public</span> Object <span style="color:#a6e22e">proceedWithInvocation</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> Throwable <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//事务执行完毕后调用链继续向下执行
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> invocation<span style="color:#f92672">.</span><span style="color:#a6e22e">proceed</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">});</span>
+<span style="color:#f92672">}</span></code></pre></div>
+<p>执行 <code>invokeWithinTransaction</code>方法:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#66d9ef">protected</span> Object <span style="color:#a6e22e">invokeWithinTransaction</span><span style="color:#f92672">(</span>Method method<span style="color:#f92672">,</span> Class targetClass<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> InvocationCallback invocation<span style="color:#f92672">)</span>
+			<span style="color:#66d9ef">throws</span> Throwable <span style="color:#f92672">{</span>
+
+		<span style="color:#75715e">// If the transaction attribute is null, the method is non-transactional.
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// 获取事务信息
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">final</span> TransactionAttribute txAttr <span style="color:#f92672">=</span> getTransactionAttributeSource<span style="color:#f92672">().</span><span style="color:#a6e22e">getTransactionAttribute</span><span style="color:#f92672">(</span>method<span style="color:#f92672">,</span> targetClass<span style="color:#f92672">);</span>
+		<span style="color:#75715e">// 获取事务管理器
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">final</span> PlatformTransactionManager tm <span style="color:#f92672">=</span> determineTransactionManager<span style="color:#f92672">(</span>txAttr<span style="color:#f92672">);</span>
+		<span style="color:#75715e">// 得到方法名
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">final</span> String joinpointIdentification <span style="color:#f92672">=</span> methodIdentification<span style="color:#f92672">(</span>method<span style="color:#f92672">,</span> targetClass<span style="color:#f92672">);</span>
+
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>txAttr <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> <span style="color:#f92672">!(</span>tm <span style="color:#66d9ef">instanceof</span> CallbackPreferringPlatformTransactionManager<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+			<span style="color:#75715e">// Standard transaction demarcation with getTransaction and commit/rollback calls.
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">// 事务开启
+</span><span style="color:#75715e"></span>			TransactionInfo txInfo <span style="color:#f92672">=</span> createTransactionIfNecessary<span style="color:#f92672">(</span>tm<span style="color:#f92672">,</span> txAttr<span style="color:#f92672">,</span> joinpointIdentification<span style="color:#f92672">);</span>
+			Object retVal <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+			<span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+			
+     <span style="color:#75715e">// 继续执行剩下的advice调用链，最终执行本身方法
+</span><span style="color:#75715e"></span>				retVal <span style="color:#f92672">=</span> invocation<span style="color:#f92672">.</span><span style="color:#a6e22e">proceedWithInvocation</span><span style="color:#f92672">();</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable ex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				<span style="color:#75715e">// target invocation exception
+</span><span style="color:#75715e"></span>				<span style="color:#75715e">// 异常下提交或者回滚处理
+</span><span style="color:#75715e"></span>				completeTransactionAfterThrowing<span style="color:#f92672">(</span>txInfo<span style="color:#f92672">,</span> ex<span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">throw</span> ex<span style="color:#f92672">;</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+			    <span style="color:#75715e">// 还原前一个事务的信息到本地线程
+</span><span style="color:#75715e"></span>				cleanupTransactionInfo<span style="color:#f92672">(</span>txInfo<span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#75715e">// 提交事务
+</span><span style="color:#75715e"></span>			commitTransactionAfterReturning<span style="color:#f92672">(</span>txInfo<span style="color:#f92672">);</span>
+			<span style="color:#66d9ef">return</span> retVal<span style="color:#f92672">;</span>
+		<span style="color:#f92672">}</span></code></pre></div>
+<p>上面是一个事务执行的完整流程，开始事务 &ndash;&gt; 返回执行结果 &ndash;&gt; 异常则回滚 &ndash;&gt; 执行成功则提交事务并返回</p>
+
+<h3 id="3-1-1-事务属性">3.1.1 事务属性</h3>
+
+<p><strong>TransactionAttribute</strong> 主要用于保存@transacation注解的对应信息</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#66d9ef">public</span> TransactionAttribute <span style="color:#a6e22e">getTransactionAttribute</span><span style="color:#f92672">(</span>Method method<span style="color:#f92672">,</span> Class<span style="color:#f92672">&lt;?&gt;</span> targetClass<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		<span style="color:#75715e">// First, see if we have a cached value.
+</span><span style="color:#75715e"></span>		Object cacheKey <span style="color:#f92672">=</span> getCacheKey<span style="color:#f92672">(</span>method<span style="color:#f92672">,</span> targetClass<span style="color:#f92672">);</span>
+		Object cached <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">attributeCache</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>cacheKey<span style="color:#f92672">);</span>
+		<span style="color:#75715e">// 读取缓存事务属性，缓存没有就解析并放入缓存
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>cached <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>cached <span style="color:#f92672">==</span> NULL_TRANSACTION_ATTRIBUTE<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+			   <span style="color:#75715e">// 根据@transacation注解返回对应信息 RuleBasedTransactionAttribute
+</span><span style="color:#75715e"></span>				<span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>TransactionAttribute<span style="color:#f92672">)</span> cached<span style="color:#f92672">;</span>
+			<span style="color:#f92672">}</span>
+		<span style="color:#f92672">}</span>
+		<span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+			<span style="color:#75715e">// 缓存为空
+</span><span style="color:#75715e"></span>			TransactionAttribute txAtt <span style="color:#f92672">=</span> computeTransactionAttribute<span style="color:#f92672">(</span>method<span style="color:#f92672">,</span> targetClass<span style="color:#f92672">);</span>
+			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>txAtt <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				<span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">attributeCache</span><span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>cacheKey<span style="color:#f92672">,</span> NULL_TRANSACTION_ATTRIBUTE<span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>logger<span style="color:#f92672">.</span><span style="color:#a6e22e">isDebugEnabled</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+					Class<span style="color:#f92672">&lt;?&gt;</span> classToLog <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>targetClass <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">?</span> targetClass <span style="color:#f92672">:</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaringClass</span><span style="color:#f92672">());</span>
+					logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Adding transactional method &#39;&#34;</span> <span style="color:#f92672">+</span> classToLog<span style="color:#f92672">.</span><span style="color:#a6e22e">getSimpleName</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;.&#34;</span> <span style="color:#f92672">+</span>
+							method<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&#39; with attribute: &#34;</span> <span style="color:#f92672">+</span> txAtt<span style="color:#f92672">);</span>
+				<span style="color:#f92672">}</span>
+				<span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">attributeCache</span><span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>cacheKey<span style="color:#f92672">,</span> txAtt<span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">return</span> txAtt<span style="color:#f92672">;</span>
+		<span style="color:#f92672">}</span>
+	<span style="color:#f92672">}</span>
+	
+	
+		<span style="color:#66d9ef">private</span> TransactionAttribute <span style="color:#a6e22e">computeTransactionAttribute</span><span style="color:#f92672">(</span>Method method<span style="color:#f92672">,</span> Class<span style="color:#f92672">&lt;?&gt;</span> targetClass<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		<span style="color:#75715e">// Don&#39;t allow no-public methods as required.
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 不允许非public访问权限的方法代理
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>allowPublicMethodsOnly<span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>Modifier<span style="color:#f92672">.</span><span style="color:#a6e22e">isPublic</span><span style="color:#f92672">(</span>method<span style="color:#f92672">.</span><span style="color:#a6e22e">getModifiers</span><span style="color:#f92672">()))</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+		<span style="color:#f92672">}</span>
+
+		<span style="color:#75715e">// Ignore CGLIB subclasses - introspect the actual user class.
+</span><span style="color:#75715e"></span>		Class<span style="color:#f92672">&lt;?&gt;</span> userClass <span style="color:#f92672">=</span> ClassUtils<span style="color:#f92672">.</span><span style="color:#a6e22e">getUserClass</span><span style="color:#f92672">(</span>targetClass<span style="color:#f92672">);</span>
+		<span style="color:#75715e">// The method may be on an interface, but we need attributes from the target class.
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// If the target class is null, the method will be unchanged.
+</span><span style="color:#75715e"></span>		Method specificMethod <span style="color:#f92672">=</span> ClassUtils<span style="color:#f92672">.</span><span style="color:#a6e22e">getMostSpecificMethod</span><span style="color:#f92672">(</span>method<span style="color:#f92672">,</span> userClass<span style="color:#f92672">);</span>
+		<span style="color:#75715e">// If we are dealing with method with generic parameters, find the original method.
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 如果我们处理的是一个泛型参数的方法，则获取他的源方法
+</span><span style="color:#75715e"></span>		specificMethod <span style="color:#f92672">=</span> BridgeMethodResolver<span style="color:#f92672">.</span><span style="color:#a6e22e">findBridgedMethod</span><span style="color:#f92672">(</span>specificMethod<span style="color:#f92672">);</span>
+
+		<span style="color:#75715e">// First try is the method in the target class.
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 首先在方法上获取事务的属性
+</span><span style="color:#75715e"></span>		TransactionAttribute txAtt <span style="color:#f92672">=</span> findTransactionAttribute<span style="color:#f92672">(</span>specificMethod<span style="color:#f92672">);</span>
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>txAtt <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">return</span> txAtt<span style="color:#f92672">;</span>
+		<span style="color:#f92672">}</span>
+
+		<span style="color:#75715e">// Second try is the transaction attribute on the target class.
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 在类上获取事务的属性
+</span><span style="color:#75715e"></span>		txAtt <span style="color:#f92672">=</span> findTransactionAttribute<span style="color:#f92672">(</span>specificMethod<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaringClass</span><span style="color:#f92672">());</span>
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>txAtt <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">return</span> txAtt<span style="color:#f92672">;</span>
+		<span style="color:#f92672">}</span>
+
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>specificMethod <span style="color:#f92672">!=</span> method<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			<span style="color:#75715e">// Fallback is to look at the original method.
+</span><span style="color:#75715e"></span>			txAtt <span style="color:#f92672">=</span> findTransactionAttribute<span style="color:#f92672">(</span>method<span style="color:#f92672">);</span>
+			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>txAtt <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				<span style="color:#66d9ef">return</span> txAtt<span style="color:#f92672">;</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#75715e">// Last fallback is the class of the original method.
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">return</span> findTransactionAttribute<span style="color:#f92672">(</span>method<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaringClass</span><span style="color:#f92672">());</span>
+		<span style="color:#f92672">}</span>
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+	<span style="color:#f92672">}</span></code></pre></div>
+<h3 id="3-1-2-事务管理器">3.1.2 事务管理器</h3>
+
+<p><strong>PlatformTransactionManager</strong>  获取事务管理器:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">protected</span> PlatformTransactionManager <span style="color:#a6e22e">determineTransactionManager</span><span style="color:#f92672">(</span>TransactionAttribute txAttr<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//如果没有事务属性，那么仅从缓存中查找，找不到返回null
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>txAttr <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">beanFactory</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> getTransactionManager<span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+    String qualifier <span style="color:#f92672">=</span> txAttr<span style="color:#f92672">.</span><span style="color:#a6e22e">getQualifier</span><span style="color:#f92672">();</span>
+    <span style="color:#75715e">//如果@Transactional注解配置了transactionManager或value属性(用以决定使用哪个事务管理器):
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//首先查找缓存，找不到再去容器中按名称寻找
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>StringUtils<span style="color:#f92672">.</span><span style="color:#a6e22e">hasText</span><span style="color:#f92672">(</span>qualifier<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> determineQualifiedTransactionManager<span style="color:#f92672">(</span>qualifier<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>StringUtils<span style="color:#f92672">.</span><span style="color:#a6e22e">hasText</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">transactionManagerBeanName</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> determineQualifiedTransactionManager<span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">transactionManagerBeanName</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//去容器中按类型(Class)查找
+</span><span style="color:#75715e"></span>        PlatformTransactionManager defaultTransactionManager <span style="color:#f92672">=</span> getTransactionManager<span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>defaultTransactionManager <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            defaultTransactionManager <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">beanFactory</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getBean</span><span style="color:#f92672">(</span>PlatformTransactionManager<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">transactionManagerCache</span><span style="color:#f92672">.</span><span style="color:#a6e22e">putIfAbsent</span><span style="color:#f92672">(</span>
+                    DEFAULT_TRANSACTION_MANAGER_KEY<span style="color:#f92672">,</span> defaultTransactionManager<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> defaultTransactionManager<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span></code></pre></div>
+<p>一般我们使用<strong>DataSourceTransactionManager</strong>，类图:</p>
+
+<p><img src="https://nicky-chin.cn/media/spring-transaction-prepare/DataSourceTransactionManager-diagram.png" alt="DataSourceTransactionManager" /></p>
+
+<h3 id="3-1-3-数据源-datasource">3.1.3 数据源 DataSource</h3>
+
+<p>数据源组件，这里不做详细说明，国内比较常见的是<strong>DruidDataSource</strong></p>
+
+<h2 id="3-2-事务的开启及传播">3.2 事务的开启及传播</h2>
+
+<p><code>TransactionAspectSupport.createTransactionIfNecessary</code>方法用于业务逻辑执行前事务的开启:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#66d9ef">protected</span> TransactionInfo <span style="color:#a6e22e">createTransactionIfNecessary</span><span style="color:#f92672">(</span>
+			PlatformTransactionManager tm<span style="color:#f92672">,</span> TransactionAttribute txAttr<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> String joinpointIdentification<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+		<span style="color:#75715e">// If no name specified, apply method identification as transaction name.
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// 如果没有指定事务的名称使用方法名
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>txAttr <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> txAttr<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			txAttr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DelegatingTransactionAttribute<span style="color:#f92672">(</span>txAttr<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				<span style="color:#a6e22e">@Override</span>
+				<span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getName</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+					<span style="color:#66d9ef">return</span> joinpointIdentification<span style="color:#f92672">;</span>
+				<span style="color:#f92672">}</span>
+			<span style="color:#f92672">};</span>
+		<span style="color:#f92672">}</span>
+
+		TransactionStatus status <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>txAttr <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tm <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			    <span style="color:#75715e">// 获取事务状态
+</span><span style="color:#75715e"></span>				status <span style="color:#f92672">=</span> tm<span style="color:#f92672">.</span><span style="color:#a6e22e">getTransaction</span><span style="color:#f92672">(</span>txAttr<span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>logger<span style="color:#f92672">.</span><span style="color:#a6e22e">isDebugEnabled</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+					logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Skipping transactional joinpoint [&#34;</span> <span style="color:#f92672">+</span> joinpointIdentification <span style="color:#f92672">+</span>
+							<span style="color:#e6db74">&#34;] because no transaction manager has been configured&#34;</span><span style="color:#f92672">);</span>
+				<span style="color:#f92672">}</span>
+			<span style="color:#f92672">}</span>
+		<span style="color:#f92672">}</span>
+		<span style="color:#75715e">// 准备事务信息，将当前事务绑定到当前线程
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">return</span> prepareTransactionInfo<span style="color:#f92672">(</span>tm<span style="color:#f92672">,</span> txAttr<span style="color:#f92672">,</span> joinpointIdentification<span style="color:#f92672">,</span> status<span style="color:#f92672">);</span>
+	<span style="color:#f92672">}</span></code></pre></div>
+<p>这部分代码的核心逻辑在<code>getTransaction</code>获取事务状态和<code>prepareTransactionInfo</code>准备事务信息</p>
+
+<h3 id="3-2-1-事务执行">3.2.1 事务执行</h3>
+
+<p><code>getTransaction</code>主要是用于处理事务的传播行为，没有事务则开启事务:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> TransactionStatus <span style="color:#a6e22e">getTransaction</span><span style="color:#f92672">(</span>TransactionDefinition definition<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> TransactionException <span style="color:#f92672">{</span>
+		<span style="color:#75715e">// 获取包装的connection连接，可能为空
+</span><span style="color:#75715e"></span>		Object transaction <span style="color:#f92672">=</span> doGetTransaction<span style="color:#f92672">();</span>
+
+		<span style="color:#75715e">// Cache debug flag to avoid repeated checks.
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">boolean</span> debugEnabled <span style="color:#f92672">=</span> logger<span style="color:#f92672">.</span><span style="color:#a6e22e">isDebugEnabled</span><span style="color:#f92672">();</span>
+
+		<span style="color:#75715e">// 没有事务属性使用默认的属性配置
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>definition <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			<span style="color:#75715e">// Use defaults if no transaction definition given.
+</span><span style="color:#75715e"></span>			definition <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DefaultTransactionDefinition<span style="color:#f92672">();</span>
+		<span style="color:#f92672">}</span>
+
+        <span style="color:#75715e">// 是否已存在事务
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isExistingTransaction<span style="color:#f92672">(</span>transaction<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// 如果存在当前事务则处理事务的传播特性
+</span><span style="color:#75715e"></span>			<span style="color:#75715e">// Existing transaction found -&gt; check propagation behavior to find out how to behave.
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">return</span> handleExistingTransaction<span style="color:#f92672">(</span>definition<span style="color:#f92672">,</span> transaction<span style="color:#f92672">,</span> debugEnabled<span style="color:#f92672">);</span>
+		<span style="color:#f92672">}</span>
+
+		<span style="color:#75715e">// Check definition settings for new transaction.
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 校验超时时间
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>definition<span style="color:#f92672">.</span><span style="color:#a6e22e">getTimeout</span><span style="color:#f92672">()</span> <span style="color:#f92672">&lt;</span> TransactionDefinition<span style="color:#f92672">.</span><span style="color:#a6e22e">TIMEOUT_DEFAULT</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> InvalidTimeoutException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Invalid transaction timeout&#34;</span><span style="color:#f92672">,</span> definition<span style="color:#f92672">.</span><span style="color:#a6e22e">getTimeout</span><span style="color:#f92672">());</span>
+		<span style="color:#f92672">}</span>
+
+		<span style="color:#75715e">// 处理事务的传播级别
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 当前事务不存在报异常
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// No existing transaction found -&gt; check propagation behavior to find out how to proceed.
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>definition<span style="color:#f92672">.</span><span style="color:#a6e22e">getPropagationBehavior</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> TransactionDefinition<span style="color:#f92672">.</span><span style="color:#a6e22e">PROPAGATION_MANDATORY</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalTransactionStateException<span style="color:#f92672">(</span>
+					<span style="color:#e6db74">&#34;No existing transaction found for transaction marked with propagation &#39;mandatory&#39;&#34;</span><span style="color:#f92672">);</span>
+		<span style="color:#f92672">}</span>
+		<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>definition<span style="color:#f92672">.</span><span style="color:#a6e22e">getPropagationBehavior</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> TransactionDefinition<span style="color:#f92672">.</span><span style="color:#a6e22e">PROPAGATION_REQUIRED</span> <span style="color:#f92672">||</span>
+				definition<span style="color:#f92672">.</span><span style="color:#a6e22e">getPropagationBehavior</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> TransactionDefinition<span style="color:#f92672">.</span><span style="color:#a6e22e">PROPAGATION_REQUIRES_NEW</span> <span style="color:#f92672">||</span>
+			definition<span style="color:#f92672">.</span><span style="color:#a6e22e">getPropagationBehavior</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> TransactionDefinition<span style="color:#f92672">.</span><span style="color:#a6e22e">PROPAGATION_NESTED</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			<span style="color:#75715e">// 挂起
+</span><span style="color:#75715e"></span>		    SuspendedResourcesHolder suspendedResources <span style="color:#f92672">=</span> suspend<span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>debugEnabled<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Creating new transaction with name [&#34;</span> <span style="color:#f92672">+</span> definition<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;]: &#34;</span> <span style="color:#f92672">+</span> definition<span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+				<span style="color:#66d9ef">boolean</span> newSynchronization <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>getTransactionSynchronization<span style="color:#f92672">()</span> <span style="color:#f92672">!=</span> SYNCHRONIZATION_NEVER<span style="color:#f92672">);</span>
+				<span style="color:#75715e">// 创建事务状态对象
+</span><span style="color:#75715e"></span>				DefaultTransactionStatus status <span style="color:#f92672">=</span> newTransactionStatus<span style="color:#f92672">(</span>
+						definition<span style="color:#f92672">,</span> transaction<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> newSynchronization<span style="color:#f92672">,</span> debugEnabled<span style="color:#f92672">,</span> suspendedResources<span style="color:#f92672">);</span>
+				<span style="color:#75715e">// 创建一个事务
+</span><span style="color:#75715e"></span>				doBegin<span style="color:#f92672">(</span>transaction<span style="color:#f92672">,</span> definition<span style="color:#f92672">);</span>
+				prepareSynchronization<span style="color:#f92672">(</span>status<span style="color:#f92672">,</span> definition<span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">return</span> status<span style="color:#f92672">;</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>RuntimeException ex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			    <span style="color:#75715e">// 还原事务挂起前的状态
+</span><span style="color:#75715e"></span>				resume<span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> suspendedResources<span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">throw</span> ex<span style="color:#f92672">;</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Error err<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				resume<span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> suspendedResources<span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">throw</span> err<span style="color:#f92672">;</span>
+			<span style="color:#f92672">}</span>
+		<span style="color:#f92672">}</span>
+		<span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+		    <span style="color:#75715e">// 创建一个空事务
+</span><span style="color:#75715e"></span>			<span style="color:#75715e">// Create &#34;empty&#34; transaction: no actual transaction, but potentially synchronization.
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">boolean</span> newSynchronization <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>getTransactionSynchronization<span style="color:#f92672">()</span> <span style="color:#f92672">==</span> SYNCHRONIZATION_ALWAYS<span style="color:#f92672">);</span>
+			<span style="color:#66d9ef">return</span> prepareTransactionStatus<span style="color:#f92672">(</span>definition<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> newSynchronization<span style="color:#f92672">,</span> debugEnabled<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+		<span style="color:#f92672">}</span>
+	<span style="color:#f92672">}</span></code></pre></div>
+<p>从这里可以得出结论:</p>
+
+<p><strong>是否存在事务指的是在当前线程、当前数据源(DataSource)中是否存在处于活动状态的事务</strong>。</p>
+
+<h3 id="3-2-2-事务不存在创建事务">3.2.2 事务不存在创建事务</h3>
+
+<blockquote>
+<p>流程: 挂起  &ndash;&gt; 创建一个事务 &ndash;&gt; 初始化事务同步器 &ndash;&gt; 包装返回事务状态</p>
+</blockquote>
+
+<ul>
+<li>1 挂起</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">final</span> SuspendedResourcesHolder <span style="color:#a6e22e">suspend</span><span style="color:#f92672">(</span>Object transaction<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> TransactionException <span style="color:#f92672">{</span>
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">isSynchronizationActive</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+		    <span style="color:#75715e">// 挂起同步器并清空本地线程的同步器
+</span><span style="color:#75715e"></span>			List<span style="color:#f92672">&lt;</span>TransactionSynchronization<span style="color:#f92672">&gt;</span> suspendedSynchronizations <span style="color:#f92672">=</span> doSuspendSynchronization<span style="color:#f92672">();</span>
+			<span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+				Object suspendedResources <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#75715e">// 如果存在事务
+</span><span style="color:#75715e"></span>				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>transaction <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				    <span style="color:#75715e">// 挂起事务，清除本地数据库连接缓存
+</span><span style="color:#75715e"></span>					suspendedResources <span style="color:#f92672">=</span> doSuspend<span style="color:#f92672">(</span>transaction<span style="color:#f92672">);</span>
+				<span style="color:#f92672">}</span>
+				String name <span style="color:#f92672">=</span> TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">getCurrentTransactionName</span><span style="color:#f92672">();</span>
+				TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">setCurrentTransactionName</span><span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">boolean</span> readOnly <span style="color:#f92672">=</span> TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">isCurrentTransactionReadOnly</span><span style="color:#f92672">();</span>
+				TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">setCurrentTransactionReadOnly</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+				Integer isolationLevel <span style="color:#f92672">=</span> TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">getCurrentTransactionIsolationLevel</span><span style="color:#f92672">();</span>
+				TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">setCurrentTransactionIsolationLevel</span><span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">boolean</span> wasActive <span style="color:#f92672">=</span> TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">isActualTransactionActive</span><span style="color:#f92672">();</span>
+				TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">setActualTransactionActive</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> SuspendedResourcesHolder<span style="color:#f92672">(</span>
+						suspendedResources<span style="color:#f92672">,</span> suspendedSynchronizations<span style="color:#f92672">,</span> name<span style="color:#f92672">,</span> readOnly<span style="color:#f92672">,</span> isolationLevel<span style="color:#f92672">,</span> wasActive<span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>RuntimeException ex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				<span style="color:#75715e">// doSuspend failed - original transaction is still active...
+</span><span style="color:#75715e"></span>                <span style="color:#75715e">// 挂起失败还原之前的同步器
+</span><span style="color:#75715e"></span>				doResumeSynchronization<span style="color:#f92672">(</span>suspendedSynchronizations<span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">throw</span> ex<span style="color:#f92672">;</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Error err<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				<span style="color:#75715e">// doSuspend failed - original transaction is still active...
+</span><span style="color:#75715e"></span>				doResumeSynchronization<span style="color:#f92672">(</span>suspendedSynchronizations<span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">throw</span> err<span style="color:#f92672">;</span>
+			<span style="color:#f92672">}</span>
+		<span style="color:#f92672">}</span>
+		<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>transaction <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			<span style="color:#75715e">// Transaction active but no synchronization active.
+</span><span style="color:#75715e"></span>			Object suspendedResources <span style="color:#f92672">=</span> doSuspend<span style="color:#f92672">(</span>transaction<span style="color:#f92672">);</span>
+			<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> SuspendedResourcesHolder<span style="color:#f92672">(</span>suspendedResources<span style="color:#f92672">);</span>
+		<span style="color:#f92672">}</span>
+		<span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+			<span style="color:#75715e">// Neither transaction nor synchronization active.
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+		<span style="color:#f92672">}</span>
+	<span style="color:#f92672">}</span></code></pre></div>
+<p>主要是清空基于_ThreadLocal_的本地线程绑定的事务信息，并将清空的事务信息存入<strong>SuspendedResourcesHolder</strong>挂起资源对象中返回</p>
+
+<ul>
+<li>2 创建一个事务</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">doBegin</span><span style="color:#f92672">(</span>Object transaction<span style="color:#f92672">,</span> TransactionDefinition definition<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		<span style="color:#75715e">//此时，txObject不为null，只是其核心的ConnectHolder属性为null
+</span><span style="color:#75715e"></span>		DataSourceTransactionObject txObject <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>DataSourceTransactionObject<span style="color:#f92672">)</span> transaction<span style="color:#f92672">;</span>
+		Connection con <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+
+		<span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>txObject<span style="color:#f92672">.</span><span style="color:#a6e22e">getConnectionHolder</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span>
+					txObject<span style="color:#f92672">.</span><span style="color:#a6e22e">getConnectionHolder</span><span style="color:#f92672">().</span><span style="color:#a6e22e">isSynchronizedWithTransaction</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+			    <span style="color:#75715e">// 获取数据库新连接
+</span><span style="color:#75715e"></span>				Connection newCon <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">dataSource</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getConnection</span><span style="color:#f92672">();</span>
+				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>logger<span style="color:#f92672">.</span><span style="color:#a6e22e">isDebugEnabled</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+					logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Acquired Connection [&#34;</span> <span style="color:#f92672">+</span> newCon <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;] for JDBC transaction&#34;</span><span style="color:#f92672">);</span>
+				<span style="color:#f92672">}</span>
+                <span style="color:#75715e">// 可以看出ConnectionHolder是对Connection的包装
+</span><span style="color:#75715e"></span>				txObject<span style="color:#f92672">.</span><span style="color:#a6e22e">setConnectionHolder</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ConnectionHolder<span style="color:#f92672">(</span>newCon<span style="color:#f92672">),</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+
+			txObject<span style="color:#f92672">.</span><span style="color:#a6e22e">getConnectionHolder</span><span style="color:#f92672">().</span><span style="color:#a6e22e">setSynchronizedWithTransaction</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+			con <span style="color:#f92672">=</span> txObject<span style="color:#f92672">.</span><span style="color:#a6e22e">getConnectionHolder</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getConnection</span><span style="color:#f92672">();</span>
+            <span style="color:#75715e">//设置是否只读和隔离级别
+</span><span style="color:#75715e"></span>            Integer previousIsolationLevel <span style="color:#f92672">=</span> DataSourceUtils<span style="color:#f92672">.</span><span style="color:#a6e22e">prepareConnectionForTransaction</span><span style="color:#f92672">(</span>con<span style="color:#f92672">,</span> definition<span style="color:#f92672">);</span>
+			txObject<span style="color:#f92672">.</span><span style="color:#a6e22e">setPreviousIsolationLevel</span><span style="color:#f92672">(</span>previousIsolationLevel<span style="color:#f92672">);</span>
+            <span style="color:#75715e">// 将自动提交设置为false
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>con<span style="color:#f92672">.</span><span style="color:#a6e22e">getAutoCommit</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+				txObject<span style="color:#f92672">.</span><span style="color:#a6e22e">setMustRestoreAutoCommit</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>logger<span style="color:#f92672">.</span><span style="color:#a6e22e">isDebugEnabled</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+					logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Switching JDBC Connection [&#34;</span> <span style="color:#f92672">+</span> con <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;] to manual commit&#34;</span><span style="color:#f92672">);</span>
+				<span style="color:#f92672">}</span>
+				con<span style="color:#f92672">.</span><span style="color:#a6e22e">setAutoCommit</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#75715e">// 设置事务为存活状态
+</span><span style="color:#75715e"></span>			txObject<span style="color:#f92672">.</span><span style="color:#a6e22e">getConnectionHolder</span><span style="color:#f92672">().</span><span style="color:#a6e22e">setTransactionActive</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+			<span style="color:#75715e">// 设置超时时间点
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">int</span> timeout <span style="color:#f92672">=</span> determineTimeout<span style="color:#f92672">(</span>definition<span style="color:#f92672">);</span>
+			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>timeout <span style="color:#f92672">!=</span> TransactionDefinition<span style="color:#f92672">.</span><span style="color:#a6e22e">TIMEOUT_DEFAULT</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				txObject<span style="color:#f92672">.</span><span style="color:#a6e22e">getConnectionHolder</span><span style="color:#f92672">().</span><span style="color:#a6e22e">setTimeoutInSeconds</span><span style="color:#f92672">(</span>timeout<span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+
+			<span style="color:#75715e">// Bind the session holder to the thread.
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">// 绑定事务属性到本地数据源
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>txObject<span style="color:#f92672">.</span><span style="color:#a6e22e">isNewConnectionHolder</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+				TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">bindResource</span><span style="color:#f92672">(</span>getDataSource<span style="color:#f92672">(),</span> txObject<span style="color:#f92672">.</span><span style="color:#a6e22e">getConnectionHolder</span><span style="color:#f92672">());</span>
+			<span style="color:#f92672">}</span>
+		<span style="color:#f92672">}</span>
+
+		<span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable ex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		    <span style="color:#75715e">// 如果是新事务则释放连接
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>txObject<span style="color:#f92672">.</span><span style="color:#a6e22e">isNewConnectionHolder</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+				DataSourceUtils<span style="color:#f92672">.</span><span style="color:#a6e22e">releaseConnection</span><span style="color:#f92672">(</span>con<span style="color:#f92672">,</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">dataSource</span><span style="color:#f92672">);</span>
+				txObject<span style="color:#f92672">.</span><span style="color:#a6e22e">setConnectionHolder</span><span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> CannotCreateTransactionException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Could not open JDBC Connection for transaction&#34;</span><span style="color:#f92672">,</span> ex<span style="color:#f92672">);</span>
+		<span style="color:#f92672">}</span>
+	<span style="color:#f92672">}</span></code></pre></div>
+<p>上述创建事务主要逻辑：</p>
+
+<blockquote>
+<p>1 创建一个新连接</p>
+
+<p>2 设置隔离级别和是否只读</p>
+
+<p>3 设置超时时间和手动提交</p>
+
+<p>4 绑定事务数据源到本地线程</p>
+
+<p>5 异常释放连接</p>
+</blockquote>
+
+<p>逻辑很清晰，为了connection数据源的创建并绑定到本地线程</p>
+
+<ul>
+<li>3 初始化事务同步器</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">prepareSynchronization</span><span style="color:#f92672">(</span>DefaultTransactionStatus status<span style="color:#f92672">,</span> TransactionDefinition definition<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">isNewSynchronization</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+			TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">setActualTransactionActive</span><span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">hasTransaction</span><span style="color:#f92672">());</span>
+			TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">setCurrentTransactionIsolationLevel</span><span style="color:#f92672">(</span>
+					<span style="color:#f92672">(</span>definition<span style="color:#f92672">.</span><span style="color:#a6e22e">getIsolationLevel</span><span style="color:#f92672">()</span> <span style="color:#f92672">!=</span> TransactionDefinition<span style="color:#f92672">.</span><span style="color:#a6e22e">ISOLATION_DEFAULT</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span>
+							definition<span style="color:#f92672">.</span><span style="color:#a6e22e">getIsolationLevel</span><span style="color:#f92672">()</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+			TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">setCurrentTransactionReadOnly</span><span style="color:#f92672">(</span>definition<span style="color:#f92672">.</span><span style="color:#a6e22e">isReadOnly</span><span style="color:#f92672">());</span>
+			TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">setCurrentTransactionName</span><span style="color:#f92672">(</span>definition<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">());</span>
+			TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">initSynchronization</span><span style="color:#f92672">();</span>
+		<span style="color:#f92672">}</span>
+	<span style="color:#f92672">}</span></code></pre></div>
+<p>将要将事务的存活状态，隔离级别，是否只读的信息绑定到本地线程，并初始化同步器</p>
+
+<ul>
+<li>4  异常还原事务信息</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">resume</span><span style="color:#f92672">(</span>Object transaction<span style="color:#f92672">,</span> SuspendedResourcesHolder resourcesHolder<span style="color:#f92672">)</span>
+			<span style="color:#66d9ef">throws</span> TransactionException <span style="color:#f92672">{</span>
+
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>resourcesHolder <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			Object suspendedResources <span style="color:#f92672">=</span> resourcesHolder<span style="color:#f92672">.</span><span style="color:#a6e22e">suspendedResources</span><span style="color:#f92672">;</span>
+			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>suspendedResources <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				doResume<span style="color:#f92672">(</span>transaction<span style="color:#f92672">,</span> suspendedResources<span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			List<span style="color:#f92672">&lt;</span>TransactionSynchronization<span style="color:#f92672">&gt;</span> suspendedSynchronizations <span style="color:#f92672">=</span> resourcesHolder<span style="color:#f92672">.</span><span style="color:#a6e22e">suspendedSynchronizations</span><span style="color:#f92672">;</span>
+			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>suspendedSynchronizations <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">setActualTransactionActive</span><span style="color:#f92672">(</span>resourcesHolder<span style="color:#f92672">.</span><span style="color:#a6e22e">wasActive</span><span style="color:#f92672">);</span>
+				TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">setCurrentTransactionIsolationLevel</span><span style="color:#f92672">(</span>resourcesHolder<span style="color:#f92672">.</span><span style="color:#a6e22e">isolationLevel</span><span style="color:#f92672">);</span>
+				TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">setCurrentTransactionReadOnly</span><span style="color:#f92672">(</span>resourcesHolder<span style="color:#f92672">.</span><span style="color:#a6e22e">readOnly</span><span style="color:#f92672">);</span>
+				TransactionSynchronizationManager<span style="color:#f92672">.</span><span style="color:#a6e22e">setCurrentTransactionName</span><span style="color:#f92672">(</span>resourcesHolder<span style="color:#f92672">.</span><span style="color:#a6e22e">name</span><span style="color:#f92672">);</span>
+				doResumeSynchronization<span style="color:#f92672">(</span>suspendedSynchronizations<span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+		<span style="color:#f92672">}</span>
+	<span style="color:#f92672">}</span></code></pre></div>
+<p>异常情况主要是重新将当前线程绑定到上一个事务的信息</p>
+
+<h3 id="3-2-3-事务已存在传播事务">3.2.3 事务已存在传播事务</h3>
+
+<p>如果检测到已存在事务，则需要处理事务的传播特性，具体看<code>AbstractPlatformTransactionManager.handleExistingTransaction</code>方法:</p>
+
+<ul>
+<li>1 PROPAGATION_NEVER</li>
+</ul>
+
+<p>即当前方法需在非事务环境下执行，如果有事务存在，则抛出异常:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>definition<span style="color:#f92672">.</span><span style="color:#a6e22e">getPropagationBehavior</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> TransactionDefinition<span style="color:#f92672">.</span><span style="color:#a6e22e">PROPAGATION_NEVER</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalTransactionStateException<span style="color:#f92672">(</span>
+        <span style="color:#e6db74">&#34;Existing transaction found for transaction marked with propagation &#39;never&#39;&#34;</span><span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span></code></pre></div>
+<ul>
+<li>2 PROPAGATION_NOT_SUPPORTED</li>
+</ul>
+
+<p>如果有事务存在，那么将事务挂起:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>definition<span style="color:#f92672">.</span><span style="color:#a6e22e">getPropagationBehavior</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> TransactionDefinition<span style="color:#f92672">.</span><span style="color:#a6e22e">PROPAGATION_NOT_SUPPORTED</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    Object suspendedResources <span style="color:#f92672">=</span> suspend<span style="color:#f92672">(</span>transaction<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">boolean</span> newSynchronization <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>getTransactionSynchronization<span style="color:#f92672">()</span> <span style="color:#f92672">==</span> SYNCHRONIZATION_ALWAYS<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> prepareTransactionStatus<span style="color:#f92672">(</span>
+        definition<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> newSynchronization<span style="color:#f92672">,</span> debugEnabled<span style="color:#f92672">,</span> suspendedResources<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span></code></pre></div>
+<p>事务挂起<code>suspend</code>方法上面已分析，最终调用<code>TransactionSynchronizationManager.doUnbindResource</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> Object <span style="color:#a6e22e">doUnbindResource</span><span style="color:#f92672">(</span>Object actualKey<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    Map<span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">,</span> Object<span style="color:#f92672">&gt;</span> map <span style="color:#f92672">=</span> resources<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>map <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    Object value <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>actualKey<span style="color:#f92672">);</span>
+    <span style="color:#75715e">// Remove entire ThreadLocal if empty...
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>map<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+        resources<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#75715e">// Transparently suppress a ResourceHolder that was marked as void...
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>value <span style="color:#66d9ef">instanceof</span> ResourceHolder <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">((</span>ResourceHolder<span style="color:#f92672">)</span> value<span style="color:#f92672">).</span><span style="color:#a6e22e">isVoid</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+        value <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> value<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span></code></pre></div>
+<p>可以看出，事务挂起做了移除当前线程、数据源活动事务对象的过程</p>
+
+<ul>
+<li>3 PROPAGATION_REQUIRES_NEW</li>
+</ul>
+
+<p>​     挂起当前事务，并创建一个新事务</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#75715e">// 挂起当前活动事务并创建新事务的过程
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>definition<span style="color:#f92672">.</span><span style="color:#a6e22e">getPropagationBehavior</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> TransactionDefinition<span style="color:#f92672">.</span><span style="color:#a6e22e">PROPAGATION_REQUIRES_NEW</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>debugEnabled<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Suspending current transaction, creating new transaction with name [&#34;</span> <span style="color:#f92672">+</span>
+						definition<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;]&#34;</span><span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			SuspendedResourcesHolder suspendedResources <span style="color:#f92672">=</span> suspend<span style="color:#f92672">(</span>transaction<span style="color:#f92672">);</span>
+			<span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+				<span style="color:#66d9ef">boolean</span> newSynchronization <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>getTransactionSynchronization<span style="color:#f92672">()</span> <span style="color:#f92672">!=</span> SYNCHRONIZATION_NEVER<span style="color:#f92672">);</span>
+				DefaultTransactionStatus status <span style="color:#f92672">=</span> newTransactionStatus<span style="color:#f92672">(</span>
+						definition<span style="color:#f92672">,</span> transaction<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> newSynchronization<span style="color:#f92672">,</span> debugEnabled<span style="color:#f92672">,</span> suspendedResources<span style="color:#f92672">);</span>
+				<span style="color:#75715e">// 开始新事务
+</span><span style="color:#75715e"></span>				doBegin<span style="color:#f92672">(</span>transaction<span style="color:#f92672">,</span> definition<span style="color:#f92672">);</span>
+			    <span style="color:#75715e">// 初始化事务同步器
+</span><span style="color:#75715e"></span>				prepareSynchronization<span style="color:#f92672">(</span>status<span style="color:#f92672">,</span> definition<span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">return</span> status<span style="color:#f92672">;</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>RuntimeException beginEx<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			    <span style="color:#75715e">// 还原挂起的事务
+</span><span style="color:#75715e"></span>				resumeAfterBeginException<span style="color:#f92672">(</span>transaction<span style="color:#f92672">,</span> suspendedResources<span style="color:#f92672">,</span> beginEx<span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">throw</span> beginEx<span style="color:#f92672">;</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Error beginErr<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				resumeAfterBeginException<span style="color:#f92672">(</span>transaction<span style="color:#f92672">,</span> suspendedResources<span style="color:#f92672">,</span> beginErr<span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">throw</span> beginErr<span style="color:#f92672">;</span>
+			<span style="color:#f92672">}</span>
+		<span style="color:#f92672">}</span>
+		</code></pre></div>
+<p>可以看出，这部分逻辑和创建新事务基本相同</p>
+
+<ul>
+<li>4 PROPAGATION_NESTED</li>
+</ul>
+
+<blockquote>
+<p>开始一个 嵌套的事务,  它是已经存在事务的一个真正的子事务. 嵌套事务开始执行时,  它将取得一个 savepoint. 如果这个嵌套事务失败, 我们将回滚到此 savepoint. 嵌套事务是外部事务的一部分, 只有外部事务结束后它才会被提交.</p>
+</blockquote>
+
+<p>具体代码逻辑:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#75715e">// 嵌套事务
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>definition<span style="color:#f92672">.</span><span style="color:#a6e22e">getPropagationBehavior</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> TransactionDefinition<span style="color:#f92672">.</span><span style="color:#a6e22e">PROPAGATION_NESTED</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isNestedTransactionAllowed<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+				<span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NestedTransactionNotSupportedException<span style="color:#f92672">(</span>
+						<span style="color:#e6db74">&#34;Transaction manager does not allow nested transactions by default - &#34;</span> <span style="color:#f92672">+</span>
+						<span style="color:#e6db74">&#34;specify &#39;nestedTransactionAllowed&#39; property with value &#39;true&#39;&#34;</span><span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>debugEnabled<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Creating nested transaction with name [&#34;</span> <span style="color:#f92672">+</span> definition<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;]&#34;</span><span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#75715e">// 是否使用savepoint
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>useSavepointForNestedTransaction<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+				<span style="color:#75715e">// Create savepoint within existing Spring-managed transaction,
+</span><span style="color:#75715e"></span>				<span style="color:#75715e">// through the SavepointManager API implemented by TransactionStatus.
+</span><span style="color:#75715e"></span>				<span style="color:#75715e">// Usually uses JDBC 3.0 savepoints. Never activates Spring synchronization.
+</span><span style="color:#75715e"></span>				DefaultTransactionStatus status <span style="color:#f92672">=</span>
+						prepareTransactionStatus<span style="color:#f92672">(</span>definition<span style="color:#f92672">,</span> transaction<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> debugEnabled<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+				status<span style="color:#f92672">.</span><span style="color:#a6e22e">createAndHoldSavepoint</span><span style="color:#f92672">();</span>
+				<span style="color:#66d9ef">return</span> status<span style="color:#f92672">;</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+				<span style="color:#75715e">// Nested transaction through nested begin and commit/rollback calls.
+</span><span style="color:#75715e"></span>				<span style="color:#75715e">// Usually only for JTA: Spring synchronization might get activated here
+</span><span style="color:#75715e"></span>				<span style="color:#75715e">// in case of a pre-existing JTA transaction.
+</span><span style="color:#75715e"></span>				<span style="color:#66d9ef">boolean</span> newSynchronization <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>getTransactionSynchronization<span style="color:#f92672">()</span> <span style="color:#f92672">!=</span> SYNCHRONIZATION_NEVER<span style="color:#f92672">);</span>
+				DefaultTransactionStatus status <span style="color:#f92672">=</span> newTransactionStatus<span style="color:#f92672">(</span>
+						definition<span style="color:#f92672">,</span> transaction<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> newSynchronization<span style="color:#f92672">,</span> debugEnabled<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+				doBegin<span style="color:#f92672">(</span>transaction<span style="color:#f92672">,</span> definition<span style="color:#f92672">);</span>
+				<span style="color:#75715e">// 初始化事务同步器
+</span><span style="color:#75715e"></span>				prepareSynchronization<span style="color:#f92672">(</span>status<span style="color:#f92672">,</span> definition<span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">return</span> status<span style="color:#f92672">;</span>
+			<span style="color:#f92672">}</span>
+		<span style="color:#f92672">}</span>
+		</code></pre></div>
+<p>嵌套事务如果使用savepoint则会通过数据库本身实现的安全点处理。否则会创建一个新的事务</p>
+
+<h2 id="3-3-绑定事务">3.3 绑定事务</h2>
+
+<p>通过<code>TransactionAspectSupport.prepareTransactionInfo</code>准备事务信息，将当前事务绑定到当前线程：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#66d9ef">protected</span> TransactionInfo <span style="color:#a6e22e">prepareTransactionInfo</span><span style="color:#f92672">(</span>PlatformTransactionManager tm<span style="color:#f92672">,</span>
+			TransactionAttribute txAttr<span style="color:#f92672">,</span> String joinpointIdentification<span style="color:#f92672">,</span> TransactionStatus status<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+		TransactionInfo txInfo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TransactionInfo<span style="color:#f92672">(</span>tm<span style="color:#f92672">,</span> txAttr<span style="color:#f92672">,</span> joinpointIdentification<span style="color:#f92672">);</span>
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>txAttr <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			<span style="color:#75715e">// We need a transaction for this method
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>logger<span style="color:#f92672">.</span><span style="color:#a6e22e">isTraceEnabled</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+				logger<span style="color:#f92672">.</span><span style="color:#a6e22e">trace</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Getting transaction for [&#34;</span> <span style="color:#f92672">+</span> txInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">getJoinpointIdentification</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;]&#34;</span><span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#75715e">// The transaction manager will flag an error if an incompatible tx already exists
+</span><span style="color:#75715e"></span>			txInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">newTransactionStatus</span><span style="color:#f92672">(</span>status<span style="color:#f92672">);</span>
+		<span style="color:#f92672">}</span>
+		<span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+		
+			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>logger<span style="color:#f92672">.</span><span style="color:#a6e22e">isTraceEnabled</span><span style="color:#f92672">())</span>
+				logger<span style="color:#f92672">.</span><span style="color:#a6e22e">trace</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Don&#39;t need to create transaction for [&#34;</span> <span style="color:#f92672">+</span> joinpointIdentification <span style="color:#f92672">+</span>
+						<span style="color:#e6db74">&#34;]: This method isn&#39;t transactional.&#34;</span><span style="color:#f92672">);</span>
+		<span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">// 保存上一个事务信息和当前事务信息到对象中
+</span><span style="color:#75715e"></span>		txInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">bindToThread</span><span style="color:#f92672">();</span>
+		<span style="color:#66d9ef">return</span> txInfo<span style="color:#f92672">;</span>
+	<span style="color:#f92672">}</span>
+
+	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">bindToThread</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+			<span style="color:#75715e">// Expose current TransactionStatus, preserving any existing TransactionStatus
+</span><span style="color:#75715e"></span>			<span style="color:#75715e">// for restoration after this transaction is complete.
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">oldTransactionInfo</span> <span style="color:#f92672">=</span> transactionInfoHolder<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">();</span>
+			transactionInfoHolder<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">);</span>
+		<span style="color:#f92672">}</span></code></pre></div>
+<p>意图很明显，就是将当前事务绑定到本地线程，同时将上一级的事务存放到_oldTransactionInfo_属性中，为什么要这么做呢，这个请看之后的事务提交部分的解析</p>
+
+<h1 id="4-reference">4 Reference</h1>
+
+<p><a href="http://www.iteye.com/topic/35907">spring 嵌套事务分析</a></p>
+
+
+        </div>
+
+    </div>
+
+    
+    <nav id="article-nav">
+
+        
+        
+
+        
+        <div id="article-nav-older" class="article-nav-title">
+            <a href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/">
+                Transaction源码解析之事务的配置解析
+            </a>
+        </div>
+        
+
+    </nav>
+    
+
+
+</article>
+
+<div id="toc" class="toc-article" >
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc">
+        <nav id="TableOfContents">
+<ul>
+<li><a href="#1-调试源码">1 调试源码</a></li>
+<li><a href="#2-事务执行流程">2 事务执行流程</a>
+<ul>
+<li><a href="#2-1-cglibaopproxy动态代理">2.1 CglibAopProxy动态代理</a></li>
+<li><a href="#2-2-获取拦截器">2.2 获取拦截器</a></li>
+<li><a href="#2-3-拦截器链执行">2.3 拦截器链执行</a></li>
+</ul></li>
+<li><a href="#3-事务拦截器">3 事务拦截器</a>
+<ul>
+<li><a href="#3-1-事务基础组件">3.1 事务基础组件</a>
+<ul>
+<li><a href="#3-1-1-事务属性">3.1.1 事务属性</a></li>
+<li><a href="#3-1-2-事务管理器">3.1.2 事务管理器</a></li>
+<li><a href="#3-1-3-数据源-datasource">3.1.3 数据源 DataSource</a></li>
+</ul></li>
+<li><a href="#3-2-事务的开启及传播">3.2 事务的开启及传播</a>
+<ul>
+<li><a href="#3-2-1-事务执行">3.2.1 事务执行</a></li>
+<li><a href="#3-2-2-事务不存在创建事务">3.2.2 事务不存在创建事务</a></li>
+<li><a href="#3-2-3-事务已存在传播事务">3.2.3 事务已存在传播事务</a></li>
+</ul></li>
+<li><a href="#3-3-绑定事务">3.3 绑定事务</a></li>
+</ul></li>
+<li><a href="#4-reference">4 Reference</a></li>
+</ul>
+</nav>
+    </ol>
+    <div style="text-align:center">-----------------------</div>
+    <strong class="toc-title">最新评论</strong>
+    <ol class="toc">
+        <div class="remark42__last-comments" data-max="10"></div>
+    </ol>
+</div>
+<style>
+    
+    .left-col .switch-btn {
+        display: none;
+    }
+
+    .left-col .switch-area {
+        display: none;
+    }
+    
+
+
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录" >
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function () {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    
+    
+    
+        
+    
+</script>
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a class="bds_qzone" data-cmd="qzone" href="#" title="分享到 QQ 空间"></a>
+        <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+        <a class="bds_count" data-cmd="count"></a>
+        <a class="bds_more" data-cmd="more"></a>
+
+    </div>
+    <script>
+        window._bd_share_config = {
+            "common": {
+                "bdSnsKey": {},
+                "bdText": "",
+                "bdMini": "2",
+                "bdMiniList": false,
+                "bdPic": "",
+                "bdStyle": "0",
+                "bdSize": "24"
+            }, "share": {}
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+</div>
+
+
+
+
+<div style="margin-left: 30px;margin-right: 30px;background: white;padding-left: 30px;padding-right: 30px">
+    <div class="comments">
+        <h3>[评论][COMMENTS]</h3>
+        
+            
+                
+                
+                
+                
+                
+            
+        
+        <div id="remark42"></div>
+        <div id="disqus_thread"></div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="scroll" id="post-nav-button">
+
+    
+    <a href="https://nicky-chin.cn/" title="回到主页"><i class="fa fa-home"></i></a>
+    
+
+
+    <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+
+    
+    <a href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/" title="下一篇: Transaction源码解析之事务的配置解析">
+        <i class="fa fa-angle-right"></i>
+    </a>
+    
+
+</div>
+
+
+<ul class="post-list toc-article">
+    
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/" target="_blank">Transaction源码解析之事务预处理</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/" target="_blank">Transaction源码解析之事务的配置解析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/" target="_blank">生产-消费模型之虚假唤醒</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/" target="_blank">Spring实例化bean之源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/03/02/float-precision/" target="_blank">float浮点小数的设计及精度问题</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/05/03/apt_lombok_implement/" target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/02/15/filter/" target="_blank">实际项目运用之Filter模式（过滤器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/12/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/11/17/btree-info/" target="_blank">数据结构之BTree和B&#43;Tree(多路平衡查找树 )</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/10/15/id-redis/" target="_blank">分布式全局序列ID方案之Redis优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/25/id-flicker/" target="_blank">分布式全局序列ID方案之Flicker优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/19/id-snowflake/" target="_blank">分布式全局序列ID方案之Snowflake算法</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/25/spring-springmvc/" target="_blank">Spring之动手实现SpringMVC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/22/java-methodhandler/" target="_blank">Java反射优化之方法句柄</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/16/spring-bean-ioc/" target="_blank">Spring之动手实现IOC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/12/spring-bean-lifecycle/" target="_blank">Spring之Bean加载-解析-生命周期</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/09/aqs-condition/" target="_blank">并发基础之Condition(等待队列)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/07/cache-redis-optimize/" target="_blank">Redis注意事项及常见优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/04/aqs_chapter02/" target="_blank">并发基础之AQS同步器（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/01/cache-redis-slowlog/" target="_blank">Redis之慢查询日志</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/31/aqs_chapter01/" target="_blank">并发基础之AQS同步器（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/16/junit-codeanalysis/" target="_blank">初窥门径之JUnit源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/13/java-securitymanager/" target="_blank">Java安全之SecurityManager</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/05/spi-introduction/" target="_blank">框架基础之SPI机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/29/responsibility-chain/" target="_blank">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/25/jndi-introdution/" target="_blank">JNDI知识摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/17/architect/" target="_blank">技术图谱</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/13/distribution-knowledge/" target="_blank">分布式项目知识要点</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/07/singletion/" target="_blank">设计模式之单例模式终极版【克隆-序列化-反射】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/02/fail-fast-safe/" target="_blank">Fail-Fast和Fail-Safe机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/27/adapter/" target="_blank">实际项目运用之Adapter模式（适配器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/18/template/" target="_blank">设计模式之Template模式（模版模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/14/synchronized-principle/" target="_blank">synchronized实现原理及锁优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/13/juc-tree-info/" target="_blank">JUC知识点总结</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/06/strategy/" target="_blank">实际项目运用之Strategy模式（策略模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/04/volatile-feature/" target="_blank">volatile关键字原理实现及应用</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/28/high-event/" target="_blank">MYSQL高级特性之【Event事件】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/27/process-fun/" target="_blank">MYSQL高级特性之【存储过程与函数】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/25/cap-base-flp/" target="_blank">分布式之【CAP理论、BASE理论 、FLP不可能定理】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/21/string-builder-question/" target="_blank">字符串拼接的疑惑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/17/exception-introduce/" target="_blank">Java异常处理-原理及优化建议</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/03/thread-jmm-happens-before/" target="_blank">java内存模型之[JMM][重排序][happens-before]</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/28/decorator/" target="_blank">实际项目运用之Decorator模式（装饰器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/26/interface-idempotency/" target="_blank">接口设计的幂等性考虑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/21/binary-operation/" target="_blank">java中位运算技巧</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/20/classloader-chapter02/" target="_blank">ClassLoader类加载分析（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/13/introspector/" target="_blank">Java 内省(Introspector)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/08/classloader-chapter01/" target="_blank">ClassLoader类加载分析（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/19/builder/" target="_blank">设计模式之builder模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/07/builder-factory/" target="_blank">设计模式之factory模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/11/03/recursive-lock/" target="_blank">可重入锁</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/09/12/show-global-status/" target="_blank">库级优化之SHOW GLOBAL STATUS</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/06/13/optimize-picture/" target="_blank">后端开发需要了解的mysql优化方向</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/16/thread-communication/" target="_blank">多线程之线程通信摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/07/design-rule/" target="_blank">数据库设计三范式和反范式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/info/" target="_blank">联系&amp;留言</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/open_source/" target="_blank">开源项目</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/tools/" target="_blank">在线工具</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/01/23/externalizable-interface/" target="_blank">自定义序列化之Externalizable接口</a></li>
+    
+</ul>
+
+<script>
+    var remark_config = {
+        host: "https://nicky-chin.cn", 
+        site_id: 'nicky-blog',
+        components: ['embed', 'last-comments'], 
+        max_shown_comments: 20, 
+        theme: 'light', 
+        locale: 'zh'
+    };
+
+    (function(c) {
+        for(var i = 0; i < c.length; i++){
+            var d = document, s = d.createElement('script');
+            s.src = remark_config.host + '/web/' +c[i] +'.js';
+            s.defer = true;
+            (d.head || d.body).appendChild(s);
+        }
+    })(remark_config.components || ['embed']);
+</script>
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    $(".post-list").addClass("toc-article");
+    $(".post-list-item a").attr("target", "_blank");
+    $("#post-nav-button > a:nth-child(2)").click(function () {
+        $(".fa-bars, .fa-times").toggle();
+        $(".post-list").toggle(300);
+        if ($(".toc").length > 0) {
+            $("#toc, #tocButton").toggle(200, function () {
+                if ($(".switch-area").is(":visible")) {
+                    $("#toc, .switch-btn, .switch-area").toggle();
+                    $("#tocButton").attr("value", valueHide);
+                }
+            })
+        }
+        else {
+            $(".switch-btn, .switch-area").fadeToggle(300);
+        }
+    })
+</script>
+
+<script>
+
+</script>
+
+
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2020 南乡清水@Hangzhou
+            </div>
+            <div class="s-bottom-layer-right" style="font-size: 0.2em" >
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33011002014475"
+                    target="_blank"><span class="lh s-bottom-recordcode">京公网安备33011002014475号</span></a>
+                <span class="lh"> 浙ICP备19049847号</span>
+            </div>
+
+            
+                
+            
+        </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chin.cn/js/GithubRepoWidget.js"></script>
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  10 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-159911678-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>
