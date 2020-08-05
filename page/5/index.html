@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
     <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
 
+    <link rel="stylesheet" type="text/css" href="https://nicky-chin.cn/assets/waifu.css"/>
 
     <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
 
@@ -40,6 +41,7 @@
 
 <body>
 <div id="container">
+
     <div class="left-col">
         <div class="overlay"></div>
 <div class="intrude-less">
@@ -142,13 +144,13 @@
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
                         
-                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color4">Junit</a>
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color3">Junit</a>
                         
-                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color2">Redis</a>
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color1">Redis</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color3">Spring-Base</a>
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color2">Spring-Base</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color4">Spring-Transaction</a>
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color2">Spring-Transaction</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">优化</a>
                         
@@ -156,25 +158,25 @@
                         
                             <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color1">创建型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color3">基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color3">多线程</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color2">多线程</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color3">思维导图</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color1">数据结构</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color4">数据结构</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">框架基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">框架基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color1">源码</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color3">源码</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color2">理论</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color2">结构型</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color3">结构型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color2">行为型</a>
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color1">行为型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color1">锁优化</a>
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">锁优化</a>
                         
                     </div>
                 </section>
@@ -299,7 +301,7 @@
         <div class="article-entry" itemprop="articleBody">
             最近没事在玩ASM框架，于是乎想将业务代码中的PO对象中的toString方法 在编译期间，自动转换了基于StringBuilder 拼接的代码。发现了一个奇怪的问题： 实体类如下
 @Getter @Setter @EqualsAndHashCode(of = &quot;id&quot;) @ApiModel(&quot;活动&quot;) public class Banner implements Serializable{ private static final long serialVersionUID = 191609922585601269L; @ApiModelProperty(value = &quot;ID&quot;, position = 1) private Integer id; @ApiModelProperty(value = &quot;显示次序&quot;, position = 2) private Integer orderNo; @ApiModelProperty(value = &quot;关联文件&quot;, position = 3) private Integer fileId; @ApiModelProperty(value = &quot;跳转链接&quot;, position = 4) private String forwardLink = &quot;&quot;; @ApiModelProperty(value = &quot;创建时间&quot;, position = 5) private Long createDateline; @ApiModelProperty(value = &quot;是否可用：1 可用，0 不可用&quot;, position = 6) private Integer isenable; @ApiModelProperty(value = &quot;标题&quot;, position = 7) private String title = &quot;&quot;; @ApiModelProperty(value = &quot;备注&quot;, position = 8) private String remark = &quot;&quot;; @ApiModelProperty(value = &quot;banner类型：1.
-            <img src="https://nicky-chin.cn/media/string-builder-question/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/string-builder-question/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -364,7 +366,7 @@
 
         <div class="article-entry" itemprop="articleBody">
             1 异常层次结构 异常指不期而至的各种状况，如：文件找不到、网络连接失败、非法参数等。异常是一个事件，它发生在程序运行期间，干扰了正常的指令流程。Java通 过API中Throwable类的众多子类描述各种不同的异常。因而，Java异常都是对象，是Throwable子类的实例，描述了出现在一段编码中的 错误条件。当条件生成时，错误将引发异常。 Java异常类层次结构图： 在 Java 中，所有的异常都有一个共同的祖先 Throwable（可抛出）。Throwable 指定代码中可用异常传播机制通过 Java 应用程序传输的任何问题的共性。 Throwable： 有两个重要的子类：*Exception（异常）和 Error（错误）*，二者都是 Java 异常处理的重要子类，各自都包含大量子类。 Error（错误）:是程序无法处理的错误，表示运行应用程序中较严重问题。大多数错误与代码编写者执行的操作无关，而表示代码运行时 JVM（Java 虚拟机）出现的问题。例如，Java虚拟机运行错误（Virtual MachineError），当 JVM 不再有继续执行操作所需的内存资源时，将出现 OutOfMemoryError。这些异常发生时，Java虚拟机（JVM）一般会选择线程终止。这些错误表示故障发生于虚拟机自身、或者发生在虚拟机试图执行应用时，如Java虚拟机运行错误（Virtual MachineError）、类定义错误（NoClassDefFoundError）等。这些错误是不可查的，因为它们在应用程序的控制和处理能力之 外，而且绝大多数是程序运行时不允许出现的状况。对于设计合理的应用程序来说，即使确实发生了错误，本质上也不应该试图去处理它所引起的异常状况。在 Java中，错误通过Error的子类描述。
-            <img src="https://nicky-chin.cn/media/exception-introduce/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/exception-introduce/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -429,7 +431,7 @@
 
         <div class="article-entry" itemprop="articleBody">
             1.并发编程模型的分类 在并发编程中，我们需要处理两个关键问题：线程之间如何通信及线程之间如何同 步（这里的线程是指并发执行的活动实体）。通信是指线程之间以何种机制来交换 信息。在命令式编程中，线程之间的通信机制有两种：*共享内存和消息传递*。 在共享内存的并发模型里，线程之间共享程序的公共状态，线程之间通过写-读内 存中的公共状态来隐式进行通信。在消息传递的并发模型里，线程之间没有公共状 态，线程之间必须通过明确的发送消息来显式进行通信。 同步是指程序用于控制不同线程之间操作发生相对顺序的机制。在共享内存并发模 型里，同步是显式进行的。程序员必须显式指定某个方法或某段代码需要在线程之 间互斥执行。在消息传递的并发模型里，由于消息的发送必须在消息的接收之前， 因此同步是隐式进行的。 Java 的并发采用的是共享内存模型，Java 线程之间的通信总是隐式进行，整个通 信过程对程序员完全透明。如果编写多线程程序的 Java 程序员不理解隐式进行的 线程之间通信的工作机制，很可能会遇到各种奇怪的内存可见性问题。
-            <img src="https://nicky-chin.cn/media/thread-jmm-happens-before/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/thread-jmm-happens-before/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -496,7 +498,7 @@
             1 概述 在项目中，经常因一些新增需求，导致同一业务的变更，如果所在类继承关系如下：Parent、Child、Grandparent，那么要在Child类上增强些功能怎么办？给Child类增加方法？那会对Grandparent产生什么影响？该如何去处理？看完本文，你会找到你的答案。
 JavaIO中，像下面的嵌套语句很常见，为什么要怎样定义呢？理解装饰模式后，你会找到答案。
 FilterInputStream filterInputStreasm = new BufferedInputStream(new FileInputStream(new File(&quot;/user/a&quot;)));  1.1案例 例如下面一个功能需求，4s店的汽车销售向客户推销自家品牌的产品，我们用代码实现，关系如下：
-            <img src="https://nicky-chin.cn/media/decorator/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/decorator/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -561,7 +563,7 @@ FilterInputStream filterInputStreasm = new BufferedInputStream(new FileInputStre
 
         <div class="article-entry" itemprop="articleBody">
             分布式系统接口幂等性 1.幂等性定义 1.1 数学定义  在数学里，幂等有两种主要的定义：- 在某二元运算下，幂等元素是指被自己重复运算(或对于函数是为复合)的结果等于它自己的元素。例如，乘法下唯一两个幂等实数为0和1。即 s *s = s- 某一元运算为幂等的时，其作用在任一元素两次后会和其作用一次的结果相同。例如，高斯符号便是幂等的，即f(f(x)) = f(x)。
-            <img src="https://nicky-chin.cn/media/interface-idempotency/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/interface-idempotency/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -627,7 +629,7 @@ FilterInputStream filterInputStreasm = new BufferedInputStream(new FileInputStre
         <div class="article-entry" itemprop="articleBody">
             位运算符主要针对二进制，它包括了：“与”、“非”、“或”、“异或”。
 运算符 含义 描述 【&amp;】 按位与 如果两个相应的二进制位都为1，则该位的结果值为1，否则为0 【|】按位或 两个相应的二进制位中只要有一个为1，该位的结果值为1 【^】 按位异或 若参加运算的两个二进制位值相同则为0，否则为1 【~】 取反 ~是一元运算符，用来对一个二进制数按位取反，即将0变1，将1变0 【&lt;&lt;】 左移 用来将一个数的各二进制位全部左移N位，右补0 【&gt;&gt;】右移 将一个数的各二进制位右移N位，移到右端的低位被舍弃，对于无符号数，高位补0
-            <img src="https://nicky-chin.cn/media/binary-operation/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/binary-operation/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -693,7 +695,7 @@ FilterInputStream filterInputStreasm = new BufferedInputStream(new FileInputStre
         <div class="article-entry" itemprop="articleBody">
             一、JVM 提供的 Classloader 1.1 BootstrapClassloader 引导类加载器，又称启动类加载器，是最顶层的类加载器，主要用来加载Java核心类，如rt.jar、resources.jar、charsets.jar等，Sun的JVM中，执行java的命令中使用-Xbootclasspath选项或使用- D选项指定sun.boot.class.path系统属性值可以指定附加的类，它不是 java.lang.ClassLoader的子类，而是由JVM自身实现的该类c 语言实现，Java程序访问不到该加载器。通过下面代码可以查看该加载器加载了哪些jar包
 public class MainClass { public static void main(String[] args) throws ClassNotFoundException { URL[] urls = sun.
-            <img src="https://nicky-chin.cn/media/classloader-chapter02/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/classloader-chapter02/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -761,7 +763,7 @@ public class MainClass { public static void main(String[] args) throws ClassNotF
 　JavaBean是一种特殊的类，主要用于传递数据信息，这种类中的方法主要用于访问私有的字段，且方法名符合某种命名规则。如果在两个模块之间传递信息，可以将信息封装进JavaBean中，这种对象称为“值对象”(Value Object)，或“VO”。方法比较少。这些信息储存在类的私有变量中，通过set()、get()获得。
 　例如类Use :
 public class User { private String name; private String address; public String getName() { return name; } public void setName(String name) { this.
-            <img src="https://nicky-chin.cn/media/introspector/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/introspector/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -830,7 +832,7 @@ public class User { private String name; private String address; public String g
 1、装载
 2-4、链接 -包括 【验证、准备、解析】
 5、初始化
-            <img src="https://nicky-chin.cn/media/classloader-chapter01/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/classloader-chapter01/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -898,7 +900,7 @@ public class User { private String name; private String address; public String g
 建造者模式中的角色分类：  抽象建造者Builder：接口类型，用于规范各个产品的组成部分；  具体建造者ConcreteBuilder：实现Builder中的所有方法，返回一个产品实例；  指导者Director：指挥建造者制造相应的产品  产品Product：用户最终看到的复杂对象。
 假设我们有一个向客户发送新年祝福邮件的需求，而邮件内容可以是纯文档的，也可以是有动画的，也可以是有音频的，可以动态的添加个组件
 uml下图所示： 如上图所示，邮箱有多个组件，包含收件人，发送人，内容，音乐等 通过具体的建造者添加不同的组件模版，最后通过指挥者去调用抽象建造者 来返回具体的email对象
-            <img src="https://nicky-chin.cn/media/builder/preview.jpg" width="720px" height="300px" onerror="this.remove()" title="图片预览">
+            <img src="https://nicky-chin.cn/media/builder/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -1105,6 +1107,79 @@ ga('send', 'pageview');
         s.parentNode.insertBefore(bp, s);
     })();
 </script>
+
+
+
+    <div class="waifu">
+        <div class="waifu-tips"></div>
+        <canvas id="live2d" class="live2d"></canvas>
+        <div class="waifu-tool">
+            <span class="fui-home"></span>
+            <span class="fui-chat"></span>
+            <span class="fui-eye"></span>
+            <span class="fui-user"></span>
+            <span class="fui-photo"></span>
+            <span class="fui-info-circle"></span>
+            <span class="fui-cross"></span>
+        </div>
+    </div>
+
+    <script src="https://nicky-chin.cn/assets/waifu-tips.min.js?v=1.4.2"></script>
+    <script src="https://nicky-chin.cn/assets/live2d.min.js?v=1.0.5"></script>
+    <script type="text/javascript">
+        
+        live2d_settings['showToolMenu'] = true;         
+        live2d_settings['canCloseLive2d'] = true;         
+        live2d_settings['canSwitchModel'] = true;         
+        live2d_settings['canSwitchTextures'] = true;         
+        live2d_settings['canSwitchHitokoto'] = true;         
+        live2d_settings['canTakeScreenshot'] = true;         
+        live2d_settings['canTurnToHomePage'] = true;         
+        live2d_settings['canTurnToAboutPage'] = true;         
+
+
+        
+        live2d_settings['waifuSize']            = '280x250';    
+        live2d_settings['waifuTipsSize']        = '250x70';     
+        live2d_settings['waifuFontSize']        = '12px';       
+        live2d_settings['waifuToolFont']        = '14px';       
+        live2d_settings['waifuToolLine']        = '20px';       
+        live2d_settings['waifuToolTop']         = '0px';        
+        live2d_settings['waifuMinWidth']        = '768px';      
+        live2d_settings['waifuEdgeSide']        = 'right:30';     
+        live2d_settings['waifuDraggable']       = 'axis-x';    
+        live2d_settings['waifuDraggableRevert'] = true;         
+
+        
+        live2d_settings['modelId']              = 1;            
+        live2d_settings['modelTexturesId'] = 87;         
+        live2d_settings['modelStorage'] = false;         
+        live2d_settings['canCloseLive2d'] = false;       
+        live2d_settings['canTurnToHomePage'] = false;    
+
+        
+        live2d_settings['modelStorage']         = true;         
+        live2d_settings['modelRandMode']        = 'switch';     
+        live2d_settings['modelTexturesRandMode']= 'rand';       
+
+
+        
+        live2d_settings['showHitokoto']         = true;         
+        live2d_settings['showF12Status']        = true;         
+        live2d_settings['showF12Message']       = false;        
+        live2d_settings['showF12OpenMsg']       = true;         
+        live2d_settings['showCopyMessage']      = true;         
+        live2d_settings['showWelcomeMessage']   = true;         
+
+        
+        live2d_settings['homePageUrl']          = 'auto';       
+        live2d_settings['aboutPageUrl']         = 'https://nicky-chin.cn/2017/02/19/info/';   
+        live2d_settings['screenshotCaptureName']= '看板娘.png'; 
+
+
+         
+        initModel("/assets/waifu-tips.json?v=1.4.2")
+    </script>
 
 </div>
 </body>
