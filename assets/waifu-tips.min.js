@@ -20,7 +20,7 @@ window.live2d_settings = Array(); /*
 
 
 // 后端接口
-live2d_settings['modelAPI']             = '//live2d.fghrsh.net/api/';   // 自建 API 修改这里
+live2d_settings['modelAPI']             = '//nicky-chin.cn/live2d_api/';   // 自建 API 修改这里
 live2d_settings['tipsMessage']          = 'waifu-tips.json';            // 同目录下可省略路径
 live2d_settings['hitokotoAPI']          = 'hitokoto.cn';                  // 一言 API，可选 'lwl12.com', 'hitokoto.cn', 'jinrishici.com'(古诗词)
 
@@ -199,7 +199,7 @@ function loadModel(modelId, modelTexturesId=0) {
     } else {
         sessionStorage.setItem('modelId', modelId);
         sessionStorage.setItem('modelTexturesId', modelTexturesId);
-    } loadlive2d('live2d', live2d_settings.modelAPI+'get/?id='+modelId+'-'+modelTexturesId, (live2d_settings.showF12Status ? console.log('[Status]','live2d','模型',modelId+'-'+modelTexturesId,'加载完成'):null));
+    } loadlive2d('live2d', live2d_settings.modelAPI+'get/index.php?id='+modelId+'-'+modelTexturesId, (live2d_settings.showF12Status ? console.log('[Status]','live2d','模型',modelId+'-'+modelTexturesId,'加载完成'):null));
 }
 
 function loadTipsMessage(result) {
@@ -301,7 +301,7 @@ function loadTipsMessage(result) {
         
         $.ajax({
             cache: modelRandMode == 'switch' ? true : false,
-            url: live2d_settings.modelAPI+modelRandMode+'/?id='+modelId,
+            url: live2d_settings.modelAPI+modelRandMode+'/index.php?id='+modelId,
             dataType: "json",
             success: function(result) {
                 loadModel(result.model['id']);
@@ -319,7 +319,7 @@ function loadTipsMessage(result) {
         
         $.ajax({
             cache: modelTexturesRandMode == 'switch' ? true : false,
-            url: live2d_settings.modelAPI+modelTexturesRandMode+'_textures/?id='+modelId+'-'+modelTexturesId,
+            url: live2d_settings.modelAPI+modelTexturesRandMode+'_textures/index.php?id='+modelId+'-'+modelTexturesId,
             dataType: "json",
             success: function(result) {
                 if (result.textures['id'] == 1 && (modelTexturesId == 1 || modelTexturesId == 0))
