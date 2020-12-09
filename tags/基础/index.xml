@@ -32,6 +32,18 @@
     </item>
     
     <item>
+      <title>MySQL中的page页详解</title>
+      <link>https://nicky-chin.cn/2019/07/11/mysql-page-detail/</link>
+      <pubDate>Thu, 11 Jul 2019 11:14:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2019/07/11/mysql-page-detail/</guid>
+      <description>1 InnoDB中的存储结构 从InnoDB存储引擎的逻辑结构看，所有数据都被逻辑地存放在一个空间内，称为表空间(tablespace)，而表空间由段（sengment）、区（extent）、页（page）组成。 在一些文档中extend又称块（block）。
+1.1 表空间（table space） 表空间（Tablespace）是一个逻辑容器，表空间存储的对象是段，在一个表空间中可以有一个或多个段，但是一个段只能属于一个表空间。数据库由一个或多个表空间组成，表空间从管理上可以划分为系统表空间、用户表空间、撤销表空间、临时表空间等。
+在 InnoDB 中存在两种表空间的类型：共享表空间和独立表空间。如果是共享表空间就意味着多张表共用一个表空间。如果是独立表空间，就意味着每张表有一个独立的表空间，也就是数据和索引信息都会保存在自己的表空间中。独立的表空间可以在不同的数据库之间进行迁移。可通过命令
+mysql &amp;gt; show variables like &#39;innodb_file_per_table&#39;;  查看当前系统启用的表空间类型。目前最新版本已经默认启用独立表空间。</description>
+    </item>
+    
+    <item>
       <title>基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</title>
       <link>https://nicky-chin.cn/2019/05/03/apt_lombok_implement/</link>
       <pubDate>Fri, 03 May 2019 11:18:15 +0800</pubDate>
