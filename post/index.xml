@@ -7,10 +7,65 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
-    <lastBuildDate>Mon, 02 Mar 2020 14:18:15 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 19 May 2020 13:39:15 +0800</lastBuildDate>
     
 	<atom:link href="https://nicky-chin.cn/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Transaction源码解析之事务提交与回滚</title>
+      <link>https://nicky-chin.cn/2020/05/19/spring-transaction-commit/</link>
+      <pubDate>Tue, 19 May 2020 13:39:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2020/05/19/spring-transaction-commit/</guid>
+      <description>1 事务还原 1.1 调试demo 我们使用常用的业务代码来做调试：
+@Service(&amp;quot;personService&amp;quot;) public class PersonServiceImpl implements IPersonService { @Override @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class) public void removeUserById(Integer id) { personRepository.removeById(id); User user = new User(); user.setId(0); user.setName(&amp;quot;aaa&amp;quot;); user.setSumScore(&amp;quot;222&amp;quot;); user.setAvgScore(&amp;quot;111&amp;quot;); user.setAge(20); user.setIsSuccess(false); user.setScore(UnsignedInteger.valueOf(1)); user.setStatus(UnsignedLong.valueOf(2)); userService.insertOne(user); } } @Repository public interface PersonRepository extends JpaRepository&amp;lt;Person, Integer&amp;gt;, JpaSpecificationExecutor { Person findByName(String name); @Query(&amp;quot;select p from Person p where p.id = ?1&amp;quot;) Person findObjectById(Integer id); //@CacheEvict(value = &amp;quot;person&amp;quot;) @Transactional(propagation = Propagation.</description>
+    </item>
+    
+    <item>
+      <title>Transaction源码解析之事务预处理</title>
+      <link>https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/</link>
+      <pubDate>Mon, 11 May 2020 12:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/</guid>
+      <description>1 调试源码 接上篇Transaction源码解析之事务的配置解析
+我们调用相应的service类,来调试具体的事务处理流程，测试代码如下:
+public void testInvokeTransactional() throws Exception { TransactionalTestBean testBean = getTestBean(); CallCountingTransactionManager ptm = (CallCountingTransactionManager) context.getBean(&amp;quot;transactionManager&amp;quot;); // try with transactional assertEquals(&amp;quot;Should not have any started transactions&amp;quot;, 0, ptm.begun); testBean.findAllFoos(); assertEquals(&amp;quot;Should have 1 started transaction&amp;quot;, 1, ptm.begun); assertEquals(&amp;quot;Should have 1 committed transaction&amp;quot;, 1, ptm.commits); // try with non-transaction testBean.doSomething(); assertEquals(&amp;quot;Should not have started another transaction&amp;quot;, 1, ptm.begun); // try with exceptional try { testBean.exceptional(new IllegalArgumentException(&amp;quot;foo&amp;quot;)); fail(&amp;quot;Should NEVER get here&amp;quot;); } catch (Throwable throwable) { assertEquals(&amp;quot;Should have another started transaction&amp;quot;, 2, ptm.</description>
+    </item>
+    
+    <item>
+      <title>Transaction源码解析之事务配置解析</title>
+      <link>https://nicky-chin.cn/2020/05/03/spring-transaction-config/</link>
+      <pubDate>Sun, 03 May 2020 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2020/05/03/spring-transaction-config/</guid>
+      <description>1 事务配置 关于Spring的事务，大家每天都会遇见或者用到，为了更好的理解Transaction的原理机制，我们从源码角度来解析，本文的调试源码基于Spring-3.2.x版本进行调试。
+1.1 配置 配置XML文件annotationTransactionNamespaceHandlerTests.xml
+&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt; &amp;lt;beans xmlns=&amp;quot;http://www.springframework.org/schema/beans&amp;quot; xmlns:xsi=&amp;quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot; xmlns:aop=&amp;quot;http://www.springframework.org/schema/aop&amp;quot; xmlns:context=&amp;quot;http://www.springframework.org/schema/context&amp;quot; xmlns:tx=&amp;quot;http://www.springframework.org/schema/tx&amp;quot; xsi:schemaLocation=&amp;quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd&amp;quot;&amp;gt; &amp;lt;tx:annotation-driven/&amp;gt; &amp;lt;bean id=&amp;quot;transactionManager&amp;quot; class=&amp;quot;org.springframework.tests.transaction.CallCountingTransactionManager&amp;quot;/&amp;gt; &amp;lt;bean id=&amp;quot;testBean&amp;quot; class=&amp;quot;org.springframework.transaction.annotation.AnnotationTransactionNamespaceHandlerTests$TransactionalTestBean&amp;quot;/&amp;gt; &amp;lt;context:mbean-export/&amp;gt;  TransactionalTestBean类
+	@Service @ManagedResource(&amp;quot;test:type=TestBean&amp;quot;) public static class TransactionalTestBean { @Transactional(readOnly = true) public Collection&amp;lt;?&amp;gt; findAllFoos() { return null; } public void saveFoo() { } @Transactional(&amp;quot;qualifiedTransactionManager&amp;quot;) public void saveQualifiedFoo() { } @Transactional public void exceptional(Throwable t) throws Throwable { throw t; } @ManagedOperation public String doSomething() { return &amp;quot;done&amp;quot;; } @Transactional protected void annotationsOnProtectedAreIgnored() { } }  上面XML配置主要是开启事务驱动，然后配置事务管理器和带有@Transaction注解的Bean对象</description>
+    </item>
+    
+    <item>
+      <title>生产-消费模型之虚假唤醒</title>
+      <link>https://nicky-chin.cn/2020/04/23/spurious-wakeup/</link>
+      <pubDate>Thu, 23 Apr 2020 19:58:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2020/04/23/spurious-wakeup/</guid>
+      <description>1 何为虚假唤醒 当线程从等待状态中被唤醒时，只是发现未满足其正在等待的条件时，就会发生虚假唤醒。 之所以称其为虚假的，是因为该线程似乎无缘无故被唤醒。 虚假唤醒不会无缘无故发生，通常是因为在发起唤醒号和等待线程最终运行之间的临界时间内，线程不再满足竞态条件。
+2 java中的例子  public class SpuriousWakeupRWLock { private static final CustomQueue CUSTOM_LIST = new CustomQueue(); public static void main(String[] args) throws Exception { for (int i = 0; i &amp;lt; 8; i++) { Thread consumer = new Thread(() -&amp;gt; { try { CUSTOM_LIST.getOne(); } catch (InterruptedException e) { e.printStackTrace(); } ; }); consumer.setName(&amp;quot;consumer:[&amp;quot; + i + &amp;quot;]&amp;quot;); consumer.start(); } TimeUnit.SECONDS.sleep(8); for (int i = 0; i &amp;lt; 2 ; i++) { int finalI = i; Thread producer = new Thread(() -&amp;gt; { try { CUSTOM_LIST.</description>
+    </item>
+    
+    <item>
+      <title>Spring实例化bean之源码分析</title>
+      <link>https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/</link>
+      <pubDate>Wed, 15 Apr 2020 13:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/</guid>
+      <description>1 实例化bean的主流程 这张图是整体的bean的实例化的流程，我之前关于Spring的生命周期的加载bean和实例化bean的整体过程已有博文，可以 查看文章：Spring之Bean加载-解析-生命周期
+调试入口 本文中的Spring源码基于3.2.x版本，为最精简的Spring源码，选取Spring自带的测试用例进行debug调试, 本文只关注单例对象的实例化bean中各组件的源码分析, 入口如下：
+ @Test public void testConfigLocationPattern() { ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(CONTEXT_WILDCARD); assertTrue(ctx.containsBean(&amp;quot;service&amp;quot;)); assertTrue(ctx.containsBean(&amp;quot;logicOne&amp;quot;)); assertTrue(ctx.containsBean(&amp;quot;logicTwo&amp;quot;)); Service service = (Service) ctx.getBean(&amp;quot;service&amp;quot;); ctx.close(); assertTrue(service.isProperlyDestroyed()); }  2 各组件流程 实例化bean的流程主要关注AbstractAutowireCapableBeanFactory的doCreateBean方法，源码如下：
+2.1 整体流程解析  protected Object doCreateBean(final String beanName, final RootBeanDefinition mbd, final Object[] args) { // BeanWrapper是对Bean的包装，其接口中所定义的功能很简单包括设置获取被包装的对象，获取被包装bean的属性描述器 BeanWrapper instanceWrapper = null; if (mbd.isSingleton()) { // 单例模型，则从未完成的 FactoryBean 缓存中删除 instanceWrapper = this.factoryBeanInstanceCache.remove(beanName); } // 使用合适的实例化策略来创建新的实例：工厂方法、构造函数自动注入、简单初始化 if (instanceWrapper == null) { instanceWrapper = createBeanInstance(beanName, mbd, args); } // 包装的实例对象 final Object bean = (instanceWrapper !</description>
+    </item>
     
     <item>
       <title>float浮点小数的设计及精度问题</title>
@@ -21,6 +76,30 @@
       <description>1 浮点计算问题  public class Oct2Bin { public static void main(String[] args) { double a = 0.1d; double b = 0.2d; System.out.println(a + b); } }   结果为0.30000000000000004，而非0.3
  2 小数计算丢精度原因 2.1 十进制小数转换为二进制小数方法 十进制小数转换成二进制小数采用&amp;rdquo;乘2取整，顺序排列&amp;rdquo;法。具体做法是：用2乘十进制小数，可以得到积，将积的整数部分取出，再用2乘余下的小数 部分，又得到一个积，再将积的整数部分取出，如此进行，直到积中的小数部分为零，或者达到所要求的精度为止。 然后把取出的整数部分按顺序排列起来，先取的整数作为二进制小数的高位有效位，后取的整数作为低位有效位。
 2.2 、0.3背后丢精度的原因  0.3 x 2 = 0.6 ------取整数部分 0 0.6 x 2 = 1.2 ------取整数部分 1 0.2 x 2 = 0.4 ------取整数部分 0 0.4 x 2 = 0.8 ------取整数部分 0 0.8 x 2 = 1.</description>
+    </item>
+    
+    <item>
+      <title>MySQL中的page页详解</title>
+      <link>https://nicky-chin.cn/2019/07/11/mysql-page-detail/</link>
+      <pubDate>Thu, 11 Jul 2019 11:14:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2019/07/11/mysql-page-detail/</guid>
+      <description>1 InnoDB中的存储结构 从InnoDB存储引擎的逻辑结构看，所有数据都被逻辑地存放在一个空间内，称为表空间(tablespace)，而表空间由段（sengment）、区（extent）、页（page）组成。 在一些文档中extend又称块（block）。
+1.1 表空间（table space） 表空间（Tablespace）是一个逻辑容器，表空间存储的对象是段，在一个表空间中可以有一个或多个段，但是一个段只能属于一个表空间。数据库由一个或多个表空间组成，表空间从管理上可以划分为系统表空间、用户表空间、撤销表空间、临时表空间等。
+在 InnoDB 中存在两种表空间的类型：共享表空间和独立表空间。如果是共享表空间就意味着多张表共用一个表空间。如果是独立表空间，就意味着每张表有一个独立的表空间，也就是数据和索引信息都会保存在自己的表空间中。独立的表空间可以在不同的数据库之间进行迁移。可通过命令
+mysql &amp;gt; show variables like &#39;innodb_file_per_table&#39;;  查看当前系统启用的表空间类型。目前最新版本已经默认启用独立表空间。
+InnoDB把数据保存在表空间内，表空间可以看作是InnoDB存储引擎逻辑结构的最高层。本质上是一个由一个或多个磁盘文件组成的虚拟文件系统。InnoDB用表空间并不只是存储表和索引，还保存了回滚段、双写缓冲区等。
+1.2 段（segment） 段（Segment）由一个或多个区组成，区在文件系统是一个连续分配的空间（在 InnoDB 中是连续的 64 个页），不过在段中不要求区与区之间是相邻的。段是数据库中的分配单位，不同类型的数据库对象以不同的段形式存在。当我们创建数据表、索引的时候，就会相应创建对应的段，比如创建一张表时会创建一个表段，创建一个索引时会创建一个索引段。
+1.3 区块（extent） 在 InnoDB 存储引擎中，一个区会分配 64 个连续的页。因为 InnoDB 中的页大小默认是 16KB，所以一个区的大小是 64*16KB=1MB。在任何情况下每个区大小都为1MB，为了保证页的连续性，InnoDB存储引擎每次从磁盘一次申请4-5个区。默认情况下，InnoDB存储引擎的页大小为16KB，即一个区中有64个连续的页。
+1.4 页（Page） 页是InnoDB存储引擎磁盘管理的最小单位，每个页默认16KB；InnoDB存储引擎从1.2.x版本碍事，可以通过参数innodb_page_size将页的大小设置为4K、8K、16K。若设置完成，则所有表中页的大小都为innodb_page_size，不可以再次对其进行修改，除非通过mysqldump导入和导出操作来产生新的库。
+innoDB存储引擎中，常见的页类型有：
+  数据页（B-tree Node)
+ undo页（undo Log Page）
+ 系统页 （System Page）
+ 事物数据页 （Transaction System Page）
+ 插入缓冲位图页（Insert Buffer Bitmap）
+ 插入缓冲空闲列表页（Insert Buffer Free List）
+ 未压缩的二进制大对象页（Uncompressed BLOB Page）</description>
     </item>
     
     <item>
@@ -901,6 +980,17 @@ markdown转公众号文章
       
       <guid>https://nicky-chin.cn/2017/02/19/open_source/</guid>
       <description>待续。。。。。。</description>
+    </item>
+    
+    <item>
+      <title>联系&amp;留言</title>
+      <link>https://nicky-chin.cn/2017/02/19/info/</link>
+      <pubDate>Sun, 19 Feb 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2017/02/19/info/</guid>
+      <description> 联系方式  e-mail: shuilianpiying@163.com
+qq: 1529274926
+ </description>
     </item>
     
   </channel>

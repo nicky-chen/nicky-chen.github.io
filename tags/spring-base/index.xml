@@ -7,10 +7,22 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
-    <lastBuildDate>Sat, 25 Aug 2018 11:18:15 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 15 Apr 2020 13:18:15 +0800</lastBuildDate>
     
 	<atom:link href="https://nicky-chin.cn/tags/spring-base/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Spring实例化bean之源码分析</title>
+      <link>https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/</link>
+      <pubDate>Wed, 15 Apr 2020 13:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/</guid>
+      <description>1 实例化bean的主流程 这张图是整体的bean的实例化的流程，我之前关于Spring的生命周期的加载bean和实例化bean的整体过程已有博文，可以 查看文章：Spring之Bean加载-解析-生命周期
+调试入口 本文中的Spring源码基于3.2.x版本，为最精简的Spring源码，选取Spring自带的测试用例进行debug调试, 本文只关注单例对象的实例化bean中各组件的源码分析, 入口如下：
+ @Test public void testConfigLocationPattern() { ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(CONTEXT_WILDCARD); assertTrue(ctx.containsBean(&amp;quot;service&amp;quot;)); assertTrue(ctx.containsBean(&amp;quot;logicOne&amp;quot;)); assertTrue(ctx.containsBean(&amp;quot;logicTwo&amp;quot;)); Service service = (Service) ctx.getBean(&amp;quot;service&amp;quot;); ctx.close(); assertTrue(service.isProperlyDestroyed()); }  2 各组件流程 实例化bean的流程主要关注AbstractAutowireCapableBeanFactory的doCreateBean方法，源码如下：
+2.1 整体流程解析  protected Object doCreateBean(final String beanName, final RootBeanDefinition mbd, final Object[] args) { // BeanWrapper是对Bean的包装，其接口中所定义的功能很简单包括设置获取被包装的对象，获取被包装bean的属性描述器 BeanWrapper instanceWrapper = null; if (mbd.isSingleton()) { // 单例模型，则从未完成的 FactoryBean 缓存中删除 instanceWrapper = this.factoryBeanInstanceCache.remove(beanName); } // 使用合适的实例化策略来创建新的实例：工厂方法、构造函数自动注入、简单初始化 if (instanceWrapper == null) { instanceWrapper = createBeanInstance(beanName, mbd, args); } // 包装的实例对象 final Object bean = (instanceWrapper !</description>
+    </item>
     
     <item>
       <title>Spring之动手实现SpringMVC功能</title>

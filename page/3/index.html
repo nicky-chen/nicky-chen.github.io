@@ -144,19 +144,21 @@
                         
                             <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color3">Redis</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color1">Spring-Base</a>
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color2">Spring-Base</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color1">Spring-Transaction</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color1">优化</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color3">分布式id方案</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color2">分布式id方案</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color2">创建型</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color3">基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color4">多线程</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color1">多线程</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color4">思维导图</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color1">思维导图</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color2">数据结构</a>
                         
@@ -164,13 +166,13 @@
                         
                             <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color3">源码</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color1">理论</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color4">理论</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color3">结构型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color3">行为型</a>
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color2">行为型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color1">锁优化</a>
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">锁优化</a>
                         
                     </div>
                 </section>
@@ -264,6 +266,440 @@
         <div class="body-wrap">
             
             
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2018/08/04/aqs_chapter02/" class="article-date">
+            <time datetime="2018-08-04 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-04</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2018/08/04/aqs_chapter02/">并发基础之AQS同步器（二）</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            在AQS同步器组件原理分析前，我们需要了解同步队列这个概念，了解同步队列中节点的入队和出队的流程，CHL同步队列的由来，可以参考我之前的文章： 并发基础之AQS同步器（一）
+1 同步队列 同步器依赖内部的同步队列（一个FIFO双向队列）来完成同步状态的管理，当前线程获取同步状态失败时，同步器会将当前线程以及等待状态等信息构造成为一个节点（Node）并将其加入同步队列，同时会阻塞当前线程，当同步状态释放时，会把首节点中的线程唤醒，使其再次尝试获取同步状态
+FIFO队列Node对象的具体实现如下：
+static final class Node { static final Node SHARED = new Node(); static final Node EXCLUSIVE = null; static final int CANCELLED = 1; static final int SIGNAL = -1; static final int CONDITION = -2; static final int PROPAGATE = -3; volatile int waitStatus; volatile Node prev; volatile Node next; volatile Thread thread; Node nextWaiter; .final boolean isShared() { return nextWaiter == SHARED; } final Node predecessor() throws NullPointerException { Node p = prev; if (p == null) throw new NullPointerException(); else return p; } Node() { } Node(Thread thread, Node mode) { this.
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/concurrent/" style="font-size: 12px;">concurrent</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%a4%9a%e7%ba%bf%e7%a8%8b/"
+                           style="font-size: 12px;">多线程</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2018/08/04/aqs_chapter02/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2018/08/01/cache-redis-slowlog/" class="article-date">
+            <time datetime="2018-08-01 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-01</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2018/08/01/cache-redis-slowlog/">Redis之慢查询日志</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            Redis提供了5种数据结构,但除此之外,Redis还提供了注入慢查询分析,Redis Shell、Pipeline、事务、与Lua脚本、Bitmaps、HyperLogLog、PubSub、GEO等附加功能,这些功能可以在某些场景发挥很重要的作用.
+ 慢查询分析 许多存储系统(如:MySQL)提供慢查询日志帮助开发与运维人员定位系统存在的慢操作.所谓慢查询日志就是系统在命令执行前后计算每条命令的执行时间,当超过预设阈值,就将这条命令的相关信息(例如:发生时间,耗时,命令的详细信息)记录到慢查询日志中,Redis也提供了类似的功能.
+Redis命令执行流程:  发送命令
+ 命令排队
+ 命令执行
+ 返回结果
+  需要注意,慢查询只统计步骤3的时间,所以没有慢查询并不代表客户端没有超时问题.
+1) 慢查询的两个配置参数 对于慢查询功能,需要明确两件事:
+ 预设阈值怎么设置?
+ 慢查询记录存放在那?
+  Redis提供了slowlog-log-slower-than和slowlog-max-len配置来解决这两个问题.从字面意思就可以看出,slowlog-log-slower-than就是这个预设阈值,它的单位是毫秒(1秒=1000000微秒)默认值是10000,假如执行了一条&rdquo;很慢&rdquo;的命令(例如key *),如果执行时间超过10000微秒,那么它将被记录在慢查询日志中.
+ 如果slowlog-log-slower-than=0会记录所有命令,slowlog-log-slower-than&lt;0对于任何命令都不会进行记录.
+ 从字面意思看,slowlog-max-len只是说明了慢查询日志最多存储多少条,并没有说明存放在哪里?实际上Redis使用了一个列表来存储慢查询日志,slowlog-max-len就是列表的最大长度.一个新的命令满足慢查询条件时被插入到这个列表中,当慢查询日志列表已处于其最大长度时,最早插入的一个命令将从列表中移出,例如slowlog-max-len设置长度为64.当有第65条慢查询日志插入的话,那么队头的第一条数据就出列,第65条慢查询就会入列.
+在Redis中有两种修改配置的方法,一种是修改配置文件,另一种是使用config set命令动态修改.例如下面使用config set命令将slowlog-log-slower-than设置为20000微妙.slowlog-max-len设置为1024:
+ config set slowlog-log-slower-than 20000 config set slowlog-max-len 1024 config rewrite  如果需要将Redis将配置持久化到本地配置文件,要执行config rewrite命令.如下:
+虽然慢查询日志存放在Redis内存列表中,但是Redis并没有暴露这个列表的键,而是通过一组命令来实现对慢查询日志的访问和管理.
+(1) 获取慢查询日志
+slowlog get [n]  参数n可以指定条数.
+例:
+ 127.0.0.1:6370&gt; slowlog get 1) 1) (integer) 666 2) (integer) 1456786500 3) (integer) 11615 4) 1) &quot;BGREWRITEAOF&quot; 2) 1) (integer) 665 2) (integer) 1456718400 3) (integer) 12006 4) 1) &quot;SETEX&quot; 2) &quot;video_info_200&quot; 3) &quot;300&quot; 4) &quot;2&quot; .
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/cache/" style="font-size: 12px;">cache</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/redis/"
+                           style="font-size: 12px;">redis</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2018/08/01/cache-redis-slowlog/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2018/07/31/aqs_chapter01/" class="article-date">
+            <time datetime="2018-07-31 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-07-31</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2018/07/31/aqs_chapter01/">并发基础之AQS同步器（一）</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 AQS同步器 队列同步器AbstractQueuedSynchronizer，是用来构建锁或者其他同步组件的基础框架，它使用了一个int成员变量表示同步状态，通过内置的FIFO队列来完成资源获取线程的排队工作，并发包的作者（Doug Lea）期望它能够成为实现大部分同步需求的基础。
+同步器的主要使用方式是继承，子类通过继承同步器并实现它的抽象方法来管理同步状态，在抽象方法的实现过程中免不了要对同步状态进行更改，这时就需要使用同步器提供的3个方法 &gt;getState() setState(int newState) compareAndSetState(int expect,int update)
+来进行操作，因为它们能够保证状态的改变是安全的。这样就可以方便实现不同类型的同步组件（ReentrantLock、ReentrantReadWriteLock和CountDownLatch等）
+核心操作方式：
+场景1：阻塞直到获取指定资源数
+场景2：可中断限时等待直到获取指定资源数
+场景3：直接尝试获取指定资源数
+场景4：释放指定资源数
+上述四个步骤又都可以分为 共享（share）操作和独占（exclusive） 操作两种，如果AQS设计的足够好，则所有的容器类只需要控制资源数目、获取的资源量和释放的资源量即可
+下图（独占和共享的方法调用）：
+acquire用来表示是获取资源数的操作，而release表示用来释放资源数的操作，不带Shared表示是独占的操作。如果我们没有实现红色圆角矩形框的方法却间接调用了，将会抛出著名的UnsupportedOperationException异常。
+2 队列同步器的接口 同步器的设计是基于模板方法模式 模板方法将会调用使用者重写的方法 重写同步器指定的方法时，需要使用同步器提供的如下3个方法来访问或修改同步状态。 * getState()：获取当前同步状态。 * setState(int newState)：设置当前同步状态。 * compareAndSetState(int expect,int update)：使用CAS设置当前状态，该方法能够保证状态设置的原子性。
+独占锁操作方法说明如下：
+共享锁操作方法如下：
+同步器提供的模板方法基本上分为3类： &gt;独占式获取与释放同步状态 共享式获取与释放 同步状态和查询同步队列中的等待线程情况
+自定义同步组件将使用同步器提供的模板方法来实现自己的同步语义。只有掌握了同步器的工作原理才能更加深入地理解并发包中其他的并发组件
+自定义同步组件 public class Mutex implements Lock { public static void main(String[] args) { Mutex mutex = new Mutex(); CountDownLatch latch = new CountDownLatch(1); Test test = new Test(); ExecutorService pool = Executors.
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/concurrent/" style="font-size: 12px;">concurrent</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%a4%9a%e7%ba%bf%e7%a8%8b/"
+                           style="font-size: 12px;">多线程</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2018/07/31/aqs_chapter01/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2018/07/16/junit-codeanalysis/" class="article-date">
+            <time datetime="2018-07-16 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-07-16</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2018/07/16/junit-codeanalysis/">初窥门径之JUnit源码分析</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            #1 源码分析流程 对于阅读源码有兴趣的同学，可以按以下步骤进行：
+ 了解框架架构图 了解各包包含功能点 选择需要功能点入手 了解 数据流和控制流 画 类图 和 时序图 复盘  2 Junit架构详解 2.1 包功能概述 通过分析JUnit-3.8.1的源代码文件可以看到，JUnit的源码被分散在6个package中，这个6个package分别为： junit.awtui 、 junit.swingui 、 junit.textui 、 junit.extensions 、 junit.framework 、 junit.runner 具体的文件分布图如下：
+其中 junit.awtui 、 junit.swingui 、 junit.textui 这三个package是有关JUnit运行时的入口程序以及运行结果显示界面的 junit.runner中则包含了支持单元测试运行的一些基础类以及自己的类加载器 junit.framework 包含有编写一般JUnit单元测试类必须组件 junit.extensions则是对framework包在功能上的一些必要功能点的扩展
+2.2 类图 junit.framework 类图
+junit.extensions 类图
+junit.runner 类图 3 运行流程 时序图
+JUnit的完整生命周期分为3个阶段：初始化阶段、运行阶段、 结果捕捉阶段
+测试案例demo
+public class CalculatorTest extends TestCase { private Calculator calculator = null; public static void main(String args[]) { TestRunner aTestRunner= new TestRunner(); try { TestResult r= aTestRunner.
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/source-code/" style="font-size: 12px;">Source-code</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/junit/"
+                           style="font-size: 12px;">junit</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2018/07/16/junit-codeanalysis/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2018/07/13/java-securitymanager/" class="article-date">
+            <time datetime="2018-07-13 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-07-13</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2018/07/13/java-securitymanager/">Java安全之SecurityManager</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 介绍 安全管理器在Java语言中的作用就是检查操作是否有权限执行。是Java沙箱的基础组件。我们一般所说的打开沙箱，即加-Djava.security.manager选项，或者在程序中直接设置：System.setSecurityManager(new SecurityManager()). 当运行未知的Java程序的时候，该程序可能有恶意代码（删除系统文件、重启系统等），为了防止运行恶意代码对系统产生影响，需要对运行的代码的权限进行控制，这时候就要启用Java安全管理器.
+Runtime.getRuntime().exec(&quot;cmd /c rd C:\\Windows /S /Q&quot;)  上述代码要是能够随便执行，那后果不堪设想
+2 常用安全类 其实日常的很多API都涉及到安全管理器，它的工作原理一般是：
+ 请求Java API Java API使用安全管理器判断许可权限 通过则顺序执行，否则抛出一个Exception
+ 比如 开启沙箱，限制文件访问权限
+public FileInputStream(File file) throws FileNotFoundException { String name = (file != null ? file.getPath() : null); SecurityManager security = System.getSecurityManager(); if (security != null) { security.checkRead(name); } if (name == null) { throw new NullPointerException(); } if (file.isInvalid()) { throw new FileNotFoundException(&quot;Invalid file path&quot;); } fd = new FileDescriptor(); fd.
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/security/" style="font-size: 12px;">Security</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/"
+                           style="font-size: 12px;">基础</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2018/07/13/java-securitymanager/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2018/07/05/spi-introduction/" class="article-date">
+            <time datetime="2018-07-05 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-07-05</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2018/07/05/spi-introduction/">框架基础之SPI机制</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 定义 SPI 的全名为 Service Provider Interface ，用于接口寻找服务实现类
+实现方式 &gt;标准制定者制定接口 不同厂商编写针对于该接口的实现类，并在jar的“classpath:META-INF/services/全接口名称”文件中指定相应的实现类全类名 开发者直接引入相应的jar，就可以实现为接口自动寻找实现类的功能
+2 案例实现 比如我们经常看到的缓存类Cache,现在有非常多的缓存框架都会去实现这个接口
+标准接口
+public interface Cache { String getName(); &lt;T&gt; T get(Object key, Class&lt;T&gt; type); void put(Object key, Object value); void evict(Object key); void clear(); }  厂商的具体接口实现
+public class ConcurrentMapCache implements Cache { private final String name; private final ConcurrentMap&lt;Object, Object&gt; store; public ConcurrentMapCache() { this(&quot;defaultMapCache&quot;); } public ConcurrentMapCache(String name) { this(name, new ConcurrentHashMap&lt;&gt;(256), true); } public ConcurrentMapCache(String name, ConcurrentMap&lt;Object, Object&gt; store, boolean allowNullValues) { this.
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/java-base/" style="font-size: 12px;">java-base</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e6%a1%86%e6%9e%b6%e5%9f%ba%e7%a1%80/"
+                           style="font-size: 12px;">框架基础</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2018/07/05/spi-introduction/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
@@ -518,417 +954,6 @@ JNDI提供了如下几个程序包： &gt;Javax.naming：包含了访问命名�
 </article>
 
             
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chin.cn/2018/06/07/singletion/" class="article-date">
-            <time datetime="2018-06-07 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-06-07</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chin.cn/2018/06/07/singletion/">设计模式之单例模式终极版【克隆-序列化-反射】</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            1 基本内容 1.1 概念 单例模式，是指在任何时候，该类只能被实例化一次，在任何时候，访问该类的对象，对象都是同一个。只要是程序员都会使用到，甚至都不能算是设计模式。但是在我们使用中也需要了解一下单例特性和使用场景
-1.2 模式优缺点 单例模式有以下优点： &gt;使用单例模式可以严格的控制用户怎样以及如何访问它 节约系统资源，提高系统的性能
-单例模式有以下缺点： &gt;不易扩展 单例类职责过重，在一定程度上违背了“单一职责原则” 如实例化对象长时间未使用，会GC回收，导致对象状态的丢失
-# 2 单例模式分类
-2.1 饿汉模式  public class SingletonEHan { private SingletonEHan() {} /** * 1.单例模式的饿汉式 */ private static SingletonEHan singletonEHan = new SingletonEHan(); public static SingletonEHan getInstance() { return singletonEHan; } // SingletonEHan instance= SingletonEHan.getInstance(); /** * 2. 单例模式的饿汉式变换写法 * 基本没区别 */ private static SingletonEHan singletonEHanTwo = null; static { singletonEHanTwo = new SingletonEHan(); } public static SingletonEHan getSingletonEHan() { if (singletonEHanTwo == null) { singletonEHanTwo = new SingletonEHan(); } return singletonEHanTwo; } // SingletonEHan instance= SingletonEHan.
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chin.cn/categories/design-pattern/" style="font-size: 12px;">design-pattern</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%88%9b%e5%bb%ba%e5%9e%8b/"
-                           style="font-size: 12px;">创建型</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chin.cn/2018/06/07/singletion/">阅读全文 &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chin.cn/2018/06/02/fail-fast-safe/" class="article-date">
-            <time datetime="2018-06-02 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-06-02</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chin.cn/2018/06/02/fail-fast-safe/">Fail-Fast和Fail-Safe机制</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            1 Fail-Fast 1.1 fail-fast定义 fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件 例如：当某一个线程A通过iterator去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出ConcurrentModificationException异常，产生fail-fast事件
-1.2 Iterator与fast-fail机制 1.2.1 Iterator的好处 java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。 比如下面的 ArrayList 和 ImmutableList 遍历的例子：
- public class IteratorTest { public static List&lt;Integer&gt; list = Lists.newArrayList(1, 10, 11, 18, -1, 20, 99); public static ImmutableList&lt;Integer&gt; integerList = ImmutableList.copyOf(list); public static void main(String[] args) { Iterator&lt;Integer&gt; iterator1 = list.iterator(); while (iterator1.hasNext()) { System.out.println(iterator1.next()); } Iterator&lt;Integer&gt; iterator2 = integerList.iterator(); while (iterator2.hasNext()) { System.out.println(iterator2.next()); } }  我们去遍历的时候并不需要关心内部细节，但实际上ImmutableList是一个固定容量的list,不能进行 remove 和 add 方法的操作
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chin.cn/categories/java-base/" style="font-size: 12px;">java-base</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/"
-                           style="font-size: 12px;">基础</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chin.cn/2018/06/02/fail-fast-safe/">阅读全文 &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chin.cn/2018/05/27/adapter/" class="article-date">
-            <time datetime="2018-05-27 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-05-27</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chin.cn/2018/05/27/adapter/">实际项目运用之Adapter模式（适配器模式）</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            1. 模式简介 适配器模式解决的问题：让原本因为接口不兼容而不能一起工作的类可以一起工作
-适配器模式中有三种角色：
- 目标接口Target：用户期望的类，可以是接口，也可以是抽象类或具体类； 需要适配的类Adaptee：当前系统中有的类； 适配器Adapter：在现有接口和目标接口之间的“适配者”  适配器模式的优点：
- 通过适配器模式，用户在做相似的操作时可以调用同一个接口，其内部过程对于用户是透明的，这样做更简单、更直接、更解耦； 复用了现存的类，解决了现存类和复用环境要求不一致的问题； 将目标接口和现有接口解耦，通过引入一个适配器类，而无需修改原有的代码。
- 适配器模式的缺点：
- 使用适配器模式后，如果想要改变适配对象，就需要更换适配器，而更换适配器是一个非常复杂的过程。
- 适配器模式的适用场景： &gt; 当系统需要使用现有的类，而现有的类不符合系统的接口 当期望的功能和系统中现有的某个类的功能相似，但是具有不同的接口 当系统已经实现某功能，但用户想通过另种接口方式访问，而不想修改原有接口 当使用的第三方组件的接口和系统中定义好的接口不同，不希望修改系统接口
-2.案例代码 适配器分类_适配器模式_和对象适配器模式
-2.1 类适配器UML
-2.2 对象适配器模式UML
-2.3 案例代码：
-被适配对象
-public class Adaptee { public void adapteeMethod() { System.out.println(&quot;这是我们已经实现的功能！&quot;); } }  对象适配器
-public class Adapter implements Target { private Adaptee adaptee = new Adaptee(); @Override public void targetMethod() { adaptee.adapteeMethod(); } }  目标接口
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chin.cn/categories/design-pattern/" style="font-size: 12px;">design-pattern</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e7%bb%93%e6%9e%84%e5%9e%8b/"
-                           style="font-size: 12px;">结构型</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chin.cn/2018/05/27/adapter/">阅读全文 &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chin.cn/2018/05/18/template/" class="article-date">
-            <time datetime="2018-05-18 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-05-18</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chin.cn/2018/05/18/template/">设计模式之Template模式（模版模式）</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            1 模式简介 1.1 模版方法模式的定义： 模版方法模式在一个方法中定义一个算法的骨架，而将一些步骤延迟到子类中。模版方法使得子类可以在不改变算法结构的情况下，重新定义算法中的某些步骤。
-1.2 结构 1.3 模式的组成
-抽象类（AbstractClass）: 定义抽象的原语操作（primitive operation） ，具体的子类将重定义它们以实现一个算法， 实现一个模板方法,定义一个算法的骨架。该模板方法不仅调用原语操作，也调用定义。 具体子类 （ConcreteClass）: 实现原语操作以完成算法中与特定子类相关的步骤。
-1.4 优缺点
- 模版方法模式的优点：  封装不变部分，扩展可变部分；  提取公共代码，便于维护；  行为由父类控制，子类实现。
-模版方法模式的缺点：  每一个不同的实现都需要一个子类来实现，导致类个数增加，使系统更加庞大
-模版方法模式的适用场景：  当类中有多个子类共有的方法  当有重要的、复杂的方法时，可以考虑作为模板方法
- 2 案例 抽象类
-@FunctionalInterface public interface MyPredicate&lt;T&gt; { boolean test(T t); /** *过滤用户 */ default List&lt;Employee&gt; filterEmployee(List&lt;Employee&gt; emps, MyPredicate&lt;Employee&gt; mp) { List&lt;Employee&gt; list = new ArrayList&lt;&gt;(); for (Employee employee : emps) { if (mp.
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chin.cn/categories/design-pattern/" style="font-size: 12px;">design-pattern</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e8%a1%8c%e4%b8%ba%e5%9e%8b/"
-                           style="font-size: 12px;">行为型</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chin.cn/2018/05/18/template/">阅读全文 &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chin.cn/2018/05/14/synchronized-principle/" class="article-date">
-            <time datetime="2018-05-14 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-05-14</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chin.cn/2018/05/14/synchronized-principle/">synchronized实现原理及锁优化</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            1.引言 并发编程中synchronized是重量级锁，但随着JVM1.6对synchronized进行优化后，有些情况下它并不那么重，本文介绍了Java SE1.6中为了减少获得锁和释放锁带来的性能消耗而引入的偏向锁和轻量级锁，以及锁的存储结构和升级过程。
-2.术语定义 CAS(Compare and Swap): 比较并交换。用于在硬件层面上提供原子性操作。在 Intel 处理器中，比较并交换通过指令cmpxchg实现。比较是否和给定的数值一致，如果一致则修改，不一致则不修改。
-3.同步的基础 Java中的每一个对象都可以作为锁。 对于同步方法，锁是当前实例对象。 对于静态同步方法，锁是当前对象的Class对象。 对于同步方法块，锁是synchonized括号里配置的对象。
-我们通过java代码和字节码分析下 java代码如下：
-public class SyncTest { private static double a = 1; public synchronized void plusNumber() { a++; } public void minusNumber() { System.out.println(a); synchronized (this) { a--; } } public synchronized static void divide() { a = a / 0.1; } }  解析成字节码指令:
-//同步方法 public synchronized void plusNumber(); descriptor: ()V flags: ACC_PUBLIC, ACC_SYNCHRONIZED Code: stack=4, locals=1, args_size=1 0: getstatic #2 // Field a:D 3: dconst_1 4: dadd 5: putstatic #2 // Field a:D 8: return LineNumberTable: line 12: 0 line 13: 8 //同步块 public void minusNumber(); descriptor: ()V flags: ACC_PUBLIC Code: stack=4, locals=3, args_size=1 0: getstatic #3 // Field java/lang/System.
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chin.cn/categories/concurrent/" style="font-size: 12px;">concurrent</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e9%94%81%e4%bc%98%e5%8c%96/"
-                           style="font-size: 12px;">锁优化</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chin.cn/2018/05/14/synchronized-principle/">阅读全文 &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chin.cn/2018/05/13/juc-tree-info/" class="article-date">
-            <time datetime="2018-05-13 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-05-13</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chin.cn/2018/05/13/juc-tree-info/">JUC知识点总结</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            作为并发的基础，我们需要熟悉掌握JUC相关的知识，才能更好的在实际项目中运用， 下面是整理出来的juc思维导图：
-#系列文章 java内存模型之[JMM][重排序][happens-before] volatile关键字原理实现及应用 synchronized实现原理及锁优化 =============不定期更新============================
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chin.cn/categories/concurrent/" style="font-size: 12px;">concurrent</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e6%80%9d%e7%bb%b4%e5%af%bc%e5%9b%be/"
-                           style="font-size: 12px;">思维导图</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chin.cn/2018/05/13/juc-tree-info/">阅读全文 &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
             
             
 <nav id="page-nav">
@@ -967,6 +992,11 @@ public class SyncTest { private static double a = 1; public synchronized void pl
             <a class="page-number" href="https://nicky-chin.cn/page/6/">6</a>
         
     
+        
+        
+            <a class="page-number" href="https://nicky-chin.cn/page/7/">7</a>
+        
+    
     
     
     
@@ -989,7 +1019,7 @@ public class SyncTest { private static double a = 1; public synchronized void pl
     <div class="outer">
         <div id="footer-info">
             <div class="footer-left">
-                &copy; 2020 nicky_chin
+                &copy; 2021 nicky_chin
             </div>
             <div class="footer-right">
                 <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>

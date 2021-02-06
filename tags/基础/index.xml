@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
-    <lastBuildDate>Mon, 02 Mar 2020 14:18:15 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 23 Apr 2020 19:58:15 +0800</lastBuildDate>
     
 	<atom:link href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>生产-消费模型之虚假唤醒</title>
+      <link>https://nicky-chin.cn/2020/04/23/spurious-wakeup/</link>
+      <pubDate>Thu, 23 Apr 2020 19:58:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2020/04/23/spurious-wakeup/</guid>
+      <description>1 何为虚假唤醒 当线程从等待状态中被唤醒时，只是发现未满足其正在等待的条件时，就会发生虚假唤醒。 之所以称其为虚假的，是因为该线程似乎无缘无故被唤醒。 虚假唤醒不会无缘无故发生，通常是因为在发起唤醒号和等待线程最终运行之间的临界时间内，线程不再满足竞态条件。
+2 java中的例子  public class SpuriousWakeupRWLock { private static final CustomQueue CUSTOM_LIST = new CustomQueue(); public static void main(String[] args) throws Exception { for (int i = 0; i &amp;lt; 8; i++) { Thread consumer = new Thread(() -&amp;gt; { try { CUSTOM_LIST.getOne(); } catch (InterruptedException e) { e.printStackTrace(); } ; }); consumer.setName(&amp;quot;consumer:[&amp;quot; + i + &amp;quot;]&amp;quot;); consumer.start(); } TimeUnit.SECONDS.sleep(8); for (int i = 0; i &amp;lt; 2 ; i++) { int finalI = i; Thread producer = new Thread(() -&amp;gt; { try { CUSTOM_LIST.</description>
+    </item>
     
     <item>
       <title>float浮点小数的设计及精度问题</title>
@@ -21,6 +31,30 @@
       <description>1 浮点计算问题  public class Oct2Bin { public static void main(String[] args) { double a = 0.1d; double b = 0.2d; System.out.println(a + b); } }   结果为0.30000000000000004，而非0.3
  2 小数计算丢精度原因 2.1 十进制小数转换为二进制小数方法 十进制小数转换成二进制小数采用&amp;rdquo;乘2取整，顺序排列&amp;rdquo;法。具体做法是：用2乘十进制小数，可以得到积，将积的整数部分取出，再用2乘余下的小数 部分，又得到一个积，再将积的整数部分取出，如此进行，直到积中的小数部分为零，或者达到所要求的精度为止。 然后把取出的整数部分按顺序排列起来，先取的整数作为二进制小数的高位有效位，后取的整数作为低位有效位。
 2.2 、0.3背后丢精度的原因  0.3 x 2 = 0.6 ------取整数部分 0 0.6 x 2 = 1.2 ------取整数部分 1 0.2 x 2 = 0.4 ------取整数部分 0 0.4 x 2 = 0.8 ------取整数部分 0 0.8 x 2 = 1.</description>
+    </item>
+    
+    <item>
+      <title>MySQL中的page页详解</title>
+      <link>https://nicky-chin.cn/2019/07/11/mysql-page-detail/</link>
+      <pubDate>Thu, 11 Jul 2019 11:14:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2019/07/11/mysql-page-detail/</guid>
+      <description>1 InnoDB中的存储结构 从InnoDB存储引擎的逻辑结构看，所有数据都被逻辑地存放在一个空间内，称为表空间(tablespace)，而表空间由段（sengment）、区（extent）、页（page）组成。 在一些文档中extend又称块（block）。
+1.1 表空间（table space） 表空间（Tablespace）是一个逻辑容器，表空间存储的对象是段，在一个表空间中可以有一个或多个段，但是一个段只能属于一个表空间。数据库由一个或多个表空间组成，表空间从管理上可以划分为系统表空间、用户表空间、撤销表空间、临时表空间等。
+在 InnoDB 中存在两种表空间的类型：共享表空间和独立表空间。如果是共享表空间就意味着多张表共用一个表空间。如果是独立表空间，就意味着每张表有一个独立的表空间，也就是数据和索引信息都会保存在自己的表空间中。独立的表空间可以在不同的数据库之间进行迁移。可通过命令
+mysql &amp;gt; show variables like &#39;innodb_file_per_table&#39;;  查看当前系统启用的表空间类型。目前最新版本已经默认启用独立表空间。
+InnoDB把数据保存在表空间内，表空间可以看作是InnoDB存储引擎逻辑结构的最高层。本质上是一个由一个或多个磁盘文件组成的虚拟文件系统。InnoDB用表空间并不只是存储表和索引，还保存了回滚段、双写缓冲区等。
+1.2 段（segment） 段（Segment）由一个或多个区组成，区在文件系统是一个连续分配的空间（在 InnoDB 中是连续的 64 个页），不过在段中不要求区与区之间是相邻的。段是数据库中的分配单位，不同类型的数据库对象以不同的段形式存在。当我们创建数据表、索引的时候，就会相应创建对应的段，比如创建一张表时会创建一个表段，创建一个索引时会创建一个索引段。
+1.3 区块（extent） 在 InnoDB 存储引擎中，一个区会分配 64 个连续的页。因为 InnoDB 中的页大小默认是 16KB，所以一个区的大小是 64*16KB=1MB。在任何情况下每个区大小都为1MB，为了保证页的连续性，InnoDB存储引擎每次从磁盘一次申请4-5个区。默认情况下，InnoDB存储引擎的页大小为16KB，即一个区中有64个连续的页。
+1.4 页（Page） 页是InnoDB存储引擎磁盘管理的最小单位，每个页默认16KB；InnoDB存储引擎从1.2.x版本碍事，可以通过参数innodb_page_size将页的大小设置为4K、8K、16K。若设置完成，则所有表中页的大小都为innodb_page_size，不可以再次对其进行修改，除非通过mysqldump导入和导出操作来产生新的库。
+innoDB存储引擎中，常见的页类型有：
+  数据页（B-tree Node)
+ undo页（undo Log Page）
+ 系统页 （System Page）
+ 事物数据页 （Transaction System Page）
+ 插入缓冲位图页（Insert Buffer Bitmap）
+ 插入缓冲空闲列表页（Insert Buffer Free List）
+ 未压缩的二进制大对象页（Uncompressed BLOB Page）</description>
     </item>
     
     <item>

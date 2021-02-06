@@ -139,35 +139,37 @@
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
                         
-                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color1">Junit</a>
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color4">Junit</a>
                         
-                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color2">Redis</a>
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color1">Redis</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color3">Spring-Base</a>
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color1">Spring-Base</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color4">Spring-Transaction</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">优化</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color1">分布式id方案</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color2">创建型</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color3">创建型</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color3">多线程</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color2">多线程</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color1">思维导图</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color2">思维导图</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color2">数据结构</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color1">数据结构</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">框架基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color3">框架基础</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color4">源码</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color4">理论</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color3">理论</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color4">结构型</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color3">结构型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color4">行为型</a>
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color2">行为型</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">锁优化</a>
                         
@@ -263,6 +265,267 @@
         <div class="body-wrap">
             
             
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2020/05/19/spring-transaction-commit/" class="article-date">
+            <time datetime="2020-05-19 13:39:15 &#43;0800 CST" itemprop="datePublished">2020-05-19</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2020/05/19/spring-transaction-commit/">Transaction源码解析之事务提交与回滚</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 事务还原 1.1 调试demo 我们使用常用的业务代码来做调试：
+@Service(&quot;personService&quot;) public class PersonServiceImpl implements IPersonService { @Override @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class) public void removeUserById(Integer id) { personRepository.removeById(id); User user = new User(); user.setId(0); user.setName(&quot;aaa&quot;); user.setSumScore(&quot;222&quot;); user.setAvgScore(&quot;111&quot;); user.setAge(20); user.setIsSuccess(false); user.setScore(UnsignedInteger.valueOf(1)); user.setStatus(UnsignedLong.valueOf(2)); userService.insertOne(user); } } @Repository public interface PersonRepository extends JpaRepository&lt;Person, Integer&gt;, JpaSpecificationExecutor { Person findByName(String name); @Query(&quot;select p from Person p where p.id = ?1&quot;) Person findObjectById(Integer id); //@CacheEvict(value = &quot;person&quot;) @Transactional(propagation = Propagation.
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/spring/" style="font-size: 12px;">spring</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/spring-transaction/"
+                           style="font-size: 12px;">spring-transaction</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2020/05/19/spring-transaction-commit/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/" class="article-date">
+            <time datetime="2020-05-11 12:18:15 &#43;0800 CST" itemprop="datePublished">2020-05-11</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/">Transaction源码解析之事务预处理</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 调试源码 接上篇Transaction源码解析之事务的配置解析
+我们调用相应的service类,来调试具体的事务处理流程，测试代码如下:
+public void testInvokeTransactional() throws Exception { TransactionalTestBean testBean = getTestBean(); CallCountingTransactionManager ptm = (CallCountingTransactionManager) context.getBean(&quot;transactionManager&quot;); // try with transactional assertEquals(&quot;Should not have any started transactions&quot;, 0, ptm.begun); testBean.findAllFoos(); assertEquals(&quot;Should have 1 started transaction&quot;, 1, ptm.begun); assertEquals(&quot;Should have 1 committed transaction&quot;, 1, ptm.commits); // try with non-transaction testBean.doSomething(); assertEquals(&quot;Should not have started another transaction&quot;, 1, ptm.begun); // try with exceptional try { testBean.exceptional(new IllegalArgumentException(&quot;foo&quot;)); fail(&quot;Should NEVER get here&quot;); } catch (Throwable throwable) { assertEquals(&quot;Should have another started transaction&quot;, 2, ptm.
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/spring/" style="font-size: 12px;">spring</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/spring-transaction/"
+                           style="font-size: 12px;">spring-transaction</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/" class="article-date">
+            <time datetime="2020-05-03 11:18:15 &#43;0800 CST" itemprop="datePublished">2020-05-03</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/">Transaction源码解析之事务配置解析</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 事务配置 关于Spring的事务，大家每天都会遇见或者用到，为了更好的理解Transaction的原理机制，我们从源码角度来解析，本文的调试源码基于Spring-3.2.x版本进行调试。
+1.1 配置 配置XML文件annotationTransactionNamespaceHandlerTests.xml
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot; xmlns:context=&quot;http://www.springframework.org/schema/context&quot; xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot; xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd&quot;&gt; &lt;tx:annotation-driven/&gt; &lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.tests.transaction.CallCountingTransactionManager&quot;/&gt; &lt;bean id=&quot;testBean&quot; class=&quot;org.springframework.transaction.annotation.AnnotationTransactionNamespaceHandlerTests$TransactionalTestBean&quot;/&gt; &lt;context:mbean-export/&gt;  TransactionalTestBean类
+	@Service @ManagedResource(&quot;test:type=TestBean&quot;) public static class TransactionalTestBean { @Transactional(readOnly = true) public Collection&lt;?&gt; findAllFoos() { return null; } public void saveFoo() { } @Transactional(&quot;qualifiedTransactionManager&quot;) public void saveQualifiedFoo() { } @Transactional public void exceptional(Throwable t) throws Throwable { throw t; } @ManagedOperation public String doSomething() { return &quot;done&quot;; } @Transactional protected void annotationsOnProtectedAreIgnored() { } }  上面XML配置主要是开启事务驱动，然后配置事务管理器和带有@Transaction注解的Bean对象
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/spring/" style="font-size: 12px;">spring</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/spring-transaction/"
+                           style="font-size: 12px;">spring-transaction</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/" class="article-date">
+            <time datetime="2020-04-15 13:18:15 &#43;0800 CST" itemprop="datePublished">2020-04-15</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/">Spring实例化bean之源码分析</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 实例化bean的主流程 这张图是整体的bean的实例化的流程，我之前关于Spring的生命周期的加载bean和实例化bean的整体过程已有博文，可以 查看文章：Spring之Bean加载-解析-生命周期
+调试入口 本文中的Spring源码基于3.2.x版本，为最精简的Spring源码，选取Spring自带的测试用例进行debug调试, 本文只关注单例对象的实例化bean中各组件的源码分析, 入口如下：
+ @Test public void testConfigLocationPattern() { ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(CONTEXT_WILDCARD); assertTrue(ctx.containsBean(&quot;service&quot;)); assertTrue(ctx.containsBean(&quot;logicOne&quot;)); assertTrue(ctx.containsBean(&quot;logicTwo&quot;)); Service service = (Service) ctx.getBean(&quot;service&quot;); ctx.close(); assertTrue(service.isProperlyDestroyed()); }  2 各组件流程 实例化bean的流程主要关注AbstractAutowireCapableBeanFactory的doCreateBean方法，源码如下：
+2.1 整体流程解析  protected Object doCreateBean(final String beanName, final RootBeanDefinition mbd, final Object[] args) { // BeanWrapper是对Bean的包装，其接口中所定义的功能很简单包括设置获取被包装的对象，获取被包装bean的属性描述器 BeanWrapper instanceWrapper = null; if (mbd.isSingleton()) { // 单例模型，则从未完成的 FactoryBean 缓存中删除 instanceWrapper = this.factoryBeanInstanceCache.remove(beanName); } // 使用合适的实例化策略来创建新的实例：工厂方法、构造函数自动注入、简单初始化 if (instanceWrapper == null) { instanceWrapper = createBeanInstance(beanName, mbd, args); } // 包装的实例对象 final Object bean = (instanceWrapper !
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/spring/" style="font-size: 12px;">spring</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/spring-base/"
+                           style="font-size: 12px;">spring-base</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
@@ -485,7 +748,7 @@ Spring中创建Bean的方式有三种：
     <div class="outer">
         <div id="footer-info">
             <div class="footer-left">
-                &copy; 2020 nicky_chin
+                &copy; 2021 nicky_chin
             </div>
             <div class="footer-right">
                 <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>

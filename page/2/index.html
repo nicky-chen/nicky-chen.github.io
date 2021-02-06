@@ -140,37 +140,39 @@
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
                         
-                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color1">Junit</a>
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color3">Junit</a>
                         
-                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color2">Redis</a>
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color3">Redis</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color1">Spring-Base</a>
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color3">Spring-Base</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color3">Spring-Transaction</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">优化</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color1">分布式id方案</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color2">分布式id方案</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color2">创建型</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color3">创建型</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color3">基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color1">多线程</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color4">多线程</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color1">思维导图</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color4">数据结构</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color2">数据结构</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">框架基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color4">源码</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color2">源码</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color3">理论</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color2">理论</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color3">结构型</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color2">行为型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color1">锁优化</a>
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">锁优化</a>
                         
                     </div>
                 </section>
@@ -264,6 +266,435 @@
         <div class="body-wrap">
             
             
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2018/11/17/btree-info/" class="article-date">
+            <time datetime="2018-11-17 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-11-17</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2018/11/17/btree-info/">数据结构之BTree和B&#43;Tree(多路平衡查找树 )</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 背景 B-Tree是为磁盘等外存储设备设计的一种平衡查找树。因此在讲B-Tree之前先了解下磁盘的相关知识。系统从磁盘读取数据到内存时是以磁盘块（block）为基本单位的，位于同一个磁盘块中的数据会被一次性读取出来，而不是需要什么取什么。 InnoDB存储引擎中有页（Page）的概念，页是其磁盘管理的最小单位。InnoDB存储引擎中默认每个页的大小为16KB，可通过参数innodb_page_size将页的大小设置为4K、8K、16K，在MySQL中可通过如下命令查看页的大小：
+mysql&gt; show variables like 'innodb_page_size';  而系统一个磁盘块的存储空间往往没有这么大，因此InnoDB每次申请磁盘空间时都会是若干地址连续磁盘块来达到页的大小16KB。InnoDB在把磁盘数据读入到磁盘时会以页为基本单位，在查询数据时如果一个页中的每条数据都能有助于定位数据记录的位置，这将会减少磁盘I/O次数，提高查询效率。
+2 定义与特性 B-Tree B-Tree结构的数据可以让系统高效的找到数据所在的磁盘块。为了描述B-Tree，首先定义一条记录为一个二元组[key, data] ，key为记录的键值(关键字)，对应表中的主键值，data为一行记录中除主键外的数据。对于不同的记录，key值互不相同。
+一棵m阶的B-Tree有如下特性： 1. 每个节点最多有m个孩子。 2. 除了根节点和叶子节点外，其它每个节点至少有Ceil(m/2)个孩子。 3. 若根节点不是叶子节点，则至少有2个孩子 4. 所有叶子节点都在同一层，且不包含其它关键字信息 5. 每个非终端节点包含n个关键字信息（P0,P1,…Pn, k1,…kn） 6. 关键字的个数n满足：ceil(m/2)-1 &lt;= n &lt;= m-1 7. ki(i=1,…n)为关键字，且关键字升序排序。 8. Pi(i=1,…n)为指向子树根节点的指针。P(i-1)指向的子树的所有节点关键字均小于ki，但都大于k(i-1)  B树中的每个节点根据实际情况可以包含大量的关键字信息和分支 如下图所示为一个3阶的B-Tree：
+每个节点占用一个盘块的磁盘空间，一个节点上有两个升序排序的关键字和三个指向子树根节点的指针，指针存储的是子节点所在磁盘块的地址。两个关键词划分成的三个范围域对应三个指针指向的子树的数据的范围域。以根节点为例，关键字为17和35，P1指针指向的子树的数据范围小于17，P2指针指向的子树的数据范围为17~35，P3指针指向的子树的数据范围大于35
+模拟查找关键字29的过程： &gt;根据根节点找到磁盘块1，读入内存。【磁盘I/O操作第1次】 比较关键字29在区间（17,35），找到磁盘块1的指针P2。 根据P2指针找到磁盘块3，读入内存。【磁盘I/O操作第2次】 比较关键字29在区间（26,30），找到磁盘块3的指针P2。 根据P2指针找到磁盘块8，读入内存。【磁盘I/O操作第3次】 在磁盘块8中的关键字列表中找到关键字29。 分析上面过程，发现需要3次磁盘I/O操作，和3次内存查找操作。由于内存中的关键字是一个有序表结构，可以利用二分法查找提高效率。而3次磁盘I/O操作是影响整个B-Tree查找效率的决定因素。B-Tree相对于AVLTree缩减了节点个数，使每次磁盘I/O取到内存的数据都发挥了作用，从而提高了查询效率。
+B+Tree
+B+Tree是在B-Tree基础上的一种优化，使其更适合实现外存储索引结构，InnoDB存储引擎就是用B+Tree实现其索引结构。
+从B-Tree图可以看到每个节点中不仅包含数据的key值，还有data值。而每一个页的存储空间是有限的，如果data数据较大时将会导致每个节点（即一个页）能存储的key的数量很小，当存储的数据量很大时同样会导致B-Tree的深度较大，增大查询时的磁盘I/O次数，进而影响查询效率。在B+Tree中，所有数据记录节点都是按照键值大小顺序存放在同一层的叶子节点上，而非叶子节点上只存储key值信息，这样可以大大加大每个节点存储的key值数量，降低B+Tree的高度。
+B+Tree相对于B-Tree有几点不同： 非叶子节点只存储键值信息。 所有叶子节点之间都有一个链指针。 数据记录都存放在叶子节点中。  将B-Tree优化，由于B+Tree的非叶子节点只存储键值信息，假设每个磁盘块能存储4个键值及指针信息，则变成B+Tree后其结构如下图所示:
+通常在B+Tree上有两个头指针，一个指向根节点，另一个指向关键字最小的叶子节点，而且所有叶子节点（即数据节点）之间是一种链式环结构。因此可以对B+Tree进行两种查找运算：一种是对于主键的范围查找和分页查找，另一种是从根节点开始，进行随机查找。
+可能上面例子中只有22条数据记录，看不出B+Tree的优点，下面做一个推算：
+InnoDB存储引擎中页的大小为16KB，一般表的主键类型为INT（占用4个字节）或BIGINT（占用8个字节），指针类型也一般为4或8个字节，也就是说一个页（B+Tree中的一个节点）中大概存储16KB/(8B+8B)=1K个键值（因为是估值，为方便计算，这里的K取值为10^3,计算可得深度为3的树可以存储10亿数量级数据
+实际情况中每个节点可能不能填充满，因此在数据库中，B+Tree的高度一般都在2-4层。mysql的InnoDB存储引擎在设计时是将根节点常驻内存的，也就是说查找某一键值的行记录时最多只需要1~3次磁盘I/O操作
+B+Tree索引可以分为聚集索引（clustered index）和非聚簇索引（secondary index）。上面B+Tree示例图在数据库中的实现即为聚集索引
+聚集索引的B+Tree中的叶子节点存放的是整张表的行记录数据。非聚簇索引与聚集索引的区别在于非聚簇索引的叶子节点并不包含行记录的全部数据，而是存储相应行数据的聚集索引键，即主键。当通过非聚簇索引来查询数据时，InnoDB存储引擎会遍历非聚簇索引找到主键，然后再通过主键在聚集索引中找到完整的行记录数据
+# 3 B树 3.
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/algorithm/" style="font-size: 12px;">Algorithm</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84/"
+                           style="font-size: 12px;">数据结构</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2018/11/17/btree-info/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2018/10/15/id-redis/" class="article-date">
+            <time datetime="2018-10-15 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-10-15</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2018/10/15/id-redis/">分布式全局序列ID方案之Redis优化方案</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 Redis的Flicker方案 利用redis的lua脚本功能，在每个节点上通过lua脚本生成唯一ID，生成的ID为64位，具体如下：
+使用41 bit来存放时间，精确到毫秒，可以使用到2039年 使用12 bit来存放逻辑分片ID，最大分片ID是4095 使用10 bit来存放自增长ID，则每个节点，每毫秒最多可生成1024个ID 比如GTM时间 2018年6月24日11点23分 ，它的距1970年的毫秒数是 1529810591000，假定分片ID是60，自增长序列是20，则生成的ID是：
+6416490681073670164 = 1529810591000 &lt;&lt; 22 | 60 &lt;&lt; 10 | 20 redis提供了TIME命令，取得redis服务器的秒值和微秒值 毫秒值获取命令：EVAL &quot;local current = redis.call('TIME') ;return a[1]*1000 + a[2]/1000&quot; 0 生成最终ID : current &lt;&lt; (12 + 10)) | (shardingId &lt;&lt; 10) | seq  2 ID原子性自增方案 2.1 Redis HINCRBY 命令 Redis 的 INCR 命令支持 “INCR AND GET” 原子操作。利用这个特性，我们可以在 Redis 中存序列号，让分布式环境中多个取号服务在 Redis 中通过 INCR 命令来实现取号；同时 Redis 是单进程单线程架构，不会因为多个取号方的 INCR 命令导致取号重复。因此，基于 Redis 的 INCR 命令实现序列号的生成基本能满足全局唯一与单调递增的特性，并且性能还不错。
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/distribution/" style="font-size: 12px;">distribution</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%88%86%e5%b8%83%e5%bc%8fid%e6%96%b9%e6%a1%88/"
+                           style="font-size: 12px;">分布式ID方案</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2018/10/15/id-redis/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2018/09/25/id-flicker/" class="article-date">
+            <time datetime="2018-09-25 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-09-25</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2018/09/25/id-flicker/">分布式全局序列ID方案之Flicker优化方案</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 Flicker的解决方案 MySQL中id自增的特性，可以借此来生成全局的序列号，Flicker在解决全局ID生成方案里就采用了MySQL自增长ID的机制（auto_increment + replace into + MyISAM）。一个生成64位ID方案具体就是这样的： 先创建单独的数据库，然后创建一个表：
+CREATE TABLE borrow_order ( id bigint(20) unsigned NOT NULL auto_increment, stub char(1) NOT NULL default '', PRIMARY KEY (id), UNIQUE KEY stub (stub) ) ENGINE=MyISAM  当我们插入记录后，执行SELECT * from borrow_order ，查询结果就是这样的：
++-------------------+------+ | id | stub | +-------------------+------+ | 1 | 192.168.100.102 | +-------------------+------+  在我们的应用端需要做下面这两个操作，在一个事务会话里提交：
+REPLACE INTO borrow_order (stub) VALUES ('192.168.100.102'); SELECT LAST_INSERT_ID();  上述操作，通过 replace into 操作，首先尝试插入数据到表中，如果发现表中已经有此行数据则先删除此行数据，然后插入新的数据。 如果没有此行数据的话，直接插入新数据。注意：插入的行字段需要有主键索引或者唯一索引，否则会出错
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/distribution/" style="font-size: 12px;">distribution</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%88%86%e5%b8%83%e5%bc%8fid%e6%96%b9%e6%a1%88/"
+                           style="font-size: 12px;">分布式ID方案</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2018/09/25/id-flicker/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2018/09/19/id-snowflake/" class="article-date">
+            <time datetime="2018-09-19 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-09-19</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2018/09/19/id-snowflake/">分布式全局序列ID方案之Snowflake算法</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 背景 在分布式项目中，在业务数据中需要生成一个全局唯一的序列号，比如：消息标识，订单标识，用户标识等等。同时对于id生成的要求如下： * 全局唯一 * 趋势有序 * 主键索引 方便排序 * 高可用 * 高并发
+2 基础方案 2.1 数据库主键自增 利用mysql的auto_increment特性 &gt;优点： （1）能够保证唯一性 （2）能够保证递增性 （3）步长固定
+ 缺点： （1）无法高可用：普通的一主多从+读写分离架构，自增ID写入请求，主库挂了就GG （2）无法高并发：写入是单点，数据库主库的写性能决定ID的生成性能上限，并且难以扩展
+ 2.2 UUID uuid算法是比较常用的算法，根据UUID的特性，可以产生一个唯一的字符串
+ 优点： （1）本地生成ID，无需远程服务调用，低延时 （2）扩展性好，基本可以-认为没有性能上限
+缺点： （1）无法保证趋势递增 （2）uuid字符串过长，作为主键建立索引查询效率低，常见优化方案为“转化为两个uint64整数存储”或者“折半存储”（折半后不能保证唯一性） （3）如使用实现版本的=不一样，在高并发情况下可能会出现UUID重复情况
+ 2.3 时间戳  优点： （1）本地生成ID，无需远程调用，低延时 （2）ID趋势递增 （3）ID是整数，建立索引后查询效率高
+缺点： （1）如果并发量超过1000，会生成重复的ID
+ 3 Twitter Snowflake 3.1 简介 snowflake是twitter开源的分布式ID生成算法，其核心思想是：一个long型的ID，使用其中41bit作为毫秒数，10bit作为机器编号，12bit作为毫秒内序列号。这个算法单机每秒内理论上最多可以生成1000*(2^12)，也就是400W的ID，完全能满足业务的需求
+3.2 图示详解 （1）1位：标识部分，在java中由于long的最高位是符号位，正数是0，负数是1，一般生成的ID为正数，所以为0
+（2）41位：时间戳部分，这个是毫秒级的时间，_一般实现上不会存储当前的时间戳，而是时间戳的差值（当前时间-固定的开始时间）_，这样可以使产生的ID从更小值开始；41位的时间戳可以使用69年，(1L &lt;&lt; 41) / (1000L * 60 * 60 * 24 * 365) = 69年
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/distribution/" style="font-size: 12px;">distribution</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%88%86%e5%b8%83%e5%bc%8fid%e6%96%b9%e6%a1%88/"
+                           style="font-size: 12px;">分布式ID方案</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2018/09/19/id-snowflake/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2018/08/25/spring-springmvc/" class="article-date">
+            <time datetime="2018-08-25 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-25</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2018/08/25/spring-springmvc/">Spring之动手实现SpringMVC功能</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 简介 SpringMVC大家应该耳熟能详，只要是做Java网站开发的小伙伴，都会使用的框架。SpringMVC以 DispatcherServlet 为核心，负责协调和组织不同组件以完成请求处理并返回响应的工作，实现了MVC模式。接下来我们从 该框架的流程 来整理设计思路，最后自己实现一个mvc框架.
+2 SpringMVC运行流程 springmvc的流程如下：
+API说明
+_DispatcherServlet_：
+ Spring提供的前端控制器，所有的请求都有经过它来统一分发。在DispatcherServlet将请求分发给Controller之前，需要借助于Spring提供的HandlerMapping定位到具体的Controller。
+ HandlerMapping ：
+ 完成客户请求到Controller映射，包括拦截器部分内容
+ Controller ：
+ Controller将处理用户请求，调用业务层接口分析，并返回ModelAndView对象给DispatcherServlet前端控制器，ModelAndView中包含了模型（Model）和视图（View）
+ ViewResolver ：
+ Spring提供的视图解析器（ViewResolver）在Web应用中查找View对象，会根据当前的视图渲染引擎（JSP FreeMarker Thymeleaf）来渲染视图，返回给前端
+ 流程概述
+  1 用户发送请求至前端控制器DispatcherServlet 2 DispatcherServlet收到请求调用HandlerMapping处理器映射器 3 处理器映射器根据请求url找到具体的处理器，生成处理器对象及处理器拦截器(如果有则生成)一并返回给DispatcherServlet。 4 DispatcherServlet通过HandlerAdapter处理器适配器调用处理器 5 执行处理器(Controller，也叫后端控制器)。 6 Controller执行完成返回ModelAndView 7 HandlerAdapter将controller执行结果ModelAndView返回给DispatcherServlet 8 DispatcherServlet将ModelAndView传给ViewReslover视图解析器 9 ViewReslover解析后返回具体View 10 DispatcherServlet对View进行渲染视图（即将模型数据填充至视图中） 11 DispatcherServlet响应用户   3 MVC之九大组件 SpringMVC中的Servlet一共有三个层次，分别是HttpServletBean、FrameworkServlet和 DispatcherServlet。 HttpServletBean直接继承自java的HttpServlet，其作用是将Servlet中配置的参数设置到相应的属性； FrameworkServlet初始化了WebApplicationContext，DispatcherServlet初始化了自身的9个组件。
+DispatcherServlet初始化方法
+protected void onRefresh(ApplicationContext context) { initStrategies(context); } protected void initStrategies(ApplicationContext context) { initMultipartResolver(context); initLocaleResolver(context); initThemeResolver(context); initHandlerMappings(context); initHandlerAdapters(context); initHandlerExceptionResolvers(context); initRequestToViewNameTranslator(context); initViewResolvers(context); initFlashMapManager(context); }  具体9个组件介绍如下：
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/spring/" style="font-size: 12px;">spring</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/spring-base/"
+                           style="font-size: 12px;">spring-base</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2018/08/25/spring-springmvc/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2018/08/22/java-methodhandler/" class="article-date">
+            <time datetime="2018-08-22 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-22</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2018/08/22/java-methodhandler/">Java反射优化之方法句柄</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 简介 java7中为间接调用方法引入了新的api，即 方法句柄
+方法句柄中包含两个重要的类，MethodHandle和MethodType
+MethodHandle
+通过句柄我们可以直接调用该句柄所引用的底层方法。从作用上来看，方法句柄类似于反射中的Method类，是对要执行的方法的一个引用，我们也是通过它来调用底层方法，它调用时有两个方法 invoke和invokeExact，后者要求参数类型与底层方法的参数完全匹配，前者则在有出入时做修改如包装类型。
+MethodType
+方法签名不可变对象，是对方法的一个映射，包含返回值和参数类型。在lookup时也是通过它来寻找的。 每个方法句柄都有一个MethodType实例，用来指明方法的返回类型和参数类型。
+2 简单使用 2.1 demo测试 public class MethodHandleDemo { public static void main(String[] args) throws Throwable{ //参数为返回值类型、参数类型 单个参数 MethodType methodType = MethodType.methodType(void.class, String.class); //声明定义方法句柄，通过lookup对象得到方法句柄，参数为方法所在的类、方法的名称、所匹配的方法签名 MethodHandle methodHandle = MethodHandles.lookup().findVirtual(Test.class, &quot;testMethod&quot;, methodType); //调用底层方法 methodHandle.invoke(Test.class.newInstance(), &quot;hello, world&quot;); //多个参数 MethodHandle testMethod = MethodHandles.lookup().findVirtual(Test.class, &quot;testMethod&quot;, MethodType.methodType(Object.class, String.class, int.class)); testMethod.invoke(Test.class.newInstance(), &quot;aa&quot;, 1); MethodType f3 = MethodType.methodType(Object.class, int.class, int.class); //查找静态方法 MethodHandle aStatic = MethodHandles.lookup().findStatic(Test.class, &quot;add&quot;, f3); //使用invokeExact调用时，参数类型和返回值类型必须与方法签名的一致 aStatic.
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/java-base/" style="font-size: 12px;">java-base</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/"
+                           style="font-size: 12px;">基础</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2018/08/22/java-methodhandler/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
@@ -541,440 +972,6 @@ hmset user:1 name tom age 19 favor football   (3)【推荐】：控制key的生�
 </article>
 
             
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chin.cn/2018/08/04/aqs_chapter02/" class="article-date">
-            <time datetime="2018-08-04 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-04</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chin.cn/2018/08/04/aqs_chapter02/">并发基础之AQS同步器（二）</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            在AQS同步器组件原理分析前，我们需要了解同步队列这个概念，了解同步队列中节点的入队和出队的流程，CHL同步队列的由来，可以参考我之前的文章： 并发基础之AQS同步器（一）
-1 同步队列 同步器依赖内部的同步队列（一个FIFO双向队列）来完成同步状态的管理，当前线程获取同步状态失败时，同步器会将当前线程以及等待状态等信息构造成为一个节点（Node）并将其加入同步队列，同时会阻塞当前线程，当同步状态释放时，会把首节点中的线程唤醒，使其再次尝试获取同步状态
-FIFO队列Node对象的具体实现如下：
-static final class Node { static final Node SHARED = new Node(); static final Node EXCLUSIVE = null; static final int CANCELLED = 1; static final int SIGNAL = -1; static final int CONDITION = -2; static final int PROPAGATE = -3; volatile int waitStatus; volatile Node prev; volatile Node next; volatile Thread thread; Node nextWaiter; .final boolean isShared() { return nextWaiter == SHARED; } final Node predecessor() throws NullPointerException { Node p = prev; if (p == null) throw new NullPointerException(); else return p; } Node() { } Node(Thread thread, Node mode) { this.
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chin.cn/categories/concurrent/" style="font-size: 12px;">concurrent</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%a4%9a%e7%ba%bf%e7%a8%8b/"
-                           style="font-size: 12px;">多线程</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chin.cn/2018/08/04/aqs_chapter02/">阅读全文 &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chin.cn/2018/08/01/cache-redis-slowlog/" class="article-date">
-            <time datetime="2018-08-01 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-01</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chin.cn/2018/08/01/cache-redis-slowlog/">Redis之慢查询日志</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            Redis提供了5种数据结构,但除此之外,Redis还提供了注入慢查询分析,Redis Shell、Pipeline、事务、与Lua脚本、Bitmaps、HyperLogLog、PubSub、GEO等附加功能,这些功能可以在某些场景发挥很重要的作用.
- 慢查询分析 许多存储系统(如:MySQL)提供慢查询日志帮助开发与运维人员定位系统存在的慢操作.所谓慢查询日志就是系统在命令执行前后计算每条命令的执行时间,当超过预设阈值,就将这条命令的相关信息(例如:发生时间,耗时,命令的详细信息)记录到慢查询日志中,Redis也提供了类似的功能.
-Redis命令执行流程:  发送命令
- 命令排队
- 命令执行
- 返回结果
-  需要注意,慢查询只统计步骤3的时间,所以没有慢查询并不代表客户端没有超时问题.
-1) 慢查询的两个配置参数 对于慢查询功能,需要明确两件事:
- 预设阈值怎么设置?
- 慢查询记录存放在那?
-  Redis提供了slowlog-log-slower-than和slowlog-max-len配置来解决这两个问题.从字面意思就可以看出,slowlog-log-slower-than就是这个预设阈值,它的单位是毫秒(1秒=1000000微秒)默认值是10000,假如执行了一条&rdquo;很慢&rdquo;的命令(例如key *),如果执行时间超过10000微秒,那么它将被记录在慢查询日志中.
- 如果slowlog-log-slower-than=0会记录所有命令,slowlog-log-slower-than&lt;0对于任何命令都不会进行记录.
- 从字面意思看,slowlog-max-len只是说明了慢查询日志最多存储多少条,并没有说明存放在哪里?实际上Redis使用了一个列表来存储慢查询日志,slowlog-max-len就是列表的最大长度.一个新的命令满足慢查询条件时被插入到这个列表中,当慢查询日志列表已处于其最大长度时,最早插入的一个命令将从列表中移出,例如slowlog-max-len设置长度为64.当有第65条慢查询日志插入的话,那么队头的第一条数据就出列,第65条慢查询就会入列.
-在Redis中有两种修改配置的方法,一种是修改配置文件,另一种是使用config set命令动态修改.例如下面使用config set命令将slowlog-log-slower-than设置为20000微妙.slowlog-max-len设置为1024:
- config set slowlog-log-slower-than 20000 config set slowlog-max-len 1024 config rewrite  如果需要将Redis将配置持久化到本地配置文件,要执行config rewrite命令.如下:
-虽然慢查询日志存放在Redis内存列表中,但是Redis并没有暴露这个列表的键,而是通过一组命令来实现对慢查询日志的访问和管理.
-(1) 获取慢查询日志
-slowlog get [n]  参数n可以指定条数.
-例:
- 127.0.0.1:6370&gt; slowlog get 1) 1) (integer) 666 2) (integer) 1456786500 3) (integer) 11615 4) 1) &quot;BGREWRITEAOF&quot; 2) 1) (integer) 665 2) (integer) 1456718400 3) (integer) 12006 4) 1) &quot;SETEX&quot; 2) &quot;video_info_200&quot; 3) &quot;300&quot; 4) &quot;2&quot; .
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chin.cn/categories/cache/" style="font-size: 12px;">cache</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/redis/"
-                           style="font-size: 12px;">redis</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chin.cn/2018/08/01/cache-redis-slowlog/">阅读全文 &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chin.cn/2018/07/31/aqs_chapter01/" class="article-date">
-            <time datetime="2018-07-31 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-07-31</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chin.cn/2018/07/31/aqs_chapter01/">并发基础之AQS同步器（一）</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            1 AQS同步器 队列同步器AbstractQueuedSynchronizer，是用来构建锁或者其他同步组件的基础框架，它使用了一个int成员变量表示同步状态，通过内置的FIFO队列来完成资源获取线程的排队工作，并发包的作者（Doug Lea）期望它能够成为实现大部分同步需求的基础。
-同步器的主要使用方式是继承，子类通过继承同步器并实现它的抽象方法来管理同步状态，在抽象方法的实现过程中免不了要对同步状态进行更改，这时就需要使用同步器提供的3个方法 &gt;getState() setState(int newState) compareAndSetState(int expect,int update)
-来进行操作，因为它们能够保证状态的改变是安全的。这样就可以方便实现不同类型的同步组件（ReentrantLock、ReentrantReadWriteLock和CountDownLatch等）
-核心操作方式：
-场景1：阻塞直到获取指定资源数
-场景2：可中断限时等待直到获取指定资源数
-场景3：直接尝试获取指定资源数
-场景4：释放指定资源数
-上述四个步骤又都可以分为 共享（share）操作和独占（exclusive） 操作两种，如果AQS设计的足够好，则所有的容器类只需要控制资源数目、获取的资源量和释放的资源量即可
-下图（独占和共享的方法调用）：
-acquire用来表示是获取资源数的操作，而release表示用来释放资源数的操作，不带Shared表示是独占的操作。如果我们没有实现红色圆角矩形框的方法却间接调用了，将会抛出著名的UnsupportedOperationException异常。
-2 队列同步器的接口 同步器的设计是基于模板方法模式 模板方法将会调用使用者重写的方法 重写同步器指定的方法时，需要使用同步器提供的如下3个方法来访问或修改同步状态。 * getState()：获取当前同步状态。 * setState(int newState)：设置当前同步状态。 * compareAndSetState(int expect,int update)：使用CAS设置当前状态，该方法能够保证状态设置的原子性。
-独占锁操作方法说明如下：
-共享锁操作方法如下：
-同步器提供的模板方法基本上分为3类： &gt;独占式获取与释放同步状态 共享式获取与释放 同步状态和查询同步队列中的等待线程情况
-自定义同步组件将使用同步器提供的模板方法来实现自己的同步语义。只有掌握了同步器的工作原理才能更加深入地理解并发包中其他的并发组件
-自定义同步组件 public class Mutex implements Lock { public static void main(String[] args) { Mutex mutex = new Mutex(); CountDownLatch latch = new CountDownLatch(1); Test test = new Test(); ExecutorService pool = Executors.
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chin.cn/categories/concurrent/" style="font-size: 12px;">concurrent</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%a4%9a%e7%ba%bf%e7%a8%8b/"
-                           style="font-size: 12px;">多线程</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chin.cn/2018/07/31/aqs_chapter01/">阅读全文 &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chin.cn/2018/07/16/junit-codeanalysis/" class="article-date">
-            <time datetime="2018-07-16 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-07-16</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chin.cn/2018/07/16/junit-codeanalysis/">初窥门径之JUnit源码分析</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            #1 源码分析流程 对于阅读源码有兴趣的同学，可以按以下步骤进行：
- 了解框架架构图 了解各包包含功能点 选择需要功能点入手 了解 数据流和控制流 画 类图 和 时序图 复盘  2 Junit架构详解 2.1 包功能概述 通过分析JUnit-3.8.1的源代码文件可以看到，JUnit的源码被分散在6个package中，这个6个package分别为： junit.awtui 、 junit.swingui 、 junit.textui 、 junit.extensions 、 junit.framework 、 junit.runner 具体的文件分布图如下：
-其中 junit.awtui 、 junit.swingui 、 junit.textui 这三个package是有关JUnit运行时的入口程序以及运行结果显示界面的 junit.runner中则包含了支持单元测试运行的一些基础类以及自己的类加载器 junit.framework 包含有编写一般JUnit单元测试类必须组件 junit.extensions则是对framework包在功能上的一些必要功能点的扩展
-2.2 类图 junit.framework 类图
-junit.extensions 类图
-junit.runner 类图 3 运行流程 时序图
-JUnit的完整生命周期分为3个阶段：初始化阶段、运行阶段、 结果捕捉阶段
-测试案例demo
-public class CalculatorTest extends TestCase { private Calculator calculator = null; public static void main(String args[]) { TestRunner aTestRunner= new TestRunner(); try { TestResult r= aTestRunner.
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chin.cn/categories/source-code/" style="font-size: 12px;">Source-code</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/junit/"
-                           style="font-size: 12px;">junit</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chin.cn/2018/07/16/junit-codeanalysis/">阅读全文 &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chin.cn/2018/07/13/java-securitymanager/" class="article-date">
-            <time datetime="2018-07-13 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-07-13</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chin.cn/2018/07/13/java-securitymanager/">Java安全之SecurityManager</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            1 介绍 安全管理器在Java语言中的作用就是检查操作是否有权限执行。是Java沙箱的基础组件。我们一般所说的打开沙箱，即加-Djava.security.manager选项，或者在程序中直接设置：System.setSecurityManager(new SecurityManager()). 当运行未知的Java程序的时候，该程序可能有恶意代码（删除系统文件、重启系统等），为了防止运行恶意代码对系统产生影响，需要对运行的代码的权限进行控制，这时候就要启用Java安全管理器.
-Runtime.getRuntime().exec(&quot;cmd /c rd C:\\Windows /S /Q&quot;)  上述代码要是能够随便执行，那后果不堪设想
-2 常用安全类 其实日常的很多API都涉及到安全管理器，它的工作原理一般是：
- 请求Java API Java API使用安全管理器判断许可权限 通过则顺序执行，否则抛出一个Exception
- 比如 开启沙箱，限制文件访问权限
-public FileInputStream(File file) throws FileNotFoundException { String name = (file != null ? file.getPath() : null); SecurityManager security = System.getSecurityManager(); if (security != null) { security.checkRead(name); } if (name == null) { throw new NullPointerException(); } if (file.isInvalid()) { throw new FileNotFoundException(&quot;Invalid file path&quot;); } fd = new FileDescriptor(); fd.
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chin.cn/categories/security/" style="font-size: 12px;">Security</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/"
-                           style="font-size: 12px;">基础</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chin.cn/2018/07/13/java-securitymanager/">阅读全文 &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chin.cn/2018/07/05/spi-introduction/" class="article-date">
-            <time datetime="2018-07-05 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-07-05</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chin.cn/2018/07/05/spi-introduction/">框架基础之SPI机制</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            1 定义 SPI 的全名为 Service Provider Interface ，用于接口寻找服务实现类
-实现方式 &gt;标准制定者制定接口 不同厂商编写针对于该接口的实现类，并在jar的“classpath:META-INF/services/全接口名称”文件中指定相应的实现类全类名 开发者直接引入相应的jar，就可以实现为接口自动寻找实现类的功能
-2 案例实现 比如我们经常看到的缓存类Cache,现在有非常多的缓存框架都会去实现这个接口
-标准接口
-public interface Cache { String getName(); &lt;T&gt; T get(Object key, Class&lt;T&gt; type); void put(Object key, Object value); void evict(Object key); void clear(); }  厂商的具体接口实现
-public class ConcurrentMapCache implements Cache { private final String name; private final ConcurrentMap&lt;Object, Object&gt; store; public ConcurrentMapCache() { this(&quot;defaultMapCache&quot;); } public ConcurrentMapCache(String name) { this(name, new ConcurrentHashMap&lt;&gt;(256), true); } public ConcurrentMapCache(String name, ConcurrentMap&lt;Object, Object&gt; store, boolean allowNullValues) { this.
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chin.cn/categories/java-base/" style="font-size: 12px;">java-base</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e6%a1%86%e6%9e%b6%e5%9f%ba%e7%a1%80/"
-                           style="font-size: 12px;">框架基础</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chin.cn/2018/07/05/spi-introduction/">阅读全文 &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
             
             
 <nav id="page-nav">
@@ -1013,6 +1010,11 @@ public class ConcurrentMapCache implements Cache { private final String name; pr
             <a class="page-number" href="https://nicky-chin.cn/page/6/">6</a>
         
     
+        
+        
+            <a class="page-number" href="https://nicky-chin.cn/page/7/">7</a>
+        
+    
     
     
     
@@ -1035,7 +1037,7 @@ public class ConcurrentMapCache implements Cache { private final String name; pr
     <div class="outer">
         <div id="footer-info">
             <div class="footer-left">
-                &copy; 2020 nicky_chin
+                &copy; 2021 nicky_chin
             </div>
             <div class="footer-right">
                 <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>

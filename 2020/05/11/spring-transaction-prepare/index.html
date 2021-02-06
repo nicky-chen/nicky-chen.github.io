@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  true ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+
+    <title>Transaction源码解析之事务预处理</title>
+    <link rel="icon" href="https://nicky-chin.cn/img/favicon.ico">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
+
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
+
+    
+    
+    <link rel="stylesheet" href="https://nicky-chin.cn/highlight/styles/darcula.css">
+    <script src="https://nicky-chin.cn/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chin.cn/" class="profilepic">
+            <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chin.cn/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color2">Junit</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color2">Redis</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color1">Spring-Base</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color4">Spring-Transaction</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color1">优化</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color2">分布式id方案</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color2">创建型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color4">多线程</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color3">思维导图</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color4">数据结构</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">框架基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color1">源码</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color2">理论</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color1">结构型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color2">行为型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chin.cn/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chin.cn/" class="profilepic">
+                <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+            <article id="post-js-android" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/" class="article-date">
+            <time datetime="2020-05-11 12:18:15 &#43;0800 CST" itemprop="datePublished">2020-05-11</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 class="article-title" itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/">Transaction源码解析之事务预处理</a>
+            </h1>
+
+
+        </header>
+
+        <div class="article-info article-info-post">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="article-category-link" href="https://nicky-chin.cn/categories/spring/" style="font-size: 12px;">spring</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/spring-transaction/"
+                           style="font-size: 12px;">spring-transaction</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="article-entry" itemprop="articleBody">
+
+            
+
+<h1 id="1-调试源码">1 调试源码</h1>
+
+<p>接上篇<a href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/">Transaction源码解析之事务的配置解析</a></p>
+
+<p>我们调用相应的service类,来调试具体的事务处理流程，测试代码如下:</p>
+
+<pre><code class="language-java">
+public void testInvokeTransactional() throws Exception {
+		TransactionalTestBean testBean = getTestBean();
+		CallCountingTransactionManager ptm = (CallCountingTransactionManager) context.getBean(&quot;transactionManager&quot;);
+
+		// try with transactional
+		assertEquals(&quot;Should not have any started transactions&quot;, 0, ptm.begun);
+		testBean.findAllFoos();
+		assertEquals(&quot;Should have 1 started transaction&quot;, 1, ptm.begun);
+		assertEquals(&quot;Should have 1 committed transaction&quot;, 1, ptm.commits);
+
+		// try with non-transaction
+		testBean.doSomething();
+		assertEquals(&quot;Should not have started another transaction&quot;, 1, ptm.begun);
+
+		// try with exceptional
+		try {
+			testBean.exceptional(new IllegalArgumentException(&quot;foo&quot;));
+			fail(&quot;Should NEVER get here&quot;);
+		}
+		catch (Throwable throwable) {
+			assertEquals(&quot;Should have another started transaction&quot;, 2, ptm.begun);
+			assertEquals(&quot;Should have 1 rolled back transaction&quot;, 1, ptm.rollbacks);
+
+		}
+	}
+
+</code></pre>
+
+<h1 id="2-事务执行流程">2 事务执行流程</h1>
+
+<h2 id="2-1-cglibaopproxy动态代理">2.1 CglibAopProxy动态代理</h2>
+
+<p>业务类没有实现接口，所以 <strong>TransactionalTestBean</strong> 会走Cglib动态代理，具体流程在<code>DynamicAdvisedInterceptor.intercept</code> 方法中 :</p>
+
+<pre><code class="language-java">public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
+			Object oldProxy = null;
+			boolean setProxyContext = false;
+			Class&lt;?&gt; targetClass = null;
+			Object target = null;
+			try {
+			    // 是否需要暴露代理对象
+				if (this.advised.exposeProxy) {
+           // 基于threadLocal暴露代理对象
+					oldProxy = AopContext.setCurrentProxy(proxy);
+					setProxyContext = true;
+				}
+                // 目标对象
+                target = getTarget();
+				if (target != null) {
+					targetClass = target.getClass();
+				}
+                // 获取拦截器链
+                List&lt;Object&gt; chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
+				Object retVal;
+                // 如果没有拦截器链，则直接调用目标类的方法
+                if (chain.isEmpty() &amp;&amp; Modifier.isPublic(method.getModifiers())) {
+
+					retVal = methodProxy.invoke(target, args);
+				}
+				else {
+                    // 构造CglibMethodInvocation，递归调用拦截器链
+                    retVal = new CglibMethodInvocation(proxy, target, method, args, targetClass, chain, methodProxy).proceed();
+				}
+                // 返回实施增强之后的调用结果
+                retVal = processReturnType(proxy, target, method, retVal);
+				return retVal;
+			}
+			finally {
+				if (target != null) {
+					releaseTarget(target);
+				}
+				if (setProxyContext) {
+					// Restore old proxy.
+					AopContext.setCurrentProxy(oldProxy);
+				}
+			}
+		}
+</code></pre>
+
+<h2 id="2-2-获取拦截器">2.2 获取拦截器</h2>
+
+<p>获取拦截器的方法<code>List&lt;Object&gt; chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass)</code></p>
+
+<p><strong>遍历所有Advisor，获得MethodInterceptor</strong></p>
+
+<p>根据Spring的定义，Advice可以是一个MethodInterceptor，也可以是类似于Aspectj的before, after通知。转换由DefaultAdvisorAdapterRegistry.getInterceptors完成:</p>
+
+<pre><code class="language-java">@Override
+public MethodInterceptor[] getInterceptors(Advisor advisor) throws UnknownAdviceTypeException {
+    List&lt;MethodInterceptor&gt; interceptors = new ArrayList&lt;MethodInterceptor&gt;(3);
+    Advice advice = advisor.getAdvice();
+    if (advice instanceof MethodInterceptor) {
+        interceptors.add((MethodInterceptor) advice);
+    }
+    for (AdvisorAdapter adapter : this.adapters) {
+        if (adapter.supportsAdvice(advice)) {
+            interceptors.add(adapter.getInterceptor(advisor));
+        }
+    }
+    if (interceptors.isEmpty()) {
+        throw new UnknownAdviceTypeException(advisor.getAdvice());
+    }
+    return interceptors.toArray(new MethodInterceptor[interceptors.size()]);
+}
+</code></pre>
+
+<p>AdvisorAdapter接口用以支持用户自定义的Advice类型，并将自定义的类型转为拦截器。默认adapters含有<strong>MethodBeforeAdviceAdapter、AfterReturningAdviceAdapter和ThrowsAdviceAdapter</strong>三种类型，用以分别支持<strong>MethodBeforeAdvice、AfterReturningAdvice和ThrowsAdvice</strong></p>
+
+<h2 id="2-3-拦截器链执行">2.3 拦截器链执行</h2>
+
+<pre><code class="language-java">	private static class CglibMethodInvocation extends ReflectiveMethodInvocation {
+
+		private final MethodProxy methodProxy;
+
+		private final boolean protectedMethod;
+
+		public CglibMethodInvocation(Object proxy, Object target, Method method, Object[] arguments,
+				Class&lt;?&gt; targetClass, List&lt;Object&gt; interceptorsAndDynamicMethodMatchers, MethodProxy methodProxy) {
+
+			super(proxy, target, method, arguments, targetClass, interceptorsAndDynamicMethodMatchers);
+			this.methodProxy = methodProxy;
+			this.protectedMethod = Modifier.isProtected(method.getModifiers());
+		}
+
+		/**
+		 * Gives a marginal performance improvement versus using reflection to
+		 * invoke the target when invoking public methods.
+		 */
+		@Override
+		protected Object invokeJoinpoint() throws Throwable {
+			// 如果是protect的访问修饰符就执行原生的反射方法
+			if (this.protectedMethod) {
+				return super.invokeJoinpoint();
+			}
+			// 否则执行代理
+			else {
+				return this.methodProxy.invoke(this.target, this.arguments);
+			}
+		}
+	}
+
+@Override
+public Object proceed() throws Throwable {
+    if (this.currentInterceptorIndex == this.interceptorsAndDynamicMethodMatchers.size() - 1) {
+        //拦截器执行完毕，调用原本的方法
+        return invokeJoinpoint();
+    }
+    Object interceptorOrInterceptionAdvice =
+            this.interceptorsAndDynamicMethodMatchers.get(++this.currentInterceptorIndex);
+    if (interceptorOrInterceptionAdvice instanceof InterceptorAndDynamicMethodMatcher) {
+        InterceptorAndDynamicMethodMatcher dm =
+                (InterceptorAndDynamicMethodMatcher) interceptorOrInterceptionAdvice;
+        if (dm.methodMatcher.matches(this.method, this.targetClass, this.arguments)) {
+            return dm.interceptor.invoke(this);
+        } else {
+            // Dynamic matching failed.
+            return proceed();
+        }
+    } else {
+        //调用拦截器的invoke方法
+        return ((MethodInterceptor) interceptorOrInterceptionAdvice).invoke(this);
+    }
+}
+</code></pre>
+
+<p>通过<code>ReflectiveMethodInvocation.proceed</code>方法，会执行拦截器截器的<code>invoke</code>方法，执行完所有的拦截器方法，最终调用本身方法，这里注意如果本身方法是<strong>protect</strong>访问控制域，则不走代理方法，走本身方法</p>
+
+<h1 id="3-事务拦截器">3 事务拦截器</h1>
+
+<h2 id="3-1-事务基础组件">3.1 事务基础组件</h2>
+
+<p>关于事务相关的拦截器，只需要关注<strong>TransactionInterceptor</strong> 即可，通过<code>invoke</code>方法:</p>
+
+<pre><code class="language-java">@Override
+public Object invoke(final MethodInvocation invocation) throws Throwable {
+    Class&lt;?&gt; targetClass = (invocation.getThis() != null ? 
+             AopUtils.getTargetClass(invocation.getThis()) : null);
+    // Adapt to TransactionAspectSupport's invokeWithinTransaction...
+    return invokeWithinTransaction(invocation.getMethod(), targetClass, new InvocationCallback() {
+        @Override
+        public Object proceedWithInvocation() throws Throwable {
+            //事务执行完毕后调用链继续向下执行
+            return invocation.proceed();
+        }
+    });
+}
+</code></pre>
+
+<p>执行 <code>invokeWithinTransaction</code>方法:</p>
+
+<pre><code class="language-java">	protected Object invokeWithinTransaction(Method method, Class targetClass, final InvocationCallback invocation)
+			throws Throwable {
+
+		// If the transaction attribute is null, the method is non-transactional.
+		// 获取事务信息
+		final TransactionAttribute txAttr = getTransactionAttributeSource().getTransactionAttribute(method, targetClass);
+		// 获取事务管理器
+		final PlatformTransactionManager tm = determineTransactionManager(txAttr);
+		// 得到方法名
+		final String joinpointIdentification = methodIdentification(method, targetClass);
+
+		if (txAttr == null || !(tm instanceof CallbackPreferringPlatformTransactionManager)) {
+			// Standard transaction demarcation with getTransaction and commit/rollback calls.
+            // 事务开启
+			TransactionInfo txInfo = createTransactionIfNecessary(tm, txAttr, joinpointIdentification);
+			Object retVal = null;
+			try {
+			
+     // 继续执行剩下的advice调用链，最终执行本身方法
+				retVal = invocation.proceedWithInvocation();
+			}
+			catch (Throwable ex) {
+				// target invocation exception
+				// 异常下提交或者回滚处理
+				completeTransactionAfterThrowing(txInfo, ex);
+				throw ex;
+			}
+			finally {
+			    // 还原前一个事务的信息到本地线程
+				cleanupTransactionInfo(txInfo);
+			}
+			// 提交事务
+			commitTransactionAfterReturning(txInfo);
+			return retVal;
+		}
+</code></pre>
+
+<p>上面是一个事务执行的完整流程，开始事务 &ndash;&gt; 返回执行结果 &ndash;&gt; 异常则回滚 &ndash;&gt; 执行成功则提交事务并返回</p>
+
+<h3 id="3-1-1-事务属性">3.1.1 事务属性</h3>
+
+<p><strong>TransactionAttribute</strong> 主要用于保存@transacation注解的对应信息</p>
+
+<pre><code class="language-java">	public TransactionAttribute getTransactionAttribute(Method method, Class&lt;?&gt; targetClass) {
+		// First, see if we have a cached value.
+		Object cacheKey = getCacheKey(method, targetClass);
+		Object cached = this.attributeCache.get(cacheKey);
+		// 读取缓存事务属性，缓存没有就解析并放入缓存
+		if (cached != null) {
+			if (cached == NULL_TRANSACTION_ATTRIBUTE) {
+				return null;
+			}
+			else {
+			   // 根据@transacation注解返回对应信息 RuleBasedTransactionAttribute
+				return (TransactionAttribute) cached;
+			}
+		}
+		else {
+			// 缓存为空
+			TransactionAttribute txAtt = computeTransactionAttribute(method, targetClass);
+			if (txAtt == null) {
+				this.attributeCache.put(cacheKey, NULL_TRANSACTION_ATTRIBUTE);
+			}
+			else {
+				if (logger.isDebugEnabled()) {
+					Class&lt;?&gt; classToLog = (targetClass != null ? targetClass : method.getDeclaringClass());
+					logger.debug(&quot;Adding transactional method '&quot; + classToLog.getSimpleName() + &quot;.&quot; +
+							method.getName() + &quot;' with attribute: &quot; + txAtt);
+				}
+				this.attributeCache.put(cacheKey, txAtt);
+			}
+			return txAtt;
+		}
+	}
+	
+	
+		private TransactionAttribute computeTransactionAttribute(Method method, Class&lt;?&gt; targetClass) {
+		// Don't allow no-public methods as required.
+        // 不允许非public访问权限的方法代理
+		if (allowPublicMethodsOnly() &amp;&amp; !Modifier.isPublic(method.getModifiers())) {
+			return null;
+		}
+
+		// Ignore CGLIB subclasses - introspect the actual user class.
+		Class&lt;?&gt; userClass = ClassUtils.getUserClass(targetClass);
+		// The method may be on an interface, but we need attributes from the target class.
+		// If the target class is null, the method will be unchanged.
+		Method specificMethod = ClassUtils.getMostSpecificMethod(method, userClass);
+		// If we are dealing with method with generic parameters, find the original method.
+        // 如果我们处理的是一个泛型参数的方法，则获取他的源方法
+		specificMethod = BridgeMethodResolver.findBridgedMethod(specificMethod);
+
+		// First try is the method in the target class.
+        // 首先在方法上获取事务的属性
+		TransactionAttribute txAtt = findTransactionAttribute(specificMethod);
+		if (txAtt != null) {
+			return txAtt;
+		}
+
+		// Second try is the transaction attribute on the target class.
+        // 在类上获取事务的属性
+		txAtt = findTransactionAttribute(specificMethod.getDeclaringClass());
+		if (txAtt != null) {
+			return txAtt;
+		}
+
+		if (specificMethod != method) {
+			// Fallback is to look at the original method.
+			txAtt = findTransactionAttribute(method);
+			if (txAtt != null) {
+				return txAtt;
+			}
+			// Last fallback is the class of the original method.
+			return findTransactionAttribute(method.getDeclaringClass());
+		}
+		return null;
+	}
+
+
+</code></pre>
+
+<h3 id="3-1-2-事务管理器">3.1.2 事务管理器</h3>
+
+<p><strong>PlatformTransactionManager</strong>  获取事务管理器:</p>
+
+<pre><code class="language-java">protected PlatformTransactionManager determineTransactionManager(TransactionAttribute txAttr) {
+    //如果没有事务属性，那么仅从缓存中查找，找不到返回null
+    if (txAttr == null || this.beanFactory == null) {
+        return getTransactionManager();
+    }
+    String qualifier = txAttr.getQualifier();
+    //如果@Transactional注解配置了transactionManager或value属性(用以决定使用哪个事务管理器):
+    //首先查找缓存，找不到再去容器中按名称寻找
+    if (StringUtils.hasText(qualifier)) {
+        return determineQualifiedTransactionManager(qualifier);
+    } else if (StringUtils.hasText(this.transactionManagerBeanName)) {
+        return determineQualifiedTransactionManager(this.transactionManagerBeanName);
+    } else {
+        //去容器中按类型(Class)查找
+        PlatformTransactionManager defaultTransactionManager = getTransactionManager();
+        if (defaultTransactionManager == null) {
+            defaultTransactionManager = this.beanFactory.getBean(PlatformTransactionManager.class);
+            this.transactionManagerCache.putIfAbsent(
+                    DEFAULT_TRANSACTION_MANAGER_KEY, defaultTransactionManager);
+        }
+        return defaultTransactionManager;
+    }
+}
+</code></pre>
+
+<p>一般我们使用<strong>DataSourceTransactionManager</strong>，类图:</p>
+
+<p><img src="https://nicky-chin.cn/media/spring-transaction-prepare/DataSourceTransactionManager-diagram.png" alt="DataSourceTransactionManager" /></p>
+
+<h3 id="3-1-3-数据源-datasource">3.1.3 数据源 DataSource</h3>
+
+<p>数据源组件，这里不做详细说明，国内比较常见的是<strong>DruidDataSource</strong></p>
+
+<h2 id="3-2-事务的开启及传播">3.2 事务的开启及传播</h2>
+
+<p><code>TransactionAspectSupport.createTransactionIfNecessary</code>方法用于业务逻辑执行前事务的开启:</p>
+
+<pre><code class="language-java">	protected TransactionInfo createTransactionIfNecessary(
+			PlatformTransactionManager tm, TransactionAttribute txAttr, final String joinpointIdentification) {
+
+		// If no name specified, apply method identification as transaction name.
+		// 如果没有指定事务的名称使用方法名
+		if (txAttr != null &amp;&amp; txAttr.getName() == null) {
+			txAttr = new DelegatingTransactionAttribute(txAttr) {
+				@Override
+				public String getName() {
+					return joinpointIdentification;
+				}
+			};
+		}
+
+		TransactionStatus status = null;
+		if (txAttr != null) {
+			if (tm != null) {
+			    // 获取事务状态
+				status = tm.getTransaction(txAttr);
+			}
+			else {
+				if (logger.isDebugEnabled()) {
+					logger.debug(&quot;Skipping transactional joinpoint [&quot; + joinpointIdentification +
+							&quot;] because no transaction manager has been configured&quot;);
+				}
+			}
+		}
+		// 准备事务信息，将当前事务绑定到当前线程
+		return prepareTransactionInfo(tm, txAttr, joinpointIdentification, status);
+	}
+
+</code></pre>
+
+<p>这部分代码的核心逻辑在<code>getTransaction</code>获取事务状态和<code>prepareTransactionInfo</code>准备事务信息</p>
+
+<h3 id="3-2-1-事务执行">3.2.1 事务执行</h3>
+
+<p><code>getTransaction</code>主要是用于处理事务的传播行为，没有事务则开启事务:</p>
+
+<pre><code class="language-java">public final TransactionStatus getTransaction(TransactionDefinition definition) throws TransactionException {
+		// 获取包装的connection连接，可能为空
+		Object transaction = doGetTransaction();
+
+		// Cache debug flag to avoid repeated checks.
+		boolean debugEnabled = logger.isDebugEnabled();
+
+		// 没有事务属性使用默认的属性配置
+		if (definition == null) {
+			// Use defaults if no transaction definition given.
+			definition = new DefaultTransactionDefinition();
+		}
+
+        // 是否已存在事务
+        if (isExistingTransaction(transaction)) {
+            // 如果存在当前事务则处理事务的传播特性
+			// Existing transaction found -&gt; check propagation behavior to find out how to behave.
+			return handleExistingTransaction(definition, transaction, debugEnabled);
+		}
+
+		// Check definition settings for new transaction.
+        // 校验超时时间
+		if (definition.getTimeout() &lt; TransactionDefinition.TIMEOUT_DEFAULT) {
+			throw new InvalidTimeoutException(&quot;Invalid transaction timeout&quot;, definition.getTimeout());
+		}
+
+		// 处理事务的传播级别
+        // 当前事务不存在报异常
+		// No existing transaction found -&gt; check propagation behavior to find out how to proceed.
+		if (definition.getPropagationBehavior() == TransactionDefinition.PROPAGATION_MANDATORY) {
+			throw new IllegalTransactionStateException(
+					&quot;No existing transaction found for transaction marked with propagation 'mandatory'&quot;);
+		}
+		else if (definition.getPropagationBehavior() == TransactionDefinition.PROPAGATION_REQUIRED ||
+				definition.getPropagationBehavior() == TransactionDefinition.PROPAGATION_REQUIRES_NEW ||
+			definition.getPropagationBehavior() == TransactionDefinition.PROPAGATION_NESTED) {
+			// 挂起
+		    SuspendedResourcesHolder suspendedResources = suspend(null);
+			if (debugEnabled) {
+				logger.debug(&quot;Creating new transaction with name [&quot; + definition.getName() + &quot;]: &quot; + definition);
+			}
+			try {
+				boolean newSynchronization = (getTransactionSynchronization() != SYNCHRONIZATION_NEVER);
+				// 创建事务状态对象
+				DefaultTransactionStatus status = newTransactionStatus(
+						definition, transaction, true, newSynchronization, debugEnabled, suspendedResources);
+				// 创建一个事务
+				doBegin(transaction, definition);
+				prepareSynchronization(status, definition);
+				return status;
+			}
+			catch (RuntimeException ex) {
+			    // 还原事务挂起前的状态
+				resume(null, suspendedResources);
+				throw ex;
+			}
+			catch (Error err) {
+				resume(null, suspendedResources);
+				throw err;
+			}
+		}
+		else {
+		    // 创建一个空事务
+			// Create &quot;empty&quot; transaction: no actual transaction, but potentially synchronization.
+			boolean newSynchronization = (getTransactionSynchronization() == SYNCHRONIZATION_ALWAYS);
+			return prepareTransactionStatus(definition, null, true, newSynchronization, debugEnabled, null);
+		}
+	}
+
+</code></pre>
+
+<p>从这里可以得出结论:</p>
+
+<p><strong>是否存在事务指的是在当前线程、当前数据源(DataSource)中是否存在处于活动状态的事务</strong>。</p>
+
+<h3 id="3-2-2-事务不存在创建事务">3.2.2 事务不存在创建事务</h3>
+
+<blockquote>
+<p>流程: 挂起  &ndash;&gt; 创建一个事务 &ndash;&gt; 初始化事务同步器 &ndash;&gt; 包装返回事务状态</p>
+</blockquote>
+
+<ul>
+<li>1 挂起</li>
+</ul>
+
+<pre><code class="language-java">
+protected final SuspendedResourcesHolder suspend(Object transaction) throws TransactionException {
+		if (TransactionSynchronizationManager.isSynchronizationActive()) {
+		    // 挂起同步器并清空本地线程的同步器
+			List&lt;TransactionSynchronization&gt; suspendedSynchronizations = doSuspendSynchronization();
+			try {
+				Object suspendedResources = null;
+        // 如果存在事务
+				if (transaction != null) {
+				    // 挂起事务，清除本地数据库连接缓存
+					suspendedResources = doSuspend(transaction);
+				}
+				String name = TransactionSynchronizationManager.getCurrentTransactionName();
+				TransactionSynchronizationManager.setCurrentTransactionName(null);
+				boolean readOnly = TransactionSynchronizationManager.isCurrentTransactionReadOnly();
+				TransactionSynchronizationManager.setCurrentTransactionReadOnly(false);
+				Integer isolationLevel = TransactionSynchronizationManager.getCurrentTransactionIsolationLevel();
+				TransactionSynchronizationManager.setCurrentTransactionIsolationLevel(null);
+				boolean wasActive = TransactionSynchronizationManager.isActualTransactionActive();
+				TransactionSynchronizationManager.setActualTransactionActive(false);
+				return new SuspendedResourcesHolder(
+						suspendedResources, suspendedSynchronizations, name, readOnly, isolationLevel, wasActive);
+			}
+			catch (RuntimeException ex) {
+				// doSuspend failed - original transaction is still active...
+                // 挂起失败还原之前的同步器
+				doResumeSynchronization(suspendedSynchronizations);
+				throw ex;
+			}
+			catch (Error err) {
+				// doSuspend failed - original transaction is still active...
+				doResumeSynchronization(suspendedSynchronizations);
+				throw err;
+			}
+		}
+		else if (transaction != null) {
+			// Transaction active but no synchronization active.
+			Object suspendedResources = doSuspend(transaction);
+			return new SuspendedResourcesHolder(suspendedResources);
+		}
+		else {
+			// Neither transaction nor synchronization active.
+			return null;
+		}
+	}
+
+
+</code></pre>
+
+<p>主要是清空基于<strong>ThreadLocal</strong>的本地线程绑定的事务信息，并将清空的事务信息存入<strong>SuspendedResourcesHolder</strong>挂起资源对象中返回</p>
+
+<ul>
+<li>2 创建一个事务</li>
+</ul>
+
+<pre><code class="language-java">
+	protected void doBegin(Object transaction, TransactionDefinition definition) {
+		//此时，txObject不为null，只是其核心的ConnectHolder属性为null
+		DataSourceTransactionObject txObject = (DataSourceTransactionObject) transaction;
+		Connection con = null;
+
+		try {
+			if (txObject.getConnectionHolder() == null ||
+					txObject.getConnectionHolder().isSynchronizedWithTransaction()) {
+			    // 获取数据库新连接
+				Connection newCon = this.dataSource.getConnection();
+				if (logger.isDebugEnabled()) {
+					logger.debug(&quot;Acquired Connection [&quot; + newCon + &quot;] for JDBC transaction&quot;);
+				}
+                // 可以看出ConnectionHolder是对Connection的包装
+				txObject.setConnectionHolder(new ConnectionHolder(newCon), true);
+			}
+
+			txObject.getConnectionHolder().setSynchronizedWithTransaction(true);
+			con = txObject.getConnectionHolder().getConnection();
+            //设置是否只读和隔离级别
+            Integer previousIsolationLevel = DataSourceUtils.prepareConnectionForTransaction(con, definition);
+			txObject.setPreviousIsolationLevel(previousIsolationLevel);
+            // 将自动提交设置为false
+			if (con.getAutoCommit()) {
+				txObject.setMustRestoreAutoCommit(true);
+				if (logger.isDebugEnabled()) {
+					logger.debug(&quot;Switching JDBC Connection [&quot; + con + &quot;] to manual commit&quot;);
+				}
+				con.setAutoCommit(false);
+			}
+			// 设置事务为存活状态
+			txObject.getConnectionHolder().setTransactionActive(true);
+			// 设置超时时间点
+			int timeout = determineTimeout(definition);
+			if (timeout != TransactionDefinition.TIMEOUT_DEFAULT) {
+				txObject.getConnectionHolder().setTimeoutInSeconds(timeout);
+			}
+
+			// Bind the session holder to the thread.
+            // 绑定事务属性到本地数据源
+			if (txObject.isNewConnectionHolder()) {
+				TransactionSynchronizationManager.bindResource(getDataSource(), txObject.getConnectionHolder());
+			}
+		}
+
+		catch (Throwable ex) {
+		    // 如果是新事务则释放连接
+			if (txObject.isNewConnectionHolder()) {
+				DataSourceUtils.releaseConnection(con, this.dataSource);
+				txObject.setConnectionHolder(null, false);
+			}
+			throw new CannotCreateTransactionException(&quot;Could not open JDBC Connection for transaction&quot;, ex);
+		}
+	}
+
+
+</code></pre>
+
+<p>上述创建事务主要逻辑：</p>
+
+<blockquote>
+<p>1 创建一个新连接</p>
+
+<p>2 设置隔离级别和是否只读</p>
+
+<p>3 设置超时时间和手动提交</p>
+
+<p>4 绑定事务数据源到本地线程</p>
+
+<p>5 异常释放连接</p>
+</blockquote>
+
+<p>逻辑很清晰，为了connection数据源的创建并绑定到本地线程</p>
+
+<ul>
+<li>3 初始化事务同步器</li>
+</ul>
+
+<pre><code class="language-java">
+	protected void prepareSynchronization(DefaultTransactionStatus status, TransactionDefinition definition) {
+		if (status.isNewSynchronization()) {
+			TransactionSynchronizationManager.setActualTransactionActive(status.hasTransaction());
+			TransactionSynchronizationManager.setCurrentTransactionIsolationLevel(
+					(definition.getIsolationLevel() != TransactionDefinition.ISOLATION_DEFAULT) ?
+							definition.getIsolationLevel() : null);
+			TransactionSynchronizationManager.setCurrentTransactionReadOnly(definition.isReadOnly());
+			TransactionSynchronizationManager.setCurrentTransactionName(definition.getName());
+			TransactionSynchronizationManager.initSynchronization();
+		}
+	}
+
+</code></pre>
+
+<p>将要将事务的存活状态，隔离级别，是否只读的信息绑定到本地线程，并初始化同步器</p>
+
+<ul>
+<li>4  异常还原事务信息</li>
+</ul>
+
+<pre><code class="language-java">	protected final void resume(Object transaction, SuspendedResourcesHolder resourcesHolder)
+			throws TransactionException {
+
+		if (resourcesHolder != null) {
+			Object suspendedResources = resourcesHolder.suspendedResources;
+			if (suspendedResources != null) {
+				doResume(transaction, suspendedResources);
+			}
+			List&lt;TransactionSynchronization&gt; suspendedSynchronizations = resourcesHolder.suspendedSynchronizations;
+			if (suspendedSynchronizations != null) {
+				TransactionSynchronizationManager.setActualTransactionActive(resourcesHolder.wasActive);
+				TransactionSynchronizationManager.setCurrentTransactionIsolationLevel(resourcesHolder.isolationLevel);
+				TransactionSynchronizationManager.setCurrentTransactionReadOnly(resourcesHolder.readOnly);
+				TransactionSynchronizationManager.setCurrentTransactionName(resourcesHolder.name);
+				doResumeSynchronization(suspendedSynchronizations);
+			}
+		}
+	}
+
+</code></pre>
+
+<p>异常情况主要是重新将当前线程绑定到上一个事务的信息</p>
+
+<h3 id="3-2-3-事务已存在传播事务">3.2.3 事务已存在传播事务</h3>
+
+<p>如果检测到已存在事务，则需要处理事务的传播特性，具体看<code>AbstractPlatformTransactionManager.handleExistingTransaction</code>方法:</p>
+
+<ul>
+<li>1 PROPAGATION_NEVER</li>
+</ul>
+
+<p>即当前方法需在非事务环境下执行，如果有事务存在，则抛出异常:</p>
+
+<pre><code class="language-java">if (definition.getPropagationBehavior() == TransactionDefinition.PROPAGATION_NEVER) {
+    throw new IllegalTransactionStateException(
+        &quot;Existing transaction found for transaction marked with propagation 'never'&quot;);
+}
+</code></pre>
+
+<ul>
+<li>2 PROPAGATION_NOT_SUPPORTED</li>
+</ul>
+
+<p>如果有事务存在，那么将事务挂起:</p>
+
+<pre><code class="language-java">if (definition.getPropagationBehavior() == TransactionDefinition.PROPAGATION_NOT_SUPPORTED) {
+    Object suspendedResources = suspend(transaction);
+    boolean newSynchronization = (getTransactionSynchronization() == SYNCHRONIZATION_ALWAYS);
+    return prepareTransactionStatus(
+        definition, null, false, newSynchronization, debugEnabled, suspendedResources);
+}
+</code></pre>
+
+<p>事务挂起<code>suspend</code>方法上面已分析，最终调用<code>TransactionSynchronizationManager.doUnbindResource</code>:</p>
+
+<pre><code class="language-java">private static Object doUnbindResource(Object actualKey) {
+    Map&lt;Object, Object&gt; map = resources.get();
+    if (map == null) {
+        return null;
+    }
+    Object value = map.remove(actualKey);
+    // Remove entire ThreadLocal if empty...
+    if (map.isEmpty()) {
+        resources.remove();
+    }
+    // Transparently suppress a ResourceHolder that was marked as void...
+    if (value instanceof ResourceHolder &amp;&amp; ((ResourceHolder) value).isVoid()) {
+        value = null;
+    }
+    return value;
+}
+</code></pre>
+
+<p>可以看出，事务挂起做了移除当前线程、数据源活动事务对象的过程</p>
+
+<ul>
+<li>3 PROPAGATION_REQUIRES_NEW</li>
+</ul>
+
+<p>​     挂起当前事务，并创建一个新事务</p>
+
+<pre><code class="language-java">	// 挂起当前活动事务并创建新事务的过程
+		if (definition.getPropagationBehavior() == TransactionDefinition.PROPAGATION_REQUIRES_NEW) {
+			if (debugEnabled) {
+				logger.debug(&quot;Suspending current transaction, creating new transaction with name [&quot; +
+						definition.getName() + &quot;]&quot;);
+			}
+			SuspendedResourcesHolder suspendedResources = suspend(transaction);
+			try {
+				boolean newSynchronization = (getTransactionSynchronization() != SYNCHRONIZATION_NEVER);
+				DefaultTransactionStatus status = newTransactionStatus(
+						definition, transaction, true, newSynchronization, debugEnabled, suspendedResources);
+				// 开始新事务
+				doBegin(transaction, definition);
+			    // 初始化事务同步器
+				prepareSynchronization(status, definition);
+				return status;
+			}
+			catch (RuntimeException beginEx) {
+			    // 还原挂起的事务
+				resumeAfterBeginException(transaction, suspendedResources, beginEx);
+				throw beginEx;
+			}
+			catch (Error beginErr) {
+				resumeAfterBeginException(transaction, suspendedResources, beginErr);
+				throw beginErr;
+			}
+		}
+		
+</code></pre>
+
+<p>可以看出，这部分逻辑和创建新事务基本相同</p>
+
+<ul>
+<li>4 PROPAGATION_NESTED</li>
+</ul>
+
+<blockquote>
+<p>开始一个 嵌套的事务,  它是已经存在事务的一个真正的子事务. 嵌套事务开始执行时,  它将取得一个 savepoint. 如果这个嵌套事务失败, 我们将回滚到此 savepoint. 嵌套事务是外部事务的一部分, 只有外部事务结束后它才会被提交.</p>
+</blockquote>
+
+<p>具体代码逻辑:</p>
+
+<pre><code class="language-java">	// 嵌套事务
+		if (definition.getPropagationBehavior() == TransactionDefinition.PROPAGATION_NESTED) {
+			if (!isNestedTransactionAllowed()) {
+				throw new NestedTransactionNotSupportedException(
+						&quot;Transaction manager does not allow nested transactions by default - &quot; +
+						&quot;specify 'nestedTransactionAllowed' property with value 'true'&quot;);
+			}
+			if (debugEnabled) {
+				logger.debug(&quot;Creating nested transaction with name [&quot; + definition.getName() + &quot;]&quot;);
+			}
+			// 是否使用savepoint
+			if (useSavepointForNestedTransaction()) {
+				// Create savepoint within existing Spring-managed transaction,
+				// through the SavepointManager API implemented by TransactionStatus.
+				// Usually uses JDBC 3.0 savepoints. Never activates Spring synchronization.
+				DefaultTransactionStatus status =
+						prepareTransactionStatus(definition, transaction, false, false, debugEnabled, null);
+				status.createAndHoldSavepoint();
+				return status;
+			}
+			else {
+				// Nested transaction through nested begin and commit/rollback calls.
+				// Usually only for JTA: Spring synchronization might get activated here
+				// in case of a pre-existing JTA transaction.
+				boolean newSynchronization = (getTransactionSynchronization() != SYNCHRONIZATION_NEVER);
+				DefaultTransactionStatus status = newTransactionStatus(
+						definition, transaction, true, newSynchronization, debugEnabled, null);
+				doBegin(transaction, definition);
+				// 初始化事务同步器
+				prepareSynchronization(status, definition);
+				return status;
+			}
+		}
+		
+</code></pre>
+
+<p>嵌套事务如果使用savepoint则会通过数据库本身实现的安全点处理。否则会创建一个新的事务</p>
+
+<h2 id="3-3-绑定事务">3.3 绑定事务</h2>
+
+<p>通过<code>TransactionAspectSupport.prepareTransactionInfo</code>准备事务信息，将当前事务绑定到当前线程：</p>
+
+<pre><code class="language-java">	protected TransactionInfo prepareTransactionInfo(PlatformTransactionManager tm,
+			TransactionAttribute txAttr, String joinpointIdentification, TransactionStatus status) {
+
+		TransactionInfo txInfo = new TransactionInfo(tm, txAttr, joinpointIdentification);
+		if (txAttr != null) {
+			// We need a transaction for this method
+			if (logger.isTraceEnabled()) {
+				logger.trace(&quot;Getting transaction for [&quot; + txInfo.getJoinpointIdentification() + &quot;]&quot;);
+			}
+			// The transaction manager will flag an error if an incompatible tx already exists
+			txInfo.newTransactionStatus(status);
+		}
+		else {
+		
+			if (logger.isTraceEnabled())
+				logger.trace(&quot;Don't need to create transaction for [&quot; + joinpointIdentification +
+						&quot;]: This method isn't transactional.&quot;);
+		}
+
+    // 保存上一个事务信息和当前事务信息到对象中
+		txInfo.bindToThread();
+		return txInfo;
+	}
+
+	private void bindToThread() {
+			// Expose current TransactionStatus, preserving any existing TransactionStatus
+			// for restoration after this transaction is complete.
+			this.oldTransactionInfo = transactionInfoHolder.get();
+			transactionInfoHolder.set(this);
+		}
+
+
+</code></pre>
+
+<p>意图很明显，就是将当前事务绑定到本地线程，同时将上一级的事务存放到<code>oldTransactionInfo</code>属性中，为什么要这么做呢，这个请看之后的事务提交部分的解析</p>
+
+<h1 id="4-reference">4 Reference</h1>
+
+<p><a href="http://www.iteye.com/topic/35907">spring 嵌套事务分析</a></p>
+
+
+        </div>
+
+    </div>
+
+    
+    <nav id="article-nav">
+
+        
+        <div id="article-nav-newer" class="article-nav-title">
+            <a href="https://nicky-chin.cn/2020/05/19/spring-transaction-commit/">
+                Transaction源码解析之事务提交与回滚
+            </a>
+        </div>
+        
+
+        
+        <div id="article-nav-older" class="article-nav-title">
+            <a href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/">
+                Transaction源码解析之事务配置解析
+            </a>
+        </div>
+        
+
+    </nav>
+    
+
+
+</article>
+
+<div id="toc" class="toc-article" >
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc">
+        <nav id="TableOfContents">
+<ul>
+<li><a href="#1-调试源码">1 调试源码</a></li>
+<li><a href="#2-事务执行流程">2 事务执行流程</a>
+<ul>
+<li><a href="#2-1-cglibaopproxy动态代理">2.1 CglibAopProxy动态代理</a></li>
+<li><a href="#2-2-获取拦截器">2.2 获取拦截器</a></li>
+<li><a href="#2-3-拦截器链执行">2.3 拦截器链执行</a></li>
+</ul></li>
+<li><a href="#3-事务拦截器">3 事务拦截器</a>
+<ul>
+<li><a href="#3-1-事务基础组件">3.1 事务基础组件</a>
+<ul>
+<li><a href="#3-1-1-事务属性">3.1.1 事务属性</a></li>
+<li><a href="#3-1-2-事务管理器">3.1.2 事务管理器</a></li>
+<li><a href="#3-1-3-数据源-datasource">3.1.3 数据源 DataSource</a></li>
+</ul></li>
+<li><a href="#3-2-事务的开启及传播">3.2 事务的开启及传播</a>
+<ul>
+<li><a href="#3-2-1-事务执行">3.2.1 事务执行</a></li>
+<li><a href="#3-2-2-事务不存在创建事务">3.2.2 事务不存在创建事务</a></li>
+<li><a href="#3-2-3-事务已存在传播事务">3.2.3 事务已存在传播事务</a></li>
+</ul></li>
+<li><a href="#3-3-绑定事务">3.3 绑定事务</a></li>
+</ul></li>
+<li><a href="#4-reference">4 Reference</a></li>
+</ul>
+</nav>
+    </ol>
+</div>
+<style>
+    
+    .left-col .switch-btn {
+        display: none;
+    }
+
+    .left-col .switch-area {
+        display: none;
+    }
+    
+
+
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录" >
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function () {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    
+    
+    
+        
+    
+</script>
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a class="bds_qzone" data-cmd="qzone" href="#" title="分享到 QQ 空间"></a>
+        <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+        <a class="bds_count" data-cmd="count"></a>
+        <a class="bds_more" data-cmd="more"></a>
+
+    </div>
+    <script>
+        window._bd_share_config = {
+            "common": {
+                "bdSnsKey": {},
+                "bdText": "",
+                "bdMini": "2",
+                "bdMiniList": false,
+                "bdPic": "",
+                "bdStyle": "0",
+                "bdSize": "24"
+            }, "share": {}
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+</div>
+
+
+
+
+<div style="margin-left: 30px;margin-right: 30px;background: white;padding-left: 30px;padding-right: 30px">
+    <div class="comments">
+        <h3>COMMENTS</h3>
+        <script type="text/javascript">
+            (function() {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                dsq.setAttribute('data-timestamp', +new Date());
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <div id="disqus_thread"></div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="scroll" id="post-nav-button">
+
+    
+    <a href="https://nicky-chin.cn/2020/05/19/spring-transaction-commit/" title="上一篇: Transaction源码解析之事务提交与回滚">
+        <i class="fa fa-angle-left"></i>
+    </a>
+    
+
+
+    <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+
+    
+    <a href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/" title="下一篇: Transaction源码解析之事务配置解析">
+        <i class="fa fa-angle-right"></i>
+    </a>
+    
+
+</div>
+
+
+<ul class="post-list toc-article">
+    
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/19/spring-transaction-commit/" target="_blank">Transaction源码解析之事务提交与回滚</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/" target="_blank">Transaction源码解析之事务预处理</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/" target="_blank">Transaction源码解析之事务配置解析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/" target="_blank">生产-消费模型之虚假唤醒</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/" target="_blank">Spring实例化bean之源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/03/02/float-precision/" target="_blank">float浮点小数的设计及精度问题</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/07/11/mysql-page-detail/" target="_blank">MySQL中的page页详解</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/05/03/apt_lombok_implement/" target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/02/15/filter/" target="_blank">实际项目运用之Filter模式（过滤器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/12/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/11/17/btree-info/" target="_blank">数据结构之BTree和B&#43;Tree(多路平衡查找树 )</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/10/15/id-redis/" target="_blank">分布式全局序列ID方案之Redis优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/25/id-flicker/" target="_blank">分布式全局序列ID方案之Flicker优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/19/id-snowflake/" target="_blank">分布式全局序列ID方案之Snowflake算法</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/25/spring-springmvc/" target="_blank">Spring之动手实现SpringMVC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/22/java-methodhandler/" target="_blank">Java反射优化之方法句柄</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/16/spring-bean-ioc/" target="_blank">Spring之动手实现IOC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/12/spring-bean-lifecycle/" target="_blank">Spring之Bean加载-解析-生命周期</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/09/aqs-condition/" target="_blank">并发基础之Condition(等待队列)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/07/cache-redis-optimize/" target="_blank">Redis注意事项及常见优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/04/aqs_chapter02/" target="_blank">并发基础之AQS同步器（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/01/cache-redis-slowlog/" target="_blank">Redis之慢查询日志</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/31/aqs_chapter01/" target="_blank">并发基础之AQS同步器（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/16/junit-codeanalysis/" target="_blank">初窥门径之JUnit源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/13/java-securitymanager/" target="_blank">Java安全之SecurityManager</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/05/spi-introduction/" target="_blank">框架基础之SPI机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/29/responsibility-chain/" target="_blank">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/25/jndi-introdution/" target="_blank">JNDI知识摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/17/architect/" target="_blank">技术图谱</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/13/distribution-knowledge/" target="_blank">分布式项目知识要点</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/07/singletion/" target="_blank">设计模式之单例模式终极版【克隆-序列化-反射】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/02/fail-fast-safe/" target="_blank">Fail-Fast和Fail-Safe机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/27/adapter/" target="_blank">实际项目运用之Adapter模式（适配器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/18/template/" target="_blank">设计模式之Template模式（模版模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/14/synchronized-principle/" target="_blank">synchronized实现原理及锁优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/13/juc-tree-info/" target="_blank">JUC知识点总结</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/06/strategy/" target="_blank">实际项目运用之Strategy模式（策略模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/04/volatile-feature/" target="_blank">volatile关键字原理实现及应用</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/28/high-event/" target="_blank">MYSQL高级特性之【Event事件】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/27/process-fun/" target="_blank">MYSQL高级特性之【存储过程与函数】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/25/cap-base-flp/" target="_blank">分布式之【CAP理论、BASE理论 、FLP不可能定理】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/21/string-builder-question/" target="_blank">字符串拼接的疑惑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/17/exception-introduce/" target="_blank">Java异常处理-原理及优化建议</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/03/thread-jmm-happens-before/" target="_blank">java内存模型之[JMM][重排序][happens-before]</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/28/decorator/" target="_blank">实际项目运用之Decorator模式（装饰器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/26/interface-idempotency/" target="_blank">接口设计的幂等性考虑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/21/binary-operation/" target="_blank">java中位运算技巧</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/20/classloader-chapter02/" target="_blank">ClassLoader类加载分析（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/13/introspector/" target="_blank">Java 内省(Introspector)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/08/classloader-chapter01/" target="_blank">ClassLoader类加载分析（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/19/builder/" target="_blank">设计模式之builder模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/07/builder-factory/" target="_blank">设计模式之factory模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/11/03/recursive-lock/" target="_blank">可重入锁</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/09/12/show-global-status/" target="_blank">库级优化之SHOW GLOBAL STATUS</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/06/13/optimize-picture/" target="_blank">后端开发需要了解的mysql优化方向</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/16/thread-communication/" target="_blank">多线程之线程通信摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/07/design-rule/" target="_blank">数据库设计三范式和反范式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/info/" target="_blank">联系&amp;留言</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/open_source/" target="_blank">开源项目</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/tools/" target="_blank">在线工具</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/01/23/externalizable-interface/" target="_blank">自定义序列化之Externalizable接口</a></li>
+    
+</ul>
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    $(".post-list").addClass("toc-article");
+    $(".post-list-item a").attr("target", "_blank");
+    $("#post-nav-button > a:nth-child(2)").click(function () {
+        $(".fa-bars, .fa-times").toggle();
+        $(".post-list").toggle(300);
+        if ($(".toc").length > 0) {
+            $("#toc, #tocButton").toggle(200, function () {
+                if ($(".switch-area").is(":visible")) {
+                    $("#toc, .switch-btn, .switch-area").toggle();
+                    $("#tocButton").attr("value", valueHide);
+                }
+            })
+        }
+        else {
+            $(".switch-btn, .switch-area").fadeToggle(300);
+        }
+    })
+</script>
+
+
+<script>
+
+</script>
+
+
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2021 nicky_chin
+            </div>
+            <div class="footer-right">
+                <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>
+            </div>
+        </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chin.cn/js/GithubRepoWidget.js"></script>
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  10 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-119892182-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>

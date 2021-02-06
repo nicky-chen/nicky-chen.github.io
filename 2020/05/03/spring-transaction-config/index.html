@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  true ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+
+    <title>Transaction源码解析之事务配置解析</title>
+    <link rel="icon" href="https://nicky-chin.cn/img/favicon.ico">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
+
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
+
+    
+    
+    <link rel="stylesheet" href="https://nicky-chin.cn/highlight/styles/darcula.css">
+    <script src="https://nicky-chin.cn/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chin.cn/" class="profilepic">
+            <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chin.cn/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color1">Junit</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color1">Redis</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color4">Spring-Base</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color2">Spring-Transaction</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">优化</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color4">分布式id方案</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color2">创建型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color2">多线程</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color2">思维导图</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color4">数据结构</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">框架基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color2">源码</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color3">理论</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color4">结构型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color2">行为型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chin.cn/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chin.cn/" class="profilepic">
+                <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+            <article id="post-js-android" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/" class="article-date">
+            <time datetime="2020-05-03 11:18:15 &#43;0800 CST" itemprop="datePublished">2020-05-03</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 class="article-title" itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/">Transaction源码解析之事务配置解析</a>
+            </h1>
+
+
+        </header>
+
+        <div class="article-info article-info-post">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="article-category-link" href="https://nicky-chin.cn/categories/spring/" style="font-size: 12px;">spring</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/spring-transaction/"
+                           style="font-size: 12px;">spring-transaction</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="article-entry" itemprop="articleBody">
+
+            
+
+<h1 id="1-事务配置">1 事务配置</h1>
+
+<p>关于Spring的事务，大家每天都会遇见或者用到，为了更好的理解Transaction的原理机制，我们从源码角度来解析，本文的调试源码基于<strong>Spring-3.2.x版本</strong>进行调试。</p>
+
+<h2 id="1-1-配置">1.1 配置</h2>
+
+<p>配置XML文件<code>annotationTransactionNamespaceHandlerTests.xml</code></p>
+
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+	   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+	   xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;
+		 xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+	   xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;
+	   xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd&quot;&gt;
+
+	&lt;tx:annotation-driven/&gt;
+
+	&lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.tests.transaction.CallCountingTransactionManager&quot;/&gt;
+
+	&lt;bean id=&quot;testBean&quot;
+		  class=&quot;org.springframework.transaction.annotation.AnnotationTransactionNamespaceHandlerTests$TransactionalTestBean&quot;/&gt;
+		  
+	&lt;context:mbean-export/&gt;
+	
+</code></pre>
+
+<p><strong>TransactionalTestBean类</strong></p>
+
+<pre><code>	@Service
+	@ManagedResource(&quot;test:type=TestBean&quot;)
+	public static class TransactionalTestBean {
+
+		@Transactional(readOnly = true)
+		public Collection&lt;?&gt; findAllFoos() {
+			return null;
+		}
+
+		public void saveFoo() {
+		}
+
+		@Transactional(&quot;qualifiedTransactionManager&quot;)
+		public void saveQualifiedFoo() {
+		}
+
+		@Transactional
+		public void exceptional(Throwable t) throws Throwable {
+			throw t;
+		}
+
+		@ManagedOperation
+		public String doSomething() {
+			return &quot;done&quot;;
+		}
+
+		@Transactional
+		protected void annotationsOnProtectedAreIgnored() {
+		}
+	}
+
+</code></pre>
+
+<p>上面XML配置主要是开启事务驱动，然后配置事务管理器和带有<code>@Transaction</code>注解的Bean对象</p>
+
+<h2 id="1-2-调试入口">1.2 调试入口</h2>
+
+<pre><code>public class AnnotationTransactionNamespaceHandlerTests extends TestCase {
+
+	private ConfigurableApplicationContext context;
+
+	@Override
+	public void setUp() {
+		this.context = new ClassPathXmlApplicationContext(
+				&quot;org/springframework/transaction/annotation/annotationTransactionNamespaceHandlerTests.xml&quot;);
+	}
+
+	@Override
+	protected void tearDown() {
+		this.context.close();
+	}
+
+	public void testIsProxy() throws Exception {
+		TransactionalTestBean bean = getTestBean();
+		assertTrue(&quot;testBean is not a proxy&quot;, AopUtils.isAopProxy(bean));
+		assertEquals(&quot;Should not have any started transactions&quot;, 0, ptm.begun);
+		bean.findAllFoos();
+		assertEquals(&quot;Should have 1 started transaction&quot;, 1, ptm.begun);
+	}
+	}
+
+</code></pre>
+
+<p>通过调用<code>testIsProxy</code>方法调试事务流程</p>
+
+<h1 id="2-事务解析">2 事务解析</h1>
+
+<h2 id="2-1-事务namespacehandler解析">2.1 事务NameSpaceHandler解析</h2>
+
+<h3 id="2-1-1-加载事务驱动">2.1.1 加载事务驱动</h3>
+
+<p>在加载XML文件的时候，会通过<strong>XmlBeanDefinitionReader</strong>的<code>loadBeanDefinitions</code>方法来加载配置。</p>
+
+<blockquote>
+<p><a href="tx:annotation-driven/">tx:annotation-driven/</a></p>
+</blockquote>
+
+<p>解析到改行的时候会调用<strong>BeanDefinitionParserDelegate</strong>的<code>parseCustomElement</code>方法来处理自定义<strong>命名空间处理器</strong>。</p>
+
+<pre><code>	public BeanDefinition parseCustomElement(Element ele, BeanDefinition containingBd) {
+        // 获取 namespaceUri
+        String namespaceUri = getNamespaceURI(ele);
+        // 根据 namespaceUri 获取相应的 Handler
+        NamespaceHandler handler = this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);
+		if (handler == null) {
+			error(&quot;Unable to locate Spring NamespaceHandler for XML schema namespace [&quot; + namespaceUri + &quot;]&quot;, ele);
+			return null;
+		}
+        // 调用自定义的 Handler 处理
+        return handler.parse(ele, new ParserContext(this.readerContext, this, containingBd));
+	}
+
+
+</code></pre>
+
+<p>通过<strong>spring.handlers</strong>的定义配置：</p>
+
+<blockquote>
+<p>http://www.springframework.org/schema/tx=org.springframework.transaction.config.TxNamespaceHandler</p>
+</blockquote>
+
+<p>找到对应的处理器<strong>TxNamespaceHandler</strong>，然后进行解析。关于<a href="https://examples.javacodegeeks.com/enterprise-java/spring/spring-namespacehandler-example/">Spring扩展机制NameHandler可以找文章了解</a></p>
+
+<h3 id="2-1-2-注册初始化处理器">2.1.2 注册初始化处理器</h3>
+
+<p>初始化事务处理器<code>init</code>方法</p>
+
+<pre><code>public class TxNamespaceHandler extends NamespaceHandlerSupport {
+
+	static final String TRANSACTION_MANAGER_ATTRIBUTE = &quot;transaction-manager&quot;;
+
+	static final String DEFAULT_TRANSACTION_MANAGER_BEAN_NAME = &quot;transactionManager&quot;;
+
+
+	static String getTransactionManagerName(Element element) {
+		return (element.hasAttribute(TRANSACTION_MANAGER_ATTRIBUTE) ?
+				element.getAttribute(TRANSACTION_MANAGER_ATTRIBUTE) : DEFAULT_TRANSACTION_MANAGER_BEAN_NAME);
+	}
+
+
+	public void init() {
+		registerBeanDefinitionParser(&quot;advice&quot;, new TxAdviceBeanDefinitionParser());
+		registerBeanDefinitionParser(&quot;annotation-driven&quot;, new AnnotationDrivenBeanDefinitionParser());
+		registerBeanDefinitionParser(&quot;jta-transaction-manager&quot;, new JtaTransactionManagerBeanDefinitionParser());
+	}
+
+}
+
+
+</code></pre>
+
+<p>上面注册的三个解析器</p>
+
+<blockquote>
+<p>TxAdviceBeanDefinitionParser  : 用于处理<a href="tx:advice/">tx:advice/</a>标签全局定义的事务</p>
+
+<p>AnnotationDrivenBeanDefinitionParser : 用于处理<a href="tx:annotation-driven/">tx:annotation-driven/</a>标签注解类型的事务</p>
+
+<p>JtaTransactionManagerBeanDefinitionParser : 用于处理JTA事务</p>
+</blockquote>
+
+<p>这里我们关注<strong>AnnotationDrivenBeanDefinitionParser</strong>的解析，调用<code>parse</code>方法</p>
+
+<pre><code>	public BeanDefinition parse(Element element, ParserContext parserContext) {
+		String mode = element.getAttribute(&quot;mode&quot;);
+		if (&quot;aspectj&quot;.equals(mode)) {
+			// mode=&quot;aspectj&quot;
+			registerTransactionAspect(element, parserContext);
+		}
+		else {
+			// mode=&quot;proxy&quot;
+			AopAutoProxyConfigurer.configureAutoProxyCreator(element, parserContext);
+		}
+		return null;
+	}
+
+</code></pre>
+
+<p>如果是proxy代理模式则会调用<code>configureAutoProxyCreator</code>方法：</p>
+
+<pre><code>	private static class AopAutoProxyConfigurer {
+
+		public static void configureAutoProxyCreator(Element element, ParserContext parserContext) {
+			AopNamespaceUtils.registerAutoProxyCreatorIfNecessary(parserContext, element);
+
+			String txAdvisorBeanName = TransactionManagementConfigUtils.TRANSACTION_ADVISOR_BEAN_NAME;
+			if (!parserContext.getRegistry().containsBeanDefinition(txAdvisorBeanName)) {
+				Object eleSource = parserContext.extractSource(element);
+
+				// Create the TransactionAttributeSource definition.
+				// 创建注册TransactionAttributeSource的bean
+				RootBeanDefinition sourceDef = new RootBeanDefinition(
+						&quot;org.springframework.transaction.annotation.AnnotationTransactionAttributeSource&quot;);
+				sourceDef.setSource(eleSource);
+				sourceDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+				String sourceName = parserContext.getReaderContext().registerWithGeneratedName(sourceDef);
+
+				// Create the TransactionInterceptor definition.
+                // 创建TransactionInterceptor的bean
+				RootBeanDefinition interceptorDef = new RootBeanDefinition(TransactionInterceptor.class);
+				interceptorDef.setSource(eleSource);
+				interceptorDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+				registerTransactionManager(element, interceptorDef);
+				interceptorDef.getPropertyValues().add(&quot;transactionAttributeSource&quot;, new RuntimeBeanReference(sourceName));
+				String interceptorName = parserContext.getReaderContext().registerWithGeneratedName(interceptorDef);
+
+				// Create the TransactionAttributeSourceAdvisor definition.
+                // 创建BeanFactoryTransactionAttributeSourceAdvisor 的bean
+				RootBeanDefinition advisorDef = new RootBeanDefinition(BeanFactoryTransactionAttributeSourceAdvisor.class);
+				advisorDef.setSource(eleSource);
+				advisorDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+				advisorDef.getPropertyValues().add(&quot;transactionAttributeSource&quot;, new RuntimeBeanReference(sourceName));
+				advisorDef.getPropertyValues().add(&quot;adviceBeanName&quot;, interceptorName);
+				if (element.hasAttribute(&quot;order&quot;)) {
+					advisorDef.getPropertyValues().add(&quot;order&quot;, element.getAttribute(&quot;order&quot;));
+				}
+				parserContext.getRegistry().registerBeanDefinition(txAdvisorBeanName, advisorDef);
+
+				CompositeComponentDefinition compositeDef = new CompositeComponentDefinition(element.getTagName(), eleSource);
+				compositeDef.addNestedComponent(new BeanComponentDefinition(sourceDef, sourceName));
+				compositeDef.addNestedComponent(new BeanComponentDefinition(interceptorDef, interceptorName));
+				compositeDef.addNestedComponent(new BeanComponentDefinition(advisorDef, txAdvisorBeanName));
+				parserContext.registerComponent(compositeDef);
+			}
+		}
+	}
+
+
+</code></pre>
+
+<p>这里的执行流程如下：</p>
+
+<blockquote>
+<ol>
+<li><p>注册代理组件 &ndash;&gt;  InfrastructureAdvisorAutoProxyCreator  &ndash;&gt; 用于创建bean的事务代理类</p></li>
+
+<li><p>创建注册事务属性源的bean  &ndash;&gt; TransactionAttributeSource  &ndash;&gt; 用于解析注解的事务属性</p></li>
+
+<li><p>创建注册事务拦截器的bean &ndash;&gt; TransactionInterceptor &ndash;&gt; 用于拦截事务注解的方法处理</p></li>
+
+<li><p>创建注册事务advisor的bean &ndash;&gt; BeanFactoryTransactionAttributeSourceAdvisor  &ndash;&gt; 用于处理Bean是否需要代理的逻辑</p></li>
+</ol>
+</blockquote>
+
+<h2 id="2-2-bean的事务解析">2.2 Bean的事务解析</h2>
+
+<h3 id="2-2-1-infrastructureadvisorautoproxycreator事务代理类">2.2.1   InfrastructureAdvisorAutoProxyCreator事务代理类</h3>
+
+<ul>
+<li>1 类图
+<img src="https://nicky-chin.cn/media/spring-transaction-config/InfrastructureAdvisorAutoProxyCreator-diagram.png" alt="类图" /></li>
+</ul>
+
+<p>实现了<strong>Aware</strong>和<strong>BeanPostProcessor</strong>这两个类，所以在getBean的时候会用到前置处理器和后置处理器</p>
+
+<p>为包含事务注解的Bean类创建代理的入口位于<em>AbstractAutoProxyCreator.postProcessAfterInitialization</em>:</p>
+
+<pre><code>@Override
+public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    if (bean != null) {
+    		// 获取缓存key
+        Object cacheKey = getCacheKey(bean.getClass(), beanName);
+        // 如果不在map中就根据条件决定是否包装bean对象
+        if (!this.earlyProxyReferences.contains(cacheKey)) {
+            return wrapIfNecessary(bean, beanName, cacheKey);
+        }
+    }
+    return bean;
+}
+</code></pre>
+
+<p><code>wrapIfNecessary</code>核心逻辑:</p>
+
+<pre><code>
+	protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {
+		if (beanName != null &amp;&amp; this.targetSourcedBeans.containsKey(beanName)) {
+			return bean;
+		}
+		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
+			return bean;
+		}
+		// 是否是基础类或者需要跳过的类
+		if (isInfrastructureClass(bean.getClass()) || shouldSkip(bean.getClass(), beanName)) {
+			this.advisedBeans.put(cacheKey, Boolean.FALSE);
+			return bean;
+		}
+
+    // 寻找适用于当前bean的Advisor并创建代理
+		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
+		if (specificInterceptors != DO_NOT_PROXY) {
+			this.advisedBeans.put(cacheKey, Boolean.TRUE);
+			// 创建代理
+			Object proxy = createProxy(bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
+			this.proxyTypes.put(cacheKey, proxy.getClass());
+			return proxy;
+		}
+
+		this.advisedBeans.put(cacheKey, Boolean.FALSE);
+		return bean;
+	}
+
+</code></pre>
+
+<p>当前的bean是否需要创建代理主要就是看<code>getAdvicesAndAdvisorsForBean</code>的方法逻辑</p>
+
+<h3 id="2-2-2-筛选advisor确定是否需要代理">2.2.2  筛选Advisor确定是否需要代理</h3>
+
+<p><strong>AbstractAdvisorAutoProxyCreator</strong>的筛选符合条件的Advisor方法<code>getAdvicesAndAdvisorsForBean</code>,最终</p>
+
+<p>会调用：</p>
+
+<pre><code>	protected List&lt;Advisor&gt; findEligibleAdvisors(Class beanClass, String beanName) {
+	    // 查询Advisor
+		List&lt;Advisor&gt; candidateAdvisors = findCandidateAdvisors();
+		// 筛选符合条件的Advisor
+		List&lt;Advisor&gt; eligibleAdvisors = findAdvisorsThatCanApply(candidateAdvisors, beanClass, beanName);
+		extendAdvisors(eligibleAdvisors);
+		if (!eligibleAdvisors.isEmpty()) {
+		    // 用于对实现了Ordered接口的Advisor进行排序
+			eligibleAdvisors = sortAdvisors(eligibleAdvisors);
+		}
+		return eligibleAdvisors;
+	}
+
+</code></pre>
+
+<p>上述的流程：</p>
+
+<ul>
+<li>findCandidateAdvisors &ndash;&gt; 寻找实现Advisor接口的所有bean</li>
+<li>findAdvisorsThatCanApply &ndash;&gt; 筛选符合条件的Advisor的bean</li>
+<li>extendAdvisors &ndash;&gt; 扩展处理</li>
+<li>sortAdvisors &ndash;&gt; 排序</li>
+</ul>
+
+<p>重点我们需要知道筛选bean的流程<code>findAdvisorsThatCanApply</code>的方法逻辑中的<code>canApply</code>流程：</p>
+
+<pre><code>
+public static boolean canApply(Advisor advisor, Class&lt;?&gt; targetClass, boolean hasIntroductions) {
+		if (advisor instanceof IntroductionAdvisor) {
+		    // 判断advisor是否符合targetClass的切入点操条件
+			return ((IntroductionAdvisor) advisor).getClassFilter().matches(targetClass);
+		}
+		else if (advisor instanceof PointcutAdvisor) {
+			PointcutAdvisor pca = (PointcutAdvisor) advisor;
+			return canApply(pca.getPointcut(), targetClass, hasIntroductions);
+		}
+		else {
+			// It doesn't have a pointcut so we assume it applies.
+			return true;
+		}
+	}
+</code></pre>
+
+<ul>
+<li>循环处理的判断逻辑:
+
+<ul>
+<li>如果<code>Advisor</code>是<code>IntroductionAdvisor</code>，则判断对应的<strong>ClassFilter</strong>的<code>matches</code>方法是否匹配当前bean类</li>
+<li>如果<code>Advisor</code>是<code>PointcutAdvisor</code>，则先通过<strong>ClassFilter</strong>进行类匹配，如果匹配不成功，则通过<code>MethodMatcher</code>的<code>matches</code>方法进行方法匹配，只要bean有一个方法满足，则返回true匹配成功</li>
+</ul></li>
+</ul>
+
+<p>Spring事务相关的Advisor已经在之前<code>TxNamespaceHandler.parse</code>中已经注册过该bean。就是</p>
+
+<p><strong>BeanFactoryTransactionAttributeSourceAdvisor</strong> 这个类，具体的类图如下：</p>
+
+<p><img src="https://nicky-chin.cn/media/spring-transaction-config/BeanFactoryTransactionAttributeSourceAdvisor-diagram.png" alt="类图" /></p>
+
+<p>该类实现了<strong>Advisor</strong>接口，同时也是<strong>PointcutAdvisor</strong>的实现，通过<code>pca.getPointcut()</code>方法获取</p>
+
+<p><strong>Pointcut</strong>对象,具体实现是<strong>TransactionAttributeSourcePointcut</strong>的类</p>
+
+<p><img src="https://nicky-chin.cn/media/spring-transaction-config/TransactionAttributeSourcePointcut-diagram.png" alt="类图" /></p>
+
+<p>在调用<code>pc.getClassFilter().matches(targetClass)</code>改方法，根据具体的实现，返回的永远是true,</p>
+
+<p>所以最终进行方法匹配:</p>
+
+<pre><code>
+	public static boolean canApply(Pointcut pc, Class&lt;?&gt; targetClass, boolean hasIntroductions) {
+		Assert.notNull(pc, &quot;Pointcut must not be null&quot;);
+        //是否Pointcut可以匹配当前类
+        if (!pc.getClassFilter().matches(targetClass)) {
+			return false;
+		}
+
+		MethodMatcher methodMatcher = pc.getMethodMatcher();
+		IntroductionAwareMethodMatcher introductionAwareMethodMatcher = null;
+		if (methodMatcher instanceof IntroductionAwareMethodMatcher) {
+			introductionAwareMethodMatcher = (IntroductionAwareMethodMatcher) methodMatcher;
+		}
+
+		Set&lt;Class&gt; classes = new LinkedHashSet&lt;Class&gt;(ClassUtils.getAllInterfacesForClassAsSet(targetClass));
+		classes.add(targetClass);
+		for (Class&lt;?&gt; clazz : classes) {
+			Method[] methods = clazz.getMethods();
+			for (Method method : methods) {
+			    // 判断给定的方法是否在Pointcut匹配的范围内
+				if ((introductionAwareMethodMatcher != null &amp;&amp;
+						introductionAwareMethodMatcher.matches(method, targetClass, hasIntroductions)) ||
+						methodMatcher.matches(method, targetClass)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+
+
+</code></pre>
+
+<p>上述代码逻辑中，<strong>introductionAwareMethodMatcher</strong>实例对象为空，所以通过<code>methodMatcher.matches(method, targetClass)</code>来匹配合适的方法，具体的实现逻辑如下：</p>
+
+<pre><code>	public boolean matches(Method method, Class targetClass) {
+		// 获取事务属性源
+		TransactionAttributeSource tas = getTransactionAttributeSource();
+		return (tas == null || tas.getTransactionAttribute(method, targetClass) != null);
+	}
+
+</code></pre>
+
+<p>最终会调用<strong>AnnotationTransactionAttributeSource</strong>的<code>computeTransactionAttribute</code>方法来进行匹配:</p>
+
+<pre><code>
+	private TransactionAttribute computeTransactionAttribute(Method method, Class&lt;?&gt; targetClass) {
+		// Don't allow no-public methods as required.
+        // 不允许非public访问权限的方法代理
+		if (allowPublicMethodsOnly() &amp;&amp; !Modifier.isPublic(method.getModifiers())) {
+			return null;
+		}
+
+		// Ignore CGLIB subclasses - introspect the actual user class.
+		Class&lt;?&gt; userClass = ClassUtils.getUserClass(targetClass);
+		// The method may be on an interface, but we need attributes from the target class.
+		// If the target class is null, the method will be unchanged.
+		Method specificMethod = ClassUtils.getMostSpecificMethod(method, userClass);
+		// If we are dealing with method with generic parameters, find the original method.
+        // 如果我们处理的是一个泛型参数的方法，则获取他的桥方法
+		specificMethod = BridgeMethodResolver.findBridgedMethod(specificMethod);
+
+		// First try is the method in the target class.
+        // 首先在方法上获取事务的属性
+		TransactionAttribute txAtt = findTransactionAttribute(specificMethod);
+		if (txAtt != null) {
+			return txAtt;
+		}
+
+		// Second try is the transaction attribute on the target class.
+        // 在类上获取事务的属性
+		txAtt = findTransactionAttribute(specificMethod.getDeclaringClass());
+		if (txAtt != null) {
+			return txAtt;
+		}
+
+		if (specificMethod != method) {
+			// Fallback is to look at the original method.
+			txAtt = findTransactionAttribute(method);
+			if (txAtt != null) {
+				return txAtt;
+			}
+			// Last fallback is the class of the original method.
+			return findTransactionAttribute(method.getDeclaringClass());
+		}
+		return null;
+	}
+
+
+</code></pre>
+
+<p>上述流程主要通过findTransactionAttribut匹配：</p>
+
+<ul>
+<li>1 首先方法上匹配，如果方法上有@Transaction注解则匹配成功，具体会通过<strong>SpringTransactionAnnotationParser</strong>这个解析器处理</li>
+<li>2 其实类匹配，如果类上有@Transaction注解则匹配成功</li>
+<li>3 如果是specificMethod != method，在按上述1和2的流程通过method去匹配</li>
+</ul>
+
+<p><strong>SpringTransactionAnnotationParser</strong>的代码如下：</p>
+
+<pre><code>public class SpringTransactionAnnotationParser implements TransactionAnnotationParser, Serializable {
+
+	public TransactionAttribute parseTransactionAnnotation(AnnotatedElement ae) {
+		Transactional ann = AnnotationUtils.getAnnotation(ae, Transactional.class);
+		if (ann != null) {
+			return parseTransactionAnnotation(ann);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public TransactionAttribute parseTransactionAnnotation(Transactional ann) {
+		RuleBasedTransactionAttribute rbta = new RuleBasedTransactionAttribute();
+		rbta.setPropagationBehavior(ann.propagation().value());
+		rbta.setIsolationLevel(ann.isolation().value());
+		rbta.setTimeout(ann.timeout());
+		rbta.setReadOnly(ann.readOnly());
+		rbta.setQualifier(ann.value());
+		ArrayList&lt;RollbackRuleAttribute&gt; rollBackRules = new ArrayList&lt;RollbackRuleAttribute&gt;();
+		Class[] rbf = ann.rollbackFor();
+        // 回滚规则
+        for (Class rbRule : rbf) {
+			RollbackRuleAttribute rule = new RollbackRuleAttribute(rbRule);
+			rollBackRules.add(rule);
+		}
+		String[] rbfc = ann.rollbackForClassName();
+		for (String rbRule : rbfc) {
+			RollbackRuleAttribute rule = new RollbackRuleAttribute(rbRule);
+			rollBackRules.add(rule);
+		}
+		// 不需要回滚异常的规则
+		Class[] nrbf = ann.noRollbackFor();
+		for (Class rbRule : nrbf) {
+			NoRollbackRuleAttribute rule = new NoRollbackRuleAttribute(rbRule);
+			rollBackRules.add(rule);
+		}
+		String[] nrbfc = ann.noRollbackForClassName();
+		for (String rbRule : nrbfc) {
+			NoRollbackRuleAttribute rule = new NoRollbackRuleAttribute(rbRule);
+			rollBackRules.add(rule);
+		}
+		rbta.getRollbackRules().addAll(rollBackRules);
+		return rbta;
+	}
+}
+
+
+
+</code></pre>
+
+<p>就此,我们就可以判定Bean的方法中是否包含@Transaction这个注解，如果包含这返回这个对应<strong>Advisor</strong>,</p>
+
+<p>即<strong>BeanFactoryTransactionAttributeSourceAdvisor</strong>这个实现，如果有这个实现那么</p>
+
+<pre><code>
+  // 寻找适用于当前bean的Advisor并创建代理
+		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
+		if (specificInterceptors != DO_NOT_PROXY) {
+			this.advisedBeans.put(cacheKey, Boolean.TRUE);
+			// 创建代理
+			Object proxy = createProxy(bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
+			this.proxyTypes.put(cacheKey, proxy.getClass());
+			return proxy;
+		}
+</code></pre>
+
+<p>就会创建bean的代理类</p>
+
+<h3 id="2-2-3-创建事务代理类">2.2.3  创建事务代理类</h3>
+
+<pre><code>	protected Object createProxy(
+			Class&lt;?&gt; beanClass, String beanName, Object[] specificInterceptors, TargetSource targetSource) {
+	    // 创建代理工厂
+		ProxyFactory proxyFactory = new ProxyFactory();
+		// Copy our properties (proxyTargetClass etc) inherited from ProxyConfig.
+		// 拷贝当前类中的相关属性
+		proxyFactory.copyFrom(this);
+        //判定给定的bean是否代理Class
+		if (!shouldProxyTargetClass(beanClass, beanName)) {
+			// Must allow for introductions; can't just set interfaces to
+			// the target's interfaces only.
+			Class&lt;?&gt;[] targetInterfaces = ClassUtils.getAllInterfacesForClass(beanClass, this.proxyClassLoader);
+			for (Class&lt;?&gt; targetInterface : targetInterfaces) {
+				proxyFactory.addInterface(targetInterface);
+			}
+		}
+
+        //将interceptor适配为Advisor
+        Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);
+		for (Advisor advisor : advisors) {
+			proxyFactory.addAdvisor(advisor);
+		}
+        // 设置目标类
+		proxyFactory.setTargetSource(targetSource);
+		customizeProxyFactory(proxyFactory);
+        // 设置是否冻结，默认为false即代理设置后不允许修改代理的配置
+		proxyFactory.setFrozen(this.freezeProxy);
+		if (advisorsPreFiltered()) {
+			proxyFactory.setPreFiltered(true);
+		}
+		// 创建代理
+		return proxyFactory.getProxy(this.proxyClassLoader);
+	}
+
+</code></pre>
+
+<p>创建代理的主要目的就是将 <strong>Advisor[] advisors = buildAdvisors(beanName, specificInterceptors)</strong>的advisor集合放入到生成代理类的的<code>AdvisedSupport advised</code>变量中，在执行的时候会解析成Interceptor，然后调用，这边不具体展开。</p>
+
+
+        </div>
+
+    </div>
+
+    
+    <nav id="article-nav">
+
+        
+        <div id="article-nav-newer" class="article-nav-title">
+            <a href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/">
+                Transaction源码解析之事务预处理
+            </a>
+        </div>
+        
+
+        
+        <div id="article-nav-older" class="article-nav-title">
+            <a href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/">
+                生产-消费模型之虚假唤醒
+            </a>
+        </div>
+        
+
+    </nav>
+    
+
+
+</article>
+
+<div id="toc" class="toc-article" >
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc">
+        <nav id="TableOfContents">
+<ul>
+<li><a href="#1-事务配置">1 事务配置</a>
+<ul>
+<li><a href="#1-1-配置">1.1 配置</a></li>
+<li><a href="#1-2-调试入口">1.2 调试入口</a></li>
+</ul></li>
+<li><a href="#2-事务解析">2 事务解析</a>
+<ul>
+<li><a href="#2-1-事务namespacehandler解析">2.1 事务NameSpaceHandler解析</a>
+<ul>
+<li><a href="#2-1-1-加载事务驱动">2.1.1 加载事务驱动</a></li>
+<li><a href="#2-1-2-注册初始化处理器">2.1.2 注册初始化处理器</a></li>
+</ul></li>
+<li><a href="#2-2-bean的事务解析">2.2 Bean的事务解析</a>
+<ul>
+<li><a href="#2-2-1-infrastructureadvisorautoproxycreator事务代理类">2.2.1   InfrastructureAdvisorAutoProxyCreator事务代理类</a></li>
+<li><a href="#2-2-2-筛选advisor确定是否需要代理">2.2.2  筛选Advisor确定是否需要代理</a></li>
+<li><a href="#2-2-3-创建事务代理类">2.2.3  创建事务代理类</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+    </ol>
+</div>
+<style>
+    
+    .left-col .switch-btn {
+        display: none;
+    }
+
+    .left-col .switch-area {
+        display: none;
+    }
+    
+
+
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录" >
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function () {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    
+    
+    
+        
+    
+</script>
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a class="bds_qzone" data-cmd="qzone" href="#" title="分享到 QQ 空间"></a>
+        <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+        <a class="bds_count" data-cmd="count"></a>
+        <a class="bds_more" data-cmd="more"></a>
+
+    </div>
+    <script>
+        window._bd_share_config = {
+            "common": {
+                "bdSnsKey": {},
+                "bdText": "",
+                "bdMini": "2",
+                "bdMiniList": false,
+                "bdPic": "",
+                "bdStyle": "0",
+                "bdSize": "24"
+            }, "share": {}
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+</div>
+
+
+
+
+<div style="margin-left: 30px;margin-right: 30px;background: white;padding-left: 30px;padding-right: 30px">
+    <div class="comments">
+        <h3>COMMENTS</h3>
+        <script type="text/javascript">
+            (function() {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
+                dsq.setAttribute('data-timestamp', +new Date());
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <div id="disqus_thread"></div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="scroll" id="post-nav-button">
+
+    
+    <a href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/" title="上一篇: Transaction源码解析之事务预处理">
+        <i class="fa fa-angle-left"></i>
+    </a>
+    
+
+
+    <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+
+    
+    <a href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/" title="下一篇: 生产-消费模型之虚假唤醒">
+        <i class="fa fa-angle-right"></i>
+    </a>
+    
+
+</div>
+
+
+<ul class="post-list toc-article">
+    
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/19/spring-transaction-commit/" target="_blank">Transaction源码解析之事务提交与回滚</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/" target="_blank">Transaction源码解析之事务预处理</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/" target="_blank">Transaction源码解析之事务配置解析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/" target="_blank">生产-消费模型之虚假唤醒</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/" target="_blank">Spring实例化bean之源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/03/02/float-precision/" target="_blank">float浮点小数的设计及精度问题</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/07/11/mysql-page-detail/" target="_blank">MySQL中的page页详解</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/05/03/apt_lombok_implement/" target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/02/15/filter/" target="_blank">实际项目运用之Filter模式（过滤器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/12/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/11/17/btree-info/" target="_blank">数据结构之BTree和B&#43;Tree(多路平衡查找树 )</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/10/15/id-redis/" target="_blank">分布式全局序列ID方案之Redis优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/25/id-flicker/" target="_blank">分布式全局序列ID方案之Flicker优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/19/id-snowflake/" target="_blank">分布式全局序列ID方案之Snowflake算法</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/25/spring-springmvc/" target="_blank">Spring之动手实现SpringMVC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/22/java-methodhandler/" target="_blank">Java反射优化之方法句柄</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/16/spring-bean-ioc/" target="_blank">Spring之动手实现IOC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/12/spring-bean-lifecycle/" target="_blank">Spring之Bean加载-解析-生命周期</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/09/aqs-condition/" target="_blank">并发基础之Condition(等待队列)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/07/cache-redis-optimize/" target="_blank">Redis注意事项及常见优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/04/aqs_chapter02/" target="_blank">并发基础之AQS同步器（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/01/cache-redis-slowlog/" target="_blank">Redis之慢查询日志</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/31/aqs_chapter01/" target="_blank">并发基础之AQS同步器（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/16/junit-codeanalysis/" target="_blank">初窥门径之JUnit源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/13/java-securitymanager/" target="_blank">Java安全之SecurityManager</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/05/spi-introduction/" target="_blank">框架基础之SPI机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/29/responsibility-chain/" target="_blank">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/25/jndi-introdution/" target="_blank">JNDI知识摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/17/architect/" target="_blank">技术图谱</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/13/distribution-knowledge/" target="_blank">分布式项目知识要点</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/07/singletion/" target="_blank">设计模式之单例模式终极版【克隆-序列化-反射】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/02/fail-fast-safe/" target="_blank">Fail-Fast和Fail-Safe机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/27/adapter/" target="_blank">实际项目运用之Adapter模式（适配器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/18/template/" target="_blank">设计模式之Template模式（模版模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/14/synchronized-principle/" target="_blank">synchronized实现原理及锁优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/13/juc-tree-info/" target="_blank">JUC知识点总结</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/06/strategy/" target="_blank">实际项目运用之Strategy模式（策略模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/04/volatile-feature/" target="_blank">volatile关键字原理实现及应用</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/28/high-event/" target="_blank">MYSQL高级特性之【Event事件】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/27/process-fun/" target="_blank">MYSQL高级特性之【存储过程与函数】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/25/cap-base-flp/" target="_blank">分布式之【CAP理论、BASE理论 、FLP不可能定理】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/21/string-builder-question/" target="_blank">字符串拼接的疑惑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/17/exception-introduce/" target="_blank">Java异常处理-原理及优化建议</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/03/thread-jmm-happens-before/" target="_blank">java内存模型之[JMM][重排序][happens-before]</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/28/decorator/" target="_blank">实际项目运用之Decorator模式（装饰器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/26/interface-idempotency/" target="_blank">接口设计的幂等性考虑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/21/binary-operation/" target="_blank">java中位运算技巧</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/20/classloader-chapter02/" target="_blank">ClassLoader类加载分析（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/13/introspector/" target="_blank">Java 内省(Introspector)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/08/classloader-chapter01/" target="_blank">ClassLoader类加载分析（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/19/builder/" target="_blank">设计模式之builder模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/07/builder-factory/" target="_blank">设计模式之factory模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/11/03/recursive-lock/" target="_blank">可重入锁</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/09/12/show-global-status/" target="_blank">库级优化之SHOW GLOBAL STATUS</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/06/13/optimize-picture/" target="_blank">后端开发需要了解的mysql优化方向</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/16/thread-communication/" target="_blank">多线程之线程通信摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/07/design-rule/" target="_blank">数据库设计三范式和反范式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/info/" target="_blank">联系&amp;留言</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/open_source/" target="_blank">开源项目</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/tools/" target="_blank">在线工具</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/01/23/externalizable-interface/" target="_blank">自定义序列化之Externalizable接口</a></li>
+    
+</ul>
+
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    $(".post-list").addClass("toc-article");
+    $(".post-list-item a").attr("target", "_blank");
+    $("#post-nav-button > a:nth-child(2)").click(function () {
+        $(".fa-bars, .fa-times").toggle();
+        $(".post-list").toggle(300);
+        if ($(".toc").length > 0) {
+            $("#toc, #tocButton").toggle(200, function () {
+                if ($(".switch-area").is(":visible")) {
+                    $("#toc, .switch-btn, .switch-area").toggle();
+                    $("#tocButton").attr("value", valueHide);
+                }
+            })
+        }
+        else {
+            $(".switch-btn, .switch-area").fadeToggle(300);
+        }
+    })
+</script>
+
+
+<script>
+
+</script>
+
+
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2021 nicky_chin
+            </div>
+            <div class="footer-right">
+                <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>
+            </div>
+        </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chin.cn/js/GithubRepoWidget.js"></script>
+<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  10 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-119892182-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>

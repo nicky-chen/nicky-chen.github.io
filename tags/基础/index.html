@@ -141,33 +141,35 @@
                         
                             <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color4">Junit</a>
                         
-                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color1">Redis</a>
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color2">Redis</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color2">Spring-Base</a>
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color1">Spring-Base</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color3">Spring-Transaction</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">优化</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color1">分布式id方案</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color3">分布式id方案</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color3">创建型</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color3">多线程</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color4">多线程</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color3">思维导图</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color2">数据结构</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color1">数据结构</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">框架基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color2">源码</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color1">源码</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color2">理论</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color1">理论</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color1">结构型</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color4">结构型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color3">行为型</a>
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color1">行为型</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">锁优化</a>
                         
@@ -267,6 +269,70 @@
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
     <div class="article-meta">
+        <a href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/" class="article-date">
+            <time datetime="2020-04-23 19:58:15 &#43;0800 CST" itemprop="datePublished">2020-04-23</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/">生产-消费模型之虚假唤醒</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 何为虚假唤醒 当线程从等待状态中被唤醒时，只是发现未满足其正在等待的条件时，就会发生虚假唤醒。 之所以称其为虚假的，是因为该线程似乎无缘无故被唤醒。 虚假唤醒不会无缘无故发生，通常是因为在发起唤醒号和等待线程最终运行之间的临界时间内，线程不再满足竞态条件。
+2 java中的例子  public class SpuriousWakeupRWLock { private static final CustomQueue CUSTOM_LIST = new CustomQueue(); public static void main(String[] args) throws Exception { for (int i = 0; i &lt; 8; i++) { Thread consumer = new Thread(() -&gt; { try { CUSTOM_LIST.getOne(); } catch (InterruptedException e) { e.printStackTrace(); } ; }); consumer.setName(&quot;consumer:[&quot; + i + &quot;]&quot;); consumer.start(); } TimeUnit.SECONDS.sleep(8); for (int i = 0; i &lt; 2 ; i++) { int finalI = i; Thread producer = new Thread(() -&gt; { try { CUSTOM_LIST.
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/concurrent/" style="font-size: 12px;">concurrent</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/"
+                           style="font-size: 12px;">基础</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
         <a href="https://nicky-chin.cn/2020/03/02/float-precision/" class="article-date">
             <time datetime="2020-03-02 14:18:15 &#43;0800 CST" itemprop="datePublished">2020-03-02</time>
         </a>
@@ -319,6 +385,84 @@
 
             <p class="article-more-link">
                 <a href="https://nicky-chin.cn/2020/03/02/float-precision/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2019/07/11/mysql-page-detail/" class="article-date">
+            <time datetime="2019-07-11 11:14:15 &#43;0800 CST" itemprop="datePublished">2019-07-11</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2019/07/11/mysql-page-detail/">MySQL中的page页详解</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 InnoDB中的存储结构 从InnoDB存储引擎的逻辑结构看，所有数据都被逻辑地存放在一个空间内，称为表空间(tablespace)，而表空间由段（sengment）、区（extent）、页（page）组成。 在一些文档中extend又称块（block）。
+1.1 表空间（table space） 表空间（Tablespace）是一个逻辑容器，表空间存储的对象是段，在一个表空间中可以有一个或多个段，但是一个段只能属于一个表空间。数据库由一个或多个表空间组成，表空间从管理上可以划分为系统表空间、用户表空间、撤销表空间、临时表空间等。
+在 InnoDB 中存在两种表空间的类型：共享表空间和独立表空间。如果是共享表空间就意味着多张表共用一个表空间。如果是独立表空间，就意味着每张表有一个独立的表空间，也就是数据和索引信息都会保存在自己的表空间中。独立的表空间可以在不同的数据库之间进行迁移。可通过命令
+mysql &gt; show variables like 'innodb_file_per_table';  查看当前系统启用的表空间类型。目前最新版本已经默认启用独立表空间。
+InnoDB把数据保存在表空间内，表空间可以看作是InnoDB存储引擎逻辑结构的最高层。本质上是一个由一个或多个磁盘文件组成的虚拟文件系统。InnoDB用表空间并不只是存储表和索引，还保存了回滚段、双写缓冲区等。
+1.2 段（segment） 段（Segment）由一个或多个区组成，区在文件系统是一个连续分配的空间（在 InnoDB 中是连续的 64 个页），不过在段中不要求区与区之间是相邻的。段是数据库中的分配单位，不同类型的数据库对象以不同的段形式存在。当我们创建数据表、索引的时候，就会相应创建对应的段，比如创建一张表时会创建一个表段，创建一个索引时会创建一个索引段。
+1.3 区块（extent） 在 InnoDB 存储引擎中，一个区会分配 64 个连续的页。因为 InnoDB 中的页大小默认是 16KB，所以一个区的大小是 64*16KB=1MB。在任何情况下每个区大小都为1MB，为了保证页的连续性，InnoDB存储引擎每次从磁盘一次申请4-5个区。默认情况下，InnoDB存储引擎的页大小为16KB，即一个区中有64个连续的页。
+1.4 页（Page） 页是InnoDB存储引擎磁盘管理的最小单位，每个页默认16KB；InnoDB存储引擎从1.2.x版本碍事，可以通过参数innodb_page_size将页的大小设置为4K、8K、16K。若设置完成，则所有表中页的大小都为innodb_page_size，不可以再次对其进行修改，除非通过mysqldump导入和导出操作来产生新的库。
+innoDB存储引擎中，常见的页类型有：
+  数据页（B-tree Node)
+ undo页（undo Log Page）
+ 系统页 （System Page）
+ 事物数据页 （Transaction System Page）
+ 插入缓冲位图页（Insert Buffer Bitmap）
+ 插入缓冲空闲列表页（Insert Buffer Free List）
+ 未压缩的二进制大对象页（Uncompressed BLOB Page）
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/mysql/" style="font-size: 12px;">MySql</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/"
+                           style="font-size: 12px;">基础</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2019/07/11/mysql-page-detail/">阅读全文 &gt;&gt;</a>
             </p>
 
             <div class="clearfix"></div>
@@ -821,139 +965,6 @@ characteristic: LANGUAGE SQL | [NOT] DETERMINISTIC | { CONTAINS SQL | NO SQL | R
 </article>
 
             
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chin.cn/2018/04/21/string-builder-question/" class="article-date">
-            <time datetime="2018-04-21 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-04-21</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chin.cn/2018/04/21/string-builder-question/">字符串拼接的疑惑</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            最近没事在玩ASM框架，于是乎想将业务代码中的PO对象中的toString方法 在编译期间，自动转换了基于StringBuilder 拼接的代码。发现了一个奇怪的问题： 实体类如下
-@Getter @Setter @EqualsAndHashCode(of = &quot;id&quot;) @ApiModel(&quot;活动&quot;) public class Banner implements Serializable{ private static final long serialVersionUID = 191609922585601269L; @ApiModelProperty(value = &quot;ID&quot;, position = 1) private Integer id; @ApiModelProperty(value = &quot;显示次序&quot;, position = 2) private Integer orderNo; @ApiModelProperty(value = &quot;关联文件&quot;, position = 3) private Integer fileId; @ApiModelProperty(value = &quot;跳转链接&quot;, position = 4) private String forwardLink = &quot;&quot;; @ApiModelProperty(value = &quot;创建时间&quot;, position = 5) private Long createDateline; @ApiModelProperty(value = &quot;是否可用：1 可用，0 不可用&quot;, position = 6) private Integer isenable; @ApiModelProperty(value = &quot;标题&quot;, position = 7) private String title = &quot;&quot;; @ApiModelProperty(value = &quot;备注&quot;, position = 8) private String remark = &quot;&quot;; @ApiModelProperty(value = &quot;banner类型：1.
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chin.cn/categories/java-base/" style="font-size: 12px;">java-base</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/"
-                           style="font-size: 12px;">基础</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chin.cn/2018/04/21/string-builder-question/">阅读全文 &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chin.cn/2018/04/17/exception-introduce/" class="article-date">
-            <time datetime="2018-04-17 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-04-17</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chin.cn/2018/04/17/exception-introduce/">Java异常处理-原理及优化建议</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            1 异常层次结构 异常指不期而至的各种状况，如：文件找不到、网络连接失败、非法参数等。异常是一个事件，它发生在程序运行期间，干扰了正常的指令流程。Java通 过API中Throwable类的众多子类描述各种不同的异常。因而，Java异常都是对象，是Throwable子类的实例，描述了出现在一段编码中的 错误条件。当条件生成时，错误将引发异常。 Java异常类层次结构图： 在 Java 中，所有的异常都有一个共同的祖先 Throwable（可抛出）。Throwable 指定代码中可用异常传播机制通过 Java 应用程序传输的任何问题的共性。 Throwable： 有两个重要的子类：*Exception（异常）和 Error（错误）*，二者都是 Java 异常处理的重要子类，各自都包含大量子类。 Error（错误）:是程序无法处理的错误，表示运行应用程序中较严重问题。大多数错误与代码编写者执行的操作无关，而表示代码运行时 JVM（Java 虚拟机）出现的问题。例如，Java虚拟机运行错误（Virtual MachineError），当 JVM 不再有继续执行操作所需的内存资源时，将出现 OutOfMemoryError。这些异常发生时，Java虚拟机（JVM）一般会选择线程终止。这些错误表示故障发生于虚拟机自身、或者发生在虚拟机试图执行应用时，如Java虚拟机运行错误（Virtual MachineError）、类定义错误（NoClassDefFoundError）等。这些错误是不可查的，因为它们在应用程序的控制和处理能力之 外，而且绝大多数是程序运行时不允许出现的状况。对于设计合理的应用程序来说，即使确实发生了错误，本质上也不应该试图去处理它所引起的异常状况。在 Java中，错误通过Error的子类描述。
-Exception（异常）:是程序本身可以处理的异常。 Exception 类有一个重要的子类 RuntimeException。RuntimeException 类及其子类表示“JVM 常用操作”引发的错误。例如，若试图使用空值对象引用、除数为零或数组越界，则分别引发运行时异常（NullPointerException、ArithmeticException）和 ArrayIndexOutOfBoundException。
-通常，Java的异常(包括Exception和Error)分为可查的异常（checked exceptions）和不可查的异常（unchecked exceptions）。
- 运行时异常：都是RuntimeException类及其子类异常，如NullPointerException(空指针异常)、IndexOutOfBoundsException(下标越界异常)等，这些异常是不检查异常，程序中可以选择捕获处理，也可以不处理。这些异常一般是由程序逻辑错误引起的，程序应该从逻辑角度尽可能避免这类异常的发生。 运行时异常的特点是Java编译器不会检查它，也就是说，当程序中可能出现这类异常，即使没有用try-catch语句捕获它，也没有用throws子句声明抛出它，也会编译通过。
-非运行时异常 （编译异常）：是RuntimeException以外的异常，类型上都属于Exception类及其子类。从程序语法角度讲是必须进行处理的异常，如果不处理，程序就不能编译通过。如IOException、SQLException等以及用户自定义的Exception异常，一般情况下不自定义检查异常。
- 2 JVM字节码分析异常处理机制 我们都知道 try、catch、finally语句块的执行顺序: 接下来我们从字节码的角度加深对异常机制的理解， 我们先反编译如下代码：
-public class FileDemo { private static void divideFun(int a, int b) { b = a - b; } public static void main(String[] args) { int a = 1; int b = 3; try { b = a + b; FilterInputStream filterInputStream = new BufferedInputStream(new FileInputStream(&quot;d:/a&quot;)); } catch (FileNotFoundException e) { System.
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chin.cn/categories/java-base/" style="font-size: 12px;">java-base</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/"
-                           style="font-size: 12px;">基础</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chin.cn/2018/04/17/exception-introduce/">阅读全文 &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
             
             
 <nav id="page-nav">
@@ -992,7 +1003,7 @@ public class FileDemo { private static void divideFun(int a, int b) { b = a - b;
     <div class="outer">
         <div id="footer-info">
             <div class="footer-left">
-                &copy; 2020 nicky_chin
+                &copy; 2021 nicky_chin
             </div>
             <div class="footer-right">
                 <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>
