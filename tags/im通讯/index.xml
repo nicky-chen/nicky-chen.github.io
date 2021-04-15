@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>IM通讯 on 南乡清水的技术积累</title>
+    <link>https://nicky-chin.cn/tags/im%E9%80%9A%E8%AE%AF/</link>
+    <description>Recent content in IM通讯 on 南乡清水的技术积累</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>All rights reserved - 2018</copyright>
+    <lastBuildDate>Fri, 13 Nov 2020 15:39:09 +0800</lastBuildDate>
+    
+	<atom:link href="https://nicky-chin.cn/tags/im%E9%80%9A%E8%AE%AF/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>基于TimeLine模型的消息同步机制</title>
+      <link>https://nicky-chin.cn/2020/11/13/im-timeline/</link>
+      <pubDate>Fri, 13 Nov 2020 15:39:09 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2020/11/13/im-timeline/</guid>
+      <description>正常的IM系统流程
+在这个方式下，消息同步的基本思路和步骤如下（序号不对应图中序号）
+ 1、把消息存储到离线收件箱
+2、向在线用户推送消息
+3、在线用户返回收到消息的ack信息
+4、服务端清除用户此条离线消息
+ 对于离线用户，登录后直接拉取离线消息即可
+这个消息同步方式有它合理的地方
+1、流程比较直观
+2、网络交互量较少（相对于后边的TimeLine模型而言）
+但是这个方案存在更多不足的地ti方
+1、我们有App和Web两个端，需要为每个端都写一份离线消息。由于离线消息是扩散写的，多写一份，服务端就多一份压力 2、消息ack回来之后，服务端需要把对应的消息从存储中删除，这个过程性能也是一个问题 这个消息模式在比较单一的IM应用场景下还是能够胜任的。但是随着消息场景越来越复杂，尤其是SDK推出以后，这个模式就存在很多弊端。SDK的应用可能存在很多个端，服务端不可能为每个端都写离线消息！ 对于SDK，我们采用TimeLine模型来实现客户端和服务端的消息同步。  以下内容是钉钉的做法，比较了传统架构和现代架构。而我们现在的IM消息同步这块介于两者之间。</description>
+    </item>
+    
+  </channel>
+</rss>
