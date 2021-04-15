@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
-    <lastBuildDate>Thu, 23 Apr 2020 19:58:15 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 13 Feb 2021 21:31:09 +0800</lastBuildDate>
     
 	<atom:link href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>java的clone方法JVM实现</title>
+      <link>https://nicky-chin.cn/2021/02/13/java-clone/</link>
+      <pubDate>Sat, 13 Feb 2021 21:31:09 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2021/02/13/java-clone/</guid>
+      <description>例子
+class Base { String name; public Base(String name) { this.name = name; } } 构造clone的类</description>
+    </item>
     
     <item>
       <title>生产-消费模型之虚假唤醒</title>

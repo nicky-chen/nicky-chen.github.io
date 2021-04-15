@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Java Base on 南乡清水的技术积累</title>
+    <title>java-base on 南乡清水的技术积累</title>
     <link>https://nicky-chin.cn/categories/java-base/</link>
-    <description>Recent content in Java Base on 南乡清水的技术积累</description>
+    <description>Recent content in java-base on 南乡清水的技术积累</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
-    <lastBuildDate>Mon, 02 Mar 2020 14:18:15 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 13 Feb 2021 21:31:09 +0800</lastBuildDate>
     
 	<atom:link href="https://nicky-chin.cn/categories/java-base/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>java的clone方法JVM实现</title>
+      <link>https://nicky-chin.cn/2021/02/13/java-clone/</link>
+      <pubDate>Sat, 13 Feb 2021 21:31:09 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2021/02/13/java-clone/</guid>
+      <description>例子
+class Base { String name; public Base(String name) { this.name = name; } } 构造clone的类</description>
+    </item>
     
     <item>
       <title>float浮点小数的设计及精度问题</title>

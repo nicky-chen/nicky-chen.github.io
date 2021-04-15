@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Concurrent on 南乡清水的技术积累</title>
+    <title>concurrent on 南乡清水的技术积累</title>
     <link>https://nicky-chin.cn/categories/concurrent/</link>
-    <description>Recent content in Concurrent on 南乡清水的技术积累</description>
+    <description>Recent content in concurrent on 南乡清水的技术积累</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
-    <lastBuildDate>Thu, 23 Apr 2020 19:58:15 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 26 Sep 2020 18:59:09 +0800</lastBuildDate>
     
 	<atom:link href="https://nicky-chin.cn/categories/concurrent/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>线程传递增强之TransmittableThreadLocal</title>
+      <link>https://nicky-chin.cn/2020/09/26/threadlocal-enchancer/</link>
+      <pubDate>Sat, 26 Sep 2020 18:59:09 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2020/09/26/threadlocal-enchancer/</guid>
+      <description>先来看TTL里面的几个重要属性及方法
+TTL定义：
+public class TransmittableThreadLocal extends InheritableThreadLocal  可以看到，TTL继承了ITL，意味着TTL首先具备ITL的功能。
+再来看看一个重要属性holder：
+ /** * 这是一个ITL类型的对象，持有一个全局的WeakMap（weakMap的key是弱引用，同TL一样，也是为了解决内存泄漏的问题），里面存放了TTL对象 * 并且重写了initialValue和childValue方法，尤其是childValue，可以看到在即将异步时父线程的属性是直接作为初始化值赋值给子线程的本地变量对象（TTL）的 */ private static InheritableThreadLocal&amp;lt;Map&amp;lt;TransmittableThreadLocal&amp;lt;?</description>
+    </item>
     
     <item>
       <title>生产-消费模型之虚假唤醒</title>
