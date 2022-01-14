@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
-    <lastBuildDate>Sat, 13 Feb 2021 21:31:09 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 13 Jan 2022 11:14:15 +0800</lastBuildDate>
     
 	<atom:link href="https://nicky-chin.cn/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>MySQL之Innodb之快照读原理实现</title>
+      <link>https://nicky-chin.cn/2022/01/13/mysql-snapshot-read/</link>
+      <pubDate>Thu, 13 Jan 2022 11:14:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2022/01/13/mysql-snapshot-read/</guid>
+      <description>Innodb之快照读原理实现 1 Innodb MVCC组成 1. 1 为何使用MVCC实现快照读 innodb存储引擎的快照读是基于多版本并发控制 MVCC 和 undolog 实现，通过 MVCC 机制提高系统读写并发性能，快照读只发生于 select 操作，但不包括 select &amp;hellip; lock in share mode, select &amp;hellip; for update　 提高并发的思路 &amp;gt; 并发数据一致性通常实现: 锁 + 多数据版本 &amp;gt; 提高并发读的思路: 通过共享锁保证读读并发，独占锁实现读写互斥 &amp;gt; 提高并发读写的思路: 一致性折衷，通过数据多版本控制，读使用快照版本，读写不互斥，提高读写并发能力  1.</description>
+    </item>
     
     <item>
       <title>java的clone方法JVM实现</title>

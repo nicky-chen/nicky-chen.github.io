@@ -158,23 +158,23 @@
                         
                             <a href="https://nicky-chin.cn/tags/netty" style="font-size: 12px;" class="color4">Netty</a>
                         
-                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color3">Redis</a>
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color4">Redis</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color1">Spring-Base</a>
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color2">Spring-Base</a>
                         
                             <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color4">Spring-Transaction</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">优化</a>
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">优化</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color1">分布式id方案</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color3">分布式id方案</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color3">创建型</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color1">创建型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color3">基础</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color1">多线程</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color1">思维导图</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color4">思维导图</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color2">数据结构</a>
                         
@@ -182,13 +182,13 @@
                         
                             <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color3">源码</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color4">理论</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color1">理论</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color3">结构型</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color1">结构型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color4">行为型</a>
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color2">行为型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">锁优化</a>
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color1">锁优化</a>
                         
                     </div>
                 </section>
@@ -284,6 +284,71 @@
         <div class="body-wrap">
             
             
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2020/03/02/float-precision/" class="article-date">
+            <time datetime="2020-03-02 14:18:15 &#43;0800 CST" itemprop="datePublished">2020-03-02</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2020/03/02/float-precision/">float浮点小数的设计及精度问题</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            1 浮点计算问题  public class Oct2Bin { public static void main(String[] args) { double a = 0.
+            <img src="https://nicky-chin.cn/media/float-precision/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/java-base/" style="font-size: 12px;">java-base</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/"
+                           style="font-size: 12px;">基础</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2020/03/02/float-precision/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
@@ -890,77 +955,6 @@ _DispatcherServlet_：
 </article>
 
             
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-
-    <div class="article-meta">
-        <a href="https://nicky-chin.cn/2018/08/22/java-methodhandler/" class="article-date">
-            <time datetime="2018-08-22 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-22</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chin.cn/2018/08/22/java-methodhandler/">Java反射优化之方法句柄</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            1 简介 java7中为间接调用方法引入了新的api，即 方法句柄
-方法句柄中包含两个重要的类，MethodHandle和MethodType
-MethodHandle
-通过句柄我们可以直接调用该句柄所引用的底层方法。从作用上来看，方法句柄类似于反射中的Method类，是对要执行的方法的一个引用，我们也是通过它来调用底层方法，它调用时有两个方法 invoke和invokeExact，后者要求参数类型与底层方法的参数完全匹配，前者则在有出入时做修改如包装类型。
-MethodType
-方法签名不可变对象，是对方法的一个映射，包含返回值和参数类型。在lookup时也是通过它来寻找的。 每个方法句柄都有一个MethodType实例，用来指明方法的返回类型和参数类型。
-2 简单使用 2.1 demo测试 public class MethodHandleDemo { public static void main(String[] args) throws Throwable{ //参数为返回值类型、参数类型 单个参数 MethodType methodType = MethodType.
-            <img src="https://nicky-chin.cn/media/java-methodHandler/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chin.cn/categories/java-base/" style="font-size: 12px;">java-base</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/"
-                           style="font-size: 12px;">基础</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chin.cn/2018/08/22/java-methodhandler/">阅读全文 &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
             
             
 <nav id="page-nav">
@@ -1036,7 +1030,7 @@ MethodType
         
         <div id="footer-info">
             <div class="footer-left">
-                &copy; 2021 南乡清水@Hangzhou
+                &copy; 2022 南乡清水@Hangzhou
             </div>
             <div class="s-bottom-layer-right" style="font-size: 0.2em" >
                 <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33011002014475"
