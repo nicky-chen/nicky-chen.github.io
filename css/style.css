@@ -1330,6 +1330,19 @@ a {
     background: none;
 }
 
+.st-default-search-input {
+    width: 68%;
+    height: 18px;
+    margin-top: 1px;
+    padding: 0;
+    font-family: inherit;
+    border: 2px solid transparent;
+    border-bottom: 2px solid #d3d3d3;
+    border-radius: 2px;
+    opacity: 0.2;
+    background: none;
+}
+
 .search:hover {
     border: 2px solid #d3d3d3;
     opacity: 1;
