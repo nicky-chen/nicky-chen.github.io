@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  false ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+    <title>分布式全局序列ID方案之Redis优化方案</title>
+    <link rel="icon" href="https://nicky-chin.cn/img/favicon.ico">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://nicky-chin.cn/assets/waifu.css"/>
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/highlight/styles/darcula.css">
+    <script src="https://nicky-chin.cn/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+            (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','zTXEk5Sy3-gUuAVTm5JE','2.0.0');
+    </script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chin.cn/" class="profilepic">
+            <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chin.cn/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chin.cn/tags/im%E9%80%9A%E8%AE%AF" style="font-size: 12px;" class="color1">Im通讯</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color1">Junit</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/netty" style="font-size: 12px;" class="color4">Netty</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color4">Redis</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color4">Spring-Base</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color1">Spring-Transaction</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">优化</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color1">分布式id方案</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color3">创建型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color1">多线程</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color1">思维导图</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color3">数据结构</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">框架基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color1">源码</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color3">理论</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color2">结构型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color2">行为型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chin.cn/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chin.cn/" class="profilepic">
+                <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+            <article id="post-js-android" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/post-2/id-redis/" class="article-date">
+            <time datetime="2018-10-15 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-10-15</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 class="article-title" itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/post-2/id-redis/">分布式全局序列ID方案之Redis优化方案</a>
+            </h1>
+
+
+        </header>
+
+        <div class="article-info article-info-post">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="article-category-link" href="https://nicky-chin.cn/categories/distribution/" style="font-size: 12px;">distribution</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%88%86%e5%b8%83%e5%bc%8fid%e6%96%b9%e6%a1%88/"
+                           style="font-size: 12px;">分布式ID方案</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            
+            <div class="article-category tagcloud">
+                <a class="article-category-link" style="font-size: 12px;"> posted by nicky_chin</a>
+            </div>
+            
+
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="article-entry" itemprop="articleBody">
+
+            
+
+<h1 id="1-redis的flicker方案">1 Redis的Flicker方案</h1>
+
+<p>利用redis的lua脚本功能，在每个节点上通过lua脚本生成唯一ID，生成的ID为64位，具体如下：</p>
+
+<p>使用41 bit来存放时间，精确到毫秒，可以使用到2039年
+使用12 bit来存放逻辑分片ID，最大分片ID是4095
+使用10 bit来存放自增长ID，则每个节点，每毫秒最多可生成1024个ID
+比如GTM时间 2018年6月24日11点23分 ，它的距1970年的毫秒数是 1529810591000，假定分片ID是60，自增长序列是20，则生成的ID是：</p>
+
+<pre><code>6416490681073670164 = 1529810591000 &lt;&lt; 22 | 60 &lt;&lt; 10 | 20
+redis提供了TIME命令，取得redis服务器的秒值和微秒值
+毫秒值获取命令：EVAL &quot;local current = redis.call('TIME') ;return a[1]*1000 + a[2]/1000&quot; 0
+生成最终ID : current &lt;&lt; (12 + 10)) | (shardingId &lt;&lt; 10) | seq
+</code></pre>
+
+<h1 id="2-id原子性自增方案">2 ID原子性自增方案</h1>
+
+<h3 id="2-1-redis-hincrby-命令">2.1 Redis HINCRBY 命令</h3>
+
+<p>Redis 的 INCR 命令支持  “INCR AND GET” 原子操作。利用这个特性，我们可以在 Redis 中存序列号，让分布式环境中多个取号服务在 Redis 中通过 INCR 命令来实现取号；同时 Redis 是单进程单线程架构，不会因为多个取号方的 INCR 命令导致取号重复。因此，基于 Redis 的 INCR 命令实现序列号的生成基本能满足全局唯一与单调递增的特性，并且性能还不错。</p>
+
+<p>实际上，为了存储序列号的更多相关信息，我们使用了 Redis 的 Hash 数据结构，Redis 同样为 Hash 提供 HINCRBY 命令来实现 “INCR AND GET” 原子操作。</p>
+
+<h3 id="2-2-redis宕机问题">2.2 Redis宕机问题</h3>
+
+<p>Redis 在提供高性能存取的同时，支持*RDB 和 AOF 持久化*，来保证宕机后的数据恢复：
+<img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190509164911.png" alt="持久化" /></p>
+
+<ul>
+<li>如果开启 RDB 持久化，由于最近一次快照时间和最新一条 HINCRBY 命令的时间有可能存在时间差，宕机后通过 RDB 快照恢复数据集会发生取号重复的情况</li>
+<li>如果使用 AOF 持久化，通过追加写命令到 AOF 文件的方式记录所有 Redis 服务器的写命令，不会发生取号重复的情况。但 AOF 持久化会损耗性能并且在宕机重启后可能由于文件过大导致恢复数据时间过长，并且通过 AOF 重写来压缩文件，在写 AOF 时发生宕机导致文件出错，则需要较多时间去人为恢复 AOF 文件</li>
+</ul>
+
+<h3 id="2-3-宕机恢复方案">2.3 宕机恢复方案</h3>
+
+<p><img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190509164938.png" alt="宕机恢复方案" /></p>
+
+<p>利用mysql记录最大序列号 max，然后设计一个服务定期统计序列号消费速度，当 Redis 中当前可取序列号接近 max 时自动更新 max 到一个适当的值，存入数据库和 Redis。在 Redis 宕机的情况下，将从数据库拉取最大值复成 Redis 当前已取序列号，防止 Redis 取号重复。当然，mysql也可能发生宕机，不过由于取号操作在 Redis，可增加最大可取序列号来提供足够时间恢复mysql</p>
+
+<p>数据预热伪代码：</p>
+
+<pre><code>@Component
+@Order(value = 1)
+public class CacheRunner implements CommandLineRunner {
+
+    @Override
+    public void run(String... args) throws Exception {
+        //doSomething
+        System.out.println(&quot;==================id预加载=======================&quot;);
+
+    }
+}
+</code></pre>
+
+<p>通过实现CommandLineRunner的方式，完成数据的预加载，宕机重启，可通过后台服务刷新redis可用最大值来解决</p>
+
+<h3 id="2-3-redis设计">2.3 Redis设计</h3>
+
+<p><strong>i 数据结构</strong></p>
+
+<p>采用原子性hash,具体设计如下：</p>
+
+<p><img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190509165010.png" alt="id信息" /></p>
+
+<p>其中
+<strong>cur</strong> 表示当前游标位置，即最新生成的序列号id
+<strong>max</strong> 表示当前情况下允许生成的最大序列号
+<strong>seq_recently</strong> 统计5分钟消耗的id数量
+<strong>seq_long_term</strong> 统计30分钟内消耗的id数量</p>
+
+<p><strong>ii Redis调用分析</strong></p>
+
+<p>通过 <strong>HINCRBY</strong> 命令生成ID并且取出，然后校验当前值是否超出了最大可用序列号 max。seqs_recently 和 seqs_long_term 记录了当前序列消耗的序列号数，用于计算之后增大 max 的步长，即扩容算法。具体生成id代码如下：</p>
+
+<pre><code>   public static long hashIncrementAndGetNumber(final String key, final List&lt;String&gt; fields) {
+        Jedis jedis = null;
+        try {
+            jedis = getJedis();
+            String script =
+                    &quot;local maxSeqNumStr = redis.pcall('HGET', KEYS[1], ARGV[1]) &quot;
+                    +&quot;if type(maxSeqNumStr) == 'boolean' and maxSeqNumStr == false then return nil end &quot;+
+                    &quot;local maxSeqNum = tonumber(maxSeqNumStr) &quot;
+                    + &quot;local seqNum = redis.pcall('HINCRBY', KEYS[1], ARGV[2], ARGV[3]) &quot;
+                    + &quot;if seqNum &lt;= maxSeqNum then &quot;
+                    + &quot; return seqNum else return nil end&quot;;
+            Object result = jedis.eval(script, Collections.singletonList(key), fields);
+            return (long) result;
+
+        } catch (Exception e) {
+            logger.error(&quot;releaseRedisLock error : &quot; + e);
+            return -1L;
+
+        }finally {
+            recycleJedisOjbect(jedis);
+        }
+    }
+
+通过 hashIncrementAndGetNumber(&quot;roborder:hash&quot;, Arrays.asList(&quot;max&quot;, &quot;cur&quot;, &quot;1&quot;));获取值，自增步幅 ＋1
+             
+</code></pre>
+
+<h3 id="2-4-mysql设计">2.4 Mysql设计</h3>
+
+<p>mysql表设计无需赘述</p>
+
+<pre><code>CREATE TABLE `id_generator` (
+  `id` int(10) NOT NULL,
+  `current_max_id` bigint(20) NOT NULL COMMENT '当前最大id',
+  `increment_step` int(10) NOT NULL COMMENT '步幅长度',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</code></pre>
+
+<p>通过定时任务计算max服务，根据 seqs_recently 和 seqs_long_term，预估之后一小时所需要消耗的序列号数。如果当前剩余序列号数不足以支撑十五分钟，则扩容计算之后一小时将消耗的序列号数作为步长，更新 max 到 MySql 和 Redis，保证客户端应用每次能获取到有效的序列号</p>
+
+<p>当然，如果还未来得及计算序列号的消耗，而序列号的使用已达到可用序列号的最大值，可利用fail-fast 机制，提示异常，防止线程阻塞带来的问题</p>
+
+<h1 id="reference">Reference</h1>
+
+<p><a href="https://www.jianshu.com/p/b06e75af0268">万亿级调用系统：微信序列号生成器架构设计及演变</a>
+<a href="https://tech.meituan.com/MT_Leaf.html">美团点评分布式ID生成系统</a></p>
+
+
+        </div>
+
+    </div>
+
+    
+
+
+</article>
+
+<div id="toc" class="toc-article" >
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc">
+        <nav id="TableOfContents">
+<ul>
+<li><a href="#1-redis的flicker方案">1 Redis的Flicker方案</a></li>
+<li><a href="#2-id原子性自增方案">2 ID原子性自增方案</a>
+<ul>
+<li>
+<ul>
+<li><a href="#2-1-redis-hincrby-命令">2.1 Redis HINCRBY 命令</a></li>
+<li><a href="#2-2-redis宕机问题">2.2 Redis宕机问题</a></li>
+<li><a href="#2-3-宕机恢复方案">2.3 宕机恢复方案</a></li>
+<li><a href="#2-3-redis设计">2.3 Redis设计</a></li>
+<li><a href="#2-4-mysql设计">2.4 Mysql设计</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#reference">Reference</a></li>
+</ul>
+</nav>
+    </ol>
+    <div style="text-align:center">-----------------------</div>
+    <strong class="toc-title">最新评论</strong>
+    <ol class="toc">
+        <div class="remark42__last-comments" data-max="10"></div>
+    </ol>
+</div>
+<style>
+    
+
+    #tocButton{
+        display: none;
+    }
+    #toc{
+        display: none;
+    }
+
+    
+
+
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录" >
+
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function () {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    
+    
+    
+        
+    
+</script>
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a class="bds_qzone" data-cmd="qzone" href="#" title="分享到 QQ 空间"></a>
+        <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+        <a class="bds_count" data-cmd="count"></a>
+        <a class="bds_more" data-cmd="more"></a>
+
+    </div>
+    <script>
+        window._bd_share_config = {
+            "common": {
+                "bdSnsKey": {},
+                "bdText": "",
+                "bdMini": "2",
+                "bdMiniList": false,
+                "bdPic": "",
+                "bdStyle": "0",
+                "bdSize": "24"
+            }, "share": {}
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+</div>
+
+
+
+
+<div style="margin-left: 30px;margin-right: 30px;background: white;padding-left: 30px;padding-right: 30px">
+    <div class="comments">
+        <h3>[评论][COMMENTS]</h3>
+        
+            
+                
+                
+                
+                
+                
+            
+        
+        <div id="remark42"></div>
+        <div id="disqus_thread"></div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<ul class="post-list toc-article">
+    
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2022/01/13/mysql-snapshot-read/" target="_blank">MySQL之Innodb之快照读原理实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2021/02/13/java-clone/" target="_blank">java的clone方法JVM实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/11/13/im-timeline/" target="_blank">基于TimeLine模型的消息同步机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/09/26/threadlocal-enchancer/" target="_blank">线程传递增强之TransmittableThreadLocal</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/06/11/net-nio-netty/" target="_blank">浅析java-nio及netty的reactor模型</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/19/spring-transaction-commit/" target="_blank">Transaction源码解析之事务提交与回滚</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/" target="_blank">Transaction源码解析之事务预处理</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/" target="_blank">Transaction源码解析之事务配置解析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/" target="_blank">生产-消费模型之虚假唤醒</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/" target="_blank">Spring实例化bean之源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/03/02/float-precision/" target="_blank">float浮点小数的设计及精度问题</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/07/11/mysql-page-detail/" target="_blank">MySQL中的page页详解</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/05/03/apt_lombok_implement/" target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/02/15/filter/" target="_blank">实际项目运用之Filter模式（过滤器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/12/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/11/17/btree-info/" target="_blank">数据结构之BTree和B&#43;Tree(多路平衡查找树 )</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/10/15/id-redis/" target="_blank">分布式全局序列ID方案之Redis优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/25/id-flicker/" target="_blank">分布式全局序列ID方案之Flicker优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/19/id-snowflake/" target="_blank">分布式全局序列ID方案之Snowflake算法</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/25/spring-springmvc/" target="_blank">Spring之动手实现SpringMVC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/22/java-methodhandler/" target="_blank">Java反射优化之方法句柄</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/16/spring-bean-ioc/" target="_blank">Spring之动手实现IOC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/12/spring-bean-lifecycle/" target="_blank">Spring之Bean加载-解析-生命周期</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/09/aqs-condition/" target="_blank">并发基础之Condition(等待队列)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/07/cache-redis-optimize/" target="_blank">Redis注意事项及常见优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/04/aqs_chapter02/" target="_blank">并发基础之AQS同步器（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/01/cache-redis-slowlog/" target="_blank">Redis之慢查询日志</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/31/aqs_chapter01/" target="_blank">并发基础之AQS同步器（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/16/junit-codeanalysis/" target="_blank">初窥门径之JUnit源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/13/java-securitymanager/" target="_blank">Java安全之SecurityManager</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/05/spi-introduction/" target="_blank">框架基础之SPI机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/29/responsibility-chain/" target="_blank">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/25/jndi-introdution/" target="_blank">JNDI知识摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/17/architect/" target="_blank">技术图谱</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/13/distribution-knowledge/" target="_blank">分布式项目知识要点</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/07/singletion/" target="_blank">设计模式之单例模式终极版【克隆-序列化-反射】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/02/fail-fast-safe/" target="_blank">Fail-Fast和Fail-Safe机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/27/adapter/" target="_blank">实际项目运用之Adapter模式（适配器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/18/template/" target="_blank">设计模式之Template模式（模版模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/14/synchronized-principle/" target="_blank">synchronized实现原理及锁优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/13/juc-tree-info/" target="_blank">JUC知识点总结</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/06/strategy/" target="_blank">实际项目运用之Strategy模式（策略模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/04/volatile-feature/" target="_blank">volatile关键字原理实现及应用</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/28/high-event/" target="_blank">MYSQL高级特性之【Event事件】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/27/process-fun/" target="_blank">MYSQL高级特性之【存储过程与函数】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/25/cap-base-flp/" target="_blank">分布式之【CAP理论、BASE理论 、FLP不可能定理】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/21/string-builder-question/" target="_blank">字符串拼接的疑惑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/17/exception-introduce/" target="_blank">Java异常处理-原理及优化建议</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/03/thread-jmm-happens-before/" target="_blank">java内存模型之[JMM][重排序][happens-before]</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/28/decorator/" target="_blank">实际项目运用之Decorator模式（装饰器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/26/interface-idempotency/" target="_blank">接口设计的幂等性考虑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/21/binary-operation/" target="_blank">java中位运算技巧</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/20/classloader-chapter02/" target="_blank">ClassLoader类加载分析（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/13/introspector/" target="_blank">Java 内省(Introspector)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/08/classloader-chapter01/" target="_blank">ClassLoader类加载分析（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/19/builder/" target="_blank">设计模式之builder模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/07/builder-factory/" target="_blank">设计模式之factory模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/11/03/recursive-lock/" target="_blank">可重入锁</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/09/12/show-global-status/" target="_blank">库级优化之SHOW GLOBAL STATUS</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/06/13/optimize-picture/" target="_blank">后端开发需要了解的mysql优化方向</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/16/thread-communication/" target="_blank">多线程之线程通信摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/07/design-rule/" target="_blank">数据库设计三范式和反范式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/info/" target="_blank">联系&amp;留言</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/open_source/" target="_blank">开源项目</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/tools/" target="_blank">在线工具</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/01/23/externalizable-interface/" target="_blank">自定义序列化之Externalizable接口</a></li>
+    
+</ul>
+
+<script>
+    var remark_config = {
+        host: "https://nicky-chin.cn", 
+        site_id: 'nicky-blog',
+        components: ['embed', 'last-comments'], 
+        max_shown_comments: 20, 
+        theme: 'light', 
+        locale: 'zh'
+    };
+
+    (function(c) {
+        for(var i = 0; i < c.length; i++){
+            var d = document, s = d.createElement('script');
+            s.src = remark_config.host + '/web/' +c[i] +'.js';
+            s.defer = true;
+            (d.head || d.body).appendChild(s);
+        }
+    })(remark_config.components || ['embed']);
+</script>
+
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    $(".post-list").addClass("toc-article");
+    $(".post-list-item a").attr("target", "_blank");
+    $("#post-nav-button > a:nth-child(2)").click(function () {
+        $(".fa-bars, .fa-times").toggle();
+        $(".post-list").toggle(300);
+        if ($(".toc").length > 0) {
+            $("#toc, #tocButton").toggle(200, function () {
+                if ($(".switch-area").is(":visible")) {
+                    $("#toc, .switch-btn, .switch-area").toggle();
+                    $("#tocButton").attr("value", valueHide);
+                }
+            })
+        }
+        else {
+            $(".switch-btn, .switch-area").fadeToggle(300);
+        }
+    })
+</script>
+
+<script>
+    (function(d, w, c) {
+        w.ChatraID = 'jZh4grHz47JAjnsis';
+        var s = d.createElement('script');
+        w[c] = w[c] || function() {
+            (w[c].q = w[c].q || []).push(arguments);
+        };
+        s.async = true;
+        s.src = 'https://call.chatra.io/chatra.js';
+        if (d.head) d.head.appendChild(s);
+    })(document, window, 'Chatra');
+</script>
+
+<script>
+
+</script>
+
+
+        </div>
+        <footer id="footer">
+
+    
+
+
+    <div class="outer">
+        
+        
+            <div class="footer-right">
+                
+                    <span id="busuanzi_container_site_pv" style='display: block'>
+                        <span id="site-visit" >本站访客数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    
+                
+                
+                    
+                        
+                            
+                        
+                    
+                
+            </div>
+        
+        
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2022 南乡清水@Hangzhou
+            </div>
+            <div class="s-bottom-layer-right" style="font-size: 0.2em" >
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33011002014475"
+                   target="_blank"><span class="lh s-bottom-recordcode">京公网安备33011002014475号</span></a>
+                <a href="https://beian.miit.gov.cn/"
+                   target="_blank"><span class="lh"> 浙ICP备19049847号-1</span></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chin.cn/js/GithubRepoWidget.js"></script>
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  10 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-159911678-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>

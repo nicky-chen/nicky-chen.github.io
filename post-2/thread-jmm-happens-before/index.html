@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  false ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+    <title>java内存模型之[JMM][重排序][happens-before]</title>
+    <link rel="icon" href="https://nicky-chin.cn/img/favicon.ico">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://nicky-chin.cn/assets/waifu.css"/>
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/highlight/styles/darcula.css">
+    <script src="https://nicky-chin.cn/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+            (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','zTXEk5Sy3-gUuAVTm5JE','2.0.0');
+    </script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chin.cn/" class="profilepic">
+            <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chin.cn/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chin.cn/tags/im%E9%80%9A%E8%AE%AF" style="font-size: 12px;" class="color4">Im通讯</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color3">Junit</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/netty" style="font-size: 12px;" class="color1">Netty</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color3">Redis</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color4">Spring-Base</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color4">Spring-Transaction</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">优化</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color3">分布式id方案</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color2">创建型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color3">多线程</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color2">思维导图</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color1">数据结构</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">框架基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color4">源码</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color4">理论</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color4">结构型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color2">行为型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color1">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chin.cn/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chin.cn/" class="profilepic">
+                <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+            <article id="post-js-android" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/post-2/thread-jmm-happens-before/" class="article-date">
+            <time datetime="2018-04-03 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-04-03</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 class="article-title" itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/post-2/thread-jmm-happens-before/">java内存模型之[JMM][重排序][happens-before]</a>
+            </h1>
+
+
+        </header>
+
+        <div class="article-info article-info-post">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="article-category-link" href="https://nicky-chin.cn/categories/concurrent/" style="font-size: 12px;">concurrent</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/"
+                           style="font-size: 12px;">基础</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            
+            <div class="article-category tagcloud">
+                <a class="article-category-link" style="font-size: 12px;"> posted by nicky_chin</a>
+            </div>
+            
+
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="article-entry" itemprop="articleBody">
+
+            
+
+<h1 id="1-并发编程模型的分类">1.并发编程模型的分类</h1>
+
+<p>在并发编程中，我们需要处理两个关键问题：线程之间如何通信及线程之间如何同
+步（这里的线程是指并发执行的活动实体）。通信是指线程之间以何种机制来交换
+信息。在命令式编程中，线程之间的通信机制有两种：*共享内存和消息传递*。
+在共享内存的并发模型里，线程之间共享程序的公共状态，线程之间通过写-读内
+存中的公共状态来隐式进行通信。在消息传递的并发模型里，线程之间没有公共状
+态，线程之间必须通过明确的发送消息来显式进行通信。
+同步是指程序用于控制不同线程之间操作发生相对顺序的机制。在共享内存并发模
+型里，同步是显式进行的。程序员必须显式指定某个方法或某段代码需要在线程之
+间互斥执行。在消息传递的并发模型里，由于消息的发送必须在消息的接收之前，
+因此同步是隐式进行的。
+Java 的并发采用的是共享内存模型，Java 线程之间的通信总是隐式进行，整个通
+信过程对程序员完全透明。如果编写多线程程序的 Java 程序员不理解隐式进行的
+线程之间通信的工作机制，很可能会遇到各种奇怪的内存可见性问题。</p>
+
+<h1 id="2-java-内存模型的抽象">2.Java 内存模型的抽象</h1>
+
+<p>在java中，所有实例域、静态域和数组元素存储在堆内存中，堆内存在线程之间共
+享（本文使用“共享变量”这个术语代指实例域，静态域和数组元素）。<strong>局部变量
+（ Local variables ），方法定义参数（java语言规范称之为 formal method
+parameters ）和异常处理器参数（ exception handler parameters ）</strong>不会在线程之间
+共享，它们不会有内存可见性问题，也不受内存模型的影响。
+Java 线程之间的通信由 Java 内存模型（本文简称为 JMM）控制，JMM 决定一个
+线程对共享变量的写入何时对另一个线程可见。从抽象的角度来看，JMM 定义了
+线程和主内存之间的抽象关系：*线程之间的共享变量存储在主内存（main
+memory）中，每个线程都有一个私有的本地内存（local memory），本地内存
+中存储了该线程以读/写共享变量的副本。*本地内存是 JMM 的一个抽象概念，并不
+真实存在。它涵盖了缓存，写缓冲区，寄存器以及其他的硬件和编译器优化。
+Java内存模型的抽象示意图如下：
+<img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190510093229.png" alt="内存模型" />
+从上图来看，线程 A 与线程 B 之间如要通信的话，必须要经历下面 2 个步骤：
+1. 首先，线程 A 把本地内存 A 中更新过的共享变量刷新到主内存中去。
+2. 然后，线程 B 到主内存中去读取线程 A 之前已更新过的共享变量。
+下面通过示意图来说明这两个步骤：
+<img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190510093250.png" alt="通信" />
+如上图所示，本地内存 A 和 B 有主内存中共享变量 x 的副本。假设初始时，这三个
+内存中的 x 值都为 0。线程 A 在执行时，把更新后的 x 值（假设值为 1）临时存放
+在自己的本地内存 A 中。当线程 A 和线程 B 需要通信时，线程 A 首先会把自己本
+地内存中修改后的 x 值刷新到主内存中，此时主内存中的 x 值变为了 1。随后，线
+程 B 到主内存中去读取线程 A 更新后的 x 值，此时线程 B 的本地内存的 x 值也变
+为了 1。
+从整体来看，这两个步骤实质上是线程 A 在向线程 B 发送消息，而且这个通信过程
+必须要经过主内存。JMM 通过控制主内存与每个线程的本地内存之间的交互，来
+为 java 程序员提供内存可见性保证。</p>
+
+<h2 id="2-1-重排序">2.1 重排序</h2>
+
+<p>在执行程序时为了提高性能，编译器和处理器常常会对指令做重排序。重排序分三
+种类型：</p>
+
+<pre><code>1. 编译器优化的重排序。编译器在不改变单线程程序语义的前提下，可以重新安
+排语句的执行顺序。
+2. 指令级并行的重排序。现代处理器采用了指令级并行技术（Instruction-Level
+Parallelism， ILP）来将多条指令重叠执行。如果不存在数据依赖性，处理器
+可以改变语句对应机器指令的执行顺序。
+3. 内存系统的重排序。由于处理器使用缓存和读/写缓冲区，这使得加载和存储操
+作看上去可能是在乱序执行。
+</code></pre>
+
+<p>从 java 源代码到最终实际执行的指令序列，会分别经历下面三种重排序：
+<img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190510093319.png" alt="重排序" />
+上述的 1 属于编译器重排序，2 和 3 属于处理器重排序。这些重排序都可能会导致
+多线程程序出现内存可见性问题。对于编译器，JMM 的编译器重排序规则会禁止
+特定类型的编译器重排序（不是所有的编译器重排序都要禁止）。对于处理器重排
+序，JMM 的处理器重排序规则会要求 java 编译器在生成指令序列时，插入特定类
+型的内存屏障（memory barriers，intel 称之为 memory fence）指令，通过内
+存屏障指令来禁止特定类型的处理器重排序（不是所有的处理器重排序都要禁
+止）。
+JMM 属于语言级的内存模型，它确保在不同的编译器和不同的处理器平台之上，
+通过禁止特定类型的编译器重排序和处理器重排序，为程序员提供一致的内存可见
+性保证。</p>
+
+<h2 id="2-2-处理器重排序与内存屏障指令">2.2 处理器重排序与内存屏障指令</h2>
+
+<p>现代的处理器使用写缓冲区来临时保存向内存写入的数据。写缓冲区可以保证指令
+流水线持续运行，它可以避免由于处理器停顿下来等待向内存写入数据而产生的延
+迟。同时，通过以批处理的方式刷新写缓冲区，以及合并写缓冲区中对同一内存地
+址的多次写，可以减少对内存总线的占用。虽然写缓冲区有这么多好处，但每个处
+理器上的写缓冲区，仅仅对它所在的处理器可见。这个特性会对内存操作的执行顺
+序产生重要的影响：处理器对内存的读/写操作的执行顺序，不一定与内存实际发生的读/写操作顺序一致！为了具体说明，请看下面示例：
+<img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190510093345.png" alt="内存屏障" />
+这里处理器 A 和处理器 B 可以同时把共享变量写入自己的写缓冲区（A1，B1），
+然后从内存中读取另一个共享变量（A2，B2），最后才把自己写缓存区中保存的
+脏数据刷新到内存中（A3，B3）。当以这种时序执行时，程序就可以得到 x = y =
+0 的结果。
+从内存操作实际发生的顺序来看，直到处理器 A 执行 A3 来刷新自己的写缓存区，
+写操作 A1 才算真正执行了。虽然处理器 A 执行内存操作的顺序为：A1-&gt;A2，但
+内存操作实际发生的顺序却是：A2-&gt;A1。此时，处理器 A 的内存操作顺序被重排
+序了（处理器 B 的情况和处理器 A 一样，这里就不赘述了）。
+这里的关键是，由于写缓冲区仅对自己的处理器可见，它会导致处理器执行内存操
+作的顺序可能会与内存实际的操作执行顺序不一致。由于现代的处理器都会使用写
+缓冲区，因此现代的处理器都会允许对写-读操作重排序。
+下面是常见处理器允许的重排序类型的列表：
+<img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190510093421.png" alt="处理器" />
+上表单元格中的“N”表示处理器不允许两个操作重排序，“Y”表示允许重排
+序。
+从上表我们可以看出：常见的处理器都允许 Store-Load 重排序；常见的处理器都
+不允许对存在数据依赖的操作做重排序。sparc-TSO 和 x86 拥有相对较强的处理器
+内存模型，它们仅允许对写-读操作做重排序（因为它们都使用了写缓冲区）。
+※注 1：sparc-TSO 是指以 TSO(Total Store Order)内存模型运行时，sparc 处理
+器的特性。
+※注 2：上表中的 x86 包括 x64 及 AMD64。
+※注 3：由于 ARM 处理器的内存模型与 PowerPC 处理器的内存模型非常类似，本文将忽
+略它。
+※注 4：数据依赖性后文会专门说明。
+为了保证内存可见性，java 编译器在生成指令序列的适当位置会插入内存屏障指令
+来禁止特定类型的处理器重排序。JMM 把内存屏障指令分为下列四类：
+<img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190510093451.png" alt="内存屏障指令" />
+StoreLoad Barriers 是一个“全能型”的屏障，它同时具有其他三个屏障的效果。
+现代的多处理器大都支持该屏障（其他类型的屏障不一定被所有处理器支持）。执
+行该屏障开销会很昂贵，因为当前处理器通常要把写缓冲区中的数据全部刷新到内
+存中（buffer fully flush）。</p>
+
+<h2 id="2-3-happens-before">2.3 happens-before</h2>
+
+<p>从 JDK5 开始，java 使用新的 JSR -133 内存模型（本文除非特别说明，针对的都
+是 JSR- 133 内存模型）。JSR-133 使用 happens-before 的概念来阐述操作之间
+的内存可见性。在 JMM 中，如果一个操作执行的结果需要对另一个操作可见，那
+么这两个操作之间必须要存在 happens-before 关系。这里提到的两个操作既可以
+是在一个线程之内，也可以是在不同线程之间。
+&gt;与程序员密切相关的 happens-before 规则如下：
+ 程序顺序规则：一个线程中的每个操作，happens- before 于该线程中的任意后续操作。
+ 监视器锁规则：对一个监视器的解锁，happens- before 于随后对这个监视器
+的加锁。
+ volatile 变量规则：对一个 volatile 域的写，happens- before 于任意后续对
+这个 volatile 域的读。
+ 传递性：如果 A happens- before B，且 B happens- before C，那么 A
+happens- before C。
+注意，两个操作之间具有 happens-before 关系，并不意味着前一个操作必须要在
+后一个操作之前执行！happens-before 仅仅要求前一个操作（执行的结果）对后
+一个操作可见，且前一个操作按顺序排在第二个操作之前（the first is visible to
+and ordered before the second）。happens- before 的定义很微妙，后文会具
+体说明 happens-before 为什么要这么定义。</p>
+
+<p>happens-before 与 JMM 的关系如下图所示：
+<img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190510093517.png" alt="happens-before" />
+如上图所示，一个 happens-before 规则对应于一个或多个编译器和处理器重排序
+规则。对于 java 程序员来说，happens-before 规则简单易懂，它避免 java 程序
+员为了理解 JMM 提供的内存可见性保证而去学习复杂的重排序规则以及这些规则
+的具体实现。</p>
+
+<h1 id="3-重排序">3.重排序</h1>
+
+<h2 id="3-1数据依赖性">3.1数据依赖性</h2>
+
+<p>如果两个操作访问同一个变量，且这两个操作中有一个为写操作，此时这两个操作
+之间就存在数据依赖性。数据依赖分下列三种类型：
+<img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190510093543.png" alt="数据依赖" />
+上面三种情况，只要重排序两个操作的执行顺序，程序的执行结果将会被改变。
+前面提到过，编译器和处理器可能会对操作做重排序。编译器和处理器在重排序
+时，会遵守数据依赖性，编译器和处理器不会改变存在数据依赖关系的两个操作的
+执行顺序。
+注意，这里所说的数据依赖性仅针对单个处理器中执行的指令序列和单个线程中执
+行的操作，不同处理器之间和不同线程之间的数据依赖性不被编译器和处理器考
+虑。</p>
+
+<h2 id="3-2-as-if-serial-语义">3.2 as-if-serial 语义</h2>
+
+<p>as-if-serial 语义的意思指：不管怎么重排序（编译器和处理器为了提高并行度），
+（单线程）程序的执行结果不能被改变。编译器，runtime 和处理器都必须遵守
+as-if-serial 语义。
+为了遵守 as-if-serial 语义，编译器和处理器不会对存在数据依赖关系的操作做重
+排序，因为这种重排序会改变执行结果。但是，如果操作之间不存在数据依赖关
+系，这些操作就可能被编译器和处理器重排序。为了具体说明，请看下面计算圆面
+积的代码示例：</p>
+
+<pre><code>double pi = 3.14; //A
+double r = 1.0; //B
+double area = pi * r * r; //C
+</code></pre>
+
+<p>上面三个操作的数据依赖关系如下图所示：
+<img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190510093609.png" alt="依赖关系.JPG" />
+如上图所示，A 和 C 之间存在数据依赖关系，同时 B 和 C 之间也存在数据依赖关
+系。因此在最终执行的指令序列中，C 不能被重排序到 A 和 B 的前面（C 排到 A 和
+B 的前面，程序的结果将会被改变）。但 A 和 B 之间没有数据依赖关系，编译器和
+处理器可以重排序 A 和 B 之间的执行顺序。下图是该程序的两种执行顺序：
+<img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190510093639.png" alt="依赖关系" />
+as-if-serial 语义把单线程程序保护了起来，遵守 as-if-serial 语义的编译器，
+runtime 和处理器共同为编写单线程程序的程序员创建了一个幻觉：单线程程序是按程序的顺序来执行的。as-if-serial 语义使单线程程序员无需担心重排序会干扰他
+们，也无需担心内存可见性问题。
+程序顺序规则
+根据 happens- before 的程序顺序规则，上面计算圆的面积的示例代码存在三个
+happens- before 关系：
+1. A happens- before B；
+2. B happens- before C；
+3. A happens- before C；
+这里的第 3 个 happens- before 关系，是根据 happens- before 的传递性推导出
+来的。
+这里 A happens- before B，但实际执行时 B 却可以排在 A 之前执行（看上面的
+重排序后的执行顺序）。在第一章提到过，如果 A happens- before B，JMM 并
+不要求 A 一定要在 B 之前执行。JMM 仅仅要求前一个操作（执行的结果）对后一
+个操作可见，且前一个操作按顺序排在第二个操作之前。这里操作 A 的执行结果不
+需要对操作 B 可见；而且重排序操作 A 和操作 B 后的执行结果，与操作 A 和操作
+B 按 happens- before 顺序执行的结果一致。在这种情况下，JMM 会认为这种重
+排序并不非法（ not illegal）， JMM 允许这种重排序。
+在计算机中，软件技术和硬件技术有一个共同的目标：在不改变程序执行结果的前
+提下，尽可能的开发并行度。编译器和处理器遵从这一目标，从 happens- before
+的定义我们可以看出，JMM 同样遵从这一目标。
+重排序对多线程的影响
+现在让我们来看看，重排序是否会改变多线程程序的执行结果。请看下面的示例代
+码：</p>
+
+<pre><code>class ReorderExample {
+
+int a = 0;
+boolean flag = false;
+
+public void writer() {
+a = 1; //1
+flag = true; //2
+}
+
+public void reader() {
+if (flag) { //3
+int i = a * a; //4
+……
+}
+}
+</code></pre>
+
+<p>flag 变量是个标记，用来标识变量 a 是否已被写入。这里假设有两个线程 A 和 B，
+A 首先执行 writer()方法，随后 B 线程接着执行 reader()方法。线程 B 在执行操作
+4 时，能否看到线程 A 在操作 1 对共享变量 a 的写入？
+答案是：不一定能看到。
+由于操作 1 和操作 2 没有数据依赖关系，编译器和处理器可以对这两个操作重排
+序；同样，操作 3 和操作 4 没有数据依赖关系，编译器和处理器也可以对这两个操
+作重排序。让我们先来看看，当操作 1 和操作 2 重排序时，可能会产生什么效果？
+请看下面的程序执行时序图：
+<img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190510093708.png" alt="图1.JPG" />
+如上图所示，操作 1 和操作 2 做了重排序。程序执行时，线程 A 首先写标记变量
+flag，随后线程 B 读这个变量。由于条件判断为真，线程 B 将读取变量 a。此时，
+变量 a 还根本没有被线程 A 写入，在这里多线程程序的语义被重排序破坏了！
+※注：本文统一用红色的虚箭线标识错误的读操作，用绿色的虚箭线标识正确的读
+操作。
+下面再让我们看看，当操作 3 和操作 4 重排序时会产生什么效果（借助这个重排
+序，可以顺便说明控制依赖性）。下面是操作 3 和操作 4 重排序后，程序的执行时
+序图：
+<img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190510093738.png" alt="图2.JPG" />
+在程序中，操作 3 和操作 4 存在控制依赖关系。当代码中存在控制依赖性时，会影
+响指令序列执行的并行度。为此，编译器和处理器会采用猜测（Speculation）执
+行来克服控制相关性对并行度的影响。以处理器的猜测执行为例，执行线程 B 的处
+理器可以提前读取并计算 a*a，然后把计算结果临时保存到一个名为重排序缓冲
+（reorder buffer ROB）的硬件缓存中。当接下来操作 3 的条件判断为真时，就把
+该计算结果写入变量 i 中。
+从图中我们可以看出，猜测执行实质上对操作 3 和 4 做了重排序。重排序在这里破
+坏了多线程程序的语义！
+在单线程程序中，对存在控制依赖的操作重排序，不会改变执行结果（这也是 as-
+if-serial 语义允许对存在控制依赖的操作做重排序的原因）；但在多线程程序中，
+对存在控制依赖的操作重排序，可能会改变程序的执行结果。</p>
+
+<h2 id="3-2数据竞争与顺序一致性保证">3.2数据竞争与顺序一致性保证</h2>
+
+<p>当程序未正确同步时，就可能会存在数据竞争。java 内存模型规范对数据竞争的定
+义如下：
+ 在一个线程中写一个变量，
+ 在另一个线程读同一个变量，
+ 而且写和读没有通过同步来排序。
+当代码中包含数据竞争时，程序的执行往往产生违反直觉的结果（前一章的示例正
+是如此）。如果一个多线程程序能正确同步，这个程序将是一个没有数据竞争的程
+序。
+JMM 对正确同步的多线程程序的内存一致性做了如下保证：
+ 如果程序是正确同步的，程序的执行将具有顺序一致性（sequentially
+consistent）&ndash;即程序的执行结果与该程序在顺序一致性内存模型中的执行结
+果相同。马上我们将会看到，这对于程序员来说是一个极强的保证。这里的同
+步是指广义上的同步，包括对常用同步原语（ synchronized ，volatile 和 final）
+的正确使用。</p>
+
+<h1 id="references">References</h1>
+
+<p><a href="http://ifeve.com/jsr133-cn/">JSR133中文版</a>
+<a href="http://ifeve.com/java-memory-model-0/">深入理解java内存模型</a></p>
+
+
+        </div>
+
+    </div>
+
+    
+
+
+</article>
+
+<div id="toc" class="toc-article" >
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc">
+        <nav id="TableOfContents">
+<ul>
+<li><a href="#1-并发编程模型的分类">1.并发编程模型的分类</a></li>
+<li><a href="#2-java-内存模型的抽象">2.Java 内存模型的抽象</a>
+<ul>
+<li><a href="#2-1-重排序">2.1 重排序</a></li>
+<li><a href="#2-2-处理器重排序与内存屏障指令">2.2 处理器重排序与内存屏障指令</a></li>
+<li><a href="#2-3-happens-before">2.3 happens-before</a></li>
+</ul></li>
+<li><a href="#3-重排序">3.重排序</a>
+<ul>
+<li><a href="#3-1数据依赖性">3.1数据依赖性</a></li>
+<li><a href="#3-2-as-if-serial-语义">3.2 as-if-serial 语义</a></li>
+<li><a href="#3-2数据竞争与顺序一致性保证">3.2数据竞争与顺序一致性保证</a></li>
+</ul></li>
+<li><a href="#references">References</a></li>
+</ul>
+</nav>
+    </ol>
+    <div style="text-align:center">-----------------------</div>
+    <strong class="toc-title">最新评论</strong>
+    <ol class="toc">
+        <div class="remark42__last-comments" data-max="10"></div>
+    </ol>
+</div>
+<style>
+    
+
+    #tocButton{
+        display: none;
+    }
+    #toc{
+        display: none;
+    }
+
+    
+
+
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录" >
+
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function () {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    
+    
+    
+        
+    
+</script>
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a class="bds_qzone" data-cmd="qzone" href="#" title="分享到 QQ 空间"></a>
+        <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+        <a class="bds_count" data-cmd="count"></a>
+        <a class="bds_more" data-cmd="more"></a>
+
+    </div>
+    <script>
+        window._bd_share_config = {
+            "common": {
+                "bdSnsKey": {},
+                "bdText": "",
+                "bdMini": "2",
+                "bdMiniList": false,
+                "bdPic": "",
+                "bdStyle": "0",
+                "bdSize": "24"
+            }, "share": {}
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+</div>
+
+
+
+
+<div style="margin-left: 30px;margin-right: 30px;background: white;padding-left: 30px;padding-right: 30px">
+    <div class="comments">
+        <h3>[评论][COMMENTS]</h3>
+        
+            
+                
+                
+                
+                
+                
+            
+        
+        <div id="remark42"></div>
+        <div id="disqus_thread"></div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<ul class="post-list toc-article">
+    
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2022/01/13/mysql-snapshot-read/" target="_blank">MySQL之Innodb之快照读原理实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2021/02/13/java-clone/" target="_blank">java的clone方法JVM实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/11/13/im-timeline/" target="_blank">基于TimeLine模型的消息同步机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/09/26/threadlocal-enchancer/" target="_blank">线程传递增强之TransmittableThreadLocal</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/06/11/net-nio-netty/" target="_blank">浅析java-nio及netty的reactor模型</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/19/spring-transaction-commit/" target="_blank">Transaction源码解析之事务提交与回滚</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/" target="_blank">Transaction源码解析之事务预处理</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/" target="_blank">Transaction源码解析之事务配置解析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/" target="_blank">生产-消费模型之虚假唤醒</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/" target="_blank">Spring实例化bean之源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/03/02/float-precision/" target="_blank">float浮点小数的设计及精度问题</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/07/11/mysql-page-detail/" target="_blank">MySQL中的page页详解</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/05/03/apt_lombok_implement/" target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/02/15/filter/" target="_blank">实际项目运用之Filter模式（过滤器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/12/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/11/17/btree-info/" target="_blank">数据结构之BTree和B&#43;Tree(多路平衡查找树 )</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/10/15/id-redis/" target="_blank">分布式全局序列ID方案之Redis优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/25/id-flicker/" target="_blank">分布式全局序列ID方案之Flicker优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/19/id-snowflake/" target="_blank">分布式全局序列ID方案之Snowflake算法</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/25/spring-springmvc/" target="_blank">Spring之动手实现SpringMVC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/22/java-methodhandler/" target="_blank">Java反射优化之方法句柄</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/16/spring-bean-ioc/" target="_blank">Spring之动手实现IOC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/12/spring-bean-lifecycle/" target="_blank">Spring之Bean加载-解析-生命周期</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/09/aqs-condition/" target="_blank">并发基础之Condition(等待队列)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/07/cache-redis-optimize/" target="_blank">Redis注意事项及常见优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/04/aqs_chapter02/" target="_blank">并发基础之AQS同步器（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/01/cache-redis-slowlog/" target="_blank">Redis之慢查询日志</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/31/aqs_chapter01/" target="_blank">并发基础之AQS同步器（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/16/junit-codeanalysis/" target="_blank">初窥门径之JUnit源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/13/java-securitymanager/" target="_blank">Java安全之SecurityManager</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/05/spi-introduction/" target="_blank">框架基础之SPI机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/29/responsibility-chain/" target="_blank">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/25/jndi-introdution/" target="_blank">JNDI知识摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/17/architect/" target="_blank">技术图谱</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/13/distribution-knowledge/" target="_blank">分布式项目知识要点</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/07/singletion/" target="_blank">设计模式之单例模式终极版【克隆-序列化-反射】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/02/fail-fast-safe/" target="_blank">Fail-Fast和Fail-Safe机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/27/adapter/" target="_blank">实际项目运用之Adapter模式（适配器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/18/template/" target="_blank">设计模式之Template模式（模版模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/14/synchronized-principle/" target="_blank">synchronized实现原理及锁优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/13/juc-tree-info/" target="_blank">JUC知识点总结</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/06/strategy/" target="_blank">实际项目运用之Strategy模式（策略模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/04/volatile-feature/" target="_blank">volatile关键字原理实现及应用</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/28/high-event/" target="_blank">MYSQL高级特性之【Event事件】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/27/process-fun/" target="_blank">MYSQL高级特性之【存储过程与函数】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/25/cap-base-flp/" target="_blank">分布式之【CAP理论、BASE理论 、FLP不可能定理】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/21/string-builder-question/" target="_blank">字符串拼接的疑惑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/17/exception-introduce/" target="_blank">Java异常处理-原理及优化建议</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/03/thread-jmm-happens-before/" target="_blank">java内存模型之[JMM][重排序][happens-before]</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/28/decorator/" target="_blank">实际项目运用之Decorator模式（装饰器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/26/interface-idempotency/" target="_blank">接口设计的幂等性考虑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/21/binary-operation/" target="_blank">java中位运算技巧</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/20/classloader-chapter02/" target="_blank">ClassLoader类加载分析（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/13/introspector/" target="_blank">Java 内省(Introspector)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/08/classloader-chapter01/" target="_blank">ClassLoader类加载分析（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/19/builder/" target="_blank">设计模式之builder模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/07/builder-factory/" target="_blank">设计模式之factory模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/11/03/recursive-lock/" target="_blank">可重入锁</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/09/12/show-global-status/" target="_blank">库级优化之SHOW GLOBAL STATUS</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/06/13/optimize-picture/" target="_blank">后端开发需要了解的mysql优化方向</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/16/thread-communication/" target="_blank">多线程之线程通信摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/07/design-rule/" target="_blank">数据库设计三范式和反范式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/info/" target="_blank">联系&amp;留言</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/open_source/" target="_blank">开源项目</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/tools/" target="_blank">在线工具</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/01/23/externalizable-interface/" target="_blank">自定义序列化之Externalizable接口</a></li>
+    
+</ul>
+
+<script>
+    var remark_config = {
+        host: "https://nicky-chin.cn", 
+        site_id: 'nicky-blog',
+        components: ['embed', 'last-comments'], 
+        max_shown_comments: 20, 
+        theme: 'light', 
+        locale: 'zh'
+    };
+
+    (function(c) {
+        for(var i = 0; i < c.length; i++){
+            var d = document, s = d.createElement('script');
+            s.src = remark_config.host + '/web/' +c[i] +'.js';
+            s.defer = true;
+            (d.head || d.body).appendChild(s);
+        }
+    })(remark_config.components || ['embed']);
+</script>
+
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    $(".post-list").addClass("toc-article");
+    $(".post-list-item a").attr("target", "_blank");
+    $("#post-nav-button > a:nth-child(2)").click(function () {
+        $(".fa-bars, .fa-times").toggle();
+        $(".post-list").toggle(300);
+        if ($(".toc").length > 0) {
+            $("#toc, #tocButton").toggle(200, function () {
+                if ($(".switch-area").is(":visible")) {
+                    $("#toc, .switch-btn, .switch-area").toggle();
+                    $("#tocButton").attr("value", valueHide);
+                }
+            })
+        }
+        else {
+            $(".switch-btn, .switch-area").fadeToggle(300);
+        }
+    })
+</script>
+
+<script>
+    (function(d, w, c) {
+        w.ChatraID = 'jZh4grHz47JAjnsis';
+        var s = d.createElement('script');
+        w[c] = w[c] || function() {
+            (w[c].q = w[c].q || []).push(arguments);
+        };
+        s.async = true;
+        s.src = 'https://call.chatra.io/chatra.js';
+        if (d.head) d.head.appendChild(s);
+    })(document, window, 'Chatra');
+</script>
+
+<script>
+
+</script>
+
+
+        </div>
+        <footer id="footer">
+
+    
+
+
+    <div class="outer">
+        
+        
+            <div class="footer-right">
+                
+                    <span id="busuanzi_container_site_pv" style='display: block'>
+                        <span id="site-visit" >本站访客数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    
+                
+                
+                    
+                        
+                            
+                        
+                    
+                
+            </div>
+        
+        
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2022 南乡清水@Hangzhou
+            </div>
+            <div class="s-bottom-layer-right" style="font-size: 0.2em" >
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33011002014475"
+                   target="_blank"><span class="lh s-bottom-recordcode">京公网安备33011002014475号</span></a>
+                <a href="https://beian.miit.gov.cn/"
+                   target="_blank"><span class="lh"> 浙ICP备19049847号-1</span></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chin.cn/js/GithubRepoWidget.js"></script>
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  10 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-159911678-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>

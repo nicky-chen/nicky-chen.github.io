@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  false ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+    <title>MySQL之Innodb之快照读原理实现</title>
+    <link rel="icon" href="https://nicky-chin.cn/img/favicon.ico">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://nicky-chin.cn/assets/waifu.css"/>
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/highlight/styles/darcula.css">
+    <script src="https://nicky-chin.cn/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+            (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','zTXEk5Sy3-gUuAVTm5JE','2.0.0');
+    </script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chin.cn/" class="profilepic">
+            <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chin.cn/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chin.cn/tags/im%E9%80%9A%E8%AE%AF" style="font-size: 12px;" class="color1">Im通讯</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color4">Junit</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/netty" style="font-size: 12px;" class="color1">Netty</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color3">Redis</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color2">Spring-Base</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color1">Spring-Transaction</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">优化</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color4">分布式id方案</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color4">创建型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color1">多线程</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color3">思维导图</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color1">数据结构</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">框架基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color2">源码</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color3">理论</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color2">结构型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color3">行为型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chin.cn/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chin.cn/" class="profilepic">
+                <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+            <article id="post-js-android" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/post-2/mysql-snapshot-read/" class="article-date">
+            <time datetime="2022-01-13 11:14:15 &#43;0800 CST" itemprop="datePublished">2022-01-13</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 class="article-title" itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/post-2/mysql-snapshot-read/">MySQL之Innodb之快照读原理实现</a>
+            </h1>
+
+
+        </header>
+
+        <div class="article-info article-info-post">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="article-category-link" href="https://nicky-chin.cn/categories/mysql/" style="font-size: 12px;">MySql</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e6%ba%90%e7%a0%81/"
+                           style="font-size: 12px;">源码</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            
+            <div class="article-category tagcloud">
+                <a class="article-category-link" style="font-size: 12px;"> posted by 清水</a>
+            </div>
+            
+
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="article-entry" itemprop="articleBody">
+
+            
+
+<h1 id="innodb之快照读原理实现">Innodb之快照读原理实现</h1>
+
+<h1 id="1-innodb-mvcc组成">1 Innodb MVCC组成</h1>
+
+<h3 id="1-1-为何使用mvcc实现快照读">1. 1 为何使用MVCC实现快照读</h3>
+
+<p>innodb存储引擎的快照读是基于多版本并发控制 MVCC 和 undolog 实现，通过 MVCC 机制提高系统读写并发性能，快照读只发生于 select 操作，但不包括 <strong>select &hellip; lock in share mode, select &hellip; for update</strong>　　　　</p>
+
+<ul>
+<li>提高并发的思路
+&gt; 并发数据一致性通常实现: 锁 + 多数据版本
+&gt; 提高并发读的思路: 通过共享锁保证读读并发，独占锁实现读写互斥
+&gt; 提高并发读写的思路: 一致性折衷，通过数据多版本控制，读使用快照版本，读写不互斥，提高读写并发能力</li>
+</ul>
+
+<h3 id="1-2-mvcc-相关概念">1.2  MVCC 相关概念</h3>
+
+<p>InnoDB的MVCC实现基于<code>undo log</code>，通过<code>回滚段</code>保存 undo log 记录版本快照数据，通过<code>readview</code>机制来确定<code>数据的可见性</code>，通过 purge 线程基于 readview 来清理旧数据版本</p>
+
+<h5 id="1-2-1-undolog">1.2.1  undolog</h5>
+
+<ul>
+<li>mysql 事务未提交前，会将事务修改前的<strong>旧版本数据</strong>存放到 undo 日志里，用于事务回滚或者数据库奔溃对数据库数据的影响，来保证数据的原子性。</li>
+<li>undo 日志会存储在<code>回滚段</code>中,分为:<code>insert undo log</code> 和 <code>update undo log</code></li>
+</ul>
+
+<h5 id="1-2-2-readview">1.2.2 readview</h5>
+
+<ul>
+<li>readview 主要用于可见性判断</li>
+<li>在 repeatable read 隔离级别，快照的产生只会在事务开启后第一个 select 读操作后创建 readview 快照</li>
+<li>在 read committed 隔离级别，事务中的每一个 select 读操作都会创建 read view 快照</li>
+</ul>
+
+<h5 id="1-2-3-三个隐式字段">1.2.3 三个隐式字段</h5>
+
+<table>
+<thead>
+<tr>
+<th align="center">字段</th>
+<th align="center">含义</th>
+<th align="center">存储位置</th>
+<th align="center">大小</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center"><strong>DB_TRX_ID</strong></td>
+<td align="center">最后更新的事务 id(update,delete,insert)</td>
+<td align="center">表数据行和聚簇索引上</td>
+<td align="center">占6字节</td>
+</tr>
+
+<tr>
+<td align="center"><strong>DB_ROLL_PTR</strong></td>
+<td align="center">回滚指针，指向前一个版本的 undolog 记录，组成 undo 链表</td>
+<td align="center">表数据行和聚簇索引上</td>
+<td align="center">占7字节</td>
+</tr>
+
+<tr>
+<td align="center"><strong>DB_ROW_ID</strong></td>
+<td align="center">数据行 id，单调递增</td>
+<td align="center">表数据行和聚簇索引上</td>
+<td align="center">占6字节</td>
+</tr>
+</tbody>
+</table>
+
+<h1 id="2-innodb-mvcc-实现-5-6-x版本">2 Innodb MVCC 实现（5.6.x版本）</h1>
+
+<h3 id="2-1-多版本实现">2.1 多版本实现</h3>
+
+<h5 id="2-1-1-事务快照更新过程">2.1.1 事务快照更新过程</h5>
+
+<p>假设<code>user</code>表中 字段<code>id</code>为<strong>聚簇索引</strong>，字段<code>name</code> 为<strong>非聚簇索引</strong></p>
+
+<ul>
+<li>步骤1 创建记录
+<code>sql
+INSERT INTO `user`(`id`, `name`, `score`) VALUES (9, 'zhang3', 60)
+</code></li>
+</ul>
+
+<p>如图所示：</p>
+
+<p><img src="https://nicky-chin.cn/media/mysql-snapshot-read/undolog-insert001.png" alt="undolog-insert001" /></p>
+
+<p>插入之后生成的数据行上有三个隐式字段：分别对应该行的行 id 标识、最新事务 id 标识和回滚指针，以及对应的业务属性数据</p>
+
+<ul>
+<li>步骤2 聚簇索引更新记录</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"> <span style="color:#66d9ef">update</span> <span style="color:#66d9ef">table</span> <span style="color:#f92672">`</span><span style="color:#66d9ef">user</span><span style="color:#f92672">`</span> <span style="color:#66d9ef">set</span> <span style="color:#f92672">`</span>score<span style="color:#f92672">`=</span> <span style="color:#ae81ff">70</span> <span style="color:#66d9ef">where</span> id<span style="color:#f92672">=</span><span style="color:#ae81ff">9</span></code></pre></div>
+<p>如图所示：</p>
+
+<p><img src="https://nicky-chin.cn/media/mysql-snapshot-read/undolog-update001.png" alt="undolog-update001" /></p>
+
+<blockquote>
+<p>1 对 id 为9的数据行加X锁
+2 写旧版本数据到 undo log
+3 更新数据行，修改 DB_TRX_ID 为667, 回滚指针指向拷贝到 undo log 的旧版本
+4 更新聚簇索引所在行的 DB_TRX_ID 和 DB_ROLL_PTR
+5 事务提交，释放锁</p>
+</blockquote>
+
+<ul>
+<li>步骤3 非聚簇索引更新记录</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">   <span style="color:#66d9ef">update</span> <span style="color:#66d9ef">table</span> <span style="color:#f92672">`</span><span style="color:#66d9ef">user</span><span style="color:#f92672">`</span> <span style="color:#66d9ef">set</span> <span style="color:#f92672">`</span>score<span style="color:#f92672">`=</span> <span style="color:#ae81ff">80</span> <span style="color:#66d9ef">where</span> <span style="color:#f92672">`</span>name<span style="color:#f92672">`</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;zhang3&#39;</span></code></pre></div>
+<p>如图所示：</p>
+
+<p><img src="https://nicky-chin.cn/media/mysql-snapshot-read/undolog-update002.png" alt="undolog-update002" /></p>
+
+<p>二级索引更新</p>
+
+<p><img src="https://nicky-chin.cn/media/mysql-snapshot-read/undolog-update003.png" alt="undolog-update003" /></p>
+
+<blockquote>
+<p>1 对 id 为9的数据行加X锁
+2 写旧版本数据到 undo log
+3 更新数据行，修改 DB_TRX_ID 为668, 回滚指针指向拷贝到 undo log 的旧版本
+4 标记Page当前所在行 <strong>DELETED BIT</strong> 为被删除
+5 插入新的索引行记录并更新所在 Page 页的最大<strong>trx_id</strong>
+6 更新聚簇索引所在行的 DB_TRX_ID 和 DB_ROLL_PTR
+7 事务提交，释放锁</p>
+</blockquote>
+
+<ul>
+<li>总结</li>
+</ul>
+
+<p>通过多次更新，旧版本快照通过回滚指针串联成一个链表</p>
+
+<p>同时 undolog 日志会通过 purge 线程查询比当前活跃的最老的事务id的回滚日志进行删除操作</p>
+
+<h3 id="2-2-readview-可见性判断">2.2 readview 可见性判断</h3>
+
+<h5 id="2-2-1-可见性判断流程">2.2.1 可见性判断流程</h5>
+
+<ul>
+<li>readview 结构体包含如下几个属性</li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th align="center">字段</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center"><strong>creator_trx_id</strong></td>
+<td align="center">创建该视图的事务 ID</td>
+</tr>
+
+<tr>
+<td align="center"><strong>trx_ids</strong></td>
+<td align="center">创建 ReadView 时，活跃的读写事务 ID 数组，有序存储</td>
+</tr>
+
+<tr>
+<td align="center"><strong>low_limit_id</strong></td>
+<td align="center">设置为当前最大事务 ID</td>
+</tr>
+
+<tr>
+<td align="center"><strong>up_limit_id</strong></td>
+<td align="center">m_ids 集合中的最小值</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>可见性算法</li>
+</ul>
+
+<p><img src="https://nicky-chin.cn/media/mysql-snapshot-read/see-001.png" alt="see-001" /></p>
+
+<p>在RC或者RR级别下开启事务时会生成一个 readview 快照，当 select 查询到一条数据时，会根据该数据的 trx_id 与 readveiw 中的数据进行可见性比对，可见性算法如下：</p>
+
+<ul>
+<li>如果记录行的<code>trx_id</code>小于<code>read_view_t::up_limit_id</code>，则说明该事务在创建 ReadView 时已经提交了，肯定可见</li>
+<li>如果记录行的<code>trx_id</code>大于等于<code>read_view_t::m_low_limit_id</code>，则说明该事务是创建 readview 之后开启的，肯定不可见</li>
+<li>当<code>trx_id</code>在<code>up_limit_id</code>和<code>low_limit_id</code>之间，并且在<code>read_view_t::trx_ids</code>数组中，则说明创建  readview 时该事务是活跃的，其数据变更对当前视图不可见，如果不在活跃事务列表<code>trx_ids</code>中则对该<code>trx_id</code>的变更可见</li>
+</ul>
+
+<h5 id="2-2-2-rr-级别可重复读流程">2.2.2 RR 级别可重复读流程</h5>
+
+<ul>
+<li>数据准备</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#f92672">`</span><span style="color:#66d9ef">user</span><span style="color:#f92672">`</span> (
+  <span style="color:#f92672">`</span>id<span style="color:#f92672">`</span> int(<span style="color:#ae81ff">10</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> AUTO_INCREMENT,
+  <span style="color:#f92672">`</span>name<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">100</span>) <span style="color:#66d9ef">COLLATE</span> utf8mb4_bin <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+  <span style="color:#f92672">`</span>scores<span style="color:#f92672">`</span> int(<span style="color:#ae81ff">10</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+  <span style="color:#f92672">`</span>status<span style="color:#f92672">`</span> bigint(<span style="color:#ae81ff">20</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+  <span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span> (<span style="color:#f92672">`</span>id<span style="color:#f92672">`</span>)
+) ENGINE<span style="color:#f92672">=</span>InnoDB AUTO_INCREMENT<span style="color:#f92672">=</span><span style="color:#ae81ff">11</span> <span style="color:#66d9ef">DEFAULT</span> CHARSET<span style="color:#f92672">=</span>utf8mb4 <span style="color:#66d9ef">COLLATE</span><span style="color:#f92672">=</span>utf8mb4_bin;
+
+
+<span style="color:#66d9ef">BEGIN</span>;
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> <span style="color:#f92672">`</span><span style="color:#66d9ef">user</span><span style="color:#f92672">`</span> <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;wang5&#39;</span>, <span style="color:#ae81ff">33</span>, <span style="color:#ae81ff">2</span>);
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> <span style="color:#f92672">`</span><span style="color:#66d9ef">user</span><span style="color:#f92672">`</span> <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">2</span>, <span style="color:#e6db74">&#39;zhao6&#39;</span>, <span style="color:#ae81ff">23</span>, <span style="color:#ae81ff">2</span>);
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> <span style="color:#f92672">`</span><span style="color:#66d9ef">user</span><span style="color:#f92672">`</span> <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">9</span>, <span style="color:#e6db74">&#39;zhang3&#39;</span>, <span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">1</span>);
+<span style="color:#66d9ef">COMMIT</span>;</code></pre></div>
+<ul>
+<li>步骤1 新启动两个事务AB</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">  <span style="color:#f92672">-</span><span style="color:#960050;background-color:#1e0010">事务</span>A
+  <span style="color:#66d9ef">set</span> <span style="color:#66d9ef">session</span> transaction <span style="color:#66d9ef">isolation</span> <span style="color:#66d9ef">level</span> <span style="color:#66d9ef">repeatable</span> <span style="color:#66d9ef">read</span>
+  <span style="color:#66d9ef">BEGIN</span>
+  <span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">where</span> id <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+  <span style="color:#f92672">#</span> <span style="color:#960050;background-color:#1e0010">查询当前会话事务</span>id
+  <span style="color:#66d9ef">select</span> TRX_ID <span style="color:#66d9ef">from</span> INFORMATION_SCHEMA.INNODB_TRX <span style="color:#66d9ef">where</span> TRX_MYSQL_THREAD_ID <span style="color:#f92672">=</span> CONNECTION_ID();
+  
+  <span style="color:#f92672">-</span><span style="color:#960050;background-color:#1e0010">事务</span>B
+  <span style="color:#66d9ef">set</span> <span style="color:#66d9ef">session</span> transaction <span style="color:#66d9ef">isolation</span> <span style="color:#66d9ef">level</span> <span style="color:#66d9ef">repeatable</span> <span style="color:#66d9ef">read</span>
+  <span style="color:#66d9ef">BEGIN</span>
+  <span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">where</span> id <span style="color:#f92672">=</span> <span style="color:#ae81ff">9</span>
+  <span style="color:#f92672">#</span> <span style="color:#960050;background-color:#1e0010">查询当前会话事务</span>id
+  <span style="color:#66d9ef">select</span> TRX_ID <span style="color:#66d9ef">from</span> INFORMATION_SCHEMA.INNODB_TRX <span style="color:#66d9ef">where</span> TRX_MYSQL_THREAD_ID <span style="color:#f92672">=</span> CONNECTION_ID();</code></pre></div>
+<p>事务A之后发起事务B， 并查询当前会话事务 id 分别为 710 和 711，通过 readview 机制可知，当前事务B的 readView 快照如下</p>
+
+<p><img src="https://nicky-chin.cn/media/mysql-snapshot-read/readview-001.png" alt="readview-001" /></p>
+
+<ul>
+<li>步骤2 事务A 更新提交得分数据</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">  <span style="color:#f92672">-</span><span style="color:#960050;background-color:#1e0010">事务</span>A
+  <span style="color:#66d9ef">UPDATE</span> <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">set</span> scores <span style="color:#f92672">=</span> <span style="color:#ae81ff">112</span> <span style="color:#66d9ef">where</span> id <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+  <span style="color:#66d9ef">commit</span></code></pre></div>
+<p>此时事务A会生成 undolog 旧版本快照, 事务B的 readview 快照还是如下图：</p>
+
+<p><img src="https://nicky-chin.cn/media/mysql-snapshot-read/readview-002.png" alt="readview-002" /></p>
+
+<p>在RR级别下 readview 中的活跃事务 trx_ids 还是[710, 711]，事务B <code>SELECT * from user where id = 1</code>操作</p>
+
+<p>根据可见性算法可知，查询到最新记录行 trx_id 的记录，发现当前事务 ID 在事务活跃列表，所以要去 undolog 里查询就版本。旧数据的记录行 trx_id 为709的，小于 up_limit_id 最小事务 id, 所以可见，最终显示 score 为33</p>
+
+<ul>
+<li>步骤3 事务C 插入数据</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">  <span style="color:#f92672">-</span><span style="color:#960050;background-color:#1e0010">事务</span><span style="color:#66d9ef">C</span>
+  <span style="color:#66d9ef">set</span> <span style="color:#66d9ef">session</span> transaction <span style="color:#66d9ef">isolation</span> <span style="color:#66d9ef">level</span> <span style="color:#66d9ef">repeatable</span> <span style="color:#66d9ef">read</span>
+  <span style="color:#66d9ef">BEGIN</span>
+  <span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> <span style="color:#f92672">`</span><span style="color:#66d9ef">user</span><span style="color:#f92672">`</span>(<span style="color:#f92672">`</span>name<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>scores<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>status<span style="color:#f92672">`</span>) <span style="color:#66d9ef">VALUES</span> (<span style="color:#e6db74">&#39;li4&#39;</span>, <span style="color:#ae81ff">55</span>, <span style="color:#ae81ff">1</span>)
+  <span style="color:#f92672">#</span> <span style="color:#960050;background-color:#1e0010">查询当前会话事务</span>id
+  <span style="color:#66d9ef">select</span> TRX_ID <span style="color:#66d9ef">from</span> INFORMATION_SCHEMA.INNODB_TRX <span style="color:#66d9ef">where</span> TRX_MYSQL_THREAD_ID <span style="color:#f92672">=</span> CONNECTION_ID();
+  <span style="color:#66d9ef">COMMIT</span></code></pre></div>
+<p>事务C的 trx_id 为712，此时事务B再次发起查询 <code>SELECT * from user where id &gt; 8</code> 根据可见性算法可知，</p>
+
+<p>查询到 id 为9和10两条记录记录，但是 id 为10的记录 trx_id = 712，超过了  readview 快照的最大记录所以不可见，undo 日志也没有旧版本记录，最终只能查询到 id=9 的记录</p>
+
+<h3 id="2-3-快照读源码解析">2.3  快照读源码解析</h3>
+
+<h5 id="2-3-1-innodb三个隐藏字段源码">2.3.1 InnoDB三个隐藏字段源码</h5>
+
+<ul>
+<li>表数据行会添加<code>dict0dict.cc#dict_table_add_system_columns</code>方法</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">  <span style="color:#75715e">/**
+</span><span style="color:#75715e">   * 添加数据行的隐藏字段
+</span><span style="color:#75715e">   * @param table  
+</span><span style="color:#75715e">   * @param heap 
+</span><span style="color:#75715e">   */</span>
+  <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dict_table_add_system_columns</span>(
+  	dict_table_t<span style="color:#f92672">*</span>	table,
+  	mem_heap_t<span style="color:#f92672">*</span>	heap)	
+  {
+  
+    <span style="color:#75715e">// 按顺序添加行id，事务id，回滚指针
+</span><span style="color:#75715e"></span>  	dict_mem_table_add_col(table, heap, <span style="color:#e6db74">&#34;DB_ROW_ID&#34;</span>, DATA_SYS,
+  			       DATA_ROW_ID <span style="color:#f92672">|</span> DATA_NOT_NULL,
+  			       DATA_ROW_ID_LEN);
+  
+  	dict_mem_table_add_col(table, heap, <span style="color:#e6db74">&#34;DB_TRX_ID&#34;</span>, DATA_SYS,
+  			       DATA_TRX_ID <span style="color:#f92672">|</span> DATA_NOT_NULL,
+  			       DATA_TRX_ID_LEN);
+  
+  	dict_mem_table_add_col(table, heap, <span style="color:#e6db74">&#34;DB_ROLL_PTR&#34;</span>, DATA_SYS,
+  			       DATA_ROLL_PTR <span style="color:#f92672">|</span> DATA_NOT_NULL,
+  			       DATA_ROLL_PTR_LEN);
+  
+  }
+</code></pre></div>
+<ul>
+<li>聚簇索引会添加 <code>row0upd.cc#row_upd_index_entry_sys_field</code>方法</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 设置事务id或回滚指针到聚簇索引对应的记录行
+</span><span style="color:#75715e"> * @param entry 数据行记录
+</span><span style="color:#75715e"> * @param index 聚簇索引
+</span><span style="color:#75715e"> * @param type 类型 DATA_TRX_ID or DATA_ROLL_PTR
+</span><span style="color:#75715e"> * @param val  更新的值
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">row_upd_index_entry_sys_field</span>(
+	dtuple_t<span style="color:#f92672">*</span>	entry,	
+	dict_index_t<span style="color:#f92672">*</span>	index,
+	ulint		type,
+	ib_uint64_t	val)	
+{
+	dfield_t<span style="color:#f92672">*</span>	dfield;
+	byte<span style="color:#f92672">*</span>		field;
+	ulint		pos;
+    <span style="color:#75715e">// 查询索引隐藏字段初始位置
+</span><span style="color:#75715e"></span>	pos <span style="color:#f92672">=</span> dict_index_get_sys_col_pos(index, type);
+    <span style="color:#75715e">// 获取对应数据记录行的指针
+</span><span style="color:#75715e"></span>	dfield <span style="color:#f92672">=</span> dtuple_get_nth_field(entry, pos);
+	field <span style="color:#f92672">=</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>byte<span style="color:#f92672">*&gt;</span>(dfield_get_data(dfield));
+    <span style="color:#75715e">// 添加类型
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> (type <span style="color:#f92672">==</span> DATA_TRX_ID) {
+		trx_write_trx_id(field, val);
+	} <span style="color:#66d9ef">else</span> {
+		ut_ad(type <span style="color:#f92672">==</span> DATA_ROLL_PTR);
+		trx_write_roll_ptr(field, val);
+	}
+}
+</code></pre></div>
+<p>聚簇索引上会存储额外信息，6字节的 DB_TRX_ID 字段，表示最新插入或者更新该记录的事务 ID。7字节的 DB_ROLL_PTR 字段，指向该记录的 rollback segment 的 undo log 记录。6字节的 DB_ROW_ID，当有新数据插入的时候会自动递增。若表未没有设置主键，InnoDB 会自动产生聚集索引，包含 DB_ROW_ID 字段。</p>
+
+<h5 id="2-3-2-readview-的执行流程">2.3.2 readview 的执行流程</h5>
+
+<ul>
+<li>readview 数据结构</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">  <span style="color:#66d9ef">struct</span> read_view_t{
+    
+    <span style="color:#75715e">// 等于low_limit_id
+</span><span style="color:#75715e"></span>  	trx_id_t	low_limit_no;
+  			
+    <span style="color:#75715e">// 最大事务id
+</span><span style="color:#75715e"></span>  	trx_id_t	low_limit_id;
+  			
+    <span style="color:#75715e">// 最小事务id
+</span><span style="color:#75715e"></span>  	trx_id_t	up_limit_id;
+  			
+    <span style="color:#75715e">// 活跃事务的个数
+</span><span style="color:#75715e"></span>  	ulint		n_trx_ids;
+  				
+    <span style="color:#75715e">// 活跃事务
+</span><span style="color:#75715e"></span>  	trx_id_t<span style="color:#f92672">*</span>	trx_ids;
+    
+    <span style="color:#75715e">// 创建快照是的事务id
+</span><span style="color:#75715e"></span>  	trx_id_t	creator_trx_id;
+  			
+  	UT_LIST_NODE_T(read_view_t) view_list;
+  };
+</code></pre></div>
+<ul>
+<li>确定当前读or快照读判断流程 <code>row0sel.cc#row_search_for_mysql</code>方法</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">    <span style="color:#75715e">// 如果加锁则为当前读
+</span><span style="color:#75715e"></span>  	<span style="color:#66d9ef">if</span> (prebuilt<span style="color:#f92672">-&gt;</span>select_lock_type <span style="color:#f92672">!=</span> LOCK_NONE) {
+      <span style="color:#75715e">// 省略
+</span><span style="color:#75715e"></span>    }<span style="color:#66d9ef">else</span> {
+      <span style="color:#75715e">// 不加锁则为快照读
+</span><span style="color:#75715e"></span>  		<span style="color:#66d9ef">if</span> (trx<span style="color:#f92672">-&gt;</span>isolation_level <span style="color:#f92672">==</span> TRX_ISO_READ_UNCOMMITTED) {
+      <span style="color:#75715e">// 读未提交直接最新记录行
+</span><span style="color:#75715e"></span>  		} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (index <span style="color:#f92672">==</span> clust_index) {
+      <span style="color:#75715e">// 如果当前索引是聚簇索引
+</span><span style="color:#75715e"></span>  		
+        <span style="color:#75715e">// 直接可见性判断
+</span><span style="color:#75715e"></span>  			<span style="color:#66d9ef">if</span> (UNIV_LIKELY(srv_force_recovery <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">5</span>)
+  			    <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>lock_clust_rec_cons_read_sees(
+  				    rec, index, offsets, trx<span style="color:#f92672">-&gt;</span>read_view)) {
+  
+  				rec_t<span style="color:#f92672">*</span>	old_vers;
+          <span style="color:#75715e">// 不可见则通过undo日志获取记录行上一个版本
+</span><span style="color:#75715e"></span>  				err <span style="color:#f92672">=</span> row_sel_build_prev_vers_for_mysql(
+  					trx<span style="color:#f92672">-&gt;</span>read_view, clust_index,
+  					prebuilt, rec, <span style="color:#f92672">&amp;</span>offsets, <span style="color:#f92672">&amp;</span>heap,
+  					<span style="color:#f92672">&amp;</span>old_vers, <span style="color:#f92672">&amp;</span>mtr);
+  
+  				<span style="color:#66d9ef">if</span> (err <span style="color:#f92672">!=</span> DB_SUCCESS) {
+  
+  					<span style="color:#66d9ef">goto</span> lock_wait_or_error;
+  				}
+  
+  				<span style="color:#66d9ef">if</span> (old_vers <span style="color:#f92672">==</span> NULL) {
+  					<span style="color:#66d9ef">goto</span> next_rec;
+  				}
+          <span style="color:#75715e">// 赋值成老版本
+</span><span style="color:#75715e"></span>  				rec <span style="color:#f92672">=</span> old_vers;
+  			}
+  		} <span style="color:#66d9ef">else</span> {
+        <span style="color:#75715e">// 非聚簇索引可见性判断
+</span><span style="color:#75715e"></span>  
+  			ut_ad(<span style="color:#f92672">!</span>dict_index_is_clust(index));
+  			<span style="color:#75715e">// 如果不可见尝试索引下推，查看聚簇索引上的记录行，通过行上的DB_TRX_ID判断可见性
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 二级索引不含隐藏列，只有page的最大trx_id
+</span><span style="color:#75715e"></span>  			<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>lock_sec_rec_cons_read_sees(
+  				    rec, trx<span style="color:#f92672">-&gt;</span>read_view)) {
+  				<span style="color:#66d9ef">switch</span> (row_search_idx_cond_check(
+  						buf, prebuilt, rec, offsets)) {
+          <span style="color:#75715e">// ICP 未满足条件且未超扫描范围，则获取下一条记录继续查找
+</span><span style="color:#75715e"></span>  				<span style="color:#66d9ef">case</span> ICP_NO_MATCH:
+  					<span style="color:#66d9ef">goto</span> next_rec;
+  				<span style="color:#66d9ef">case</span> ICP_OUT_OF_RANGE:
+          <span style="color:#75715e">// 如果不满足条件且超扫描范围
+</span><span style="color:#75715e"></span>  					err <span style="color:#f92672">=</span> DB_RECORD_NOT_FOUND;
+  					<span style="color:#66d9ef">goto</span> idx_cond_failed;
+  				<span style="color:#66d9ef">case</span> ICP_MATCH:
+          <span style="color:#75715e">// 如果 ICP匹配到记录，则回查聚簇索引进行可见性判断
+</span><span style="color:#75715e"></span>  					<span style="color:#66d9ef">goto</span> requires_clust_rec;
+  				}
+  				ut_error;
+  			}
+  		}
+  	}
+  
+</code></pre></div>
+<p>对于非聚簇索引，因为没有聚簇索引中的隐藏列，所以当快照读命中二级索引时，会先调用<code>lock_sec_rec_cons_read_sees</code>判断 page 上记录的<strong>最新一次修改的 trx_id 是否小于 up_limit_id</strong>，如果小于即该 page 页上数据可见，否则会回查聚簇索引上的记录行，通过行上的 DB_TRX_ID 判断可见性，找到正确的可见版本数据</p>
+
+<ul>
+<li>readview 的开启`<code>row0sel.cc#row_search_for_mysql</code> &rarr;  <code>trx_assign_read_view</code> 方法</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">trx_assign_read_view(
+	trx_t<span style="color:#f92672">*</span>	trx)	
+  
+{
+	ut_ad(trx<span style="color:#f92672">-&gt;</span>state <span style="color:#f92672">==</span> TRX_STATE_ACTIVE);
+  <span style="color:#75715e">// 如果有则返回
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> (trx<span style="color:#f92672">-&gt;</span>read_view <span style="color:#f92672">!=</span> NULL) {
+		<span style="color:#66d9ef">return</span>(trx<span style="color:#f92672">-&gt;</span>read_view);
+	}
+  <span style="color:#75715e">// 没有则创建
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>trx<span style="color:#f92672">-&gt;</span>read_view) {
+		trx<span style="color:#f92672">-&gt;</span>read_view <span style="color:#f92672">=</span> read_view_open_now(
+			trx<span style="color:#f92672">-&gt;</span>id, trx<span style="color:#f92672">-&gt;</span>global_read_view_heap);
+
+		trx<span style="color:#f92672">-&gt;</span>global_read_view <span style="color:#f92672">=</span> trx<span style="color:#f92672">-&gt;</span>read_view;
+	}
+  <span style="color:#75715e">// 返回快照
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">return</span>(trx<span style="color:#f92672">-&gt;</span>read_view);
+
+}
+</code></pre></div>
+<p>具体流程<code>trx_assign_read_view</code> &rarr; <code>read_view_open_now</code>  &rarr;  <code>read_view_open_now_low</code></p>
+
+<ul>
+<li>readview 的关闭 <code>ha_innodb.cc#ha_innobase::external_lock</code> 方法</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">	<span style="color:#66d9ef">if</span> (trx<span style="color:#f92672">-&gt;</span>n_mysql_tables_in_use <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+
+		trx<span style="color:#f92672">-&gt;</span>mysql_n_tables_locked <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+		prebuilt<span style="color:#f92672">-&gt;</span>used_in_HANDLER <span style="color:#f92672">=</span> FALSE;
+    <span style="color:#75715e">// autocommit=1，提交事务
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>thd_test_options(
+				thd, OPTION_NOT_AUTOCOMMIT <span style="color:#f92672">|</span> OPTION_BEGIN)) {
+      <span style="color:#75715e">// 提交事务或标记sql语句结束
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> (trx_is_started(trx)) {
+				innobase_commit(ht, thd, TRUE);
+			}
+    <span style="color:#75715e">// 事务隔离级别小于等于RC级别删除快照
+</span><span style="color:#75715e"></span>		} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (trx<span style="color:#f92672">-&gt;</span>isolation_level <span style="color:#f92672">&lt;=</span> TRX_ISO_READ_COMMITTED
+			   <span style="color:#f92672">&amp;&amp;</span> trx<span style="color:#f92672">-&gt;</span>global_read_view) {
+      <span style="color:#75715e">// 关闭快照
+</span><span style="color:#75715e"></span>			read_view_close_for_mysql(trx);
+		}
+	}
+
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 事务隔离级别小于等于RC级别调用
+</span><span style="color:#75715e"> * @param trx 
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">void</span> read_view_close_for_mysql(
+	trx_t<span style="color:#f92672">*</span>		trx)	
+{
+	ut_a(trx<span style="color:#f92672">-&gt;</span>global_read_view);
+
+	read_view_remove(trx<span style="color:#f92672">-&gt;</span>global_read_view, false);
+
+	mem_heap_empty(trx<span style="color:#f92672">-&gt;</span>global_read_view_heap);
+  <span style="color:#75715e">// 快照设置为 NULL
+</span><span style="color:#75715e"></span>	trx<span style="color:#f92672">-&gt;</span>read_view <span style="color:#f92672">=</span> NULL;
+	trx<span style="color:#f92672">-&gt;</span>global_read_view <span style="color:#f92672">=</span> NULL;
+}
+</code></pre></div>
+<p>从这里可以知道RR隔离级别，快照的产生只会在事务开启后第一个 select 读操作后创建 readview 快照，并且事务未提交前不会删除，对于RC隔离级别，事务中的每一个 select 读操作都会创建 readview 快照</p>
+
+<ul>
+<li>事务可见性判断 <code>lock_clust_rec_cons_read_sees</code> &rarr;  <code>read_view_sees_trx_id</code></li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> *  可见性判断流程
+</span><span style="color:#75715e"> * @param view  当前事务readview快照
+</span><span style="color:#75715e"> * @param trx_id 数据行对应的事务id
+</span><span style="color:#75715e"> * @return
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">read_view_sees_trx_id</span>(
+	<span style="color:#66d9ef">const</span> read_view_t<span style="color:#f92672">*</span>	view,	
+	trx_id_t		trx_id)
+{
+    <span style="color:#75715e">// 如果小于当前事务的最小id
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> (trx_id <span style="color:#f92672">&lt;</span> view<span style="color:#f92672">-&gt;</span>up_limit_id) {
+
+		<span style="color:#66d9ef">return</span>(true);
+  <span style="color:#75715e">// 如果大于等于当前事务快照的最大id
+</span><span style="color:#75715e"></span>	} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (trx_id <span style="color:#f92672">&gt;=</span> view<span style="color:#f92672">-&gt;</span>low_limit_id) {
+
+		<span style="color:#66d9ef">return</span>(false);
+	} <span style="color:#66d9ef">else</span> {
+    <span style="color:#75715e">// 如果在两者之间
+</span><span style="color:#75715e"></span>		ulint	lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+		ulint	upper <span style="color:#f92672">=</span> view<span style="color:#f92672">-&gt;</span>n_trx_ids <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+
+		ut_a(view<span style="color:#f92672">-&gt;</span>n_trx_ids <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>);
+    <span style="color:#75715e">// 基于当前活跃的事务数组，通过二分法查找比较trx_id是否存在其中
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">do</span> {
+			ulint		mid	<span style="color:#f92672">=</span> (lower <span style="color:#f92672">+</span> upper) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>;
+			trx_id_t	mid_id	<span style="color:#f92672">=</span> view<span style="color:#f92672">-&gt;</span>trx_ids[mid];
+
+			<span style="color:#66d9ef">if</span> (mid_id <span style="color:#f92672">==</span> trx_id) {
+				<span style="color:#66d9ef">return</span>(FALSE);
+			} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (mid_id <span style="color:#f92672">&lt;</span> trx_id) {
+				<span style="color:#66d9ef">if</span> (mid <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+					upper <span style="color:#f92672">=</span> mid <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+				} <span style="color:#66d9ef">else</span> {
+					<span style="color:#66d9ef">break</span>;
+				}
+			} <span style="color:#66d9ef">else</span> {
+				lower <span style="color:#f92672">=</span> mid <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+			}
+		} <span style="color:#66d9ef">while</span> (lower <span style="color:#f92672">&lt;=</span> upper);
+	}
+    <span style="color:#75715e">// 不在活跃事务中则当前数据行可见
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">return</span>(true);
+}
+</code></pre></div>
+<h1 id="3-参考资料">3 参考资料</h1>
+
+<p>数据库多版本实现内幕</p>
+
+<p><a href="http://mysql.taobao.org/monthly/2018/11/04/">引擎特性 · InnoDB MVCC 相关实现</a></p>
+
+
+        </div>
+
+    </div>
+
+    
+
+
+</article>
+
+<div id="toc" class="toc-article" >
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc">
+        <nav id="TableOfContents">
+<ul>
+<li><a href="#innodb之快照读原理实现">Innodb之快照读原理实现</a></li>
+<li><a href="#1-innodb-mvcc组成">1 Innodb MVCC组成</a>
+<ul>
+<li>
+<ul>
+<li><a href="#1-1-为何使用mvcc实现快照读">1. 1 为何使用MVCC实现快照读</a></li>
+<li><a href="#1-2-mvcc-相关概念">1.2  MVCC 相关概念</a>
+<ul>
+<li>
+<ul>
+<li><a href="#1-2-1-undolog">1.2.1  undolog</a></li>
+<li><a href="#1-2-2-readview">1.2.2 readview</a></li>
+<li><a href="#1-2-3-三个隐式字段">1.2.3 三个隐式字段</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#2-innodb-mvcc-实现-5-6-x版本">2 Innodb MVCC 实现（5.6.x版本）</a>
+<ul>
+<li>
+<ul>
+<li><a href="#2-1-多版本实现">2.1 多版本实现</a>
+<ul>
+<li>
+<ul>
+<li><a href="#2-1-1-事务快照更新过程">2.1.1 事务快照更新过程</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#2-2-readview-可见性判断">2.2 readview 可见性判断</a>
+<ul>
+<li>
+<ul>
+<li><a href="#2-2-1-可见性判断流程">2.2.1 可见性判断流程</a></li>
+<li><a href="#2-2-2-rr-级别可重复读流程">2.2.2 RR 级别可重复读流程</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#2-3-快照读源码解析">2.3  快照读源码解析</a>
+<ul>
+<li>
+<ul>
+<li><a href="#2-3-1-innodb三个隐藏字段源码">2.3.1 InnoDB三个隐藏字段源码</a></li>
+<li><a href="#2-3-2-readview-的执行流程">2.3.2 readview 的执行流程</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#3-参考资料">3 参考资料</a></li>
+</ul>
+</nav>
+    </ol>
+    <div style="text-align:center">-----------------------</div>
+    <strong class="toc-title">最新评论</strong>
+    <ol class="toc">
+        <div class="remark42__last-comments" data-max="10"></div>
+    </ol>
+</div>
+<style>
+    
+
+    #tocButton{
+        display: none;
+    }
+    #toc{
+        display: none;
+    }
+
+    
+
+
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录" >
+
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function () {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    
+    
+    
+        
+    
+</script>
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a class="bds_qzone" data-cmd="qzone" href="#" title="分享到 QQ 空间"></a>
+        <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+        <a class="bds_count" data-cmd="count"></a>
+        <a class="bds_more" data-cmd="more"></a>
+
+    </div>
+    <script>
+        window._bd_share_config = {
+            "common": {
+                "bdSnsKey": {},
+                "bdText": "",
+                "bdMini": "2",
+                "bdMiniList": false,
+                "bdPic": "",
+                "bdStyle": "0",
+                "bdSize": "24"
+            }, "share": {}
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+</div>
+
+
+
+
+<div style="margin-left: 30px;margin-right: 30px;background: white;padding-left: 30px;padding-right: 30px">
+    <div class="comments">
+        <h3>[评论][COMMENTS]</h3>
+        
+            
+                
+                
+                
+                
+                
+            
+        
+        <div id="remark42"></div>
+        <div id="disqus_thread"></div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<ul class="post-list toc-article">
+    
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2022/01/13/mysql-snapshot-read/" target="_blank">MySQL之Innodb之快照读原理实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2021/02/13/java-clone/" target="_blank">java的clone方法JVM实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/11/13/im-timeline/" target="_blank">基于TimeLine模型的消息同步机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/09/26/threadlocal-enchancer/" target="_blank">线程传递增强之TransmittableThreadLocal</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/06/11/net-nio-netty/" target="_blank">浅析java-nio及netty的reactor模型</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/19/spring-transaction-commit/" target="_blank">Transaction源码解析之事务提交与回滚</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/" target="_blank">Transaction源码解析之事务预处理</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/" target="_blank">Transaction源码解析之事务配置解析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/" target="_blank">生产-消费模型之虚假唤醒</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/" target="_blank">Spring实例化bean之源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/03/02/float-precision/" target="_blank">float浮点小数的设计及精度问题</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/07/11/mysql-page-detail/" target="_blank">MySQL中的page页详解</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/05/03/apt_lombok_implement/" target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/02/15/filter/" target="_blank">实际项目运用之Filter模式（过滤器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/12/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/11/17/btree-info/" target="_blank">数据结构之BTree和B&#43;Tree(多路平衡查找树 )</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/10/15/id-redis/" target="_blank">分布式全局序列ID方案之Redis优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/25/id-flicker/" target="_blank">分布式全局序列ID方案之Flicker优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/19/id-snowflake/" target="_blank">分布式全局序列ID方案之Snowflake算法</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/25/spring-springmvc/" target="_blank">Spring之动手实现SpringMVC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/22/java-methodhandler/" target="_blank">Java反射优化之方法句柄</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/16/spring-bean-ioc/" target="_blank">Spring之动手实现IOC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/12/spring-bean-lifecycle/" target="_blank">Spring之Bean加载-解析-生命周期</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/09/aqs-condition/" target="_blank">并发基础之Condition(等待队列)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/07/cache-redis-optimize/" target="_blank">Redis注意事项及常见优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/04/aqs_chapter02/" target="_blank">并发基础之AQS同步器（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/01/cache-redis-slowlog/" target="_blank">Redis之慢查询日志</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/31/aqs_chapter01/" target="_blank">并发基础之AQS同步器（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/16/junit-codeanalysis/" target="_blank">初窥门径之JUnit源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/13/java-securitymanager/" target="_blank">Java安全之SecurityManager</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/05/spi-introduction/" target="_blank">框架基础之SPI机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/29/responsibility-chain/" target="_blank">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/25/jndi-introdution/" target="_blank">JNDI知识摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/17/architect/" target="_blank">技术图谱</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/13/distribution-knowledge/" target="_blank">分布式项目知识要点</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/07/singletion/" target="_blank">设计模式之单例模式终极版【克隆-序列化-反射】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/02/fail-fast-safe/" target="_blank">Fail-Fast和Fail-Safe机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/27/adapter/" target="_blank">实际项目运用之Adapter模式（适配器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/18/template/" target="_blank">设计模式之Template模式（模版模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/14/synchronized-principle/" target="_blank">synchronized实现原理及锁优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/13/juc-tree-info/" target="_blank">JUC知识点总结</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/06/strategy/" target="_blank">实际项目运用之Strategy模式（策略模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/04/volatile-feature/" target="_blank">volatile关键字原理实现及应用</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/28/high-event/" target="_blank">MYSQL高级特性之【Event事件】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/27/process-fun/" target="_blank">MYSQL高级特性之【存储过程与函数】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/25/cap-base-flp/" target="_blank">分布式之【CAP理论、BASE理论 、FLP不可能定理】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/21/string-builder-question/" target="_blank">字符串拼接的疑惑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/17/exception-introduce/" target="_blank">Java异常处理-原理及优化建议</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/03/thread-jmm-happens-before/" target="_blank">java内存模型之[JMM][重排序][happens-before]</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/28/decorator/" target="_blank">实际项目运用之Decorator模式（装饰器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/26/interface-idempotency/" target="_blank">接口设计的幂等性考虑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/21/binary-operation/" target="_blank">java中位运算技巧</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/20/classloader-chapter02/" target="_blank">ClassLoader类加载分析（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/13/introspector/" target="_blank">Java 内省(Introspector)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/08/classloader-chapter01/" target="_blank">ClassLoader类加载分析（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/19/builder/" target="_blank">设计模式之builder模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/07/builder-factory/" target="_blank">设计模式之factory模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/11/03/recursive-lock/" target="_blank">可重入锁</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/09/12/show-global-status/" target="_blank">库级优化之SHOW GLOBAL STATUS</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/06/13/optimize-picture/" target="_blank">后端开发需要了解的mysql优化方向</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/16/thread-communication/" target="_blank">多线程之线程通信摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/07/design-rule/" target="_blank">数据库设计三范式和反范式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/info/" target="_blank">联系&amp;留言</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/open_source/" target="_blank">开源项目</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/tools/" target="_blank">在线工具</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/01/23/externalizable-interface/" target="_blank">自定义序列化之Externalizable接口</a></li>
+    
+</ul>
+
+<script>
+    var remark_config = {
+        host: "https://nicky-chin.cn", 
+        site_id: 'nicky-blog',
+        components: ['embed', 'last-comments'], 
+        max_shown_comments: 20, 
+        theme: 'light', 
+        locale: 'zh'
+    };
+
+    (function(c) {
+        for(var i = 0; i < c.length; i++){
+            var d = document, s = d.createElement('script');
+            s.src = remark_config.host + '/web/' +c[i] +'.js';
+            s.defer = true;
+            (d.head || d.body).appendChild(s);
+        }
+    })(remark_config.components || ['embed']);
+</script>
+
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    $(".post-list").addClass("toc-article");
+    $(".post-list-item a").attr("target", "_blank");
+    $("#post-nav-button > a:nth-child(2)").click(function () {
+        $(".fa-bars, .fa-times").toggle();
+        $(".post-list").toggle(300);
+        if ($(".toc").length > 0) {
+            $("#toc, #tocButton").toggle(200, function () {
+                if ($(".switch-area").is(":visible")) {
+                    $("#toc, .switch-btn, .switch-area").toggle();
+                    $("#tocButton").attr("value", valueHide);
+                }
+            })
+        }
+        else {
+            $(".switch-btn, .switch-area").fadeToggle(300);
+        }
+    })
+</script>
+
+<script>
+    (function(d, w, c) {
+        w.ChatraID = 'jZh4grHz47JAjnsis';
+        var s = d.createElement('script');
+        w[c] = w[c] || function() {
+            (w[c].q = w[c].q || []).push(arguments);
+        };
+        s.async = true;
+        s.src = 'https://call.chatra.io/chatra.js';
+        if (d.head) d.head.appendChild(s);
+    })(document, window, 'Chatra');
+</script>
+
+<script>
+
+</script>
+
+
+        </div>
+        <footer id="footer">
+
+    
+
+
+    <div class="outer">
+        
+        
+            <div class="footer-right">
+                
+                    <span id="busuanzi_container_site_pv" style='display: block'>
+                        <span id="site-visit" >本站访客数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    
+                
+                
+                    
+                        
+                            
+                        
+                    
+                
+            </div>
+        
+        
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2022 南乡清水@Hangzhou
+            </div>
+            <div class="s-bottom-layer-right" style="font-size: 0.2em" >
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33011002014475"
+                   target="_blank"><span class="lh s-bottom-recordcode">京公网安备33011002014475号</span></a>
+                <a href="https://beian.miit.gov.cn/"
+                   target="_blank"><span class="lh"> 浙ICP备19049847号-1</span></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chin.cn/js/GithubRepoWidget.js"></script>
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  10 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-159911678-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>

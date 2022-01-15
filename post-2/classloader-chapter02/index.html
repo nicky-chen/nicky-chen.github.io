@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  false ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+    <title>ClassLoader类加载分析（二）</title>
+    <link rel="icon" href="https://nicky-chin.cn/img/favicon.ico">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://nicky-chin.cn/assets/waifu.css"/>
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/highlight/styles/darcula.css">
+    <script src="https://nicky-chin.cn/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+            (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','zTXEk5Sy3-gUuAVTm5JE','2.0.0');
+    </script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chin.cn/" class="profilepic">
+            <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chin.cn/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chin.cn/tags/im%E9%80%9A%E8%AE%AF" style="font-size: 12px;" class="color2">Im通讯</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color1">Junit</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/netty" style="font-size: 12px;" class="color3">Netty</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color3">Redis</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color4">Spring-Base</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color1">Spring-Transaction</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color1">优化</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color4">分布式id方案</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color3">创建型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color2">多线程</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color3">思维导图</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color4">数据结构</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color3">框架基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color3">源码</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color3">理论</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color2">结构型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color3">行为型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chin.cn/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chin.cn/" class="profilepic">
+                <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+            <article id="post-js-android" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/post-2/classloader-chapter02/" class="article-date">
+            <time datetime="2018-03-20 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-03-20</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 class="article-title" itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/post-2/classloader-chapter02/">ClassLoader类加载分析（二）</a>
+            </h1>
+
+
+        </header>
+
+        <div class="article-info article-info-post">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="article-category-link" href="https://nicky-chin.cn/categories/classloader/" style="font-size: 12px;">Classloader</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e6%ba%90%e7%a0%81/"
+                           style="font-size: 12px;">源码</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            
+            <div class="article-category tagcloud">
+                <a class="article-category-link" style="font-size: 12px;"> posted by nicky_chin</a>
+            </div>
+            
+
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="article-entry" itemprop="articleBody">
+
+            
+
+<h1 id="一-jvm-提供的-classloader">一、JVM 提供的 Classloader</h1>
+
+<h2 id="1-1-bootstrapclassloader">1.1 BootstrapClassloader</h2>
+
+<p>引导类加载器，又称启动类加载器，是最顶层的类加载器，主要用来加载Java核心类，如rt.jar、resources.jar、charsets.jar等，Sun的JVM中，执行java的命令中使用<strong>-Xbootclasspath选项或使用- D选项</strong>指定sun.boot.class.path系统属性值可以指定附加的类，它不是 java.lang.ClassLoader的子类，而是由JVM自身实现的该类c 语言实现，Java程序访问不到该加载器。通过下面代码可以查看该加载器加载了哪些jar包</p>
+
+<pre><code>public class MainClass {
+
+    public static void main(String[] args) throws ClassNotFoundException {
+        URL[] urls = sun.misc.Launcher.getBootstrapClassPath().getURLs();
+        Arrays.stream(urls).map(URL::toExternalForm).forEach(System.out::println);
+    }
+
+}
+</code></pre>
+
+<p>执行结果：
+file:/C:/java/jdk1.8.0_74/jre/lib/resources.jar
+file:/C:/java/jdk1.8.0_74/jre/lib/rt.jar
+file:/C:/java/jdk1.8.0_74/jre/lib/sunrsasign.jar
+file:/C:/java/jdk1.8.0_74/jre/lib/jsse.jar
+file:/C:/java/jdk1.8.0_74/jre/lib/jce.jar
+file:/C:/java/jdk1.8.0_74/jre/lib/charsets.jar
+file:/C:/java/jdk1.8.0_74/jre/lib/jfr.jar
+file:/C:/java/jdk1.8.0_74/jre/classes，
+写到这里大家应该都知道，我们并没有在classpath里面指定这些类的路径，为啥还是能被加载到jvm并使用起来了吧，因为这些是bootstarp来加载的。</p>
+
+<h2 id="1-2-extclassloader">1.2 ExtClassloader</h2>
+
+<p>扩展类加载器，主要负责加载Java的扩展类库，默认加载JAVA_HOME/jre/lib/ext/目下的所有jar包或者<strong>由java.ext.dirs系统属性</strong>指定的jar包。放入这个目录下的jar包对所有AppClassloader都是可见的（后面会知道ExtClassloader是AppClassloader的父加载器)。那么ext都是在那些地方加载类内：</p>
+
+<pre><code>System.out.println(System.getProperty(&quot;java.ext.dirs&quot;));
+</code></pre>
+
+<p>C:\java\jdk1.8.0_74\jre\lib\ext;C:\WINDOWS\Sun\Java\lib\ext</p>
+
+<h2 id="1-3-appclassloader">1.3 AppClassloader</h2>
+
+<p>系统类加载器，又称应用加载器，本文说的SystemClassloader和APPClassloader是一个东西，它负责在JVM启动时，加载来自在命令java中的-classpath或者<strong>java.class.path系统属性或者 CLASSPATH</strong>操作系统属性所指定的JAR类包和类路径。调用ClassLoader.getSystemClassLoader()可以获取该类加载器。如果没有特别指定，则用户自定义的任何类加载器都将该类加载器作为它的父加载器,这点通过ClassLoader的无参构造函数可以知道如下：</p>
+
+<pre><code> protected ClassLoader() {        this(checkCreateClassLoader(), getSystemClassLoader());
+    }
+</code></pre>
+
+<p>执行以下代码即可获得classpath加载路径：</p>
+
+<pre><code>System.out.println(System.getProperty(&quot;java.class.path&quot;));
+</code></pre>
+
+<h2 id="1-4-java中如何构造三种类加载器的结构">1.4 Java中如何构造三种类加载器的结构</h2>
+
+<p>下面从源码来分析下JVM是如何构建内置classloader的，具体是rt.jar包里面sun.misc.Launcher类：</p>
+
+<pre><code>public class Launcher {
+
+private static Launcher launcher = new Launcher();
+    private static String bootClassPath =
+        System.getProperty(&quot;sun.boot.class.path&quot;);
+
+    public static Launcher getLauncher() {
+        return launcher;
+    }
+
+    private ClassLoader loader;
+public Launcher()  
+      {  
+        ExtClassLoader localExtClassLoader;  
+        try  
+        {  //首先创建了ExtClassLoader
+          localExtClassLoader = ExtClassLoader.getExtClassLoader();  
+        }  
+        catch (IOException localIOException1)  
+        {  
+          throw new InternalError(&quot;Could not create extension class loader&quot;);  
+        }  
+        try  
+        {  //然后以ExtClassloader作为父加载器创建了AppClassLoader
+          this.loader = AppClassLoader.getAppClassLoader(localExtClassLoader);  
+        }  
+        catch (IOException localIOException2)  
+        {  
+          throw new InternalError(&quot;Could not create application class loader&quot;);  
+        }  //这个是个特殊的加载器后面会讲到，这里只需要知道默认下线程上下文加载器为appclassloader
+        Thread.currentThread().setContextClassLoader(this.loader);  
+
+        ................
+      }
+</code></pre>
+
+<ol>
+<li>Launcher初始化了ExtClassLoader和AppClassLoader。</li>
+<li>Launcher中并没有看见BootstrapClassLoader，但通过System.getProperty(&ldquo;sun.boot.class.path&rdquo;)得到了字符串bootClassPath,这个应该就是BootstrapClassLoader加载的jar包路径。</li>
+</ol>
+
+<p>下面看下ExtClassLoader.getExtClassLoader()的代码</p>
+
+<pre><code>static class ExtClassLoader extends URLClassLoader {
+
+        static {
+            ClassLoader.registerAsParallelCapable();
+        }
+
+public static ExtClassLoader getExtClassLoader()  
+      throws IOException  
+    {  //可以知道ExtClassLoader类加载路径为java.ext.dirs
+      File[] arrayOfFile = getExtDirs();  
+      try  
+      {  
+        (ExtClassLoader)AccessController.doPrivileged(new PrivilegedExceptionAction()  
+        {  
+          public Launcher.ExtClassLoader run()  
+            throws IOException  
+          {  
+            int i = this.val$dirs.length;  
+            for (int j = 0; j &lt; i; j++) {  
+              MetaIndex.registerDirectory(this.val$dirs[j]);  
+            }  
+            return new Launcher.ExtClassLoader(this.val$dirs);  
+          }  
+        });  
+      }  
+      catch (PrivilegedActionException localPrivilegedActionException)  
+      {  
+        throw ((IOException)localPrivilegedActionException.getException());  
+      }  
+    }  
+
+    private static File[] getExtDirs()  
+    {  
+      String str = System.getProperty(&quot;java.ext.dirs&quot;);  
+      File[] arrayOfFile;  
+      if (str != null)  
+      {  
+        StringTokenizer localStringTokenizer = new StringTokenizer(str, File.pathSeparator);  
+
+        int i = localStringTokenizer.countTokens();  
+        arrayOfFile = new File[i];  
+        for (int j = 0; j &lt; i; j++) {  
+          arrayOfFile[j] = new File(localStringTokenizer.nextToken());  
+        }  
+      }  
+      else  
+      {  
+        arrayOfFile = new File[0];  
+      }  
+      return arrayOfFile;  
+    }
+</code></pre>
+
+<p>可以指定-D java.ext.dirs参数来添加和改变ExtClassLoader的加载路径。</p>
+
+<p>下面看下AppClassLoader.getAppClassLoader的代码</p>
+
+<pre><code>public static ClassLoader getAppClassLoader(final ClassLoader paramClassLoader)  
+      throws IOException  
+    {  //可知AppClassLoader类加载路径为java.class.path
+      String str = System.getProperty(&quot;java.class.path&quot;);  
+      final File[] arrayOfFile = str == null ? new File[0] : Launcher.getClassPath(str);  
+
+      (ClassLoader)AccessController.doPrivileged(new PrivilegedAction()  
+      {  
+        public Launcher.AppClassLoader run()  
+        {  
+          URL[] arrayOfURL = this.val$s == null ? new URL[0] : Launcher.pathToURLs(arrayOfFile);  
+
+          return new Launcher.AppClassLoader(arrayOfURL, paramClassLoader);  
+        }  
+      });  
+    }
+</code></pre>
+
+<p>AppClassLoader加载的就是java.class.path下的路径。</p>
+
+<h2 id="1-5-三种加载器联系">1.5 三种加载器联系</h2>
+
+<p><img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190510093029.png" alt="jvm类加载器" /></p>
+
+<p>自定义的无参加载器的<strong>父类加载器默认是AppClassloader加载器</strong>，而<strong>AppClassloader加载器的父加载器是ExtClassloader</strong>，我们通过下面代码可以验证：</p>
+
+<pre><code>public class MainClass {
+
+    public static void main(String[] args) throws ClassNotFoundException {
+        System.out.println(ClassLoader.getSystemClassLoader().toString());
+        ClassLoader loader = ClassLoader.getSystemClassLoader().getParent();
+
+        ClassLoader classLoader = MainClass.class.getClassLoader();
+        System.out.println(&quot;MainClass's classLoader is &quot; + classLoader.toString());
+        System.out.println(&quot;classLoader's parent is &quot; +classLoader..getParent().toString());
+
+       Class aClass = classLoader.loadClass(&quot;compare.CompareTest&quot;);
+        System.err.println(aClass.getClassLoader().toString());
+}
+}
+</code></pre>
+
+<p>结果如下：
+sun.misc.Launcher$AppClassLoader@18b4aac2
+sun.misc.Launcher$ExtClassLoader@2a84aee7
+MainClass&rsquo;s classLoader is sun.misc.Launcher$AppClassLoader@18b4aac2
+classLoader&rsquo;s parent is sun.misc.Launcher$ExtClassLoader@2a84aee7</p>
+
+<h1 id="sun-misc-launcher-appclassloader-18b4aac2">sun.misc.Launcher$AppClassLoader@18b4aac2</h1>
+
+<p><strong>如上可知 MainClass的类加载器和CompareTest的类加载器指向的都是同一个
+AppClassLoader,这是类的默认加载器</strong></p>
+
+<p>一般我们都认为ExtClassloader的父类加载器是BootStarpClassloader，但是其实他们之间根本是没有父子关系的，只是在ExtClassloader找不到要加载类时候会去委托BootStrap加载器去加载。
+通过如下代码可以知道父加载器为null</p>
+
+<pre><code>ClassLoader.getSystemClassLoader().getParent().getParent()
+ System.out.println(int.class.getClassLoader().toString());
+ //System.out.println(String.class.getClassLoader().toString());
+</code></pre>
+
+<p>打印结果：</p>
+
+<h1 id="npe异常-int基本类型和string类型也无法获取他们的父类">NPE异常, int基本类型和String类型也无法获取他们的父类</h1>
+
+<p>那么他们到底是怎么被加载的，<strong>答案是BootstrapLoader;Bootstrap ClassLoader是由C++编写的，可以通过通过JNI本地方法调用实现。具体底层代码不做研究，但是可以通过类加载的原理来论证</strong></p>
+
+<h2 id="1-6-类加载器原理">1.6 类加载器原理</h2>
+
+<p>Java类加载器使用的是委托机制，也就是子类加载器在加载一个类时候会让父类来加载，那么问题来了，为啥使用这种方式那?因为这样可以避免重复加载，当父亲已经加载了该类的时候，就没有必要子ClassLoader再加载一次。考虑到安全因素，我们试想一下，如果不使用这种委托模式，那我们就可以随时使用自定义的String来动态替代java核心api中定义的类型，这样会存在非常大的安全隐患，而双亲委托的方式，就可以避免这种情况，因为String已经在启动时就被引导类加载器（Bootstrap ClassLoader）加载，所以用户<strong>自定义的ClassLoader永远也无法加载一个自己写的同包路径的也就是java.lang.String的类，即时改变JDK中ClassLoader搜索类的默认算法,但还是会报java.lang.SecurityException</strong>， 下面我们从源码看如何实现委托机制：</p>
+
+<p>整个流程可以如下图所示：</p>
+
+<p><img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190510093104.png" alt="类加载时序图" /></p>
+
+<p>================================================================
+上面已经详细介绍了加载过程，但具体为什么是这样加载，我们还需要了解几个个重要的方法loadClass()、findLoadedClass()、findClass()、defineClass()。
+类加载过程通过debug调试发现 首先会调用<strong>ClassLoader类中的 getSystemClassLoader()</strong> 然后会进入Launcher类，初始化了ExtClassLoader和AppClassLoader 然后 进入loadclass方法</p>
+
+<pre><code>protected Class&lt;?&gt; loadClass(Stringname,boolean resolve)  
+       throws ClassNotFoundException  
+   {  
+       synchronized (getClassLoadingLock(name)) {  
+           // (1)首先从jvm缓存查找该类 ，检测是否已经加载
+           Class c = findLoadedClass(name);           
+          if (c ==null) {  
+               longt0 = System.nanoTime();  
+               try {  
+                   //然后委托给父类加载器进行加载
+                   if (parent !=null) {  
+                      //父加载器不为空则调用父加载器的loadClass
+                       c = parent.loadClass(name,false);  
+                   } else {  
+                   //如果父类加载器为null,则委托给BootStrap加载器加载
+                       c = findBootstrapClassOrNull(name);  
+                   }  
+               } catch (ClassNotFoundExceptione) {  
+                   // ClassNotFoundException thrown if class not found  
+                   // from the non-null parent class loader  
+               }  
+
+               if (c ==null) {  
+                   // 若仍然没有找到则调用findclass查找
+                   // to find the class.  
+                   longt1 = System.nanoTime(); 
+                 //父加载器不为空则调用父加载器的loadClass 
+                   c = findClass(name);  
+                   // this is the defining class loader; record the stats  
+                   sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 -t0);  
+                   sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);  
+                   sun.misc.PerfCounter.getFindClasses().increment();  
+               }  
+           }  
+           if (resolve) {  
+               //调用resolveClass()
+               resolveClass(c);  
+           }  
+           return c;  
+       }  
+   }
+</code></pre>
+
+<p>分析代码知道首先会执行
+（1）从jvm缓存查找该类，如何该类之前被加载过，则直接从jvm缓存返回该类，否者看当前类加载器是否有父加载器，如果有的话则委托为父类加载器进行加在
+（2）递归调用父类加载器，如果ExtClassLoader也没有加载过，则委托为BootStrapClassloader进行加载，如果还是没有找到，则调用当前Classloader的findclass（String）方法进行查找。
+（3）参数resolve又是true的话，那么loadClass()又会调用resolveClass(Class)这个方法来生成最终的Class对象</p>
+
+<p>总结下Java应用启动过程是首先BootstarpClassloader加载rt.jar包里面的sun.misc.Launcher类，而该类内部使用BootstarpClassloader加载器构建和初始化Java中三种类加载和线程上下文类加载器，然后在根据不同场景去使载器去自己的类查找路径去加载类。</p>
+
+<h2 id="1-7-自定义classloader-动态加载class">1.7 自定义ClassLoader 动态加载class</h2>
+
+<p>可以通过覆盖ClassLoader的findClass方法或者覆盖loadClass方法来实现。</p>
+
+<pre><code>public class ProxyDriver extends RealDriver implements Driver {
+
+    @Override
+    public void driveCar() {
+        System.out.println(&quot;帮客户加满油&quot;);
+    }
+
+}
+
+public class RealDriver{
+
+    public void say() {
+        System.out.println(&quot;say : &quot; + Instant.now().toEpochMilli());
+
+    }
+}
+
+public interface Driver {
+
+    void driveCar();
+
+}
+
+</code></pre>
+
+<p>1通过覆盖 loadClass方法</p>
+
+<pre><code>public class MyClassLoader extends ClassLoader {
+
+    public MyClassLoader(ClassLoader parent) {
+        super(parent);
+    }
+
+    @Override 
+    public Class loadClass(String name) throws ClassNotFoundException {
+
+        if (!&quot;classloader.ProxyDriver&quot;.equals(name)) {
+            return super.loadClass(name);
+        }
+
+        try {
+
+            String path = &quot;E:/totalpalce/excelTest/target/classes/classloader/ProxyDriver.class&quot;;
+
+            byte[] classData = Files.readAllBytes(Paths.get(path));
+
+            return defineClass(&quot;classloader.ProxyDriver&quot;, classData, 0, classData.length);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
+
+    public static void main(String[] args)
+            throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+
+        //类加载
+        ClassLoader parentClassLoader = MyClassLoader.class.getClassLoader();
+        MyClassLoader classLoader = new MyClassLoader(parentClassLoader);
+        Class myObjectClass = classLoader.loadClass(&quot;classloader.ProxyDriver&quot;);
+
+        Driver object1 = (Driver) myObjectClass.newInstance();
+        object1.driveCar();
+
+        RealDriver object2 = (RealDriver) myObjectClass.newInstance();
+        object2.say();
+
+        //类重载
+        classLoader = new MyClassLoader(parentClassLoader);
+
+        myObjectClass = classLoader.loadClass(&quot;classloader.ProxyDriver&quot;);
+
+        object1 = (Driver) myObjectClass.newInstance();
+        object1.driveCar();
+
+        object2 = (RealDriver) myObjectClass.newInstance();
+        object2.say();
+
+    }
+</code></pre>
+
+<p>2 通过findClass()</p>
+
+<pre><code>public class PathClassLoader extends ClassLoader {
+
+   //要创建用户自己的类加载器，只需要继承java.lang.ClassLoader类，然后覆盖它的findClass(String name)方法即可，即指明如何获取类的字节码流。
+
+    //如果要符合双亲委派规范，则重写findClass方法（用户自定义类加载逻辑）；要破坏的话，重写loadClass方法(双亲委派的具体逻辑实现)
+
+    private String classPath;
+
+    public PathClassLoader(String classPath) {
+        this.classPath = classPath;
+    }
+
+    @Override
+    protected Class&lt;?&gt; findClass(String name) throws ClassNotFoundException {
+        System.out.println(&quot;---------&quot;);
+        byte[] classData = getData(name);
+        if (classData == null) {
+            throw new ClassNotFoundException();
+        } else {
+            return defineClass(name, classData, 0, classData.length);
+        }
+    }
+
+    private byte[] getData(String className) {
+        String path = classPath + File.separatorChar + className.replace('.', File.separatorChar) + &quot;.class&quot;;
+        try {
+            return Files.readAllBytes(Paths.get(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void main(String args[]) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        PathClassLoader pcl = new PathClassLoader(&quot;E:\\totalpalce\\excelTest\\target\\classes&quot;);
+        Class c = pcl.findClass(&quot;compare.CompareTest&quot;);//注意要包括包名
+        System.out.println(c.newInstance());//打印类加载成功.
+    }
+
+}
+
+</code></pre>
+
+<p>建议使用findClass()方法。这用不会破坏类加载的的双亲委托机制</p>
+
+<p>源码地址：<a href="http://www.grepcode.com/file/repository.grepcode.com/java/root/jdk/openjdk/8u40-b25/sun/misc/Launcher.java">http://www.grepcode.com/file/repository.grepcode.com/java/root/jdk/openjdk/8u40-b25/sun/misc/Launcher.java</a></p>
+
+
+        </div>
+
+    </div>
+
+    
+
+
+</article>
+
+<div id="toc" class="toc-article" >
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc">
+        <nav id="TableOfContents">
+<ul>
+<li><a href="#一-jvm-提供的-classloader">一、JVM 提供的 Classloader</a>
+<ul>
+<li><a href="#1-1-bootstrapclassloader">1.1 BootstrapClassloader</a></li>
+<li><a href="#1-2-extclassloader">1.2 ExtClassloader</a></li>
+<li><a href="#1-3-appclassloader">1.3 AppClassloader</a></li>
+<li><a href="#1-4-java中如何构造三种类加载器的结构">1.4 Java中如何构造三种类加载器的结构</a></li>
+<li><a href="#1-5-三种加载器联系">1.5 三种加载器联系</a></li>
+</ul></li>
+<li><a href="#sun-misc-launcher-appclassloader-18b4aac2">sun.misc.Launcher$AppClassLoader@18b4aac2</a></li>
+<li><a href="#npe异常-int基本类型和string类型也无法获取他们的父类">NPE异常, int基本类型和String类型也无法获取他们的父类</a>
+<ul>
+<li><a href="#1-6-类加载器原理">1.6 类加载器原理</a></li>
+<li><a href="#1-7-自定义classloader-动态加载class">1.7 自定义ClassLoader 动态加载class</a></li>
+</ul></li>
+</ul>
+</nav>
+    </ol>
+    <div style="text-align:center">-----------------------</div>
+    <strong class="toc-title">最新评论</strong>
+    <ol class="toc">
+        <div class="remark42__last-comments" data-max="10"></div>
+    </ol>
+</div>
+<style>
+    
+
+    #tocButton{
+        display: none;
+    }
+    #toc{
+        display: none;
+    }
+
+    
+
+
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录" >
+
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function () {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    
+    
+    
+        
+    
+</script>
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a class="bds_qzone" data-cmd="qzone" href="#" title="分享到 QQ 空间"></a>
+        <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+        <a class="bds_count" data-cmd="count"></a>
+        <a class="bds_more" data-cmd="more"></a>
+
+    </div>
+    <script>
+        window._bd_share_config = {
+            "common": {
+                "bdSnsKey": {},
+                "bdText": "",
+                "bdMini": "2",
+                "bdMiniList": false,
+                "bdPic": "",
+                "bdStyle": "0",
+                "bdSize": "24"
+            }, "share": {}
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+</div>
+
+
+
+
+<div style="margin-left: 30px;margin-right: 30px;background: white;padding-left: 30px;padding-right: 30px">
+    <div class="comments">
+        <h3>[评论][COMMENTS]</h3>
+        
+            
+                
+                
+                
+                
+                
+            
+        
+        <div id="remark42"></div>
+        <div id="disqus_thread"></div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<ul class="post-list toc-article">
+    
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2022/01/13/mysql-snapshot-read/" target="_blank">MySQL之Innodb之快照读原理实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2021/02/13/java-clone/" target="_blank">java的clone方法JVM实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/11/13/im-timeline/" target="_blank">基于TimeLine模型的消息同步机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/09/26/threadlocal-enchancer/" target="_blank">线程传递增强之TransmittableThreadLocal</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/06/11/net-nio-netty/" target="_blank">浅析java-nio及netty的reactor模型</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/19/spring-transaction-commit/" target="_blank">Transaction源码解析之事务提交与回滚</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/" target="_blank">Transaction源码解析之事务预处理</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/" target="_blank">Transaction源码解析之事务配置解析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/" target="_blank">生产-消费模型之虚假唤醒</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/" target="_blank">Spring实例化bean之源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/03/02/float-precision/" target="_blank">float浮点小数的设计及精度问题</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/07/11/mysql-page-detail/" target="_blank">MySQL中的page页详解</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/05/03/apt_lombok_implement/" target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/02/15/filter/" target="_blank">实际项目运用之Filter模式（过滤器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/12/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/11/17/btree-info/" target="_blank">数据结构之BTree和B&#43;Tree(多路平衡查找树 )</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/10/15/id-redis/" target="_blank">分布式全局序列ID方案之Redis优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/25/id-flicker/" target="_blank">分布式全局序列ID方案之Flicker优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/19/id-snowflake/" target="_blank">分布式全局序列ID方案之Snowflake算法</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/25/spring-springmvc/" target="_blank">Spring之动手实现SpringMVC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/22/java-methodhandler/" target="_blank">Java反射优化之方法句柄</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/16/spring-bean-ioc/" target="_blank">Spring之动手实现IOC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/12/spring-bean-lifecycle/" target="_blank">Spring之Bean加载-解析-生命周期</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/09/aqs-condition/" target="_blank">并发基础之Condition(等待队列)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/07/cache-redis-optimize/" target="_blank">Redis注意事项及常见优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/04/aqs_chapter02/" target="_blank">并发基础之AQS同步器（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/01/cache-redis-slowlog/" target="_blank">Redis之慢查询日志</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/31/aqs_chapter01/" target="_blank">并发基础之AQS同步器（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/16/junit-codeanalysis/" target="_blank">初窥门径之JUnit源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/13/java-securitymanager/" target="_blank">Java安全之SecurityManager</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/05/spi-introduction/" target="_blank">框架基础之SPI机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/29/responsibility-chain/" target="_blank">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/25/jndi-introdution/" target="_blank">JNDI知识摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/17/architect/" target="_blank">技术图谱</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/13/distribution-knowledge/" target="_blank">分布式项目知识要点</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/07/singletion/" target="_blank">设计模式之单例模式终极版【克隆-序列化-反射】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/02/fail-fast-safe/" target="_blank">Fail-Fast和Fail-Safe机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/27/adapter/" target="_blank">实际项目运用之Adapter模式（适配器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/18/template/" target="_blank">设计模式之Template模式（模版模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/14/synchronized-principle/" target="_blank">synchronized实现原理及锁优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/13/juc-tree-info/" target="_blank">JUC知识点总结</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/06/strategy/" target="_blank">实际项目运用之Strategy模式（策略模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/04/volatile-feature/" target="_blank">volatile关键字原理实现及应用</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/28/high-event/" target="_blank">MYSQL高级特性之【Event事件】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/27/process-fun/" target="_blank">MYSQL高级特性之【存储过程与函数】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/25/cap-base-flp/" target="_blank">分布式之【CAP理论、BASE理论 、FLP不可能定理】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/21/string-builder-question/" target="_blank">字符串拼接的疑惑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/17/exception-introduce/" target="_blank">Java异常处理-原理及优化建议</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/03/thread-jmm-happens-before/" target="_blank">java内存模型之[JMM][重排序][happens-before]</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/28/decorator/" target="_blank">实际项目运用之Decorator模式（装饰器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/26/interface-idempotency/" target="_blank">接口设计的幂等性考虑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/21/binary-operation/" target="_blank">java中位运算技巧</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/20/classloader-chapter02/" target="_blank">ClassLoader类加载分析（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/13/introspector/" target="_blank">Java 内省(Introspector)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/08/classloader-chapter01/" target="_blank">ClassLoader类加载分析（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/19/builder/" target="_blank">设计模式之builder模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/07/builder-factory/" target="_blank">设计模式之factory模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/11/03/recursive-lock/" target="_blank">可重入锁</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/09/12/show-global-status/" target="_blank">库级优化之SHOW GLOBAL STATUS</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/06/13/optimize-picture/" target="_blank">后端开发需要了解的mysql优化方向</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/16/thread-communication/" target="_blank">多线程之线程通信摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/07/design-rule/" target="_blank">数据库设计三范式和反范式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/info/" target="_blank">联系&amp;留言</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/open_source/" target="_blank">开源项目</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/tools/" target="_blank">在线工具</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/01/23/externalizable-interface/" target="_blank">自定义序列化之Externalizable接口</a></li>
+    
+</ul>
+
+<script>
+    var remark_config = {
+        host: "https://nicky-chin.cn", 
+        site_id: 'nicky-blog',
+        components: ['embed', 'last-comments'], 
+        max_shown_comments: 20, 
+        theme: 'light', 
+        locale: 'zh'
+    };
+
+    (function(c) {
+        for(var i = 0; i < c.length; i++){
+            var d = document, s = d.createElement('script');
+            s.src = remark_config.host + '/web/' +c[i] +'.js';
+            s.defer = true;
+            (d.head || d.body).appendChild(s);
+        }
+    })(remark_config.components || ['embed']);
+</script>
+
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    $(".post-list").addClass("toc-article");
+    $(".post-list-item a").attr("target", "_blank");
+    $("#post-nav-button > a:nth-child(2)").click(function () {
+        $(".fa-bars, .fa-times").toggle();
+        $(".post-list").toggle(300);
+        if ($(".toc").length > 0) {
+            $("#toc, #tocButton").toggle(200, function () {
+                if ($(".switch-area").is(":visible")) {
+                    $("#toc, .switch-btn, .switch-area").toggle();
+                    $("#tocButton").attr("value", valueHide);
+                }
+            })
+        }
+        else {
+            $(".switch-btn, .switch-area").fadeToggle(300);
+        }
+    })
+</script>
+
+<script>
+    (function(d, w, c) {
+        w.ChatraID = 'jZh4grHz47JAjnsis';
+        var s = d.createElement('script');
+        w[c] = w[c] || function() {
+            (w[c].q = w[c].q || []).push(arguments);
+        };
+        s.async = true;
+        s.src = 'https://call.chatra.io/chatra.js';
+        if (d.head) d.head.appendChild(s);
+    })(document, window, 'Chatra');
+</script>
+
+<script>
+
+</script>
+
+
+        </div>
+        <footer id="footer">
+
+    
+
+
+    <div class="outer">
+        
+        
+            <div class="footer-right">
+                
+                    <span id="busuanzi_container_site_pv" style='display: block'>
+                        <span id="site-visit" >本站访客数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    
+                
+                
+                    
+                        
+                            
+                        
+                    
+                
+            </div>
+        
+        
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2022 南乡清水@Hangzhou
+            </div>
+            <div class="s-bottom-layer-right" style="font-size: 0.2em" >
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33011002014475"
+                   target="_blank"><span class="lh s-bottom-recordcode">京公网安备33011002014475号</span></a>
+                <a href="https://beian.miit.gov.cn/"
+                   target="_blank"><span class="lh"> 浙ICP备19049847号-1</span></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chin.cn/js/GithubRepoWidget.js"></script>
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  10 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-159911678-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,783 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Post 2s on 南乡清水的技术积累</title>
+    <link>https://nicky-chin.cn/post-2/</link>
+    <description>Recent content in Post 2s on 南乡清水的技术积累</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>All rights reserved - 2018</copyright>
+    <lastBuildDate>Thu, 13 Jan 2022 11:14:15 +0800</lastBuildDate>
+    
+	<atom:link href="https://nicky-chin.cn/post-2/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>MySQL之Innodb之快照读原理实现</title>
+      <link>https://nicky-chin.cn/post-2/mysql-snapshot-read/</link>
+      <pubDate>Thu, 13 Jan 2022 11:14:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/mysql-snapshot-read/</guid>
+      <description>Innodb之快照读原理实现 1 Innodb MVCC组成 1. 1 为何使用MVCC实现快照读 innodb存储引擎的快照读是基于多版本并发控制 MVCC 和 undolog 实现，通过 MVCC 机制提高系统读写并发性能，快照读只发生于 select 操作，但不包括 select &amp;hellip; lock in share mode, select &amp;hellip; for update　 提高并发的思路 &amp;gt; 并发数据一致性通常实现: 锁 + 多数据版本 &amp;gt; 提高并发读的思路: 通过共享锁保证读读并发，独占锁实现读写互斥 &amp;gt; 提高并发读写的思路: 一致性折衷，通过数据多版本控制，读使用快照版本，读写不互斥，提高读写并发能力  1.</description>
+    </item>
+    
+    <item>
+      <title>java的clone方法JVM实现</title>
+      <link>https://nicky-chin.cn/post-2/java-clone/</link>
+      <pubDate>Sat, 13 Feb 2021 21:31:09 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/java-clone/</guid>
+      <description>例子
+class Base { String name; public Base(String name) { this.name = name; } } 构造clone的类</description>
+    </item>
+    
+    <item>
+      <title>基于TimeLine模型的消息同步机制</title>
+      <link>https://nicky-chin.cn/post-2/im-timeline/</link>
+      <pubDate>Fri, 13 Nov 2020 15:39:09 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/im-timeline/</guid>
+      <description>正常的IM系统流程
+在这个方式下，消息同步的基本思路和步骤如下（序号不对应图中序号）
+ 1、把消息存储到离线收件箱
+2、向在线用户推送消息
+3、在线用户返回收到消息的ack信息
+4、服务端清除用户此条离线消息
+ 对于离线用户，登录后直接拉取离线消息即可
+这个消息同步方式有它合理的地方
+1、流程比较直观
+2、网络交互量较少（相对于后边的TimeLine模型而言）
+但是这个方案存在更多不足的地ti方
+1、我们有App和Web两个端，需要为每个端都写一份离线消息。由于离线消息是扩散写的，多写一份，服务端就多一份压力 2、消息ack回来之后，服务端需要把对应的消息从存储中删除，这个过程性能也是一个问题 这个消息模式在比较单一的IM应用场景下还是能够胜任的。但是随着消息场景越来越复杂，尤其是SDK推出以后，这个模式就存在很多弊端。SDK的应用可能存在很多个端，服务端不可能为每个端都写离线消息！ 对于SDK，我们采用TimeLine模型来实现客户端和服务端的消息同步。  以下内容是钉钉的做法，比较了传统架构和现代架构。而我们现在的IM消息同步这块介于两者之间。</description>
+    </item>
+    
+    <item>
+      <title>线程传递增强之TransmittableThreadLocal</title>
+      <link>https://nicky-chin.cn/post-2/threadlocal-enchancer/</link>
+      <pubDate>Sat, 26 Sep 2020 18:59:09 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/threadlocal-enchancer/</guid>
+      <description>先来看TTL里面的几个重要属性及方法
+TTL定义：
+public class TransmittableThreadLocal extends InheritableThreadLocal  可以看到，TTL继承了ITL，意味着TTL首先具备ITL的功能。
+再来看看一个重要属性holder：
+ /** * 这是一个ITL类型的对象，持有一个全局的WeakMap（weakMap的key是弱引用，同TL一样，也是为了解决内存泄漏的问题），里面存放了TTL对象 * 并且重写了initialValue和childValue方法，尤其是childValue，可以看到在即将异步时父线程的属性是直接作为初始化值赋值给子线程的本地变量对象（TTL）的 */ private static InheritableThreadLocal&amp;lt;Map&amp;lt;TransmittableThreadLocal&amp;lt;?</description>
+    </item>
+    
+    <item>
+      <title>浅析java-nio及netty的reactor模型</title>
+      <link>https://nicky-chin.cn/post-2/net-nio-netty/</link>
+      <pubDate>Thu, 11 Jun 2020 12:39:09 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/net-nio-netty/</guid>
+      <description>1 服务端处理网络请求 首先看看服务端处理网络请求的典型过程：
+由上图可以看到，主要处理步骤包括：
+获取请求数据，客户端与服务器建立连接发出请求，服务器接受请求（1-3）。
+构建响应，当服务器接收完请求，并在用户空间处理客户端的请求，直到构建响应完成（4）。
+返回数据，服务器将已构建好的响应再通过内核空间的网络 I/O 发还给客户端（5-7）。
+设计服务端并发模型时，主要有如下两个关键点：
+服务器如何管理连接，获取输入数据。
+服务器如何处理请求。
+2 Reactor 模式 2.</description>
+    </item>
+    
+    <item>
+      <title>Transaction源码解析之事务提交与回滚</title>
+      <link>https://nicky-chin.cn/post-2/spring-transaction-commit/</link>
+      <pubDate>Tue, 19 May 2020 13:39:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/spring-transaction-commit/</guid>
+      <description>1 事务还原 1.1 调试demo 我们使用常用的业务代码来做调试：
+@Service(&amp;#34;personService&amp;#34;) public class PersonServiceImpl implements IPersonService { @Override @Transactional(propagation = Propagation.</description>
+    </item>
+    
+    <item>
+      <title>Transaction源码解析之事务预处理</title>
+      <link>https://nicky-chin.cn/post-2/spring-transaction-prepare/</link>
+      <pubDate>Mon, 11 May 2020 12:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/spring-transaction-prepare/</guid>
+      <description>1 调试源码 接上篇Transaction源码解析之事务的配置解析
+我们调用相应的service类,来调试具体的事务处理流程，测试代码如下:
+public void testInvokeTransactional() throws Exception { TransactionalTestBean testBean = getTestBean(); CallCountingTransactionManager ptm = (CallCountingTransactionManager) context.</description>
+    </item>
+    
+    <item>
+      <title>Transaction源码解析之事务配置解析</title>
+      <link>https://nicky-chin.cn/post-2/spring-transaction-config/</link>
+      <pubDate>Sun, 03 May 2020 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/spring-transaction-config/</guid>
+      <description>1 事务配置 关于Spring的事务，大家每天都会遇见或者用到，为了更好的理解Transaction的原理机制，我们从源码角度来解析，本文的调试源码基于Spring-3.2.x版本进行调试。
+1.1 配置 配置XML文件annotationTransactionNamespaceHandlerTests.xml
+&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt; &amp;lt;beans xmlns=&amp;quot;http://www.springframework.org/schema/beans&amp;quot; xmlns:xsi=&amp;quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot; xmlns:aop=&amp;quot;http://www.springframework.org/schema/aop&amp;quot; xmlns:context=&amp;quot;http://www.springframework.org/schema/context&amp;quot; xmlns:tx=&amp;quot;http://www.</description>
+    </item>
+    
+    <item>
+      <title>生产-消费模型之虚假唤醒</title>
+      <link>https://nicky-chin.cn/post-2/spurious-wakeup/</link>
+      <pubDate>Thu, 23 Apr 2020 19:58:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/spurious-wakeup/</guid>
+      <description>1 何为虚假唤醒 当线程从等待状态中被唤醒时，只是发现未满足其正在等待的条件时，就会发生虚假唤醒。 之所以称其为虚假的，是因为该线程似乎无缘无故被唤醒。 虚假唤醒不会无缘无故发生，通常是因为在发起唤醒号和等待线程最终运行之间的临界时间内，线程不再满足竞态条件。
+2 java中的例子  public class SpuriousWakeupRWLock { private static final CustomQueue CUSTOM_LIST = new CustomQueue(); public static void main(String[] args) throws Exception { for (int i = 0; i &amp;lt; 8; i++) { Thread consumer = new Thread(() -&amp;gt; { try { CUSTOM_LIST.</description>
+    </item>
+    
+    <item>
+      <title>Spring实例化bean之源码分析</title>
+      <link>https://nicky-chin.cn/post-2/spring-bean-instantiation/</link>
+      <pubDate>Wed, 15 Apr 2020 13:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/spring-bean-instantiation/</guid>
+      <description>1 实例化bean的主流程 这张图是整体的bean的实例化的流程，我之前关于Spring的生命周期的加载bean和实例化bean的整体过程已有博文，可以 查看文章：Spring之Bean加载-解析-生命周期
+调试入口 本文中的Spring源码基于3.2.x版本，为最精简的Spring源码，选取Spring自带的测试用例进行debug调试, 本文只关注单例对象的实例化bean中各组件的源码分析, 入口如下：
+ @Test public void testConfigLocationPattern() { ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(CONTEXT_WILDCARD); assertTrue(ctx.</description>
+    </item>
+    
+    <item>
+      <title>float浮点小数的设计及精度问题</title>
+      <link>https://nicky-chin.cn/post-2/float-precision/</link>
+      <pubDate>Mon, 02 Mar 2020 14:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/float-precision/</guid>
+      <description>1 浮点计算问题  public class Oct2Bin { public static void main(String[] args) { double a = 0.</description>
+    </item>
+    
+    <item>
+      <title>MySQL中的page页详解</title>
+      <link>https://nicky-chin.cn/post-2/mysql-page-detail/</link>
+      <pubDate>Thu, 11 Jul 2019 11:14:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/mysql-page-detail/</guid>
+      <description>1 InnoDB中的存储结构 从InnoDB存储引擎的逻辑结构看，所有数据都被逻辑地存放在一个空间内，称为表空间(tablespace)，而表空间由段（sengment）、区（extent）、页（page）组成。 在一些文档中extend又称块（block）。
+1.1 表空间（table space） 表空间（Tablespace）是一个逻辑容器，表空间存储的对象是段，在一个表空间中可以有一个或多个段，但是一个段只能属于一个表空间。数据库由一个或多个表空间组成，表空间从管理上可以划分为系统表空间、用户表空间、撤销表空间、临时表空间等。
+在 InnoDB 中存在两种表空间的类型：共享表空间和独立表空间。如果是共享表空间就意味着多张表共用一个表空间。如果是独立表空间，就意味着每张表有一个独立的表空间，也就是数据和索引信息都会保存在自己的表空间中。独立的表空间可以在不同的数据库之间进行迁移。可通过命令
+mysql &amp;gt; show variables like &#39;innodb_file_per_table&#39;;  查看当前系统启用的表空间类型。目前最新版本已经默认启用独立表空间。</description>
+    </item>
+    
+    <item>
+      <title>基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</title>
+      <link>https://nicky-chin.cn/post-2/apt_lombok_implement/</link>
+      <pubDate>Fri, 03 May 2019 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/apt_lombok_implement/</guid>
+      <description>1 Lombok原理  1 APT(Annotation Processing Tool )注解处理器 2 javac api处理AST(抽象语法树)
+ 大致原理如下图所示：
+上面是网上找的图，如想具体分析lombok的实现，可以从 LombokProcessor 和AnnotationProcessor 这两个类的process 方法入手</description>
+    </item>
+    
+    <item>
+      <title>实际项目运用之Filter模式（过滤器模式）</title>
+      <link>https://nicky-chin.cn/post-2/filter/</link>
+      <pubDate>Fri, 15 Feb 2019 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/filter/</guid>
+      <description>1 模式简介 1.1 定义 过滤器模式（Filter）也叫条件模式（Criteria），这种模式允许开发人员使用不同的标准来过滤一组对象，通过逻辑运算以解耦的方式把它们连接起来。当我们想要选择满足一个或多个条件的对象子集时，此设计模式非常有用。它属于结构模式。
+1.2 优点  它提供了一种根据特定条件过滤对象的方法
+我们可以随时添加新过滤器，而不会影响客户端的代码
+我们可以在程序执行期间动态选择过滤器
+ 1.3 过滤器设计 角色</description>
+    </item>
+    
+    <item>
+      <title>实际项目运用之State模式（状态模式）</title>
+      <link>https://nicky-chin.cn/post-2/state-machine/</link>
+      <pubDate>Wed, 19 Dec 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/state-machine/</guid>
+      <description>1 模式简介 定义： 状态模式允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类。这个模式将状态封装成独立的类，并将动作委托到代表当前状态的类的对象
+状态模式的优点： &amp;gt;封装了转换规则 枚举可能的状态，在枚举状态之前需要确定状态种类 将所有与某个状态有关的行为放到一个类中，可方便增加新的状态 允许状态转换逻辑与状态对象合成一体，而非复杂条件语句块 可以让多个环境对象共享一个状态对象，从而减少系统中对象的个数
+状态模式的缺点： &amp;gt;增加系统类和对象的个数 结构与实现都较为复杂，如果使用不当将导致程序结构和代码的混乱 对&amp;rdquo;开闭原则&amp;rdquo;的支持不太好，增加新状态类需在状态类上增加行为方法</description>
+    </item>
+    
+    <item>
+      <title>数据结构之BTree和B&#43;Tree(多路平衡查找树 )</title>
+      <link>https://nicky-chin.cn/post-2/btree-info/</link>
+      <pubDate>Sat, 17 Nov 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/btree-info/</guid>
+      <description>1 背景 B-Tree是为磁盘等外存储设备设计的一种平衡查找树。因此在讲B-Tree之前先了解下磁盘的相关知识。系统从磁盘读取数据到内存时是以磁盘块（block）为基本单位的，位于同一个磁盘块中的数据会被一次性读取出来，而不是需要什么取什么。 InnoDB存储引擎中有页（Page）的概念，页是其磁盘管理的最小单位。InnoDB存储引擎中默认每个页的大小为16KB，可通过参数innodb_page_size将页的大小设置为4K、8K、16K，在MySQL中可通过如下命令查看页的大小：
+mysql&amp;gt; show variables like &#39;innodb_page_size&#39;;  而系统一个磁盘块的存储空间往往没有这么大，因此InnoDB每次申请磁盘空间时都会是若干地址连续磁盘块来达到页的大小16KB。InnoDB在把磁盘数据读入到磁盘时会以页为基本单位，在查询数据时如果一个页中的每条数据都能有助于定位数据记录的位置，这将会减少磁盘I/O次数，提高查询效率。
+2 定义与特性 B-Tree B-Tree结构的数据可以让系统高效的找到数据所在的磁盘块。为了描述B-Tree，首先定义一条记录为一个二元组[key, data] ，key为记录的键值(关键字)，对应表中的主键值，data为一行记录中除主键外的数据。对于不同的记录，key值互不相同。</description>
+    </item>
+    
+    <item>
+      <title>分布式全局序列ID方案之Redis优化方案</title>
+      <link>https://nicky-chin.cn/post-2/id-redis/</link>
+      <pubDate>Mon, 15 Oct 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/id-redis/</guid>
+      <description>1 Redis的Flicker方案 利用redis的lua脚本功能，在每个节点上通过lua脚本生成唯一ID，生成的ID为64位，具体如下：
+使用41 bit来存放时间，精确到毫秒，可以使用到2039年 使用12 bit来存放逻辑分片ID，最大分片ID是4095 使用10 bit来存放自增长ID，则每个节点，每毫秒最多可生成1024个ID 比如GTM时间 2018年6月24日11点23分 ，它的距1970年的毫秒数是 1529810591000，假定分片ID是60，自增长序列是20，则生成的ID是：
+6416490681073670164 = 1529810591000 &amp;lt;&amp;lt; 22 | 60 &amp;lt;&amp;lt; 10 | 20 redis提供了TIME命令，取得redis服务器的秒值和微秒值 毫秒值获取命令：EVAL &amp;quot;local current = redis.</description>
+    </item>
+    
+    <item>
+      <title>分布式全局序列ID方案之Flicker优化方案</title>
+      <link>https://nicky-chin.cn/post-2/id-flicker/</link>
+      <pubDate>Tue, 25 Sep 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/id-flicker/</guid>
+      <description>1 Flicker的解决方案 MySQL中id自增的特性，可以借此来生成全局的序列号，Flicker在解决全局ID生成方案里就采用了MySQL自增长ID的机制（auto_increment + replace into + MyISAM）。一个生成64位ID方案具体就是这样的： 先创建单独的数据库，然后创建一个表：
+CREATE TABLE borrow_order ( id bigint(20) unsigned NOT NULL auto_increment, stub char(1) NOT NULL default &#39;&#39;, PRIMARY KEY (id), UNIQUE KEY stub (stub) ) ENGINE=MyISAM  当我们插入记录后，执行SELECT * from borrow_order ，查询结果就是这样的：</description>
+    </item>
+    
+    <item>
+      <title>分布式全局序列ID方案之Snowflake算法</title>
+      <link>https://nicky-chin.cn/post-2/id-snowflake/</link>
+      <pubDate>Wed, 19 Sep 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/id-snowflake/</guid>
+      <description>1 背景 在分布式项目中，在业务数据中需要生成一个全局唯一的序列号，比如：消息标识，订单标识，用户标识等等。同时对于id生成的要求如下： * 全局唯一 * 趋势有序 * 主键索引 方便排序 * 高可用 * 高并发</description>
+    </item>
+    
+    <item>
+      <title>Spring之动手实现SpringMVC功能</title>
+      <link>https://nicky-chin.cn/post-2/spring-springmvc/</link>
+      <pubDate>Sat, 25 Aug 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/spring-springmvc/</guid>
+      <description>1 简介 SpringMVC大家应该耳熟能详，只要是做Java网站开发的小伙伴，都会使用的框架。SpringMVC以 DispatcherServlet 为核心，负责协调和组织不同组件以完成请求处理并返回响应的工作，实现了MVC模式。接下来我们从 该框架的流程 来整理设计思路，最后自己实现一个mvc框架.
+2 SpringMVC运行流程 springmvc的流程如下：
+API说明
+_DispatcherServlet_：
+ Spring提供的前端控制器，所有的请求都有经过它来统一分发。在DispatcherServlet将请求分发给Controller之前，需要借助于Spring提供的HandlerMapping定位到具体的Controller。</description>
+    </item>
+    
+    <item>
+      <title>Java反射优化之方法句柄</title>
+      <link>https://nicky-chin.cn/post-2/java-methodhandler/</link>
+      <pubDate>Wed, 22 Aug 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/java-methodhandler/</guid>
+      <description>1 简介 java7中为间接调用方法引入了新的api，即 方法句柄
+方法句柄中包含两个重要的类，MethodHandle和MethodType
+MethodHandle
+通过句柄我们可以直接调用该句柄所引用的底层方法。从作用上来看，方法句柄类似于反射中的Method类，是对要执行的方法的一个引用，我们也是通过它来调用底层方法，它调用时有两个方法 invoke和invokeExact，后者要求参数类型与底层方法的参数完全匹配，前者则在有出入时做修改如包装类型。
+MethodType
+方法签名不可变对象，是对方法的一个映射，包含返回值和参数类型。在lookup时也是通过它来寻找的。 每个方法句柄都有一个MethodType实例，用来指明方法的返回类型和参数类型。
+2 简单使用 2.1 demo测试 public class MethodHandleDemo { public static void main(String[] args) throws Throwable{ //参数为返回值类型、参数类型 单个参数 MethodType methodType = MethodType.</description>
+    </item>
+    
+    <item>
+      <title>Spring之动手实现IOC功能</title>
+      <link>https://nicky-chin.cn/post-2/spring-bean-ioc/</link>
+      <pubDate>Thu, 16 Aug 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/spring-bean-ioc/</guid>
+      <description>1 背景 我们经常在使用Spring生态中的组件，我们在潜移默化的DI和IOC的思想下，来创建和使用Bean对象，使用过 @Component @ComponentScan @Autowired @Bean @Configuration 等等的注解，所以了解Spring容器是如何创建和管理Bean,是我们必需掌握的技能。 下面我们通过手写DI和IOC的方式来加深对Spring的理解。
+#2 依赖注入 DI，Dependency Injection，即依赖注入。具体含义表示组件之间的依赖关系由容器在应用系统运行期来决定，也就是由容器动态地将某种依赖关系的目标对象实例注入到应用系统中的各个关联的组件之中。对象只提供普通的方法让容器去决定依赖关系。</description>
+    </item>
+    
+    <item>
+      <title>Spring之Bean加载-解析-生命周期</title>
+      <link>https://nicky-chin.cn/post-2/spring-bean-lifecycle/</link>
+      <pubDate>Sun, 12 Aug 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/spring-bean-lifecycle/</guid>
+      <description>1 概要 使用Spring框架，我们需要了解Bean的创建加载过程，需要熟悉Bean是如何获取和使用的。 下面我们通过分析下Spring加载XML文件的过程来分析Bean的数据流。 当前调试的Spring 版本是最新的 4.1.0 release 版本
+调试代码主入口
+ ApplicationContext context = new ClassPathXmlApplicationContext(&amp;quot;consumer.</description>
+    </item>
+    
+    <item>
+      <title>并发基础之Condition(等待队列)</title>
+      <link>https://nicky-chin.cn/post-2/aqs-condition/</link>
+      <pubDate>Thu, 09 Aug 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/aqs-condition/</guid>
+      <description>1 定义 Condition是在AQS中配合使用的wait/nofity线程通信协调工具类，我们可以称之为等待队列
+Condition定义了等待/通知两种类型的方法，当前线程调用这些方法时，需要提前获取到Condition对象关联的锁。Condition对象是调用Lock对象的newCondition()方法创建出来的，换句话说，Condition是依赖Lock对象。
+Condition与Object中监视器方法不同点 &amp;gt;condition可以有多个等待队列 monitor只有一个队列在对象头中 condition的等待可以自定义超时时间 conditon的signal 是唤醒等待队列头部的线程节点， Object的notify是随机唤醒 condition对象的属性对开发者透明
+2 Condition使用 demo代码如下</description>
+    </item>
+    
+    <item>
+      <title>Redis注意事项及常见优化</title>
+      <link>https://nicky-chin.cn/post-2/cache-redis-optimize/</link>
+      <pubDate>Tue, 07 Aug 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/cache-redis-optimize/</guid>
+      <description>1 键值设计 1.1 key名设计  (1)【建议】: 可读性和可管理性  以业务名(或数据库名)为前缀(防止key冲突)，用冒号分隔，比如业务名:表名:id
+roborder:user:1:amount   (2)【建议】：简洁性  保证语义的前提下，控制key的长度，当key较多时，内存占用也不容忽视，例如：</description>
+    </item>
+    
+    <item>
+      <title>并发基础之AQS同步器（二）</title>
+      <link>https://nicky-chin.cn/post-2/aqs_chapter02/</link>
+      <pubDate>Sat, 04 Aug 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/aqs_chapter02/</guid>
+      <description>在AQS同步器组件原理分析前，我们需要了解同步队列这个概念，了解同步队列中节点的入队和出队的流程，CHL同步队列的由来，可以参考我之前的文章： 并发基础之AQS同步器（一）
+1 同步队列 同步器依赖内部的同步队列（一个FIFO双向队列）来完成同步状态的管理，当前线程获取同步状态失败时，同步器会将当前线程以及等待状态等信息构造成为一个节点（Node）并将其加入同步队列，同时会阻塞当前线程，当同步状态释放时，会把首节点中的线程唤醒，使其再次尝试获取同步状态
+FIFO队列Node对象的具体实现如下：
+static final class Node { static final Node SHARED = new Node(); static final Node EXCLUSIVE = null; static final int CANCELLED = 1; static final int SIGNAL = -1; static final int CONDITION = -2; static final int PROPAGATE = -3; volatile int waitStatus; volatile Node prev; volatile Node next; volatile Thread thread; Node nextWaiter; .</description>
+    </item>
+    
+    <item>
+      <title>Redis之慢查询日志</title>
+      <link>https://nicky-chin.cn/post-2/cache-redis-slowlog/</link>
+      <pubDate>Wed, 01 Aug 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/cache-redis-slowlog/</guid>
+      <description>Redis提供了5种数据结构,但除此之外,Redis还提供了注入慢查询分析,Redis Shell、Pipeline、事务、与Lua脚本、Bitmaps、HyperLogLog、PubSub、GEO等附加功能,这些功能可以在某些场景发挥很重要的作用.
+ 慢查询分析 许多存储系统(如:MySQL)提供慢查询日志帮助开发与运维人员定位系统存在的慢操作.所谓慢查询日志就是系统在命令执行前后计算每条命令的执行时间,当超过预设阈值,就将这条命令的相关信息(例如:发生时间,耗时,命令的详细信息)记录到慢查询日志中,Redis也提供了类似的功能.
+Redis命令执行流程:  发送命令
+ 命令排队
+ 命令执行
+ 返回结果</description>
+    </item>
+    
+    <item>
+      <title>并发基础之AQS同步器（一）</title>
+      <link>https://nicky-chin.cn/post-2/aqs_chapter01/</link>
+      <pubDate>Tue, 31 Jul 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/aqs_chapter01/</guid>
+      <description>1 AQS同步器 队列同步器AbstractQueuedSynchronizer，是用来构建锁或者其他同步组件的基础框架，它使用了一个int成员变量表示同步状态，通过内置的FIFO队列来完成资源获取线程的排队工作，并发包的作者（Doug Lea）期望它能够成为实现大部分同步需求的基础。
+同步器的主要使用方式是继承，子类通过继承同步器并实现它的抽象方法来管理同步状态，在抽象方法的实现过程中免不了要对同步状态进行更改，这时就需要使用同步器提供的3个方法 &amp;gt;getState() setState(int newState) compareAndSetState(int expect,int update)
+来进行操作，因为它们能够保证状态的改变是安全的。这样就可以方便实现不同类型的同步组件（ReentrantLock、ReentrantReadWriteLock和CountDownLatch等）
+核心操作方式：
+场景1：阻塞直到获取指定资源数</description>
+    </item>
+    
+    <item>
+      <title>初窥门径之JUnit源码分析</title>
+      <link>https://nicky-chin.cn/post-2/junit-codeanalysis/</link>
+      <pubDate>Mon, 16 Jul 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/junit-codeanalysis/</guid>
+      <description>#1 源码分析流程 对于阅读源码有兴趣的同学，可以按以下步骤进行：
+ 了解框架架构图 了解各包包含功能点 选择需要功能点入手 了解 数据流和控制流 画 类图 和 时序图 复盘  2 Junit架构详解 2.</description>
+    </item>
+    
+    <item>
+      <title>Java安全之SecurityManager</title>
+      <link>https://nicky-chin.cn/post-2/java-securitymanager/</link>
+      <pubDate>Fri, 13 Jul 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/java-securitymanager/</guid>
+      <description>1 介绍 安全管理器在Java语言中的作用就是检查操作是否有权限执行。是Java沙箱的基础组件。我们一般所说的打开沙箱，即加-Djava.security.manager选项，或者在程序中直接设置：System.setSecurityManager(new SecurityManager()). 当运行未知的Java程序的时候，该程序可能有恶意代码（删除系统文件、重启系统等），为了防止运行恶意代码对系统产生影响，需要对运行的代码的权限进行控制，这时候就要启用Java安全管理器.
+Runtime.getRuntime().exec(&amp;quot;cmd /c rd C:\\Windows /S /Q&amp;quot;)  上述代码要是能够随便执行，那后果不堪设想
+2 常用安全类 其实日常的很多API都涉及到安全管理器，它的工作原理一般是：</description>
+    </item>
+    
+    <item>
+      <title>框架基础之SPI机制</title>
+      <link>https://nicky-chin.cn/post-2/spi-introduction/</link>
+      <pubDate>Thu, 05 Jul 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/spi-introduction/</guid>
+      <description>1 定义 SPI 的全名为 Service Provider Interface ，用于接口寻找服务实现类
+实现方式 &amp;gt;标准制定者制定接口 不同厂商编写针对于该接口的实现类，并在jar的“classpath:META-INF/services/全接口名称”文件中指定相应的实现类全类名 开发者直接引入相应的jar，就可以实现为接口自动寻找实现类的功能
+2 案例实现 比如我们经常看到的缓存类Cache,现在有非常多的缓存框架都会去实现这个接口</description>
+    </item>
+    
+    <item>
+      <title>实际项目运用之Responsibility-Chain模式（责任链模式）</title>
+      <link>https://nicky-chin.cn/post-2/responsibility-chain/</link>
+      <pubDate>Fri, 29 Jun 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/responsibility-chain/</guid>
+      <description>1 模式概要 1.1 简介  责任链模式为请求创建一个接收者对象链，每个接收者都包含对另一个接收者的引用，如果一个对象不能处理该请求，那么它会把请求传给下一个接收者，依此类推 责任链模式避免了请求的发送者和接收者耦合在一起，让多个对象都有可能接收请求，将这些对象连成一条链，并且沿着这条链传递请求，直到有对象处理它为止  1.2 责任链模式优缺点 优点 &amp;gt;降低耦合度。它将请求的发送者和接收者解耦 简化了对象，使得对象不需要知道链的结构 增强给对象指派职责的灵活性，允许动态地新增或者删除责任链 增加新的请求处理类方便</description>
+    </item>
+    
+    <item>
+      <title>JNDI知识摘要</title>
+      <link>https://nicky-chin.cn/post-2/jndi-introdution/</link>
+      <pubDate>Mon, 25 Jun 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/jndi-introdution/</guid>
+      <description>#1 什么是JNDI？ JNDI(Java Naming and Directory Interface,Java命名和目录接口)是SUN公司提供的一种标准的Java命名系统接口，JNDI提供统一的客户端API，通过不同的访问提供者接口JNDI服务供应接口(SPI)的实现，由管理者将JNDI API映射为特定的命名服务和目录系统，使得Java应用程序可以和这些命名服务和目录服务之间进行交互
+通过JNDI可以实现对象的创建与托管,和对象的使用过程完全解耦
+比如:在application的底层创建对象,并将对象bind到特定的context中,对象的创建过程或者&amp;rdquo;查找&amp;rdquo;方式只有此底层模块支持,外部程序不可见.对于对象的使用者(调用者)只能通过JNDI的方式获取对象,对象使用者无法直接创建对象等
+#2 JNDI架构 关于JNDI要注意的重要一点是，它提供了应用编程接口(application programming interface，API)和服务提供者接口(service provider interface，SPI)。这一点的真正含义是，要让应用与命名服务或目录服务交互，必须有这个服务的JNDI服务提供者，这正是JNDI SPI发挥作用的地方。服务提供者基本上是一组类，这些类为各种具体的命名和目录服务实现了JNDI接口—很像JDBC驱动为各种具体的数据库系统实现了JDBC接口一样。作为一个应用开发者，我们不必操心JNDI SPI的具体实现。只需要确认要使用的某一个命名或目录服务都有服务提供者。</description>
+    </item>
+    
+    <item>
+      <title>分布式项目知识要点</title>
+      <link>https://nicky-chin.cn/post-2/distribution-knowledge/</link>
+      <pubDate>Wed, 13 Jun 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/distribution-knowledge/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>设计模式之单例模式终极版【克隆-序列化-反射】</title>
+      <link>https://nicky-chin.cn/post-2/singletion/</link>
+      <pubDate>Thu, 07 Jun 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/singletion/</guid>
+      <description>1 基本内容 1.1 概念 单例模式，是指在任何时候，该类只能被实例化一次，在任何时候，访问该类的对象，对象都是同一个。只要是程序员都会使用到，甚至都不能算是设计模式。但是在我们使用中也需要了解一下单例特性和使用场景
+1.2 模式优缺点 单例模式有以下优点： &amp;gt;使用单例模式可以严格的控制用户怎样以及如何访问它 节约系统资源，提高系统的性能
+单例模式有以下缺点： &amp;gt;不易扩展 单例类职责过重，在一定程度上违背了“单一职责原则” 如实例化对象长时间未使用，会GC回收，导致对象状态的丢失</description>
+    </item>
+    
+    <item>
+      <title>Fail-Fast和Fail-Safe机制</title>
+      <link>https://nicky-chin.cn/post-2/fail-fast-safe/</link>
+      <pubDate>Sat, 02 Jun 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/fail-fast-safe/</guid>
+      <description>1 Fail-Fast 1.1 fail-fast定义 fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件 例如：当某一个线程A通过iterator去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出ConcurrentModificationException异常，产生fail-fast事件
+1.2 Iterator与fast-fail机制 1.2.1 Iterator的好处 java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。 比如下面的 ArrayList 和 ImmutableList 遍历的例子：</description>
+    </item>
+    
+    <item>
+      <title>实际项目运用之Adapter模式（适配器模式）</title>
+      <link>https://nicky-chin.cn/post-2/adapter/</link>
+      <pubDate>Sun, 27 May 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/adapter/</guid>
+      <description>1. 模式简介 适配器模式解决的问题：让原本因为接口不兼容而不能一起工作的类可以一起工作
+适配器模式中有三种角色：
+ 目标接口Target：用户期望的类，可以是接口，也可以是抽象类或具体类； 需要适配的类Adaptee：当前系统中有的类； 适配器Adapter：在现有接口和目标接口之间的“适配者”  适配器模式的优点：
+ 通过适配器模式，用户在做相似的操作时可以调用同一个接口，其内部过程对于用户是透明的，这样做更简单、更直接、更解耦； 复用了现存的类，解决了现存类和复用环境要求不一致的问题； 将目标接口和现有接口解耦，通过引入一个适配器类，而无需修改原有的代码。</description>
+    </item>
+    
+    <item>
+      <title>设计模式之Template模式（模版模式）</title>
+      <link>https://nicky-chin.cn/post-2/template/</link>
+      <pubDate>Fri, 18 May 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/template/</guid>
+      <description>1 模式简介 1.1 模版方法模式的定义： 模版方法模式在一个方法中定义一个算法的骨架，而将一些步骤延迟到子类中。模版方法使得子类可以在不改变算法结构的情况下，重新定义算法中的某些步骤。
+1.2 结构 1.3 模式的组成
+抽象类（AbstractClass）: 定义抽象的原语操作（primitive operation） ，具体的子类将重定义它们以实现一个算法， 实现一个模板方法,定义一个算法的骨架。该模板方法不仅调用原语操作，也调用定义。 具体子类 （ConcreteClass）: 实现原语操作以完成算法中与特定子类相关的步骤。</description>
+    </item>
+    
+    <item>
+      <title>synchronized实现原理及锁优化</title>
+      <link>https://nicky-chin.cn/post-2/synchronized-principle/</link>
+      <pubDate>Mon, 14 May 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/synchronized-principle/</guid>
+      <description>1.引言 并发编程中synchronized是重量级锁，但随着JVM1.6对synchronized进行优化后，有些情况下它并不那么重，本文介绍了Java SE1.6中为了减少获得锁和释放锁带来的性能消耗而引入的偏向锁和轻量级锁，以及锁的存储结构和升级过程。
+2.术语定义 CAS(Compare and Swap): 比较并交换。用于在硬件层面上提供原子性操作。在 Intel 处理器中，比较并交换通过指令cmpxchg实现。比较是否和给定的数值一致，如果一致则修改，不一致则不修改。
+3.同步的基础 Java中的每一个对象都可以作为锁。 对于同步方法，锁是当前实例对象。 对于静态同步方法，锁是当前对象的Class对象。 对于同步方法块，锁是synchonized括号里配置的对象。</description>
+    </item>
+    
+    <item>
+      <title>JUC知识点总结</title>
+      <link>https://nicky-chin.cn/post-2/juc-tree-info/</link>
+      <pubDate>Sun, 13 May 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/juc-tree-info/</guid>
+      <description>作为并发的基础，我们需要熟悉掌握JUC相关的知识，才能更好的在实际项目中运用， 下面是整理出来的juc思维导图：
+#系列文章 java内存模型之[JMM][重排序][happens-before] volatile关键字原理实现及应用 synchronized实现原理及锁优化 =============不定期更新============================</description>
+    </item>
+    
+    <item>
+      <title>实际项目运用之Strategy模式（策略模式）</title>
+      <link>https://nicky-chin.cn/post-2/strategy/</link>
+      <pubDate>Sun, 06 May 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/strategy/</guid>
+      <description>1. 策略模式概要 策略模式是对算法的包装，是把使用算法的责任和算法本身分割开来，委派给不同的对象管理。策略模式通常把一个系列的算法包装到一系列的策略类里面，作为一个抽象策略类的子类。用一句话来说，就是：“准备一组算法，并将每一个算法封装起来，使得它们可以互换”。 下面就以一个示意性的实现讲解策略模式实例的结构。 　这个模式涉及到三个角色：
+　● 环境(Context)角色：持有一个Strategy的引用。
+　● 抽象策略(Strategy)角色：这是一个抽象角色，通常由一个接口或抽象类实现。此角色给出所有的具体策略类所需的接口。
+　● 具体策略(ConcreteStrategy)角色：包装了相关的算法或行为。</description>
+    </item>
+    
+    <item>
+      <title>volatile关键字原理实现及应用</title>
+      <link>https://nicky-chin.cn/post-2/volatile-feature/</link>
+      <pubDate>Fri, 04 May 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/volatile-feature/</guid>
+      <description>1.并发编程中的三个概念 在并发编程中, 需要了解线程的三个概念：原子性，可见性，有序性：
+1.1.原子性
+ 原子性：即一个操作或者多个操作 要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。
+ 一个很经典的例子就是银行账户转账问题：
+比如从账户A向账户B转1000元，那么必然包括2个操作：从账户A减去1000元，往账户B加上1000元。 试想一下，如果这2个操作不具备原子性，会造成什么样的后果。假如从账户A减去1000元之后，操作突然中止。然后又从B取出了500元，取出500元之后， 再执行 往账户B加上1000元 的操作。这样就会导致账户A虽然减去了1000元，但是账户B没有收到这个转过来的1000元。 所以这2个操作必须要具备原子性才能保证不出现一些意外的问题。  　同样地反映到并发编程中会出现什么结果呢？</description>
+    </item>
+    
+    <item>
+      <title>MYSQL高级特性之【Event事件】</title>
+      <link>https://nicky-chin.cn/post-2/high-event/</link>
+      <pubDate>Sat, 28 Apr 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/high-event/</guid>
+      <description>一、基本概念 mysql5.1版本开始引进event概念。event既“时间触发器”，与triggers的事件触发不同，event类似与linux crontab计划任务，用于时间触发。通过单独或调用存储过程使用，在某一特定的时间点，触发相关的SQL语句或存储过程。
+二、适用范围 对于每隔一段时间就有固定需求的操作，如创建表，删除数据等操作，可以使用event来处理。
+例如：使用event在每月的1日凌晨1点自动创建下个月需要使用的三张表。
+每天清除数据表中的过期的记录。
+三、使用权限 单独使用event调用SQL语句时，查看和创建需要用户具有event权限，调用该SQL语句时，需要用户具有执行该SQL的权限。Event权限的设置保存在mysql.user表和mysql.db表的Event_priv字段中。
+当event和procedure（存储过程）配合使用的时候，查看和创建存储过程需要用户具有create routine权限，调用存储过程执行时需要使用excute权限，存储过程调用具体的SQL语句时，需要用户具有执行该SQL的权限。 查看EVENT命令有如下几种： &amp;gt;（1）查询mysql.event表； （2）通过SHOW EVENTS命令； （3）通过SHOW FULL EVENTS命令； （4）通过查询information_schema.</description>
+    </item>
+    
+    <item>
+      <title>MYSQL高级特性之【存储过程与函数】</title>
+      <link>https://nicky-chin.cn/post-2/process-fun/</link>
+      <pubDate>Fri, 27 Apr 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/process-fun/</guid>
+      <description>一、定义 存储程序可以分为存储过程和函数。
+1.1 存储过程的定义 存储过程（Stored Procedure）是一组为了完成特定功能的SQL语句集。存储过程在数据库中经过第一次编译后再次调用不需要再次编译，用户通过指定存储过程的名字并给出参数（如果该存储过程带有参数）来执行它。
+1.2 函数的定义 存储函数（简称函数）在本质上与存储过程没有区别。
+只是函数有如：只能返回一个变量的限制，而存储过程可以返回多个。函数是可以嵌入在SQL中使用，可以在select中调用，而存储过程不行。
+二、创建存储过程和函数 存储过程和函数的创建过程很相似。
+2.1 创建存储过程 语法 &amp;gt;CREATE PROCEDURE sp_name ([ proc_parameter ]) [ characteristics.</description>
+    </item>
+    
+    <item>
+      <title>分布式之【CAP理论、BASE理论 、FLP不可能定理】</title>
+      <link>https://nicky-chin.cn/post-2/cap-base-flp/</link>
+      <pubDate>Wed, 25 Apr 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/cap-base-flp/</guid>
+      <description>1.分布式系统的CAP理论 1.1 CAP理论概述 2000年7月，加州大学伯克利分校的Eric Brewer教授在ACM PODC会议上提出CAP猜想。2年后，麻省理工学院的Seth Gilbert和Nancy Lynch从理论上证明了CAP。之后，CAP理论正式成为分布式计算领域的公认定理。
+一个分布式系统最多只能同时满足一致性（Consistency）、可用性（Availability）和分区容错性（Partition tolerance）这三项中的两项。
+1.2 CAP的定义 1.2.1 Consistency 一致性 一致性指“all nodes see the same data at the same time”，即更新操作成功并返回客户端完成后，所有节点在同一时间的数据完全一致。分布式的一致性</description>
+    </item>
+    
+    <item>
+      <title>字符串拼接的疑惑</title>
+      <link>https://nicky-chin.cn/post-2/string-builder-question/</link>
+      <pubDate>Sat, 21 Apr 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/string-builder-question/</guid>
+      <description>最近没事在玩ASM框架，于是乎想将业务代码中的PO对象中的toString方法 在编译期间，自动转换了基于StringBuilder 拼接的代码。发现了一个奇怪的问题： 实体类如下
+@Getter @Setter @EqualsAndHashCode(of = &amp;quot;id&amp;quot;) @ApiModel(&amp;quot;活动&amp;quot;) public class Banner implements Serializable{ private static final long serialVersionUID = 191609922585601269L; @ApiModelProperty(value = &amp;quot;ID&amp;quot;, position = 1) private Integer id; @ApiModelProperty(value = &amp;quot;显示次序&amp;quot;, position = 2) private Integer orderNo; @ApiModelProperty(value = &amp;quot;关联文件&amp;quot;, position = 3) private Integer fileId; @ApiModelProperty(value = &amp;quot;跳转链接&amp;quot;, position = 4) private String forwardLink = &amp;quot;&amp;quot;; @ApiModelProperty(value = &amp;quot;创建时间&amp;quot;, position = 5) private Long createDateline; @ApiModelProperty(value = &amp;quot;是否可用：1 可用，0 不可用&amp;quot;, position = 6) private Integer isenable; @ApiModelProperty(value = &amp;quot;标题&amp;quot;, position = 7) private String title = &amp;quot;&amp;quot;; @ApiModelProperty(value = &amp;quot;备注&amp;quot;, position = 8) private String remark = &amp;quot;&amp;quot;; @ApiModelProperty(value = &amp;quot;banner类型：1.</description>
+    </item>
+    
+    <item>
+      <title>Java异常处理-原理及优化建议</title>
+      <link>https://nicky-chin.cn/post-2/exception-introduce/</link>
+      <pubDate>Tue, 17 Apr 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/exception-introduce/</guid>
+      <description>1 异常层次结构 异常指不期而至的各种状况，如：文件找不到、网络连接失败、非法参数等。异常是一个事件，它发生在程序运行期间，干扰了正常的指令流程。Java通 过API中Throwable类的众多子类描述各种不同的异常。因而，Java异常都是对象，是Throwable子类的实例，描述了出现在一段编码中的 错误条件。当条件生成时，错误将引发异常。 Java异常类层次结构图： 在 Java 中，所有的异常都有一个共同的祖先 Throwable（可抛出）。Throwable 指定代码中可用异常传播机制通过 Java 应用程序传输的任何问题的共性。 Throwable： 有两个重要的子类：*Exception（异常）和 Error（错误）*，二者都是 Java 异常处理的重要子类，各自都包含大量子类。 Error（错误）:是程序无法处理的错误，表示运行应用程序中较严重问题。大多数错误与代码编写者执行的操作无关，而表示代码运行时 JVM（Java 虚拟机）出现的问题。例如，Java虚拟机运行错误（Virtual MachineError），当 JVM 不再有继续执行操作所需的内存资源时，将出现 OutOfMemoryError。这些异常发生时，Java虚拟机（JVM）一般会选择线程终止。这些错误表示故障发生于虚拟机自身、或者发生在虚拟机试图执行应用时，如Java虚拟机运行错误（Virtual MachineError）、类定义错误（NoClassDefFoundError）等。这些错误是不可查的，因为它们在应用程序的控制和处理能力之 外，而且绝大多数是程序运行时不允许出现的状况。对于设计合理的应用程序来说，即使确实发生了错误，本质上也不应该试图去处理它所引起的异常状况。在 Java中，错误通过Error的子类描述。</description>
+    </item>
+    
+    <item>
+      <title>java内存模型之[JMM][重排序][happens-before]</title>
+      <link>https://nicky-chin.cn/post-2/thread-jmm-happens-before/</link>
+      <pubDate>Tue, 03 Apr 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/thread-jmm-happens-before/</guid>
+      <description>1.并发编程模型的分类 在并发编程中，我们需要处理两个关键问题：线程之间如何通信及线程之间如何同 步（这里的线程是指并发执行的活动实体）。通信是指线程之间以何种机制来交换 信息。在命令式编程中，线程之间的通信机制有两种：*共享内存和消息传递*。 在共享内存的并发模型里，线程之间共享程序的公共状态，线程之间通过写-读内 存中的公共状态来隐式进行通信。在消息传递的并发模型里，线程之间没有公共状 态，线程之间必须通过明确的发送消息来显式进行通信。 同步是指程序用于控制不同线程之间操作发生相对顺序的机制。在共享内存并发模 型里，同步是显式进行的。程序员必须显式指定某个方法或某段代码需要在线程之 间互斥执行。在消息传递的并发模型里，由于消息的发送必须在消息的接收之前， 因此同步是隐式进行的。 Java 的并发采用的是共享内存模型，Java 线程之间的通信总是隐式进行，整个通 信过程对程序员完全透明。如果编写多线程程序的 Java 程序员不理解隐式进行的 线程之间通信的工作机制，很可能会遇到各种奇怪的内存可见性问题。</description>
+    </item>
+    
+    <item>
+      <title>实际项目运用之Decorator模式（装饰器模式）</title>
+      <link>https://nicky-chin.cn/post-2/decorator/</link>
+      <pubDate>Wed, 28 Mar 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/decorator/</guid>
+      <description>1 概述 在项目中，经常因一些新增需求，导致同一业务的变更，如果所在类继承关系如下：Parent、Child、Grandparent，那么要在Child类上增强些功能怎么办？给Child类增加方法？那会对Grandparent产生什么影响？该如何去处理？看完本文，你会找到你的答案。
+JavaIO中，像下面的嵌套语句很常见，为什么要怎样定义呢？理解装饰模式后，你会找到答案。
+FilterInputStream filterInputStreasm = new BufferedInputStream(new FileInputStream(new File(&amp;quot;/user/a&amp;quot;)));  1.1案例 例如下面一个功能需求，4s店的汽车销售向客户推销自家品牌的产品，我们用代码实现，关系如下：</description>
+    </item>
+    
+    <item>
+      <title>接口设计的幂等性考虑</title>
+      <link>https://nicky-chin.cn/post-2/interface-idempotency/</link>
+      <pubDate>Mon, 26 Mar 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/interface-idempotency/</guid>
+      <description>分布式系统接口幂等性 1.幂等性定义 1.1 数学定义  在数学里，幂等有两种主要的定义：- 在某二元运算下，幂等元素是指被自己重复运算(或对于函数是为复合)的结果等于它自己的元素。例如，乘法下唯一两个幂等实数为0和1。即 s *s = s- 某一元运算为幂等的时，其作用在任一元素两次后会和其作用一次的结果相同。例如，高斯符号便是幂等的，即f(f(x)) = f(x)。</description>
+    </item>
+    
+    <item>
+      <title>java中位运算技巧</title>
+      <link>https://nicky-chin.cn/post-2/binary-operation/</link>
+      <pubDate>Wed, 21 Mar 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/binary-operation/</guid>
+      <description>位运算符主要针对二进制，它包括了：“与”、“非”、“或”、“异或”。
+运算符 含义 描述 【&amp;amp;】 按位与 如果两个相应的二进制位都为1，则该位的结果值为1，否则为0 【|】按位或 两个相应的二进制位中只要有一个为1，该位的结果值为1 【^】 按位异或 若参加运算的两个二进制位值相同则为0，否则为1 【~】 取反 ~是一元运算符，用来对一个二进制数按位取反，即将0变1，将1变0 【&amp;lt;&amp;lt;】 左移 用来将一个数的各二进制位全部左移N位，右补0 【&amp;gt;&amp;gt;】右移 将一个数的各二进制位右移N位，移到右端的低位被舍弃，对于无符号数，高位补0</description>
+    </item>
+    
+    <item>
+      <title>ClassLoader类加载分析（二）</title>
+      <link>https://nicky-chin.cn/post-2/classloader-chapter02/</link>
+      <pubDate>Tue, 20 Mar 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/classloader-chapter02/</guid>
+      <description>一、JVM 提供的 Classloader 1.1 BootstrapClassloader 引导类加载器，又称启动类加载器，是最顶层的类加载器，主要用来加载Java核心类，如rt.jar、resources.jar、charsets.jar等，Sun的JVM中，执行java的命令中使用-Xbootclasspath选项或使用- D选项指定sun.boot.class.path系统属性值可以指定附加的类，它不是 java.lang.ClassLoader的子类，而是由JVM自身实现的该类c 语言实现，Java程序访问不到该加载器。通过下面代码可以查看该加载器加载了哪些jar包
+public class MainClass { public static void main(String[] args) throws ClassNotFoundException { URL[] urls = sun.</description>
+    </item>
+    
+    <item>
+      <title>Java 内省(Introspector)</title>
+      <link>https://nicky-chin.cn/post-2/introspector/</link>
+      <pubDate>Tue, 13 Mar 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/introspector/</guid>
+      <description>内省(Introspector) 是Java 语言对 JavaBean 类属性、事件的一种缺省处理方法。
+　JavaBean是一种特殊的类，主要用于传递数据信息，这种类中的方法主要用于访问私有的字段，且方法名符合某种命名规则。如果在两个模块之间传递信息，可以将信息封装进JavaBean中，这种对象称为“值对象”(Value Object)，或“VO”。方法比较少。这些信息储存在类的私有变量中，通过set()、get()获得。
+　例如类Use :
+public class User { private String name; private String address; public String getName() { return name; } public void setName(String name) { this.</description>
+    </item>
+    
+    <item>
+      <title>ClassLoader类加载分析（一）</title>
+      <link>https://nicky-chin.cn/post-2/classloader-chapter01/</link>
+      <pubDate>Thu, 08 Mar 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/classloader-chapter01/</guid>
+      <description>一、什么是Classloader 一个Java程序要想运行起来，首先需要经过编译生成 .class文件，然后创建一个运行环境（jvm）来加载字节码文件到内存运行，而.class 文件是怎样被加载中jvm 中的就是Java Classloader所做的事情。 那么.class文件什么时候会被类加载器加载到jvm中运行那？比如执行new操作时候，当我们使用Class.forName(“包路径+类名”)，Class.forName(“包路径+类名”,classloader),classloader.loadclass(“包路径+类名”);时候就触发了类加载器去类加载对应的路径去查找*.class,并创建Class对象。
+类的加载过程 类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：
+1、装载
+2-4、链接 -包括 【验证、准备、解析】
+5、初始化</description>
+    </item>
+    
+    <item>
+      <title>设计模式之builder模式</title>
+      <link>https://nicky-chin.cn/post-2/builder/</link>
+      <pubDate>Tue, 19 Dec 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/builder/</guid>
+      <description>建造者模式也叫生成器模式，和抽象工厂模式相似，也是一种构建复杂对象的模式。
+建造者模式中的角色分类：  抽象建造者Builder：接口类型，用于规范各个产品的组成部分；  具体建造者ConcreteBuilder：实现Builder中的所有方法，返回一个产品实例；  指导者Director：指挥建造者制造相应的产品  产品Product：用户最终看到的复杂对象。
+假设我们有一个向客户发送新年祝福邮件的需求，而邮件内容可以是纯文档的，也可以是有动画的，也可以是有音频的，可以动态的添加个组件
+uml下图所示： 如上图所示，邮箱有多个组件，包含收件人，发送人，内容，音乐等 通过具体的建造者添加不同的组件模版，最后通过指挥者去调用抽象建造者 来返回具体的email对象</description>
+    </item>
+    
+    <item>
+      <title>设计模式之factory模式</title>
+      <link>https://nicky-chin.cn/post-2/builder-factory/</link>
+      <pubDate>Thu, 07 Dec 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/builder-factory/</guid>
+      <description>定义：工厂模式通俗意义上讲就是一个多产品的流程化工厂，每个工厂生产同一系列相关性的组件
+分类：
+按工厂职能划分可以分为三类：  简单工厂模式（Simple Factory）  工厂方法模式（Factory Method）  抽象工厂方法（Abstract Factory）
+接下来我们直接通过uml图和具体的代码实现以上三类
+我们以汽车工厂生产汽车为例，本田工厂假设要生产CIVIC和CRV两种车型，那么我们该怎么去设计实现
+1 简单工厂模式</description>
+    </item>
+    
+    <item>
+      <title>可重入锁</title>
+      <link>https://nicky-chin.cn/post-2/recursive-lock/</link>
+      <pubDate>Fri, 03 Nov 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/recursive-lock/</guid>
+      <description>可重入锁，也叫做递归锁，指的是同一线程 外层函数获得锁之后 ，内层递归函数仍然有获取该锁的代码，但不受影响。比如ReentrantLock 和synchronized 都是 可重入锁
+直接放代码
+ public class SubService { ReentrantLock lock = new ReentrantLock(); public void subService1() { lock.</description>
+    </item>
+    
+    <item>
+      <title>库级优化之SHOW GLOBAL STATUS</title>
+      <link>https://nicky-chin.cn/post-2/show-global-status/</link>
+      <pubDate>Tue, 12 Sep 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/show-global-status/</guid>
+      <description>慢查询
+//查询慢线程情况 show global status like &#39;%slow%&#39; +---------------------+-------+ | Variable_name | Value | +---------------------+-------+ | Slow_launch_threads | 1 | | Slow_queries | 100 | +---------------------+-------+ 如果Slow_launch_threads值较大，说明有些东西正在延迟连接的新线程 //查询慢查询日志是否开启 show variables like &#39;%slow%&#39; +---------------------+--------------------------------------+ | Variable_name | Value | +---------------------+--------------------------------------+ |log_slow_admin_statements| ON | |log_slow_slave_statements| OFF | | slow_launch_time | 2 | | slow_query_log | ON | | slow_query_log_file | /home/mysql/mysql/slow_query.</description>
+    </item>
+    
+    <item>
+      <title>后端开发需要了解的mysql优化方向</title>
+      <link>https://nicky-chin.cn/post-2/optimize-picture/</link>
+      <pubDate>Tue, 13 Jun 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/optimize-picture/</guid>
+      <description>#优化思维导图 #参数优化注意事项 参数优化分为 动态参数配置 和 配置文件的配置，建议在启动mysql之前配置好优化参数，这样将会全局有效，如使用动态参数配置可能会不生效或出现问题,并且如果数据库重启那么之前的优化参数都会失效
+SHOW VARIABLES LIKE &#39;sort%&#39; 修改会话级变量 set SESSION sort_buffer_size=720000 退出重新连接后，此参数恢复原值 修改全局变量 set GLOBAL sort_buffer_size = 720000  #优化系列 库级优化之SHOW GLOBAL STATUS</description>
+    </item>
+    
+    <item>
+      <title>多线程之线程通信摘要</title>
+      <link>https://nicky-chin.cn/post-2/thread-communication/</link>
+      <pubDate>Tue, 16 May 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/thread-communication/</guid>
+      <description>首先我们要知道进程之间的通讯方式有哪些？
+管道( pipe ) #消息队列( message queue ) #共享内存( shared memory ) ：#套接字( socket ) 等等&amp;ndash; 线程的通讯方式：</description>
+    </item>
+    
+    <item>
+      <title>数据库设计三范式和反范式</title>
+      <link>https://nicky-chin.cn/post-2/design-rule/</link>
+      <pubDate>Sun, 07 May 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/design-rule/</guid>
+      <description>数据库范式 范式的级别 设计关系数据库时，遵从不同的规范要求，设计出合理的关系型数据库，这些不同的规范要求被称为不同的范式，各种范式呈递次规范，越高的范式数据库冗余越小。 目前关系数据库有六种范式：第一范式（1NF）、第二范式（2NF）、第三范式（3NF）、巴斯-科德范式（BCNF）、第四范式(4NF）和第五范式（5NF，又称完美范式）。 范式越高，冗余最低，一般到三范式，再往上，表越多，可能导致查询效率下降。所以有时为了提高运行效率，可以让数据冗余(反三范式，一般某个数据经常被访问时，比如数据表里存放了语文数学英语成绩，但是如果在某个时间经常要得到它的总分，每次都要进行计算会降低性能，可以加上总分这个冗余字段)。 后面的范式是在满足前面范式的基础上，比如满足第二范式的一定满足第一范式。 第一范式（1NF）：确保每一列的原子性 如果每一列都是不可再分的最小数据单元，则满足第一范式。 但是具体地址到底要不要拆分 还要看具体情形，比如看看将来会不会按国家或者省市进行分类汇总或者排序，如果需要，最好就拆，如果不需要而仅仅起字符串的作用，可以不拆，操作起来更方便。
+第二范式:非键字段必须依赖于键字段 如果一个关系满足1NF，并且除了主键以外的其它列，都依赖与该主键，则满足二范式(2NF)，第二范式要求每个表只描述一件事。例如： 第三范式：在1NF基础上，除了主键以外的其它列都不传递依赖于主键列，或者说： 任何非主属性不依赖于其它非主属性（在2NF基础上消除传递依赖）</description>
+    </item>
+    
+    <item>
+      <title>自定义序列化之Externalizable接口</title>
+      <link>https://nicky-chin.cn/post-2/externalizable-interface/</link>
+      <pubDate>Mon, 23 Jan 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/externalizable-interface/</guid>
+      <description>Externalizable简介 Externalizable是一种优先级要高于 Serializable 的序列化机制接口， 这个接口提供了writeExternal()和readExternal()方法用于指定序列化哪些属性。
+Externalizable接口与Serializable接口区别 * 1 Serializable序列化时不会调用默认的构造器，而Externalizable序列化时会调用默认构造器 * 2 transient关键字对Externalizable无效
+代码事例
+公共抽象实体类AbstractDO
+public abstract class AbstractDO implements Externalizable { private static final long serialVersionUID = -1679770357930200297L; private Long id; private Date createTime; private Date updateTime; public Long getId() { return id; } public void setId(Long id) { this.</description>
+    </item>
+    
+    <item>
+      <title>技术图谱</title>
+      <link>https://nicky-chin.cn/post-2/pages/architect/</link>
+      <pubDate>Sun, 17 Jun 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/pages/architect/</guid>
+      <description>《后端架构师技术图谱》 数据结构 队列  《java队列——queue详细分析》
+ 非阻塞队列：ConcurrentLinkedQueue(无界线程安全)，采用CAS机制（compareAndSwapObject原子操作）。 阻塞队列：ArrayBlockingQueue(有界)、LinkedBlockingQueue（无界）、DelayQueue、PriorityBlockingQueue，采用锁机制；使用 ReentrantLock 锁。  《LinkedList、ConcurrentLinkedQueue、LinkedBlockingQueue对比分析》
+  集合  《Java Set集合的详解》  链表、数组  《Java集合详解&amp;ndash;什么是List》  字典、关联数组  《Java map 详解 - 用法、遍历、排序、常用API等》  栈  《java数据结构与算法之栈（Stack）设计与实现》 《Java Stack 类》 《java stack的详细实现分析》  Stack 是线程安全的。 内部使用数组保存数据，不够时翻倍。   树 二叉树 每个节点最多有两个叶子节点。 * 《二叉树》</description>
+    </item>
+    
+    <item>
+      <title>阅读书单</title>
+      <link>https://nicky-chin.cn/post-2/pages/book_list/</link>
+      <pubDate>Fri, 17 Mar 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/pages/book_list/</guid>
+      <description>1 并发编程相关
+ 《Java多线程编程核心技术》 《Java并发编程从入门到精通》 《Java并发编程的艺术》 《Java 并发编程实战》 《深入理解 Java 内存模型》 《实战Java高并发程序设计》   2 MYSQL相关</description>
+    </item>
+    
+    <item>
+      <title>在线工具</title>
+      <link>https://nicky-chin.cn/post-2/pages/tools/</link>
+      <pubDate>Sun, 19 Feb 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/pages/tools/</guid>
+      <description>cron定时任务表达式
+编码格式转换
+JVM参数调优
+apache镜像
+java源码搜索
+JSON在线解析
+谷歌市场国外软件下载
+PYPI
+Python-Package
+正则代码生成
+RGB颜色参考
+在线格式转换
+sitemap自动生成
+markdown转公众号文章
+加密解密工具</description>
+    </item>
+    
+    <item>
+      <title>开源项目</title>
+      <link>https://nicky-chin.cn/post-2/pages/open_source/</link>
+      <pubDate>Sun, 19 Feb 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/pages/open_source/</guid>
+      <description>待续。。。。。。</description>
+    </item>
+    
+    <item>
+      <title>联系&amp;留言</title>
+      <link>https://nicky-chin.cn/post-2/pages/info/</link>
+      <pubDate>Sun, 19 Feb 2017 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/pages/info/</guid>
+      <description> 联系方式  e-mail: shuilianpiying@163.com
+qq: 1529274926
+ </description>
+    </item>
+    
+  </channel>
+</rss>

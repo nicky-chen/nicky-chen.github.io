@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  false ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+    <title>实际项目运用之Filter模式（过滤器模式）</title>
+    <link rel="icon" href="https://nicky-chin.cn/img/favicon.ico">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://nicky-chin.cn/assets/waifu.css"/>
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/highlight/styles/darcula.css">
+    <script src="https://nicky-chin.cn/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+            (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','zTXEk5Sy3-gUuAVTm5JE','2.0.0');
+    </script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chin.cn/" class="profilepic">
+            <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chin.cn/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chin.cn/tags/im%E9%80%9A%E8%AE%AF" style="font-size: 12px;" class="color3">Im通讯</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color1">Junit</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/netty" style="font-size: 12px;" class="color2">Netty</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color3">Redis</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color1">Spring-Base</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color4">Spring-Transaction</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">优化</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color4">分布式id方案</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color3">创建型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color3">基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color1">多线程</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color1">思维导图</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color2">数据结构</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color3">框架基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color2">源码</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color1">理论</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color1">结构型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color2">行为型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color1">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chin.cn/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chin.cn/" class="profilepic">
+                <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+            <article id="post-js-android" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/post-2/filter/" class="article-date">
+            <time datetime="2019-02-15 11:18:15 &#43;0800 CST" itemprop="datePublished">2019-02-15</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 class="article-title" itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/post-2/filter/">实际项目运用之Filter模式（过滤器模式）</a>
+            </h1>
+
+
+        </header>
+
+        <div class="article-info article-info-post">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="article-category-link" href="https://nicky-chin.cn/categories/design-pattern/" style="font-size: 12px;">design-pattern</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e7%bb%93%e6%9e%84%e5%9e%8b/"
+                           style="font-size: 12px;">结构型</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            
+            <div class="article-category tagcloud">
+                <a class="article-category-link" style="font-size: 12px;"> posted by nicky_chin</a>
+            </div>
+            
+
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="article-entry" itemprop="articleBody">
+
+            
+
+<h2 id="1-模式简介">1 模式简介</h2>
+
+<h4 id="1-1-定义">1.1 定义</h4>
+
+<p>过滤器模式（Filter）也叫条件模式（Criteria），这种模式允许开发人员使用不同的标准来过滤一组对象，通过逻辑运算以解耦的方式把它们连接起来。当我们想要选择满足一个或多个条件的对象子集时，此设计模式非常有用。它属于结构模式。</p>
+
+<h4 id="1-2-优点">1.2 优点</h4>
+
+<blockquote>
+<p>它提供了一种根据特定条件过滤对象的方法</p>
+
+<p>我们可以随时添加新过滤器，而不会影响客户端的代码</p>
+
+<p>我们可以在程序执行期间动态选择过滤器</p>
+</blockquote>
+
+<h4 id="1-3-过滤器设计">1.3 过滤器设计</h4>
+
+<p><img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/20190601150313.png" alt="过滤器类图" /></p>
+
+<p><strong>角色</strong></p>
+
+<ul>
+<li>过滤器（Filter） - 过滤器在请求处理程序执行请求之前或之后，执行某些任务</li>
+<li>过滤器链（Filter Chain） - 过滤器链带有多个过滤器</li>
+<li>过滤对象 （Target）- 需要过滤的数据源对象</li>
+<li>过滤管理器（Filter Manager） - 过滤管理器管理过滤器和过滤器链</li>
+<li>客户端（Client） - Client 是向 Target 对象发送请求的对象</li>
+</ul>
+
+<p>代码演示</p>
+
+<p><em>Filter</em></p>
+
+<pre><code>public interface Filter {
+   public void execute(String request);
+}
+
+</code></pre>
+
+<p><em>AuthenticationFilter</em></p>
+
+<pre><code>
+public class AuthenticationFilter implements Filter {
+   public void execute(String request){
+      System.out.println(&quot;Authenticating request: &quot; + request);
+   }
+}
+
+</code></pre>
+
+<p><em>FilterChain</em></p>
+
+<pre><code>public class FilterChain {
+   private List filters = new ArrayList();
+   
+   public void addFilter(Filter filter){
+      filters.add(filter);
+   }
+
+   public void execute(String request){
+      for (Filter filter : filters) {
+         filter.execute(request);
+      }
+   }
+}
+
+</code></pre>
+
+<p><em>FilterManager</em></p>
+
+<pre><code>public class FilterManager {
+   FilterChain filterChain;
+
+   public FilterManager(){
+      filterChain = new FilterChain();
+   }
+   public void setFilter(Filter filter){
+      filterChain.addFilter(filter);
+   }
+
+   public void filterRequest(String request){
+      filterChain.execute(request);
+   }
+}
+
+
+</code></pre>
+
+<p><em>Client</em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Client</span> <span style="color:#f92672">{</span>
+
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      FilterManager filterManager <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FilterManager<span style="color:#f92672">();</span>
+      filterManager<span style="color:#f92672">.</span><span style="color:#a6e22e">setFilter</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> AuthenticationFilter<span style="color:#f92672">());</span>
+      filterManager<span style="color:#f92672">.</span><span style="color:#a6e22e">setFilter</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> DebugFilter<span style="color:#f92672">());</span>
+      filterManager<span style="color:#f92672">.</span><span style="color:#a6e22e">sendRequest</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;HOME&#34;</span><span style="color:#f92672">);</span>
+   <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span></code></pre></div>
+<h2 id="2-filter在mongotemplate中的应用">2 Filter在MongoTemplate中的应用</h2>
+
+<pre><code>Query query = new Query();            
+
+query.addCriteria(Criteria.where(&quot;gmtCreate&quot;).gte(gmtBegin).lte(&quot;gmtCreate&quot;).lte(gmtEnd));
+
+query.addCriteria(Criteria.where(&quot;wechatName&quot;).is(wxName));
+ 
+long count =  mongoTemplate.count(query, User.class);
+
+</code></pre>
+
+<p>上述代码是非常常用的mongo查询的用法。其中 <code>Criteria</code> 可以理解就是过滤器对象， <code>Query</code> 就是过滤管理器和过滤器链的组合</p>
+
+<ul>
+<li>过滤器 <strong>CriteriaDefinition</strong></li>
+</ul>
+
+<pre><code>public interface CriteriaDefinition {
+
+	/**
+	 * Get {@link DBObject} representation.
+	 * 
+	 * @return
+	 */
+	DBObject getCriteriaObject();
+
+	/**
+	 * Get the identifying {@literal key}.
+	 * 
+	 * @return
+	 * @since 1.6
+	 */
+	String getKey();
+
+}
+
+</code></pre>
+
+<p><code>SpringMongoTemplate</code> 是基于Mongo的驱动包封装的, <code>CriteriaDefinition</code> 是where条件部分，最终通过<code>DBObject</code>的对象去执行where部分的命令</p>
+
+<ul>
+<li>具体过滤器对象</li>
+</ul>
+
+<pre><code>public class Criteria implements CriteriaDefinition {
+
+	/**
+	 * Custom &quot;not-null&quot; object as we have to be able to work with {@literal null} values as well.
+	 */
+	private static final Object NOT_SET = new Object();
+
+	private String key;
+	private List&lt;Criteria&gt; criteriaChain;
+	private LinkedHashMap&lt;String, Object&gt; criteria = new LinkedHashMap&lt;String, Object&gt;();
+	private Object isValue = NOT_SET;
+	
+	
+	}
+</code></pre>
+
+<ul>
+<li><p>1  <code>Criteria</code> 对象包含一个Map属性 <code>private LinkedHashMap&lt;String, Object&gt; criteria = new LinkedHashMap&lt;String, Object&gt;()</code>, 例如之前我们调用的方法，<code>query.addCriteria(Criteria.where(&quot;gmtCreate&quot;).gte(1000L).lte(&quot;gmtCreate&quot;).lte(2000000L))</code> 会加入到LinkedHashMap对象中。</p></li>
+
+<li><p>2  通过<code>query.addCriteria</code> 增加过滤器</p></li>
+</ul>
+
+<pre><code>public class Query {
+
+	private static final String RESTRICTED_TYPES_KEY = &quot;_$RESTRICTED_TYPES&quot;;
+
+	private final Set&lt;Class&lt;?&gt;&gt; restrictedTypes = new HashSet&lt;Class&lt;?&gt;&gt;();
+	private final Map&lt;String, CriteriaDefinition&gt; criteria = new LinkedHashMap&lt;String, CriteriaDefinition&gt;();
+	private Field fieldSpec;
+	private Sort sort;
+	private int skip;
+	private int limit;
+	private String hint;
+
+	private Meta meta = new Meta();
+
+
+................此处省略
+
+	/**
+	 * Adds the given {@link CriteriaDefinition} to the current {@link Query}.
+	 * 
+	 * @param criteriaDefinition must not be {@literal null}.
+	 * @return
+	 * @since 1.6
+	 */
+	public Query addCriteria(CriteriaDefinition criteriaDefinition) {
+
+		CriteriaDefinition existing = this.criteria.get(criteriaDefinition.getKey());
+		String key = criteriaDefinition.getKey();
+
+		if (existing == null) {
+			this.criteria.put(key, criteriaDefinition);
+		} else {
+			throw new InvalidMongoDbApiUsageException(
+					&quot;Due to limitations of the com.mongodb.BasicDBObject, &quot; + &quot;you can't add a second '&quot; + key + &quot;' criteria. &quot;
+							+ &quot;Query already contains '&quot; + existing.getCriteriaObject() + &quot;'.&quot;);
+		}
+
+		return this;
+	}
+	
+	..........
+	}
+
+</code></pre>
+
+<p>如上面的代码，过滤器会被加入到一个Map对象中，最终会将Query对象转换成DBObject对象，然后通过
+Mongo的驱动包去获取数据，这里不详细展开。</p>
+
+<ul>
+<li>类图如下：</li>
+</ul>
+
+<p><img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-06-01%20%E4%B8%8B%E5%8D%888.18.46.png" alt="mongoTemplate过滤查询流程" /></p>
+
+<p>大致流程如上图所示，结合具体代码，很容易理解是一个基于命令的过滤器模式</p>
+
+<h2 id="3-实际项目运用">3 实际项目运用</h2>
+
+<h4 id="3-1-应用背景">3.1 应用背景</h4>
+
+<p>在我们的app有这样一种需求，我们需要展示一个豆腐块列表，但是我们不知道需要怎么展示，比如，我们可以隐藏部分展示，也可以自定义展示时间和展示顺序，或者可以按照平台PC 安卓 IOS 展示不同数据，或者其他一些字体颜色等参数的使用，这时候我们需要一定过滤条件去获取最终可以展示的图标，这时候我们就可以考虑过滤器模式去实现</p>
+
+<h4 id="3-2-通用实现逻辑">3.2 通用实现逻辑</h4>
+
+<h5 id="3-2-1-设计类图">3.2.1 设计类图</h5>
+
+<p><img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-06-01%20%E4%B8%8B%E5%8D%883.49.47.png" alt="过滤器实际业务设计类图" /></p>
+
+<p>其中 <code>RuleFilter</code> 负责过滤器抽象的职能， <code>RuleContext</code> 负责过滤器链和过滤管理器的职能</p>
+
+<h5 id="3-2-2-代码实现">3.2.2 代码实现</h5>
+
+<ul>
+<li>过滤器： <em>RuleFilter</em></li>
+</ul>
+
+<pre><code>
+/**
+ * @author nicky_chin
+ * @description: 规则过滤器
+ * @date: 2019/4/4 下午5:41
+ * @since JDK 1.8
+ */
+public interface RuleFilter&lt;T&gt; {
+
+    /**
+     * 过滤数据
+     *
+     * @param ruleList
+     *
+     * @return
+     */
+    List&lt;T&gt; filterData(List&lt;T&gt; ruleList);
+}
+
+</code></pre>
+
+<ul>
+<li>具体过滤器： <em>ComparatorFilter</em>  和 <em>DisplayFilter</em></li>
+</ul>
+
+<pre><code>/**
+ * @author nicky_chin
+ * @description: 排序过滤器
+ * @date: 2019/4/4 下午5:58
+ * @since JDK 1.8
+ */
+public class ComparatorFilter implements RuleFilter&lt;PropertyRule&gt; {
+    @Override
+    public List&lt;PropertyRule&gt; filterData(List&lt;PropertyRule&gt; ruleList) {
+        return ruleList.stream().sorted(Comparator.comparingInt(PropertyRule::getIndex)).collect(Collectors.toList());
+    }
+}
+
+
+/**
+ * @author nicky_chin
+ * @description: 显示过滤器
+ * @date: 2019/4/4 下午5:56
+ * @since JDK 1.8
+ */
+@NoArgsConstructor
+@AllArgsConstructor
+public class DisplayFilter implements RuleFilter&lt;PropertyRule&gt; {
+
+    /**
+     * 用户参数显示配置
+     */
+    private Integer binaryStatus;
+
+    @Override
+    public List&lt;PropertyRule&gt; filterData(List&lt;PropertyRule&gt; ruleList) {
+        if (binaryStatus != null) {
+            for (int i = 0; i &lt; ruleList.size(); i++) {
+                PropertyRule config = ruleList.get(i);
+                //获取是否需要展示数据
+                config.setDisplayStatus(
+                    ONE.equals(config.getDisplayStatus()) &amp;&amp; (binaryStatus &amp; (1 &lt;&lt; i)) &gt;&gt; i == 1 ? ONE : ZERO);
+            }
+        }
+        return ruleList.stream().filter(x -&gt; StringPool.ONE.equals(x.getDisplayStatus())).collect(Collectors.toList());
+    }
+}
+
+
+</code></pre>
+
+<ul>
+<li><em>PropertyRule</em>  过滤对象</li>
+</ul>
+
+<pre><code>/**
+ * @author nicky_chin
+ * @description: 详情规则
+ * @date: 2019/4/3 下午6:35
+ * @since JDK 1.8
+ */
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class PropertyRule {
+
+    /**
+     * 英文属性名
+     */
+    private String key;
+
+    /**
+     * 中文属性名
+     */
+    private String chsKey;
+
+    /**
+     * 属性值
+     */
+    private Object value;
+
+    /**
+     * 是否显示
+     */
+    private String displayStatus;
+    /**
+     * 排序号
+     */
+    private int index;
+
+    /**
+     * 图标地址
+     */
+    private String iconUrl;
+
+    /**
+     * 单位
+     */
+    private String unit;
+}
+
+</code></pre>
+
+<ul>
+<li>过滤器链： <em>RuleBuilder</em> 使用建造者模式创建</li>
+<li>过滤管理器： <em>RuleContext</em></li>
+</ul>
+
+<p><code>RuleContext</code> 包含了过滤器链和过滤管理器的职能</p>
+
+<pre><code>/**
+ * @author nicky_chin
+ * @description:过滤执行器
+ * @date: 2019/4/4 下午5:55
+ * @since JDK 1.8
+ */
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class RuleContext {
+
+    private List rules;
+
+    private List&lt;RuleFilter&gt; filterList;
+
+    private RuleContext(RuleBuilder builder) {
+        this.filterList = builder.filterList;
+    }
+
+    /**
+     * 规则建造器
+     * @param rules
+     * @return
+     */
+    public static RuleBuilder rules(List rules) {
+        return new RuleBuilder().addRules(rules);
+    }
+
+    public static class RuleBuilder {
+
+        @Setter(value = AccessLevel.PRIVATE)
+        private List rules;
+
+        private List&lt;RuleFilter&gt; filterList;
+
+        public RuleBuilder addFilter(RuleFilter filter) {
+            filterList.add(filter);
+            return this;
+        }
+
+        private RuleBuilder addRules(List rules) {
+            this.setRules(rules);
+            this.filterList = Lists.newArrayList();
+            return this;
+        }
+
+        /**
+         * 执行过滤
+         * @param returnType
+         * @param &lt;C&gt;
+         * @param &lt;T&gt;
+         * @return
+         */
+        public &lt;C extends List&lt;T&gt;, T&gt; C invokerFilter(@NonNull Class&lt;T&gt; returnType) {
+            RuleContext ruleContext = new RuleContext(this);
+            ruleContext.setRules(rules);
+            ruleContext.setFilterList(filterList);
+            ruleContext.getFilterList().forEach(filter -&gt; {
+                List rules = ruleContext.getRules();
+                if (CollectionUtils.isNotEmpty(rules)) {
+                    ruleContext.setRules(filter.filterData(rules));
+                }
+            });
+            return TypeConverterManager.get().convertToCollection(ruleContext.getRules(), List.class, returnType);
+        }
+    }
+
+}
+
+</code></pre>
+
+<p>其中 <code>addFilter</code> 用于创建过滤器链， <code>addRules</code> 方法用于装载过滤元数据，最后通过 <code>invokerFilter</code> 方法来执行过滤器链</p>
+
+<ul>
+<li>客户端</li>
+</ul>
+
+<pre><code>List&lt;PropertyRule&gt; keyValueList = rule.getProperties();
+keyValueList = RuleContext.rules(keyValueList).addFilter(new DisplayFilter(binaryStatus)).addFilter(new ComparatorFilter())
+                .invokerFilter(PropertyRule.class);
+
+</code></pre>
+
+<p>这样就可以根据需要 <em>显示的规则</em> 和 <em>排序规则</em> 筛选出我们最终需要的数据配置</p>
+
+<h5 id="3-2-3-设计优点">3.2.3 设计优点</h5>
+
+<blockquote>
+<p>基于建造者模式和过滤器模式的方式简化了过滤业务逻辑</p>
+
+<p>过滤器和过滤对象通过接口和泛型的方式抽象，支持各种业务的良好扩展</p>
+
+<p>通过动态选择过滤器组合，可复用过滤器和减少重复过滤代码的维护</p>
+</blockquote>
+
+<h2 id="4-reference">4 Reference</h2>
+
+<p><a href="https://m.w3cschool.cn/shejimoshi/intercepting-filter-pattern.html">拦截过滤器模式
+</a></p>
+
+
+        </div>
+
+    </div>
+
+    
+
+
+</article>
+
+<div id="toc" class="toc-article" >
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc">
+        <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#1-模式简介">1 模式简介</a>
+<ul>
+<li>
+<ul>
+<li><a href="#1-1-定义">1.1 定义</a></li>
+<li><a href="#1-2-优点">1.2 优点</a></li>
+<li><a href="#1-3-过滤器设计">1.3 过滤器设计</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#2-filter在mongotemplate中的应用">2 Filter在MongoTemplate中的应用</a></li>
+<li><a href="#3-实际项目运用">3 实际项目运用</a>
+<ul>
+<li>
+<ul>
+<li><a href="#3-1-应用背景">3.1 应用背景</a></li>
+<li><a href="#3-2-通用实现逻辑">3.2 通用实现逻辑</a>
+<ul>
+<li><a href="#3-2-1-设计类图">3.2.1 设计类图</a></li>
+<li><a href="#3-2-2-代码实现">3.2.2 代码实现</a></li>
+<li><a href="#3-2-3-设计优点">3.2.3 设计优点</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#4-reference">4 Reference</a></li>
+</ul></li>
+</ul>
+</nav>
+    </ol>
+    <div style="text-align:center">-----------------------</div>
+    <strong class="toc-title">最新评论</strong>
+    <ol class="toc">
+        <div class="remark42__last-comments" data-max="10"></div>
+    </ol>
+</div>
+<style>
+    
+
+    #tocButton{
+        display: none;
+    }
+    #toc{
+        display: none;
+    }
+
+    
+
+
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录" >
+
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function () {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    
+    
+    
+        
+    
+</script>
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a class="bds_qzone" data-cmd="qzone" href="#" title="分享到 QQ 空间"></a>
+        <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+        <a class="bds_count" data-cmd="count"></a>
+        <a class="bds_more" data-cmd="more"></a>
+
+    </div>
+    <script>
+        window._bd_share_config = {
+            "common": {
+                "bdSnsKey": {},
+                "bdText": "",
+                "bdMini": "2",
+                "bdMiniList": false,
+                "bdPic": "",
+                "bdStyle": "0",
+                "bdSize": "24"
+            }, "share": {}
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+</div>
+
+
+
+
+<div style="margin-left: 30px;margin-right: 30px;background: white;padding-left: 30px;padding-right: 30px">
+    <div class="comments">
+        <h3>[评论][COMMENTS]</h3>
+        
+            
+                
+                
+                
+                
+                
+            
+        
+        <div id="remark42"></div>
+        <div id="disqus_thread"></div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<ul class="post-list toc-article">
+    
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2022/01/13/mysql-snapshot-read/" target="_blank">MySQL之Innodb之快照读原理实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2021/02/13/java-clone/" target="_blank">java的clone方法JVM实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/11/13/im-timeline/" target="_blank">基于TimeLine模型的消息同步机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/09/26/threadlocal-enchancer/" target="_blank">线程传递增强之TransmittableThreadLocal</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/06/11/net-nio-netty/" target="_blank">浅析java-nio及netty的reactor模型</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/19/spring-transaction-commit/" target="_blank">Transaction源码解析之事务提交与回滚</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/" target="_blank">Transaction源码解析之事务预处理</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/" target="_blank">Transaction源码解析之事务配置解析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/" target="_blank">生产-消费模型之虚假唤醒</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/" target="_blank">Spring实例化bean之源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/03/02/float-precision/" target="_blank">float浮点小数的设计及精度问题</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/07/11/mysql-page-detail/" target="_blank">MySQL中的page页详解</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/05/03/apt_lombok_implement/" target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/02/15/filter/" target="_blank">实际项目运用之Filter模式（过滤器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/12/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/11/17/btree-info/" target="_blank">数据结构之BTree和B&#43;Tree(多路平衡查找树 )</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/10/15/id-redis/" target="_blank">分布式全局序列ID方案之Redis优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/25/id-flicker/" target="_blank">分布式全局序列ID方案之Flicker优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/19/id-snowflake/" target="_blank">分布式全局序列ID方案之Snowflake算法</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/25/spring-springmvc/" target="_blank">Spring之动手实现SpringMVC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/22/java-methodhandler/" target="_blank">Java反射优化之方法句柄</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/16/spring-bean-ioc/" target="_blank">Spring之动手实现IOC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/12/spring-bean-lifecycle/" target="_blank">Spring之Bean加载-解析-生命周期</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/09/aqs-condition/" target="_blank">并发基础之Condition(等待队列)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/07/cache-redis-optimize/" target="_blank">Redis注意事项及常见优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/04/aqs_chapter02/" target="_blank">并发基础之AQS同步器（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/01/cache-redis-slowlog/" target="_blank">Redis之慢查询日志</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/31/aqs_chapter01/" target="_blank">并发基础之AQS同步器（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/16/junit-codeanalysis/" target="_blank">初窥门径之JUnit源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/13/java-securitymanager/" target="_blank">Java安全之SecurityManager</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/05/spi-introduction/" target="_blank">框架基础之SPI机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/29/responsibility-chain/" target="_blank">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/25/jndi-introdution/" target="_blank">JNDI知识摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/17/architect/" target="_blank">技术图谱</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/13/distribution-knowledge/" target="_blank">分布式项目知识要点</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/07/singletion/" target="_blank">设计模式之单例模式终极版【克隆-序列化-反射】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/02/fail-fast-safe/" target="_blank">Fail-Fast和Fail-Safe机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/27/adapter/" target="_blank">实际项目运用之Adapter模式（适配器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/18/template/" target="_blank">设计模式之Template模式（模版模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/14/synchronized-principle/" target="_blank">synchronized实现原理及锁优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/13/juc-tree-info/" target="_blank">JUC知识点总结</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/06/strategy/" target="_blank">实际项目运用之Strategy模式（策略模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/04/volatile-feature/" target="_blank">volatile关键字原理实现及应用</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/28/high-event/" target="_blank">MYSQL高级特性之【Event事件】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/27/process-fun/" target="_blank">MYSQL高级特性之【存储过程与函数】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/25/cap-base-flp/" target="_blank">分布式之【CAP理论、BASE理论 、FLP不可能定理】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/21/string-builder-question/" target="_blank">字符串拼接的疑惑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/17/exception-introduce/" target="_blank">Java异常处理-原理及优化建议</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/03/thread-jmm-happens-before/" target="_blank">java内存模型之[JMM][重排序][happens-before]</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/28/decorator/" target="_blank">实际项目运用之Decorator模式（装饰器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/26/interface-idempotency/" target="_blank">接口设计的幂等性考虑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/21/binary-operation/" target="_blank">java中位运算技巧</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/20/classloader-chapter02/" target="_blank">ClassLoader类加载分析（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/13/introspector/" target="_blank">Java 内省(Introspector)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/08/classloader-chapter01/" target="_blank">ClassLoader类加载分析（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/19/builder/" target="_blank">设计模式之builder模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/07/builder-factory/" target="_blank">设计模式之factory模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/11/03/recursive-lock/" target="_blank">可重入锁</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/09/12/show-global-status/" target="_blank">库级优化之SHOW GLOBAL STATUS</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/06/13/optimize-picture/" target="_blank">后端开发需要了解的mysql优化方向</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/16/thread-communication/" target="_blank">多线程之线程通信摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/07/design-rule/" target="_blank">数据库设计三范式和反范式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/info/" target="_blank">联系&amp;留言</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/open_source/" target="_blank">开源项目</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/tools/" target="_blank">在线工具</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/01/23/externalizable-interface/" target="_blank">自定义序列化之Externalizable接口</a></li>
+    
+</ul>
+
+<script>
+    var remark_config = {
+        host: "https://nicky-chin.cn", 
+        site_id: 'nicky-blog',
+        components: ['embed', 'last-comments'], 
+        max_shown_comments: 20, 
+        theme: 'light', 
+        locale: 'zh'
+    };
+
+    (function(c) {
+        for(var i = 0; i < c.length; i++){
+            var d = document, s = d.createElement('script');
+            s.src = remark_config.host + '/web/' +c[i] +'.js';
+            s.defer = true;
+            (d.head || d.body).appendChild(s);
+        }
+    })(remark_config.components || ['embed']);
+</script>
+
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    $(".post-list").addClass("toc-article");
+    $(".post-list-item a").attr("target", "_blank");
+    $("#post-nav-button > a:nth-child(2)").click(function () {
+        $(".fa-bars, .fa-times").toggle();
+        $(".post-list").toggle(300);
+        if ($(".toc").length > 0) {
+            $("#toc, #tocButton").toggle(200, function () {
+                if ($(".switch-area").is(":visible")) {
+                    $("#toc, .switch-btn, .switch-area").toggle();
+                    $("#tocButton").attr("value", valueHide);
+                }
+            })
+        }
+        else {
+            $(".switch-btn, .switch-area").fadeToggle(300);
+        }
+    })
+</script>
+
+<script>
+    (function(d, w, c) {
+        w.ChatraID = 'jZh4grHz47JAjnsis';
+        var s = d.createElement('script');
+        w[c] = w[c] || function() {
+            (w[c].q = w[c].q || []).push(arguments);
+        };
+        s.async = true;
+        s.src = 'https://call.chatra.io/chatra.js';
+        if (d.head) d.head.appendChild(s);
+    })(document, window, 'Chatra');
+</script>
+
+<script>
+
+</script>
+
+
+        </div>
+        <footer id="footer">
+
+    
+
+
+    <div class="outer">
+        
+        
+            <div class="footer-right">
+                
+                    <span id="busuanzi_container_site_pv" style='display: block'>
+                        <span id="site-visit" >本站访客数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    
+                
+                
+                    
+                        
+                            
+                        
+                    
+                
+            </div>
+        
+        
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2022 南乡清水@Hangzhou
+            </div>
+            <div class="s-bottom-layer-right" style="font-size: 0.2em" >
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33011002014475"
+                   target="_blank"><span class="lh s-bottom-recordcode">京公网安备33011002014475号</span></a>
+                <a href="https://beian.miit.gov.cn/"
+                   target="_blank"><span class="lh"> 浙ICP备19049847号-1</span></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chin.cn/js/GithubRepoWidget.js"></script>
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  10 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-159911678-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>

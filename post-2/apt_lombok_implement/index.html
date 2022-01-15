@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  false ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+    <title>基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</title>
+    <link rel="icon" href="https://nicky-chin.cn/img/favicon.ico">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://nicky-chin.cn/assets/waifu.css"/>
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/highlight/styles/darcula.css">
+    <script src="https://nicky-chin.cn/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+            (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','zTXEk5Sy3-gUuAVTm5JE','2.0.0');
+    </script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chin.cn/" class="profilepic">
+            <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chin.cn/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chin.cn/tags/im%E9%80%9A%E8%AE%AF" style="font-size: 12px;" class="color2">Im通讯</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color2">Junit</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/netty" style="font-size: 12px;" class="color1">Netty</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color1">Redis</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color1">Spring-Base</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color3">Spring-Transaction</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">优化</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color1">分布式id方案</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color4">创建型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color3">基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color3">多线程</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color2">思维导图</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color2">数据结构</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">框架基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color2">源码</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color4">理论</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color1">结构型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color1">行为型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chin.cn/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chin.cn/" class="profilepic">
+                <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+            <article id="post-js-android" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/post-2/apt_lombok_implement/" class="article-date">
+            <time datetime="2019-05-03 11:18:15 &#43;0800 CST" itemprop="datePublished">2019-05-03</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 class="article-title" itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/post-2/apt_lombok_implement/">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a>
+            </h1>
+
+
+        </header>
+
+        <div class="article-info article-info-post">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="article-category-link" href="https://nicky-chin.cn/categories/java-base/" style="font-size: 12px;">java-base</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/"
+                           style="font-size: 12px;">基础</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            
+            <div class="article-category tagcloud">
+                <a class="article-category-link" style="font-size: 12px;"> posted by nicky_chin</a>
+            </div>
+            
+
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="article-entry" itemprop="articleBody">
+
+            
+
+<h3 id="1-lombok原理">1 Lombok原理</h3>
+
+<blockquote>
+<p>1 APT(Annotation Processing Tool )注解处理器
+2 javac api处理AST(抽象语法树)</p>
+</blockquote>
+
+<p>大致原理如下图所示：</p>
+
+<p><img src="https://raw.githubusercontent.com/nicky-chen/pic_store/master/apt.png" alt="Lombok原理" /></p>
+
+<p>上面是网上找的图，如想具体分析lombok的实现，可以从 <code>LombokProcessor</code> 和<code>AnnotationProcessor</code> 这两个类的process 方法入手</p>
+
+<h3 id="2-自己实现lombok">2 自己实现Lombok</h3>
+
+<h5 id="2-1-创建data注解">2.1 创建Data注解</h5>
+
+<pre><code>@Documented
+@Retention(RetentionPolicy.SOURCE)
+@Target({ElementType.TYPE})
+public @interface Data {
+}
+</code></pre>
+
+<p>该Data注解只能在编译期的时候获取到，在运行期是无法获取到的</p>
+
+<h5 id="2-2-自定义注解处理器">2.2 自定义注解处理器</h5>
+
+<p>通过实现<code>Processor</code>接口可以自定义注解处理器，这里我们采用更简单的方法通过继承<code>AbstractProcessor</code>类实现自定义注解处理器。实现抽象方法process处理我们想要的功能</p>
+
+<h6 id="2-2-1-apt简单介绍">2.2.1 APT简单介绍</h6>
+
+<pre><code>@SupportedAnnotationTypes({&quot;com.nicky.lombok.annotation.Data&quot;})
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
+public class DataProcessor extends AbstractProcessor {
+   @Override
+    public synchronized void init(ProcessingEnvironment processingEnv) {
+    }
+
+    @Override
+    public boolean process(Set&lt;? extends TypeElement&gt; annotations, RoundEnvironment roundEnv) {
+    }
+}
+</code></pre>
+
+<p><em>@SupportedAnnotationTypes</em> 注解表示哪些注解需要注解处理器处理，可以多个注解校验
+<em>@SupportedSourceVersion</em> 注解 用于指定jdk使用版本</p>
+
+<p>如果不使用注解也可以在重写父类方法</p>
+
+<pre><code>Set&lt;String&gt; getSupportedAnnotationTypes() 
+
+SourceVersion getSupportedSourceVersion
+...
+</code></pre>
+
+<p><em>init 方法</em>
+&gt;主要是用于初始化上下文等信息</p>
+
+<p><em>process方法</em>
+&gt;具体处理注解的业务方法</p>
+
+<h6 id="2-2-2-具体实现">2.2.2 具体实现</h6>
+
+<ul>
+<li>1  <strong>重写init方法</strong></li>
+</ul>
+
+<pre><code>  /**
+     * 抽象语法树
+     */
+    private JavacTrees trees;
+
+    /**
+     * AST
+     */
+    private TreeMaker treeMaker;
+
+    /**
+     * 标识符
+     */
+    private Names names;
+
+    /**
+     * 日志处理
+     */
+    private Messager messager;
+
+    private Filer filer;
+
+    public synchronized void init(ProcessingEnvironment processingEnvironment) {
+        super.init(processingEnvironment);
+        this.trees = JavacTrees.instance(processingEnv);
+        Context context = ((JavacProcessingEnvironment)processingEnv).getContext();
+        this.treeMaker = TreeMaker.instance(context);
+        messager = processingEnvironment.getMessager();
+        this.names = Names.instance(context);
+        filer = processingEnvironment.getFiler();
+    }
+</code></pre>
+
+<p>基本成员变量说明：
+* 1 JavacTrees 这个是当前的java语法树变量
+* 2 TreeMaker 这个是创建或修改方法的AST变量
+* 3 Names 这个是获取变量用的
+* 4 Messager 这个是打印日志的变量
+* 5  Filer 做一些过滤使用的</p>
+
+<p><strong>注:</strong> 使用AST语法需要使用本地包 tools.jar包</p>
+
+<pre><code>    &lt;dependency&gt;
+            &lt;groupId&gt;com.sun&lt;/groupId&gt;
+            &lt;artifactId&gt;tools&lt;/artifactId&gt;
+            &lt;version&gt;1.8&lt;/version&gt;
+            &lt;scope&gt;system&lt;/scope&gt;
+            &lt;systemPath&gt;${java.home}/../lib/tools.jar&lt;/systemPath&gt;
+        &lt;/dependency&gt;
+</code></pre>
+
+<ul>
+<li>2  <strong>重写process方法</strong></li>
+</ul>
+
+<pre><code> @Override
+    public boolean process(Set&lt;? extends TypeElement&gt; annotations, RoundEnvironment roundEnv) {
+        Set&lt;? extends Element&gt; annotation = roundEnv.getElementsAnnotatedWith(Data.class);
+        annotation.stream().map(element -&gt; trees.getTree(element)).forEach(tree -&gt; tree.accept(new TreeTranslator() {
+
+            @Override
+            public void visitClassDef(JCClassDecl jcClass) {
+                //过滤属性
+                Map&lt;Name, JCVariableDecl&gt; treeMap =
+                    jcClass.defs.stream().filter(k -&gt; k.getKind().equals(Tree.Kind.VARIABLE))
+                        .map(tree -&gt; (JCVariableDecl)tree)
+                        .collect(Collectors.toMap(JCVariableDecl::getName, Function.identity()));
+                //处理变量
+                treeMap.forEach((k, jcVariable) -&gt; {
+                    messager.printMessage(Diagnostic.Kind.NOTE, String.format(&quot;fields:%s&quot;, k));
+                    try {
+                        //增加get方法
+                        jcClass.defs = jcClass.defs.prepend(generateGetterMethod(jcVariable));
+                        //增加set方法
+                        jcClass.defs = jcClass.defs.prepend(generateSetterMethod(jcVariable));
+                    } catch (Exception e) {
+                        messager.printMessage(Diagnostic.Kind.ERROR, Throwables.getStackTraceAsString(e));
+                    }
+                });
+                //增加toString方法
+                jcClass.defs = jcClass.defs.prepend(generateToStringBuilderMethod());
+                super.visitClassDef(jcClass);
+            }
+
+            @Override
+            public void visitMethodDef(JCMethodDecl jcMethod) {
+                //打印所有方法
+                messager.printMessage(Diagnostic.Kind.NOTE, jcMethod.toString());
+                //修改方法
+                if (&quot;getTest&quot;.equals(jcMethod.getName().toString())) {
+                    result = treeMaker
+                        .MethodDef(jcMethod.getModifiers(), getNameFromString(&quot;testMethod&quot;), jcMethod.restype,
+                            jcMethod.getTypeParameters(), jcMethod.getParameters(), jcMethod.getThrows(),
+                            jcMethod.getBody(), jcMethod.defaultValue);
+                }
+                super.visitMethodDef(jcMethod);
+            }
+        }));
+        return true;
+    }
+</code></pre>
+
+<p>上面逻辑分别实现了<code>getter方法 setter方法 toString方法</code></p>
+
+<p>大致逻辑:
+&gt;1 过滤包含Data的 Element 变量
+2 根据 Element 获取AST语法树
+3 创建语法翻译器重写   <code>visitClassDef</code> 和 <code>visitMethodDef</code> 方法
+4 过滤变量生成 <code>get方法 set方法 和 toString方法</code></p>
+
+<ul>
+<li>3 <strong>get方法实现</strong></li>
+</ul>
+
+<pre><code>  private JCMethodDecl generateGetterMethod(JCVariableDecl jcVariable) {
+
+        //修改方法级别
+        JCModifiers jcModifiers = treeMaker.Modifiers(Flags.PUBLIC);
+
+        //添加方法名称
+        Name methodName = handleMethodSignature(jcVariable.getName(), &quot;get&quot;);
+
+        //添加方法内容
+        ListBuffer&lt;JCStatement&gt; jcStatements = new ListBuffer&lt;&gt;();
+        jcStatements.append(
+            treeMaker.Return(treeMaker.Select(treeMaker.Ident(getNameFromString(&quot;this&quot;)), jcVariable.getName())));
+        JCBlock jcBlock = treeMaker.Block(0, jcStatements.toList());
+
+        //添加返回值类型
+        JCExpression returnType = jcVariable.vartype;
+
+        //参数类型
+        List&lt;JCTypeParameter&gt; typeParameters = List.nil();
+
+        //参数变量
+        List&lt;JCVariableDecl&gt; parameters = List.nil();
+
+        //声明异常
+        List&lt;JCExpression&gt; throwsClauses = List.nil();
+        //构建方法
+        return treeMaker
+            .MethodDef(jcModifiers, methodName, returnType, typeParameters, parameters, throwsClauses, jcBlock, null);
+    }
+</code></pre>
+
+<ul>
+<li>4 <strong>set方法实现</strong></li>
+</ul>
+
+<pre><code>    private JCMethodDecl generateSetterMethod(JCVariableDecl jcVariable) throws ReflectiveOperationException {
+
+        //修改方法级别
+        JCModifiers modifiers = treeMaker.Modifiers(Flags.PUBLIC);
+
+        //添加方法名称
+        Name variableName = jcVariable.getName();
+        Name methodName = handleMethodSignature(variableName, &quot;set&quot;);
+
+        //设置方法体
+        ListBuffer&lt;JCStatement&gt; jcStatements = new ListBuffer&lt;&gt;();
+        jcStatements.append(treeMaker.Exec(treeMaker
+            .Assign(treeMaker.Select(treeMaker.Ident(getNameFromString(&quot;this&quot;)), variableName),
+                treeMaker.Ident(variableName))));
+        //定义方法体
+        JCBlock jcBlock = treeMaker.Block(0, jcStatements.toList());
+
+        //添加返回值类型
+        JCExpression returnType =
+            treeMaker.Type((Type)(Class.forName(&quot;com.sun.tools.javac.code.Type$JCVoidType&quot;).newInstance()));
+
+        List&lt;JCTypeParameter&gt; typeParameters = List.nil();
+
+        //定义参数
+        JCVariableDecl variableDecl = treeMaker
+            .VarDef(treeMaker.Modifiers(Flags.PARAMETER, List.nil()), jcVariable.name, jcVariable.vartype, null);
+        List&lt;JCVariableDecl&gt; parameters = List.of(variableDecl);
+
+        //声明异常
+        List&lt;JCExpression&gt; throwsClauses = List.nil();
+        return treeMaker
+            .MethodDef(modifiers, methodName, returnType, typeParameters, parameters, throwsClauses, jcBlock, null);
+
+    }
+</code></pre>
+
+<ul>
+<li>5 <strong>toString方法实现</strong></li>
+</ul>
+
+<pre><code>  private JCMethodDecl generateToStringBuilderMethod() {
+
+        //修改方法级别
+        JCModifiers modifiers = treeMaker.Modifiers(Flags.PUBLIC);
+
+        //添加方法名称
+        Name methodName = getNameFromString(&quot;toString&quot;);
+
+        //设置调用方法函数类型和调用函数
+        JCExpressionStatement statement = treeMaker.Exec(treeMaker.Apply(List.of(memberAccess(&quot;java.lang.Object&quot;)),
+            memberAccess(&quot;com.nicky.lombok.adapter.AdapterFactory.builderStyleAdapter&quot;),
+            List.of(treeMaker.Ident(getNameFromString(&quot;this&quot;)))));
+        ListBuffer&lt;JCStatement&gt; jcStatements = new ListBuffer&lt;&gt;();
+        jcStatements.append(treeMaker.Return(statement.getExpression()));
+        //设置方法体
+        JCBlock jcBlock = treeMaker.Block(0, jcStatements.toList());
+
+        //添加返回值类型
+        JCExpression returnType = memberAccess(&quot;java.lang.String&quot;);
+
+        //参数类型
+        List&lt;JCTypeParameter&gt; typeParameters = List.nil();
+
+        //参数变量
+        List&lt;JCVariableDecl&gt; parameters = List.nil();
+
+        //声明异常
+        List&lt;JCExpression&gt; throwsClauses = List.nil();
+
+        return treeMaker
+            .MethodDef(modifiers, methodName, returnType, typeParameters, parameters, throwsClauses, jcBlock, null);
+    }
+
+ private JCExpression memberAccess(String components) {
+        String[] componentArray = components.split(&quot;\\.&quot;);
+        JCExpression expr = treeMaker.Ident(getNameFromString(componentArray[0]));
+        for (int i = 1; i &lt; componentArray.length; i++) {
+            expr = treeMaker.Select(expr, getNameFromString(componentArray[i]));
+        }
+        return expr;
+    }
+
+    private Name handleMethodSignature(Name name, String prefix) {
+        return names.fromString(prefix + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, name.toString()));
+    }
+
+    private Name getNameFromString(String s) {
+        return names.fromString(s);
+    }
+</code></pre>
+
+<p>最后是通过SPI的方式加载注解处理器，spi可以用java自带的方式，具体用法可以参考我的文章：<a href="https://www.jianshu.com/p/7b69543c348e">框架基础之SPI机制
+</a> 这里我们使用 google 的 auto-service 框架来实现</p>
+
+<p>在pom文件中引入</p>
+
+<pre><code>    &lt;dependency&gt;
+            &lt;groupId&gt;com.google.auto.service&lt;/groupId&gt;
+            &lt;artifactId&gt;auto-service&lt;/artifactId&gt;
+            &lt;version&gt;1.0-rc4&lt;/version&gt;
+            &lt;optional&gt;true&lt;/optional&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.google.auto&lt;/groupId&gt;
+            &lt;artifactId&gt;auto-common&lt;/artifactId&gt;
+            &lt;version&gt;0.10&lt;/version&gt;
+            &lt;optional&gt;true&lt;/optional&gt;
+        &lt;/dependency&gt;
+
+</code></pre>
+
+<p>然后在添加<code>AutoService</code>注解</p>
+
+<pre><code>@SupportedAnnotationTypes({&quot;com.nicky.lombok.annotation.Data&quot;})
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@AutoService(Processor.class)
+public class DataProcessor extends AbstractProcessor {
+</code></pre>
+
+<p>最后就是 <code>mvn clean install</code>打包到本地仓库作为一个公共包</p>
+
+<pre><code>[INFO] Installing /Users/chenxing/Documents/sourcecode/id-generator-spring-boot-starter/lombok-enchance/target/java-feature.jar to /Users/chenxing/m2repository/com/nicky/lombok-enchance/1.0.4/lombok-enchance-1.0.4.jar
+[INFO] Installing /Users/chenxing/Documents/sourcecode/id-generator-spring-boot-starter/lombok-enchance/pom.xml to /Users/chenxing/m2repository/com/nicky/lombok-enchance/1.0.4/lombok-enchance-1.0.4.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 2.372 s
+[INFO] Finished at: 2019-05-03T10:44:27+08:00
+[INFO] ------------------------------------------------------------------------
+➜  lombok-enchance git:(master) ✗ 
+</code></pre>
+
+<p>我们测试下，我们的注解处理器是否按所想的那样，实现了相应功能</p>
+
+<p>在项目中引入本地依赖
+例如我的仓库依赖坐标：</p>
+
+<pre><code>  &lt;dependency&gt;
+            &lt;groupId&gt;com.nicky&lt;/groupId&gt;
+            &lt;artifactId&gt;lombok-enchance&lt;/artifactId&gt;
+            &lt;version&gt;1.0.4&lt;/version&gt;
+        &lt;/dependency&gt;
+</code></pre>
+
+<p>给LombokTest类添加Data 注解</p>
+
+<pre><code>@Data
+public class LombokTest {
+
+    private String name;
+
+    private int age;
+
+    public LombokTest(String name) {
+        this.name = name;
+    }
+
+    public static void main(String[] args) {
+        LombokTest lombokTest = new LombokTest(&quot;nicky&quot;);
+        lombokTest.age = 18;
+        System.out.println(lombokTest.toString());
+    }
+}
+</code></pre>
+
+<p>我们编译上面的类，查看class文件是否生成了<code>getField() setField() toString()</code>方法</p>
+
+<pre><code>public class LombokTest {
+    private java.lang.String name;
+    private int age;
+
+    public java.lang.String toString() { /* compiled code */ }
+
+    public void setName(java.lang.String name) { /* compiled code */ }
+
+    public java.lang.String getName() { /* compiled code */ }
+
+    public void setAge(int age) { /* compiled code */ }
+
+    public int getAge() { /* compiled code */ }
+
+    public LombokTest(java.lang.String name) { /* compiled code */ }
+
+    public static void main(java.lang.String[] args) { /* compiled code */ }
+}
+
+</code></pre>
+
+<p>成功啦 😁</p>
+
+<p>最后测试下<code>main方法</code></p>
+
+<p>打印结果如下:</p>
+
+<pre><code>{&quot;name&quot;:&quot;nicky&quot;,&quot;age&quot;:18}
+</code></pre>
+
+<p>说明<code>toString</code>方法生效了</p>
+
+<p>对于get 和set方法 直接在IDE工具里还是无法调用的，需要编写IDE的插件,这里就不去扩展了。</p>
+
+<h3 id="3-reference">3 Reference</h3>
+
+<p><a href="[https://blog.csdn.net/a_zhenzhen/article/details/86065063#JCTree%E7%9A%84%E4%BB%8B%E7%BB%8D](https://blog.csdn.net/a_zhenzhen/article/details/86065063#JCTree%E7%9A%84%E4%BB%8B%E7%BB%8D)">在编译期修改语法树</a>
+<a href="[https://searchcode.com/file/40279168/src/com/sun/tools/javac/#](https://searchcode.com/file/40279168/src/com/sun/tools/javac/#)">tools.jar注释文档</a></p>
+
+
+        </div>
+
+    </div>
+
+    
+
+
+</article>
+
+<div id="toc" class="toc-article" >
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc">
+        <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1-lombok原理">1 Lombok原理</a></li>
+<li><a href="#2-自己实现lombok">2 自己实现Lombok</a>
+<ul>
+<li>
+<ul>
+<li><a href="#2-1-创建data注解">2.1 创建Data注解</a></li>
+<li><a href="#2-2-自定义注解处理器">2.2 自定义注解处理器</a>
+<ul>
+<li><a href="#2-2-1-apt简单介绍">2.2.1 APT简单介绍</a></li>
+<li><a href="#2-2-2-具体实现">2.2.2 具体实现</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#3-reference">3 Reference</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+    </ol>
+    <div style="text-align:center">-----------------------</div>
+    <strong class="toc-title">最新评论</strong>
+    <ol class="toc">
+        <div class="remark42__last-comments" data-max="10"></div>
+    </ol>
+</div>
+<style>
+    
+
+    #tocButton{
+        display: none;
+    }
+    #toc{
+        display: none;
+    }
+
+    
+
+
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录" >
+
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function () {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    
+    
+    
+        
+    
+</script>
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a class="bds_qzone" data-cmd="qzone" href="#" title="分享到 QQ 空间"></a>
+        <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+        <a class="bds_count" data-cmd="count"></a>
+        <a class="bds_more" data-cmd="more"></a>
+
+    </div>
+    <script>
+        window._bd_share_config = {
+            "common": {
+                "bdSnsKey": {},
+                "bdText": "",
+                "bdMini": "2",
+                "bdMiniList": false,
+                "bdPic": "",
+                "bdStyle": "0",
+                "bdSize": "24"
+            }, "share": {}
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+</div>
+
+
+
+
+<div style="margin-left: 30px;margin-right: 30px;background: white;padding-left: 30px;padding-right: 30px">
+    <div class="comments">
+        <h3>[评论][COMMENTS]</h3>
+        
+            
+                
+                
+                
+                
+                
+            
+        
+        <div id="remark42"></div>
+        <div id="disqus_thread"></div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<ul class="post-list toc-article">
+    
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2022/01/13/mysql-snapshot-read/" target="_blank">MySQL之Innodb之快照读原理实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2021/02/13/java-clone/" target="_blank">java的clone方法JVM实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/11/13/im-timeline/" target="_blank">基于TimeLine模型的消息同步机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/09/26/threadlocal-enchancer/" target="_blank">线程传递增强之TransmittableThreadLocal</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/06/11/net-nio-netty/" target="_blank">浅析java-nio及netty的reactor模型</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/19/spring-transaction-commit/" target="_blank">Transaction源码解析之事务提交与回滚</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/" target="_blank">Transaction源码解析之事务预处理</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/" target="_blank">Transaction源码解析之事务配置解析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/" target="_blank">生产-消费模型之虚假唤醒</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/" target="_blank">Spring实例化bean之源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/03/02/float-precision/" target="_blank">float浮点小数的设计及精度问题</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/07/11/mysql-page-detail/" target="_blank">MySQL中的page页详解</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/05/03/apt_lombok_implement/" target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/02/15/filter/" target="_blank">实际项目运用之Filter模式（过滤器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/12/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/11/17/btree-info/" target="_blank">数据结构之BTree和B&#43;Tree(多路平衡查找树 )</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/10/15/id-redis/" target="_blank">分布式全局序列ID方案之Redis优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/25/id-flicker/" target="_blank">分布式全局序列ID方案之Flicker优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/19/id-snowflake/" target="_blank">分布式全局序列ID方案之Snowflake算法</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/25/spring-springmvc/" target="_blank">Spring之动手实现SpringMVC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/22/java-methodhandler/" target="_blank">Java反射优化之方法句柄</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/16/spring-bean-ioc/" target="_blank">Spring之动手实现IOC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/12/spring-bean-lifecycle/" target="_blank">Spring之Bean加载-解析-生命周期</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/09/aqs-condition/" target="_blank">并发基础之Condition(等待队列)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/07/cache-redis-optimize/" target="_blank">Redis注意事项及常见优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/04/aqs_chapter02/" target="_blank">并发基础之AQS同步器（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/01/cache-redis-slowlog/" target="_blank">Redis之慢查询日志</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/31/aqs_chapter01/" target="_blank">并发基础之AQS同步器（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/16/junit-codeanalysis/" target="_blank">初窥门径之JUnit源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/13/java-securitymanager/" target="_blank">Java安全之SecurityManager</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/05/spi-introduction/" target="_blank">框架基础之SPI机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/29/responsibility-chain/" target="_blank">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/25/jndi-introdution/" target="_blank">JNDI知识摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/17/architect/" target="_blank">技术图谱</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/13/distribution-knowledge/" target="_blank">分布式项目知识要点</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/07/singletion/" target="_blank">设计模式之单例模式终极版【克隆-序列化-反射】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/02/fail-fast-safe/" target="_blank">Fail-Fast和Fail-Safe机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/27/adapter/" target="_blank">实际项目运用之Adapter模式（适配器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/18/template/" target="_blank">设计模式之Template模式（模版模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/14/synchronized-principle/" target="_blank">synchronized实现原理及锁优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/13/juc-tree-info/" target="_blank">JUC知识点总结</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/06/strategy/" target="_blank">实际项目运用之Strategy模式（策略模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/04/volatile-feature/" target="_blank">volatile关键字原理实现及应用</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/28/high-event/" target="_blank">MYSQL高级特性之【Event事件】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/27/process-fun/" target="_blank">MYSQL高级特性之【存储过程与函数】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/25/cap-base-flp/" target="_blank">分布式之【CAP理论、BASE理论 、FLP不可能定理】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/21/string-builder-question/" target="_blank">字符串拼接的疑惑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/17/exception-introduce/" target="_blank">Java异常处理-原理及优化建议</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/03/thread-jmm-happens-before/" target="_blank">java内存模型之[JMM][重排序][happens-before]</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/28/decorator/" target="_blank">实际项目运用之Decorator模式（装饰器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/26/interface-idempotency/" target="_blank">接口设计的幂等性考虑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/21/binary-operation/" target="_blank">java中位运算技巧</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/20/classloader-chapter02/" target="_blank">ClassLoader类加载分析（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/13/introspector/" target="_blank">Java 内省(Introspector)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/08/classloader-chapter01/" target="_blank">ClassLoader类加载分析（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/19/builder/" target="_blank">设计模式之builder模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/07/builder-factory/" target="_blank">设计模式之factory模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/11/03/recursive-lock/" target="_blank">可重入锁</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/09/12/show-global-status/" target="_blank">库级优化之SHOW GLOBAL STATUS</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/06/13/optimize-picture/" target="_blank">后端开发需要了解的mysql优化方向</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/16/thread-communication/" target="_blank">多线程之线程通信摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/07/design-rule/" target="_blank">数据库设计三范式和反范式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/info/" target="_blank">联系&amp;留言</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/open_source/" target="_blank">开源项目</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/tools/" target="_blank">在线工具</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/01/23/externalizable-interface/" target="_blank">自定义序列化之Externalizable接口</a></li>
+    
+</ul>
+
+<script>
+    var remark_config = {
+        host: "https://nicky-chin.cn", 
+        site_id: 'nicky-blog',
+        components: ['embed', 'last-comments'], 
+        max_shown_comments: 20, 
+        theme: 'light', 
+        locale: 'zh'
+    };
+
+    (function(c) {
+        for(var i = 0; i < c.length; i++){
+            var d = document, s = d.createElement('script');
+            s.src = remark_config.host + '/web/' +c[i] +'.js';
+            s.defer = true;
+            (d.head || d.body).appendChild(s);
+        }
+    })(remark_config.components || ['embed']);
+</script>
+
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    $(".post-list").addClass("toc-article");
+    $(".post-list-item a").attr("target", "_blank");
+    $("#post-nav-button > a:nth-child(2)").click(function () {
+        $(".fa-bars, .fa-times").toggle();
+        $(".post-list").toggle(300);
+        if ($(".toc").length > 0) {
+            $("#toc, #tocButton").toggle(200, function () {
+                if ($(".switch-area").is(":visible")) {
+                    $("#toc, .switch-btn, .switch-area").toggle();
+                    $("#tocButton").attr("value", valueHide);
+                }
+            })
+        }
+        else {
+            $(".switch-btn, .switch-area").fadeToggle(300);
+        }
+    })
+</script>
+
+<script>
+    (function(d, w, c) {
+        w.ChatraID = 'jZh4grHz47JAjnsis';
+        var s = d.createElement('script');
+        w[c] = w[c] || function() {
+            (w[c].q = w[c].q || []).push(arguments);
+        };
+        s.async = true;
+        s.src = 'https://call.chatra.io/chatra.js';
+        if (d.head) d.head.appendChild(s);
+    })(document, window, 'Chatra');
+</script>
+
+<script>
+
+</script>
+
+
+        </div>
+        <footer id="footer">
+
+    
+
+
+    <div class="outer">
+        
+        
+            <div class="footer-right">
+                
+                    <span id="busuanzi_container_site_pv" style='display: block'>
+                        <span id="site-visit" >本站访客数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    
+                
+                
+                    
+                        
+                            
+                        
+                    
+                
+            </div>
+        
+        
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2022 南乡清水@Hangzhou
+            </div>
+            <div class="s-bottom-layer-right" style="font-size: 0.2em" >
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33011002014475"
+                   target="_blank"><span class="lh s-bottom-recordcode">京公网安备33011002014475号</span></a>
+                <a href="https://beian.miit.gov.cn/"
+                   target="_blank"><span class="lh"> 浙ICP备19049847号-1</span></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chin.cn/js/GithubRepoWidget.js"></script>
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  10 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-159911678-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  false ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+    <title>MYSQL高级特性之【存储过程与函数】</title>
+    <link rel="icon" href="https://nicky-chin.cn/img/favicon.ico">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://nicky-chin.cn/assets/waifu.css"/>
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/highlight/styles/darcula.css">
+    <script src="https://nicky-chin.cn/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+            (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','zTXEk5Sy3-gUuAVTm5JE','2.0.0');
+    </script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chin.cn/" class="profilepic">
+            <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chin.cn/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chin.cn/tags/im%E9%80%9A%E8%AE%AF" style="font-size: 12px;" class="color4">Im通讯</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color3">Junit</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/netty" style="font-size: 12px;" class="color1">Netty</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color1">Redis</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color4">Spring-Base</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color2">Spring-Transaction</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">优化</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color4">分布式id方案</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color3">创建型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color1">多线程</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color1">思维导图</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color4">数据结构</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">框架基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color4">源码</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color1">理论</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color2">结构型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color1">行为型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color1">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chin.cn/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chin.cn/" class="profilepic">
+                <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+            <article id="post-js-android" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/post-2/process-fun/" class="article-date">
+            <time datetime="2018-04-27 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-04-27</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 class="article-title" itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/post-2/process-fun/">MYSQL高级特性之【存储过程与函数】</a>
+            </h1>
+
+
+        </header>
+
+        <div class="article-info article-info-post">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="article-category-link" href="https://nicky-chin.cn/categories/mysql/" style="font-size: 12px;">MySql</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/"
+                           style="font-size: 12px;">基础</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            
+            <div class="article-category tagcloud">
+                <a class="article-category-link" style="font-size: 12px;"> posted by nicky_chin</a>
+            </div>
+            
+
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="article-entry" itemprop="articleBody">
+
+            
+
+<h1 id="一-定义">一、定义</h1>
+
+<p>存储程序可以分为存储过程和函数。</p>
+
+<h2 id="1-1-存储过程的定义">1.1 存储过程的定义</h2>
+
+<p><strong>存储过程（Stored Procedure）</strong>是一组为了完成特定功能的SQL语句集。存储过程在数据库中经过第一次编译后再次调用不需要再次编译，用户通过指定存储过程的名字并给出参数（如果该存储过程带有参数）来执行它。</p>
+
+<h2 id="1-2-函数的定义">1.2 函数的定义</h2>
+
+<p>存储函数（简称<strong>函数</strong>）在本质上与存储过程没有区别。</p>
+
+<p>只是函数有如：只能返回一个变量的限制，而存储过程可以返回多个。函数是可以嵌入在SQL中使用，可以在select中调用，而存储过程不行。</p>
+
+<h1 id="二-创建存储过程和函数">二、创建存储过程和函数</h1>
+
+<p>存储过程和函数的创建过程很相似。</p>
+
+<h2 id="2-1-创建存储过程">2.1 创建存储过程</h2>
+
+<p>语法
+&gt;CREATE PROCEDURE sp_name ([ proc_parameter ]) [ characteristics..] routine_body</p>
+
+<p>proc_parameter指定存储过程的参数列表，列表形式如下：</p>
+
+<blockquote>
+<p>[IN|OUT|INOUT] param_name type</p>
+</blockquote>
+
+<p>其中in表示输入参数，out表示输出参数，inout表示既可以输入也可以输出；param_name表示参数名称；type表示参数的类型</p>
+
+<p>该类型可以是MYSQL数据库中的任意类型</p>
+
+<p>有以下取值：</p>
+
+<pre><code>characteristic: 
+    LANGUAGE SQL 
+  | [NOT] DETERMINISTIC 
+  | { CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA } 
+  | SQL SECURITY { DEFINER | INVOKER } 
+  | COMMENT 'string' 
+routine_body: 
+    Valid SQL procedure statement or statements
+</code></pre>
+
+<p><strong>LANGUAGE SQL</strong> ：说明routine_body部分是由SQL语句组成的，当前系统支持的语言为SQL，SQL是LANGUAGE特性的唯一值</p>
+
+<p><strong>[NOT] DETERMINISTIC</strong> ：指明存储过程执行的结果是否正确。DETERMINISTIC 表示结果是确定的。每次执行存储过程时，相同的输入会得到</p>
+
+<p>相同的输出。</p>
+
+<p>[NOT] DETERMINISTIC 表示结果是不确定的，相同的输入可能得到不同的输出。如果没有指定任意一个值，默认为[NOT] DETERMINISTIC</p>
+
+<p><strong>CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA</strong>：指明子程序使用SQL语句的限制。</p>
+
+<p>CONTAINS SQL表明子程序包含SQL语句，但是不包含读写数据的语句；</p>
+
+<p>NO SQL表明子程序不包含SQL语句；</p>
+
+<p>READS SQL DATA：说明子程序包含读数据的语句；</p>
+
+<p>MODIFIES SQL DATA表明子程序包含写数据的语句。</p>
+
+<p>默认情况下，系统会指定为CONTAINS SQL</p>
+
+<p><strong>SQL SECURITY { DEFINER | INVOKER }</strong> ：指明谁有权限来执行。DEFINER 表示只有定义者才能执行</p>
+
+<p>INVOKER 表示拥有权限的调用者可以执行。默认情况下，系统指定为DEFINER</p>
+
+<p>COMMENT &lsquo;string&rsquo; ：注释信息，可以用来描述存储过程或函数</p>
+
+<p>routine_body是SQL代码的内容，可以用BEGIN&hellip;END来表示SQL代码的开始和结束</p>
+
+<p>下面的语句创建一个查询order表统计数据的存储过程</p>
+
+<pre><code>DROP PROCEDURE IF EXISTS countOrder; 
+
+DELIMITER //
+CREATE PROCEDURE countOrder() 
+BEGIN
+  SELECT count(*) FROM borrow_order;
+END//
+DELIMITER ;
+
+CALL countOrder(); 
+</code></pre>
+
+<p>这里的逻辑是
+1、先判断是否有countOrder() 这个存储过程，有就drop掉
+2、创建countOrder() 存储过程
+3、执行countOrder() 存储过程</p>
+
+<blockquote>
+<p>注意：“DELIMITER //”语句的作用是将MYSQL的结束符设置为//，因为MYSQL默认的语句结束符为分号;，为了避免与存储过程中SQL语句结束符相冲突，需要使用DELIMITER 改变存储过程的结束符，并以“END//”结束存储过程。
+存储过程定义完毕之后再使用DELIMITER ;恢复默认结束符。DELIMITER 也可以指定其他符号为结束符！！！！！！！！</p>
+</blockquote>
+
+<hr />
+
+<h2 id="2-2-创建函数">2.2 创建函数</h2>
+
+<p>创建函数使用CREATE FUNCTION语句：</p>
+
+<pre><code>CREATE FUNCTION f_name([func_parameter])
+    RETURNS type
+    [characteristics...]
+   routine_body
+</code></pre>
+
+<p>参数列表可以为空，若不为空，声明形式与存储过程的声明形式一样。characteristics用于指定函数的特性，取值同上，这里不再赘述。
+func_parameter为存储函数的参数列表，参数列表如下
+&gt;[IN|OUT|INOUT]PARAM_NAMETYPE</p>
+
+<p>RETURNS type表示函数的返回类型；routine_body是函数体，函数体中必须包含一个 RETURN value 语句。</p>
+
+<h2 id="2-3函数示例">2.3函数示例</h2>
+
+<p>同样的，我们创建一个函数来计算平均工资</p>
+
+<pre><code>DELIMITER //
+CREATE FUNCTION getAvgAmount()
+    RETURNS DECIMAL(8,4)
+    RETURN(SELECT AVG(amount) FROM `user`);
+//
+DELIMITER
+</code></pre>
+
+<p>调用函数
+&gt;SELECT getAvgAmount()</p>
+
+<h1 id="3-复杂的存储过程和函数">3、复杂的存储过程和函数</h1>
+
+<h2 id="3-1变量的使用">3.1变量的使用</h2>
+
+<p>变量可以在子程序中声明并使用，这些变量的作用范围是在BEGIN&hellip;END程序中</p>
+
+<p>1、定义变量</p>
+
+<p>在存储过程中定义变量</p>
+
+<blockquote>
+<p>DECLARE var_name[,varname]&hellip;date_type[DEFAULT VALUE];</p>
+</blockquote>
+
+<p>var_name为局部变量的名称。DEFAULT VALUE子句给变量提供一个默认值。值除了可以被声明为一个常数外，还可以被指定为一个表达式。</p>
+
+<p>如果没有DEFAULT子句，初始值为NULL</p>
+
+<p>DECLARE MYPARAM INT DEFAULT 100;</p>
+
+<p>2、为变量赋值</p>
+
+<p>定义变量之后，为变量赋值可以改变变量的默认值，MYSQL中使用SET语句为变量赋值</p>
+
+<blockquote>
+<p>SET var_name=expr[,var_name=expr]&hellip;</p>
+</blockquote>
+
+<p>在存储过程中的SET语句是一般SET语句的扩展版本。</p>
+
+<p>被SET的变量可能是子程序内的变量，或者是全局服务器变量，如系统变量或者用户变量</p>
+
+<p>他运行SET a=x,b=y,&hellip;.</p>
+
+<p>声明3个变量，分别为var1，var2和var3</p>
+
+<blockquote>
+<p>DECLARE var1,var2,var3 INT;
+SET var1=10,var2=20;
+SET var3=var1+var2;</p>
+</blockquote>
+
+<p>MYSQL中还可以通过SELECT&hellip;INTO为一个或多个变量赋值</p>
+
+<blockquote>
+<p>DECLARE NAME CHAR(50);
+DECLARE id DECIMAL(8,2);
+SELECT id,NAME INTO id ,NAME FROM t3 WHERE id=2;</p>
+</blockquote>
+
+<h2 id="3-2-流程控制的使用">3.2 流程控制的使用</h2>
+
+<p>MySQL中的流程控制语句有：<code>IF</code>语句、<code>CASE</code>语句、<code>LOOP</code>语句、<code>WHILE</code>语句、<code>LEAVE</code>语句、<code>ITERATE</code>语句和<code>REPEAT</code>语句。</p>
+
+<h3 id="3-2-1-if语句">3.2.1 IF语句</h3>
+
+<p>语法格式如下：</p>
+
+<pre><code>IF expr_condition THEN statement_list
+    [ELSEIF expr_condition THEN statement_list]...
+    [ELSE statement_list]
+END IF;
+</code></pre>
+
+<h3 id="3-2-2-case语句">3.2.2 CASE语句</h3>
+
+<p>CASE语句有两种语法格式，第一种如下：</p>
+
+<pre><code>CASE expr
+    WHEN value1 THEN statement_list
+    WHEN value2 THEN statement_list
+    ...
+    [ELSE statement_list]
+END CASE;
+</code></pre>
+
+<p>第二种如下：</p>
+
+<pre><code>CASE
+    WHEN expr_condition1 THEN statement_list
+    WHEN expr_condition2 THEN statement_list
+    ...
+    [ELSE statement_list]
+END CASE;
+</code></pre>
+
+<p>注意：在存储程序里的 CASE 语句 与 直接在SELECT查询里使用的 CASE 函数有略微的不同。在存储程序里的 CASE 语句不能有<code>ELSE NULL</code>子句，并且用<code>END CASE</code>而不是<code>END</code>来终止。</p>
+
+<h3 id="3-2-3-loop语句">3.2.3 LOOP语句</h3>
+
+<p>LOOP语句的语法如下：</p>
+
+<pre><code>[loop_label:]LOOP
+    statement_list
+END LOOP [loop_label]
+</code></pre>
+
+<p>loop_label是LOOP语句的标签，该参数可以省略。 LOOP 内的语句一直重复执行直到退出循环，退出循环使用<code>LEAVE</code>语句。</p>
+
+<h3 id="3-2-4-leave语句">3.2.4 LEAVE语句</h3>
+
+<p>LEAVE语句用来退出任何被标注的流程控制语句，语法如下：</p>
+
+<pre><code>LEAVE label;
+</code></pre>
+
+<h3 id="3-2-5-iterate语句">3.2.5 ITERATE语句</h3>
+
+<p>ITERATE语句将执行顺序转到语句段开头处，ITERATE只可以出现在 LOOP、REPEAT和WHILE语句内。语法如下：</p>
+
+<pre><code>ITERATE label;
+</code></pre>
+
+<p>通俗点讲，就是相当于C++里的<code>continue</code>。</p>
+
+<h3 id="3-2-6-repeat语句">3.2.6 REPEAT语句</h3>
+
+<p>REPEAT语句创建一个带条件判断的循环过程：</p>
+
+<pre><code>[repeat_label:]REPEAT
+    statement_list
+UNTIL expr_condition
+END REPEAT [repeat_label]
+</code></pre>
+
+<h3 id="3-2-7-while语句">3.2.7 WHILE语句</h3>
+
+<p>WHILE语句也是创建一个带条件判断的循环过程，不同的是在每次执行循环体时先判断：</p>
+
+<pre><code>[while_label:]WHILE expr_condition DO
+    statement_list
+END WHILE [while_label]
+</code></pre>
+
+<h2 id="3-3-定义条件和处理程序">3.3 定义条件和处理程序</h2>
+
+<p>特定条件需要特定处理，定义条件是事先定义程序执行过程中遇到的问题，处理程序定义了在遇到这些问题时应当采取的处理方式，这样可以保证存储过程或函数在遇到警告或错误时能继续执行。</p>
+
+<h3 id="3-3-1-定义条件">3.3.1 定义条件</h3>
+
+<p>定义条件也是使用<code>DECLARE</code>语句：</p>
+
+<pre><code>DECLARE condition_name CONDITION FOR SQLSTATE 'sqlstate_value' | mysql_error_code;
+</code></pre>
+
+<p>sqlstate_value 和 mysql_error_code 都可以表示MySQL的错误，例如：<code>ERROR 1064(42000)</code>中，sqlstate_value的值是42000，mysql_error_code的值是1064。</p>
+
+<p>这个语句指定需要特殊处理的条件。它将一个名字和指定的错误条件关联起来，这个名字可以用在后面的处理程序中。例如：定义<code>'ERROR 1064(42000)'</code>错误名称为<code>syntax_error</code>。</p>
+
+<pre><code>DECLARE syntax_error CONDITION FOR SQLSTATE '42000';  /*方法一*/
+DECLARE syntax_error CONDITION FOR 1064;              /*方法二*/
+</code></pre>
+
+<h3 id="3-3-2-定义处理程序">3.3.2 定义处理程序</h3>
+
+<p>定义处理程序语法如下：</p>
+
+<pre><code>DECLARE handler_type HANDLER FOR condition_value sp_statement;
+</code></pre>
+
+<ul>
+<li><p><strong>handler_type</strong>：表示错误处理方式，只能取以下3个值。</p>
+
+<ul>
+<li><code>CONTINUE</code>：遇到错误不处理，继续执行；</li>
+<li><code>EXIT</code>：遇到错误马上退出；</li>
+<li><code>UNDO</code>：遇到错误后撤回之前的操作，MySQL暂不支持。</li>
+</ul></li>
+
+<li><p><strong>condition_value</strong>：表示错误类型，可以有以下值：</p>
+
+<ul>
+<li><code>SQLSTATE 'sqlstate_value'</code></li>
+<li><code>mysql_error_code</code></li>
+<li>condition_name：自定义的条件名称</li>
+<li><code>SQLWARNING</code>：匹配所有以01开头的SQLSTATE错误代码</li>
+<li><code>NOT FOUND</code>：匹配所有以02开头的SQLSTATE错误代码</li>
+<li><code>SQLEXCEPTION</code>：匹配所有没有被SQLWARNING或NOT FOUND捕获的SQLSTATE错误代码</li>
+</ul></li>
+
+<li><p><strong>sp_statement</strong>：程序语句段，表示在遇到定义的错误时，需要执行的存储过程或函数。</p></li>
+</ul>
+
+<h2 id="3-4-光标的使用">3.4 光标的使用</h2>
+
+<p>查询语句可能返回多条记录，如果数据量非常大，需要使用光标（cursor）来<strong>逐条</strong>读取查询结果集中的记录。</p>
+
+<h3 id="3-4-1-声明光标">3.4.1 声明光标</h3>
+
+<p>光标必须在打开之前被声明，并且其中用到的变量或条件必须在声明光标之前被声明。MySQL中使用<code>DECLARE</code>关键字来声明光标：</p>
+
+<pre><code>DECLARE cursor_name CURSOR FOR select_statement;
+</code></pre>
+
+<p>其中的 SELECT 语句返回一个用于创建光标的结果集。</p>
+
+<h3 id="3-4-2-打开光标">3.4.2 打开光标</h3>
+
+<p>打开光标的语法如下：</p>
+
+<pre><code>OPEN cursor_name;
+</code></pre>
+
+<h3 id="3-4-3-使用光标">3.4.3 使用光标</h3>
+
+<p>通过<code>FETCH</code>关键字从光标中逐条读取到变量中：</p>
+
+<pre><code>FETCH cursor_name INTO var_name[,...];
+</code></pre>
+
+<p>变量var_name必须在声明光标之前就定义好。</p>
+
+<h3 id="3-4-4-关闭光标">3.4.4 关闭光标</h3>
+
+<p>关闭光标的语法如下：</p>
+
+<pre><code>CLOSE cursor_name;
+</code></pre>
+
+<p><strong>注意：</strong>MySQL中光标只能在存储过程和函数中使用。</p>
+
+<h3 id="3-4-5-示例">3.4.5 示例</h3>
+
+<p>在<code>workers</code>表的基础上，创建一个存储过程，根据输入的城市名，输出该城市所有员工的名字。</p>
+
+<pre><code>mysql&gt; DELIMITER //
+mysql&gt; CREATE PROCEDURE useCursorDemo(IN city_name VARCHAR(15))
+    -&gt; BEGIN
+    -&gt; DECLARE m_name VARCHAR(10);
+    -&gt; DECLARE m_city VARCHAR(15);
+    -&gt; DECLARE m_stop INT DEFAULT 0;
+    -&gt; DECLARE mycursor CURSOR FOR SELECT name,city FROM workers WHERE city=city_name;
+    -&gt; DECLARE CONTINUE HANDLER FOR NOT FOUND SET m_stop=1;
+    -&gt; OPEN mycursor;
+    -&gt; FETCH mycursor INTO m_name,m_city;
+    -&gt; WHILE m_stop!=1 DO
+    -&gt; SELECT m_name,m_city;
+    -&gt; FETCH mycursor INTO m_name,m_city;
+    -&gt; END WHILE;
+    -&gt; CLOSE mycursor;
+    -&gt; END//
+Query OK, 0 rows affected (0.08 sec)
+
+mysql&gt; DELIMITER ;
+</code></pre>
+
+<p>调用<code>useCursorDemo</code>存储过程：</p>
+
+<pre><code>mysql&gt; CALL useCursorDemo('Chicago');
++--------+---------+
+| m_name | m_city  |
++--------+---------+
+| Nina   | Chicago |
++--------+---------+
+1 row in set (0.05 sec)
+
++--------+---------+
+| m_name | m_city  |
++--------+---------+
+| Tim    | Chicago |
++--------+---------+
+1 row in set (0.05 sec)
+</code></pre>
+
+<p>通过这个例子，我们可以了解到如何在存储过程或函数中使用<strong>变量、光标和流程控制。</strong></p>
+
+<h2 id="3-5-修改-删除存储过程和函数">3.5、修改、删除存储过程和函数</h2>
+
+<p>使用<code>ALTER</code>语句可以修改存储过程或函数的特性，语法如下：</p>
+
+<pre><code>ALTER {PROCEDURE|FUNCTION} sp_name [characteristic]
+</code></pre>
+
+<p><strong>sp_name</strong>是存储过程或函数的名称，<strong>characteristic</strong>指定存储过程或函数的特性，与创建过程的参数取值是一样的。</p>
+
+<p>使用<code>DROP</code>语句删除存储过程或函数，语法如下：</p>
+
+<pre><code>DROP {PROCEDURE|FUNCTION} [IF EXISTS] sp_name;
+</code></pre>
+
+<h1 id="4-存储过程与sql语句对比">4 存储过程与SQL语句对比</h1>
+
+<p><strong>优势:</strong></p>
+
+<p><strong>1、提高性能</strong>
+SQL语句在创建过程时进行分析和编译。 存储过程是预编译的，在首次运行一个存储过程时，查询优化器对其进行分析、优化，并给出最终被存在系统表中的存储计划，这样，在执行过程时便可节省此开销。
+<strong>2、降低网络开销</strong>
+存储过程调用时只需用提供存储过程名和必要的参数信息，从而可降低网络的流量。
+<strong>3、便于进行代码移植</strong>
+数据库专业人员可以随时对存储过程进行修改，但对应用程序源代码却毫无影响，从而极大的提高了程序的可移植性。
+<strong>4、更强的安全性</strong>
+1）系统管理员可以对执行的某一个存储过程进行权限限制，避免非授权用户对数据的访问
+2）在通过网络调用过程时，只有对执行过程的调用是可见的。 因此，恶意用户无法看到表和数据库对象名称、嵌入自己的 Transact-SQL 语句或搜索关键数据。
+3）使用过程参数有助于避免 SQL 注入攻击。 因为参数输入被视作文字值而非可执行代码，所以，攻击者将命令插入过程内的 Transact-SQL 语句并损害安全性将更为困难。
+4）可以对过程进行加密，这有助于对源代码进行模糊处理。</p>
+
+<p><strong>劣势：</strong></p>
+
+<p>1、存储过程需要专门的数据库开发人员进行维护
+2、设计逻辑变更，修改存储过程没有SQL灵活</p>
+
+<p>为什么在实际应用中，存储过程用到相对较少呢？
+在通常的项目研发中，用存储过程却相对较少，这是为什么呢？
+分析原因如下：
+1）没有特定的数据库开发人员，普通程序员兼职进行数据库操作
+2）程序员往往只需操作程序，即可完成数据访问，无需再在数据库上进行开发
+3）项目需求变动比较频繁，修改SQL语句比较方便，特别是涉及逻辑变更</p>
+
+<p>存储过程与SQL语句如何抉择？
+基于实际应用的经验，给予如下建议：</p>
+
+<p>1、在一些高效率或者规范性要求比较高的项目，建议采用存储过程
+2、对于一般项目建议采用参数化命令方式，是存储过程与SQL语句一种折中的方式
+3、对于一些算法要求比较高，涉及多条数据逻辑，建议采用存储过程</p>
+
+
+        </div>
+
+    </div>
+
+    
+
+
+</article>
+
+<div id="toc" class="toc-article" >
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc">
+        <nav id="TableOfContents">
+<ul>
+<li><a href="#一-定义">一、定义</a>
+<ul>
+<li><a href="#1-1-存储过程的定义">1.1 存储过程的定义</a></li>
+<li><a href="#1-2-函数的定义">1.2 函数的定义</a></li>
+</ul></li>
+<li><a href="#二-创建存储过程和函数">二、创建存储过程和函数</a>
+<ul>
+<li><a href="#2-1-创建存储过程">2.1 创建存储过程</a></li>
+<li><a href="#2-2-创建函数">2.2 创建函数</a></li>
+<li><a href="#2-3函数示例">2.3函数示例</a></li>
+</ul></li>
+<li><a href="#3-复杂的存储过程和函数">3、复杂的存储过程和函数</a>
+<ul>
+<li><a href="#3-1变量的使用">3.1变量的使用</a></li>
+<li><a href="#3-2-流程控制的使用">3.2 流程控制的使用</a>
+<ul>
+<li><a href="#3-2-1-if语句">3.2.1 IF语句</a></li>
+<li><a href="#3-2-2-case语句">3.2.2 CASE语句</a></li>
+<li><a href="#3-2-3-loop语句">3.2.3 LOOP语句</a></li>
+<li><a href="#3-2-4-leave语句">3.2.4 LEAVE语句</a></li>
+<li><a href="#3-2-5-iterate语句">3.2.5 ITERATE语句</a></li>
+<li><a href="#3-2-6-repeat语句">3.2.6 REPEAT语句</a></li>
+<li><a href="#3-2-7-while语句">3.2.7 WHILE语句</a></li>
+</ul></li>
+<li><a href="#3-3-定义条件和处理程序">3.3 定义条件和处理程序</a>
+<ul>
+<li><a href="#3-3-1-定义条件">3.3.1 定义条件</a></li>
+<li><a href="#3-3-2-定义处理程序">3.3.2 定义处理程序</a></li>
+</ul></li>
+<li><a href="#3-4-光标的使用">3.4 光标的使用</a>
+<ul>
+<li><a href="#3-4-1-声明光标">3.4.1 声明光标</a></li>
+<li><a href="#3-4-2-打开光标">3.4.2 打开光标</a></li>
+<li><a href="#3-4-3-使用光标">3.4.3 使用光标</a></li>
+<li><a href="#3-4-4-关闭光标">3.4.4 关闭光标</a></li>
+<li><a href="#3-4-5-示例">3.4.5 示例</a></li>
+</ul></li>
+<li><a href="#3-5-修改-删除存储过程和函数">3.5、修改、删除存储过程和函数</a></li>
+</ul></li>
+<li><a href="#4-存储过程与sql语句对比">4 存储过程与SQL语句对比</a></li>
+</ul>
+</nav>
+    </ol>
+    <div style="text-align:center">-----------------------</div>
+    <strong class="toc-title">最新评论</strong>
+    <ol class="toc">
+        <div class="remark42__last-comments" data-max="10"></div>
+    </ol>
+</div>
+<style>
+    
+
+    #tocButton{
+        display: none;
+    }
+    #toc{
+        display: none;
+    }
+
+    
+
+
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录" >
+
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function () {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    
+    
+    
+        
+    
+</script>
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a class="bds_qzone" data-cmd="qzone" href="#" title="分享到 QQ 空间"></a>
+        <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+        <a class="bds_count" data-cmd="count"></a>
+        <a class="bds_more" data-cmd="more"></a>
+
+    </div>
+    <script>
+        window._bd_share_config = {
+            "common": {
+                "bdSnsKey": {},
+                "bdText": "",
+                "bdMini": "2",
+                "bdMiniList": false,
+                "bdPic": "",
+                "bdStyle": "0",
+                "bdSize": "24"
+            }, "share": {}
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+</div>
+
+
+
+
+<div style="margin-left: 30px;margin-right: 30px;background: white;padding-left: 30px;padding-right: 30px">
+    <div class="comments">
+        <h3>[评论][COMMENTS]</h3>
+        
+            
+                
+                
+                
+                
+                
+            
+        
+        <div id="remark42"></div>
+        <div id="disqus_thread"></div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<ul class="post-list toc-article">
+    
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2022/01/13/mysql-snapshot-read/" target="_blank">MySQL之Innodb之快照读原理实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2021/02/13/java-clone/" target="_blank">java的clone方法JVM实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/11/13/im-timeline/" target="_blank">基于TimeLine模型的消息同步机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/09/26/threadlocal-enchancer/" target="_blank">线程传递增强之TransmittableThreadLocal</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/06/11/net-nio-netty/" target="_blank">浅析java-nio及netty的reactor模型</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/19/spring-transaction-commit/" target="_blank">Transaction源码解析之事务提交与回滚</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/" target="_blank">Transaction源码解析之事务预处理</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/" target="_blank">Transaction源码解析之事务配置解析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/" target="_blank">生产-消费模型之虚假唤醒</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/" target="_blank">Spring实例化bean之源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/03/02/float-precision/" target="_blank">float浮点小数的设计及精度问题</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/07/11/mysql-page-detail/" target="_blank">MySQL中的page页详解</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/05/03/apt_lombok_implement/" target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/02/15/filter/" target="_blank">实际项目运用之Filter模式（过滤器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/12/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/11/17/btree-info/" target="_blank">数据结构之BTree和B&#43;Tree(多路平衡查找树 )</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/10/15/id-redis/" target="_blank">分布式全局序列ID方案之Redis优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/25/id-flicker/" target="_blank">分布式全局序列ID方案之Flicker优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/19/id-snowflake/" target="_blank">分布式全局序列ID方案之Snowflake算法</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/25/spring-springmvc/" target="_blank">Spring之动手实现SpringMVC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/22/java-methodhandler/" target="_blank">Java反射优化之方法句柄</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/16/spring-bean-ioc/" target="_blank">Spring之动手实现IOC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/12/spring-bean-lifecycle/" target="_blank">Spring之Bean加载-解析-生命周期</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/09/aqs-condition/" target="_blank">并发基础之Condition(等待队列)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/07/cache-redis-optimize/" target="_blank">Redis注意事项及常见优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/04/aqs_chapter02/" target="_blank">并发基础之AQS同步器（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/01/cache-redis-slowlog/" target="_blank">Redis之慢查询日志</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/31/aqs_chapter01/" target="_blank">并发基础之AQS同步器（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/16/junit-codeanalysis/" target="_blank">初窥门径之JUnit源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/13/java-securitymanager/" target="_blank">Java安全之SecurityManager</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/05/spi-introduction/" target="_blank">框架基础之SPI机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/29/responsibility-chain/" target="_blank">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/25/jndi-introdution/" target="_blank">JNDI知识摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/17/architect/" target="_blank">技术图谱</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/13/distribution-knowledge/" target="_blank">分布式项目知识要点</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/07/singletion/" target="_blank">设计模式之单例模式终极版【克隆-序列化-反射】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/02/fail-fast-safe/" target="_blank">Fail-Fast和Fail-Safe机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/27/adapter/" target="_blank">实际项目运用之Adapter模式（适配器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/18/template/" target="_blank">设计模式之Template模式（模版模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/14/synchronized-principle/" target="_blank">synchronized实现原理及锁优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/13/juc-tree-info/" target="_blank">JUC知识点总结</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/06/strategy/" target="_blank">实际项目运用之Strategy模式（策略模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/04/volatile-feature/" target="_blank">volatile关键字原理实现及应用</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/28/high-event/" target="_blank">MYSQL高级特性之【Event事件】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/27/process-fun/" target="_blank">MYSQL高级特性之【存储过程与函数】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/25/cap-base-flp/" target="_blank">分布式之【CAP理论、BASE理论 、FLP不可能定理】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/21/string-builder-question/" target="_blank">字符串拼接的疑惑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/17/exception-introduce/" target="_blank">Java异常处理-原理及优化建议</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/03/thread-jmm-happens-before/" target="_blank">java内存模型之[JMM][重排序][happens-before]</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/28/decorator/" target="_blank">实际项目运用之Decorator模式（装饰器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/26/interface-idempotency/" target="_blank">接口设计的幂等性考虑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/21/binary-operation/" target="_blank">java中位运算技巧</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/20/classloader-chapter02/" target="_blank">ClassLoader类加载分析（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/13/introspector/" target="_blank">Java 内省(Introspector)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/08/classloader-chapter01/" target="_blank">ClassLoader类加载分析（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/19/builder/" target="_blank">设计模式之builder模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/07/builder-factory/" target="_blank">设计模式之factory模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/11/03/recursive-lock/" target="_blank">可重入锁</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/09/12/show-global-status/" target="_blank">库级优化之SHOW GLOBAL STATUS</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/06/13/optimize-picture/" target="_blank">后端开发需要了解的mysql优化方向</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/16/thread-communication/" target="_blank">多线程之线程通信摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/07/design-rule/" target="_blank">数据库设计三范式和反范式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/info/" target="_blank">联系&amp;留言</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/open_source/" target="_blank">开源项目</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/tools/" target="_blank">在线工具</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/01/23/externalizable-interface/" target="_blank">自定义序列化之Externalizable接口</a></li>
+    
+</ul>
+
+<script>
+    var remark_config = {
+        host: "https://nicky-chin.cn", 
+        site_id: 'nicky-blog',
+        components: ['embed', 'last-comments'], 
+        max_shown_comments: 20, 
+        theme: 'light', 
+        locale: 'zh'
+    };
+
+    (function(c) {
+        for(var i = 0; i < c.length; i++){
+            var d = document, s = d.createElement('script');
+            s.src = remark_config.host + '/web/' +c[i] +'.js';
+            s.defer = true;
+            (d.head || d.body).appendChild(s);
+        }
+    })(remark_config.components || ['embed']);
+</script>
+
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    $(".post-list").addClass("toc-article");
+    $(".post-list-item a").attr("target", "_blank");
+    $("#post-nav-button > a:nth-child(2)").click(function () {
+        $(".fa-bars, .fa-times").toggle();
+        $(".post-list").toggle(300);
+        if ($(".toc").length > 0) {
+            $("#toc, #tocButton").toggle(200, function () {
+                if ($(".switch-area").is(":visible")) {
+                    $("#toc, .switch-btn, .switch-area").toggle();
+                    $("#tocButton").attr("value", valueHide);
+                }
+            })
+        }
+        else {
+            $(".switch-btn, .switch-area").fadeToggle(300);
+        }
+    })
+</script>
+
+<script>
+    (function(d, w, c) {
+        w.ChatraID = 'jZh4grHz47JAjnsis';
+        var s = d.createElement('script');
+        w[c] = w[c] || function() {
+            (w[c].q = w[c].q || []).push(arguments);
+        };
+        s.async = true;
+        s.src = 'https://call.chatra.io/chatra.js';
+        if (d.head) d.head.appendChild(s);
+    })(document, window, 'Chatra');
+</script>
+
+<script>
+
+</script>
+
+
+        </div>
+        <footer id="footer">
+
+    
+
+
+    <div class="outer">
+        
+        
+            <div class="footer-right">
+                
+                    <span id="busuanzi_container_site_pv" style='display: block'>
+                        <span id="site-visit" >本站访客数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    
+                
+                
+                    
+                        
+                            
+                        
+                    
+                
+            </div>
+        
+        
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2022 南乡清水@Hangzhou
+            </div>
+            <div class="s-bottom-layer-right" style="font-size: 0.2em" >
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33011002014475"
+                   target="_blank"><span class="lh s-bottom-recordcode">京公网安备33011002014475号</span></a>
+                <a href="https://beian.miit.gov.cn/"
+                   target="_blank"><span class="lh"> 浙ICP备19049847号-1</span></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chin.cn/js/GithubRepoWidget.js"></script>
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  10 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-159911678-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>
