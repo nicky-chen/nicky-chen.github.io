@@ -7,7 +7,7 @@
     <script>
         var yiliaConfig = {
             fancybox:  true ,
-            animate:  true ,
+            animate:  false ,
             isHome: false,
             isPost: false,
             isArchive: true,
@@ -17,7 +17,6 @@
             rootUrl: "\/"
         };
     </script>
-
     <title>数据结构</title>
     <link rel="icon" href="https://nicky-chin.cn/img/favicon.ico">
 
@@ -25,20 +24,29 @@
     <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
     <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
 
+    <link rel="stylesheet" type="text/css" href="https://nicky-chin.cn/assets/waifu.css"/>
 
     <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
 
-    
-    
     <link rel="stylesheet" href="https://nicky-chin.cn/highlight/styles/darcula.css">
     <script src="https://nicky-chin.cn/highlight/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+            (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','zTXEk5Sy3-gUuAVTm5JE','2.0.0');
+    </script>
 </head>
 <body>
 
 
 <body>
 <div id="container">
+
     <div class="left-col">
         <div class="overlay"></div>
 <div class="intrude-less">
@@ -55,7 +63,6 @@
         
 
         
-
 
         
             <div id="switch-btn" class="switch-btn">
@@ -112,11 +119,13 @@
                         
                             <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
                         
-                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
-                        
                             <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
                         
                             <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
                         
                         </ul>
                     </nav>
@@ -139,39 +148,43 @@
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
                         
-                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color2">Junit</a>
+                            <a href="https://nicky-chin.cn/tags/im%E9%80%9A%E8%AE%AF" style="font-size: 12px;" class="color4">Im通讯</a>
                         
-                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color4">Redis</a>
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color1">Junit</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color3">Spring-Base</a>
+                            <a href="https://nicky-chin.cn/tags/netty" style="font-size: 12px;" class="color2">Netty</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color1">Spring-Transaction</a>
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color1">Redis</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">优化</a>
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color1">Spring-Base</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color3">Spring-Transaction</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">优化</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color3">分布式id方案</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color4">创建型</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color1">创建型</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color1">多线程</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color3">多线程</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color2">思维导图</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color3">数据结构</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">框架基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">框架基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color3">源码</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color4">源码</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color4">理论</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color3">理论</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color4">结构型</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color1">结构型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color1">行为型</a>
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color2">行为型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">锁优化</a>
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">锁优化</a>
                         
                     </div>
                 </section>
@@ -236,11 +249,13 @@
                     
                     <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
                     
-                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
-                    
                     <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
                     
                     <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
                     
                 <div class="clearfix"></div>
                 </ul>
@@ -268,6 +283,7 @@
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2018/11/17/btree-info/" class="article-date">
             <time datetime="2018-11-17 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-11-17</time>
@@ -294,20 +310,7 @@
             1 背景 B-Tree是为磁盘等外存储设备设计的一种平衡查找树。因此在讲B-Tree之前先了解下磁盘的相关知识。系统从磁盘读取数据到内存时是以磁盘块（block）为基本单位的，位于同一个磁盘块中的数据会被一次性读取出来，而不是需要什么取什么。 InnoDB存储引擎中有页（Page）的概念，页是其磁盘管理的最小单位。InnoDB存储引擎中默认每个页的大小为16KB，可通过参数innodb_page_size将页的大小设置为4K、8K、16K，在MySQL中可通过如下命令查看页的大小：
 mysql&gt; show variables like 'innodb_page_size';  而系统一个磁盘块的存储空间往往没有这么大，因此InnoDB每次申请磁盘空间时都会是若干地址连续磁盘块来达到页的大小16KB。InnoDB在把磁盘数据读入到磁盘时会以页为基本单位，在查询数据时如果一个页中的每条数据都能有助于定位数据记录的位置，这将会减少磁盘I/O次数，提高查询效率。
 2 定义与特性 B-Tree B-Tree结构的数据可以让系统高效的找到数据所在的磁盘块。为了描述B-Tree，首先定义一条记录为一个二元组[key, data] ，key为记录的键值(关键字)，对应表中的主键值，data为一行记录中除主键外的数据。对于不同的记录，key值互不相同。
-一棵m阶的B-Tree有如下特性： 1. 每个节点最多有m个孩子。 2. 除了根节点和叶子节点外，其它每个节点至少有Ceil(m/2)个孩子。 3. 若根节点不是叶子节点，则至少有2个孩子 4. 所有叶子节点都在同一层，且不包含其它关键字信息 5. 每个非终端节点包含n个关键字信息（P0,P1,…Pn, k1,…kn） 6. 关键字的个数n满足：ceil(m/2)-1 &lt;= n &lt;= m-1 7. ki(i=1,…n)为关键字，且关键字升序排序。 8. Pi(i=1,…n)为指向子树根节点的指针。P(i-1)指向的子树的所有节点关键字均小于ki，但都大于k(i-1)  B树中的每个节点根据实际情况可以包含大量的关键字信息和分支 如下图所示为一个3阶的B-Tree：
-每个节点占用一个盘块的磁盘空间，一个节点上有两个升序排序的关键字和三个指向子树根节点的指针，指针存储的是子节点所在磁盘块的地址。两个关键词划分成的三个范围域对应三个指针指向的子树的数据的范围域。以根节点为例，关键字为17和35，P1指针指向的子树的数据范围小于17，P2指针指向的子树的数据范围为17~35，P3指针指向的子树的数据范围大于35
-模拟查找关键字29的过程： &gt;根据根节点找到磁盘块1，读入内存。【磁盘I/O操作第1次】 比较关键字29在区间（17,35），找到磁盘块1的指针P2。 根据P2指针找到磁盘块3，读入内存。【磁盘I/O操作第2次】 比较关键字29在区间（26,30），找到磁盘块3的指针P2。 根据P2指针找到磁盘块8，读入内存。【磁盘I/O操作第3次】 在磁盘块8中的关键字列表中找到关键字29。 分析上面过程，发现需要3次磁盘I/O操作，和3次内存查找操作。由于内存中的关键字是一个有序表结构，可以利用二分法查找提高效率。而3次磁盘I/O操作是影响整个B-Tree查找效率的决定因素。B-Tree相对于AVLTree缩减了节点个数，使每次磁盘I/O取到内存的数据都发挥了作用，从而提高了查询效率。
-B+Tree
-B+Tree是在B-Tree基础上的一种优化，使其更适合实现外存储索引结构，InnoDB存储引擎就是用B+Tree实现其索引结构。
-从B-Tree图可以看到每个节点中不仅包含数据的key值，还有data值。而每一个页的存储空间是有限的，如果data数据较大时将会导致每个节点（即一个页）能存储的key的数量很小，当存储的数据量很大时同样会导致B-Tree的深度较大，增大查询时的磁盘I/O次数，进而影响查询效率。在B+Tree中，所有数据记录节点都是按照键值大小顺序存放在同一层的叶子节点上，而非叶子节点上只存储key值信息，这样可以大大加大每个节点存储的key值数量，降低B+Tree的高度。
-B+Tree相对于B-Tree有几点不同： 非叶子节点只存储键值信息。 所有叶子节点之间都有一个链指针。 数据记录都存放在叶子节点中。  将B-Tree优化，由于B+Tree的非叶子节点只存储键值信息，假设每个磁盘块能存储4个键值及指针信息，则变成B+Tree后其结构如下图所示:
-通常在B+Tree上有两个头指针，一个指向根节点，另一个指向关键字最小的叶子节点，而且所有叶子节点（即数据节点）之间是一种链式环结构。因此可以对B+Tree进行两种查找运算：一种是对于主键的范围查找和分页查找，另一种是从根节点开始，进行随机查找。
-可能上面例子中只有22条数据记录，看不出B+Tree的优点，下面做一个推算：
-InnoDB存储引擎中页的大小为16KB，一般表的主键类型为INT（占用4个字节）或BIGINT（占用8个字节），指针类型也一般为4或8个字节，也就是说一个页（B+Tree中的一个节点）中大概存储16KB/(8B+8B)=1K个键值（因为是估值，为方便计算，这里的K取值为10^3,计算可得深度为3的树可以存储10亿数量级数据
-实际情况中每个节点可能不能填充满，因此在数据库中，B+Tree的高度一般都在2-4层。mysql的InnoDB存储引擎在设计时是将根节点常驻内存的，也就是说查找某一键值的行记录时最多只需要1~3次磁盘I/O操作
-B+Tree索引可以分为聚集索引（clustered index）和非聚簇索引（secondary index）。上面B+Tree示例图在数据库中的实现即为聚集索引
-聚集索引的B+Tree中的叶子节点存放的是整张表的行记录数据。非聚簇索引与聚集索引的区别在于非聚簇索引的叶子节点并不包含行记录的全部数据，而是存储相应行数据的聚集索引键，即主键。当通过非聚簇索引来查询数据时，InnoDB存储引擎会遍历非聚簇索引找到主键，然后再通过主键在聚集索引中找到完整的行记录数据
-# 3 B树 3.
+            <img src="https://nicky-chin.cn/media/btree-info/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -350,23 +353,52 @@ B+Tree索引可以分为聚集索引（clustered index）和非聚簇索引（se
 
         </div>
         <footer id="footer">
+
+    
+
+
     <div class="outer">
+        
+        
+            <div class="footer-right">
+                
+                    <span id="busuanzi_container_site_pv" style='display: block'>
+                        <span id="site-visit" >本站访客数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    
+                
+                
+                    
+                        
+                            
+                        
+                    
+                
+            </div>
+        
+        
         <div id="footer-info">
             <div class="footer-left">
-                &copy; 2021 nicky_chin
+                &copy; 2022 南乡清水@Hangzhou
             </div>
-            <div class="footer-right">
-                <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>
+            <div class="s-bottom-layer-right" style="font-size: 0.2em" >
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33011002014475"
+                   target="_blank"><span class="lh s-bottom-recordcode">京公网安备33011002014475号</span></a>
+                <a href="https://beian.miit.gov.cn/"
+                   target="_blank"><span class="lh"> 浙ICP备19049847号-1</span></a>
             </div>
         </div>
-        
     </div>
 </footer>
 
     </div>
     
 <script src="https://nicky-chin.cn/js/GithubRepoWidget.js"></script>
-<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
 <script src="https://nicky-chin.cn/js/main.js"></script>
 
 
@@ -395,7 +427,7 @@ B+Tree索引可以分为聚集索引（clustered index）和非聚簇索引（se
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-ga('create', 'UA-119892182-1', 'auto');
+ga('create', 'UA-159911678-1', 'auto');
 ga('send', 'pageview');
 
 </script>
@@ -451,6 +483,79 @@ ga('send', 'pageview');
         s.parentNode.insertBefore(bp, s);
     })();
 </script>
+
+
+
+    <div class="waifu">
+        <div class="waifu-tips"></div>
+        <canvas id="live2d" class="live2d"></canvas>
+        <div class="waifu-tool">
+            <span class="fui-home"></span>
+            <span class="fui-chat"></span>
+            <span class="fui-eye"></span>
+            <span class="fui-user"></span>
+            <span class="fui-photo"></span>
+            <span class="fui-info-circle"></span>
+            <span class="fui-cross"></span>
+        </div>
+    </div>
+
+    <script src="https://nicky-chin.cn/assets/waifu-tips.min.js?v=1.4.2"></script>
+    <script src="https://nicky-chin.cn/assets/live2d.min.js?v=1.0.5"></script>
+    <script type="text/javascript">
+        
+        live2d_settings['showToolMenu'] = true;         
+        live2d_settings['canCloseLive2d'] = true;         
+        live2d_settings['canSwitchModel'] = true;         
+        live2d_settings['canSwitchTextures'] = true;         
+        live2d_settings['canSwitchHitokoto'] = true;         
+        live2d_settings['canTakeScreenshot'] = true;         
+        live2d_settings['canTurnToHomePage'] = true;         
+        live2d_settings['canTurnToAboutPage'] = true;         
+
+
+        
+        live2d_settings['waifuSize']            = '280x250';    
+        live2d_settings['waifuTipsSize']        = '250x70';     
+        live2d_settings['waifuFontSize']        = '12px';       
+        live2d_settings['waifuToolFont']        = '14px';       
+        live2d_settings['waifuToolLine']        = '20px';       
+        live2d_settings['waifuToolTop']         = '0px';        
+        live2d_settings['waifuMinWidth']        = '768px';      
+        live2d_settings['waifuEdgeSide']        = 'right:30';     
+        live2d_settings['waifuDraggable']       = 'axis-x';    
+        live2d_settings['waifuDraggableRevert'] = true;         
+
+        
+        live2d_settings['modelId']              = 1;            
+        live2d_settings['modelTexturesId'] = 87;         
+        live2d_settings['modelStorage'] = false;         
+        live2d_settings['canCloseLive2d'] = false;       
+        live2d_settings['canTurnToHomePage'] = false;    
+
+        
+        live2d_settings['modelStorage']         = true;         
+        live2d_settings['modelRandMode']        = 'switch';     
+        live2d_settings['modelTexturesRandMode']= 'rand';       
+
+
+        
+        live2d_settings['showHitokoto']         = true;         
+        live2d_settings['showF12Status']        = true;         
+        live2d_settings['showF12Message']       = false;        
+        live2d_settings['showF12OpenMsg']       = true;         
+        live2d_settings['showCopyMessage']      = true;         
+        live2d_settings['showWelcomeMessage']   = true;         
+
+        
+        live2d_settings['homePageUrl']          = 'auto';       
+        live2d_settings['aboutPageUrl']         = 'https://nicky-chin.cn/2017/02/19/info/';   
+        live2d_settings['screenshotCaptureName']= '看板娘.png'; 
+
+
+         
+        initModel("/assets/waifu-tips.json?v=1.4.2")
+    </script>
 
 </div>
 </body>

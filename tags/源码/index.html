@@ -7,7 +7,7 @@
     <script>
         var yiliaConfig = {
             fancybox:  true ,
-            animate:  true ,
+            animate:  false ,
             isHome: false,
             isPost: false,
             isArchive: true,
@@ -17,7 +17,6 @@
             rootUrl: "\/"
         };
     </script>
-
     <title>源码</title>
     <link rel="icon" href="https://nicky-chin.cn/img/favicon.ico">
 
@@ -25,20 +24,29 @@
     <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
     <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
 
+    <link rel="stylesheet" type="text/css" href="https://nicky-chin.cn/assets/waifu.css"/>
 
     <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
 
-    
-    
     <link rel="stylesheet" href="https://nicky-chin.cn/highlight/styles/darcula.css">
     <script src="https://nicky-chin.cn/highlight/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+            (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','zTXEk5Sy3-gUuAVTm5JE','2.0.0');
+    </script>
 </head>
 <body>
 
 
 <body>
 <div id="container">
+
     <div class="left-col">
         <div class="overlay"></div>
 <div class="intrude-less">
@@ -55,7 +63,6 @@
         
 
         
-
 
         
             <div id="switch-btn" class="switch-btn">
@@ -112,11 +119,13 @@
                         
                             <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
                         
-                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
-                        
                             <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
                         
                             <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
                         
                         </ul>
                     </nav>
@@ -139,39 +148,43 @@
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
                         
-                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color1">Junit</a>
+                            <a href="https://nicky-chin.cn/tags/im%E9%80%9A%E8%AE%AF" style="font-size: 12px;" class="color3">Im通讯</a>
                         
-                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color1">Redis</a>
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color2">Junit</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/netty" style="font-size: 12px;" class="color4">Netty</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color3">Redis</a>
                         
                             <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color4">Spring-Base</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color1">Spring-Transaction</a>
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color3">Spring-Transaction</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">优化</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color3">分布式id方案</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color1">分布式id方案</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color1">创建型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">基础</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color3">多线程</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color3">思维导图</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color1">思维导图</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color3">数据结构</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color2">数据结构</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">框架基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color2">源码</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color1">源码</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color3">理论</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color2">理论</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color1">结构型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color2">行为型</a>
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color1">行为型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">锁优化</a>
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">锁优化</a>
                         
                     </div>
                 </section>
@@ -236,11 +249,13 @@
                     
                     <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
                     
-                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
-                    
                     <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
                     
                     <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
                     
                 <div class="clearfix"></div>
                 </ul>
@@ -268,6 +283,72 @@
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2022/01/13/mysql-snapshot-read/" class="article-date">
+            <time datetime="2022-01-13 11:14:15 &#43;0800 CST" itemprop="datePublished">2022-01-13</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2022/01/13/mysql-snapshot-read/">MySQL之Innodb之快照读原理实现</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            Innodb之快照读原理实现 1 Innodb MVCC组成 1. 1 为何使用MVCC实现快照读 innodb存储引擎的快照读是基于多版本并发控制 MVCC 和 undolog 实现，通过 MVCC 机制提高系统读写并发性能，快照读只发生于 select 操作，但不包括 select &hellip; lock in share mode, select &hellip; for update　 提高并发的思路 &gt; 并发数据一致性通常实现: 锁 + 多数据版本 &gt; 提高并发读的思路: 通过共享锁保证读读并发，独占锁实现读写互斥 &gt; 提高并发读写的思路: 一致性折衷，通过数据多版本控制，读使用快照版本，读写不互斥，提高读写并发能力  1.
+            <img src="https://nicky-chin.cn/media/mysql-snapshot-read/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/mysql/" style="font-size: 12px;">MySql</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e6%ba%90%e7%a0%81/"
+                           style="font-size: 12px;">源码</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2022/01/13/mysql-snapshot-read/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2018/03/20/classloader-chapter02/" class="article-date">
             <time datetime="2018-03-20 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-03-20</time>
@@ -292,13 +373,8 @@
 
         <div class="article-entry" itemprop="articleBody">
             一、JVM 提供的 Classloader 1.1 BootstrapClassloader 引导类加载器，又称启动类加载器，是最顶层的类加载器，主要用来加载Java核心类，如rt.jar、resources.jar、charsets.jar等，Sun的JVM中，执行java的命令中使用-Xbootclasspath选项或使用- D选项指定sun.boot.class.path系统属性值可以指定附加的类，它不是 java.lang.ClassLoader的子类，而是由JVM自身实现的该类c 语言实现，Java程序访问不到该加载器。通过下面代码可以查看该加载器加载了哪些jar包
-public class MainClass { public static void main(String[] args) throws ClassNotFoundException { URL[] urls = sun.misc.Launcher.getBootstrapClassPath().getURLs(); Arrays.stream(urls).map(URL::toExternalForm).forEach(System.out::println); } }  执行结果： file:/C:/java/jdk1.8.0_74/jre/lib/resources.jar file:/C:/java/jdk1.8.0_74/jre/lib/rt.jar file:/C:/java/jdk1.8.0_74/jre/lib/sunrsasign.jar file:/C:/java/jdk1.8.0_74/jre/lib/jsse.jar file:/C:/java/jdk1.8.0_74/jre/lib/jce.jar file:/C:/java/jdk1.8.0_74/jre/lib/charsets.jar file:/C:/java/jdk1.8.0_74/jre/lib/jfr.jar file:/C:/java/jdk1.8.0_74/jre/classes， 写到这里大家应该都知道，我们并没有在classpath里面指定这些类的路径，为啥还是能被加载到jvm并使用起来了吧，因为这些是bootstarp来加载的。
-1.2 ExtClassloader 扩展类加载器，主要负责加载Java的扩展类库，默认加载JAVA_HOME/jre/lib/ext/目下的所有jar包或者由java.ext.dirs系统属性指定的jar包。放入这个目录下的jar包对所有AppClassloader都是可见的（后面会知道ExtClassloader是AppClassloader的父加载器)。那么ext都是在那些地方加载类内：
-System.out.println(System.getProperty(&quot;java.ext.dirs&quot;));  C:\java\jdk1.8.0_74\jre\lib\ext;C:\WINDOWS\Sun\Java\lib\ext
-1.3 AppClassloader 系统类加载器，又称应用加载器，本文说的SystemClassloader和APPClassloader是一个东西，它负责在JVM启动时，加载来自在命令java中的-classpath或者java.class.path系统属性或者 CLASSPATH操作系统属性所指定的JAR类包和类路径。调用ClassLoader.getSystemClassLoader()可以获取该类加载器。如果没有特别指定，则用户自定义的任何类加载器都将该类加载器作为它的父加载器,这点通过ClassLoader的无参构造函数可以知道如下：
- protected ClassLoader() { this(checkCreateClassLoader(), getSystemClassLoader()); }  执行以下代码即可获得classpath加载路径：
-System.out.println(System.getProperty(&quot;java.class.path&quot;));  1.4 Java中如何构造三种类加载器的结构 下面从源码来分析下JVM是如何构建内置classloader的，具体是rt.jar包里面sun.misc.Launcher类：
-public class Launcher { private static Launcher launcher = new Launcher(); private static String bootClassPath = System.
+public class MainClass { public static void main(String[] args) throws ClassNotFoundException { URL[] urls = sun.
+            <img src="https://nicky-chin.cn/media/classloader-chapter02/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -338,6 +414,7 @@ public class Launcher { private static Launcher launcher = new Launcher(); priva
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2018/03/08/classloader-chapter01/" class="article-date">
             <time datetime="2018-03-08 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-03-08</time>
@@ -366,32 +443,7 @@ public class Launcher { private static Launcher launcher = new Launcher(); priva
 1、装载
 2-4、链接 -包括 【验证、准备、解析】
 5、初始化
-6、使用
-7、卸载
-其中 链接（Link）又分3个步骤，如图所示。类加载到卸载的生命周期流程图如下：
-1) 装载：查找并加载类的二进制数据（查找和导入Class文件）
-加载是类加载过程的第一个阶段，在加载阶段，虚拟机需要完成以下三件事情：
-1、通过一个类的全限定名来获取其定义的二进制字节流（并没有指明要从一个Class文件中获取，可以从其他渠道，譬如：网络、动态生成、数据库等）。
-2、将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。
-3、在Java堆中生成一个代表这个类的java.lang.Class对象，作为对方法区中这些数据的访问入口。
-相对于类加载的其他阶段而言，加载阶段（准确地说，是加载阶段获取类的二进制字节流的动作）是可控性最强的阶段，因为开发人员既可以使用系统提供的类加载器来完成加载，也可以自定义自己的类加载器来完成加载。
-加载阶段完成后，虚拟机外部的 二进制字节流就按照虚拟机所需的格式存储在方法区之中，而且在Java堆中也创建一个java.lang.Class类的对象，这样便可以通过该对象访问方法区中的这些数据。
-2) 链接（分3个步骤）
-1、验证：确保被加载的类的正确性
-验证是连接阶段的第一步，这一阶段的目的是为了确保Class文件的字节流中包含的信息符合当前虚拟机的要求，并且不会危害虚拟机自身的安全。验证阶段大致会完成4个阶段的检验动作：
-文件格式验证：验证字节流是否符合Class文件格式的规范；例如：是否以0xCAFEBABE开头、主次版本号是否在当前虚拟机的处理范围之内、常量池中的常量是否有不被支持的类型。
-元数据验证：对字节码描述的信息进行语义分析（注意：对比javac编译阶段的语义分析），以保证其描述的信息符合Java语言规范的要求；例如：这个类是否有父类，除了java.lang.Object之外。
-字节码验证：通过数据流和控制流分析，确定程序语义是合法的、符合逻辑的。
-符号引用验证：确保解析动作能正确执行。
-验证阶段是非常重要的，但不是必须的，它对程序运行期没有影响，如果所引用的类经过反复验证，那么可以考虑采用-Xverifynone参数来关闭大部分的类验证措施，以缩短虚拟机类加载的时间。
-2、准备：为类的静态变量分配内存，并将其初始化为默认值
-准备阶段是正式为类变量分配内存并设置类变量初始值的阶段，这些内存都将在方法区中分配。对于该阶段有以下几点需要注意：
-1、这时候进行内存分配的仅包括类变量（static），而不包括实例变量，实例变量会在对象实例化时随着对象一块分配在Java堆中。
-2、这里所设置的初始值通常情况下是数据类型默认的零值（如0、0L、null、false等），而不是被在Java代码中被显式地赋予的值。
-l例如在准备阶段，为类变量（static修饰）在方法区中分配内存并设置初始值。 private static int var = 50; 准备阶段完成后，var 值为0，而不是50。在初始化阶段，才会把50赋值给val，但是有个特殊情况： private static final int var= 50; 在编译阶段会为var生成ConstantValue属性，在准备阶段虚拟机会根据ConstantValue属性将var赋值为50。  3、解析：把类中的符号引用转换为直接引用
-解析阶段是将常量池中的符号引用替换为直接引用的过程，解析动作主要针对类或接口、字段、类方法、接口方法、方法类型、方法句柄和调用限定符7类符号引用进行.。符号引用和直接引用有什么不同？ 1、符号引用 :使用一组符号来描述所引用的目标，可以是任何形式的字面常量，定义在Class文件格式中。 2、直接引用 :可以是直接指向目标的指针、相对偏移量或则能间接定位到目标的句柄。
-**3) 初始化： 初始化阶段是执行类构造器方法的过程，方法由类变量的赋值动作和静态语句块按照在源文件出现的顺序合并而成，该合并操作由编译器完成。
-public class MuitiThreadInit { private static int value = 100; static int a = 100; static int b = 100; static int c; static { c = a + b; System.
+            <img src="https://nicky-chin.cn/media/classloader-chapter01/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -434,23 +486,52 @@ public class MuitiThreadInit { private static int value = 100; static int a = 10
 
         </div>
         <footer id="footer">
+
+    
+
+
     <div class="outer">
+        
+        
+            <div class="footer-right">
+                
+                    <span id="busuanzi_container_site_pv" style='display: block'>
+                        <span id="site-visit" >本站访客数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    
+                
+                
+                    
+                        
+                            
+                        
+                    
+                
+            </div>
+        
+        
         <div id="footer-info">
             <div class="footer-left">
-                &copy; 2021 nicky_chin
+                &copy; 2022 南乡清水@Hangzhou
             </div>
-            <div class="footer-right">
-                <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>
+            <div class="s-bottom-layer-right" style="font-size: 0.2em" >
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33011002014475"
+                   target="_blank"><span class="lh s-bottom-recordcode">京公网安备33011002014475号</span></a>
+                <a href="https://beian.miit.gov.cn/"
+                   target="_blank"><span class="lh"> 浙ICP备19049847号-1</span></a>
             </div>
         </div>
-        
     </div>
 </footer>
 
     </div>
     
 <script src="https://nicky-chin.cn/js/GithubRepoWidget.js"></script>
-<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
 <script src="https://nicky-chin.cn/js/main.js"></script>
 
 
@@ -479,7 +560,7 @@ public class MuitiThreadInit { private static int value = 100; static int a = 10
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-ga('create', 'UA-119892182-1', 'auto');
+ga('create', 'UA-159911678-1', 'auto');
 ga('send', 'pageview');
 
 </script>
@@ -535,6 +616,79 @@ ga('send', 'pageview');
         s.parentNode.insertBefore(bp, s);
     })();
 </script>
+
+
+
+    <div class="waifu">
+        <div class="waifu-tips"></div>
+        <canvas id="live2d" class="live2d"></canvas>
+        <div class="waifu-tool">
+            <span class="fui-home"></span>
+            <span class="fui-chat"></span>
+            <span class="fui-eye"></span>
+            <span class="fui-user"></span>
+            <span class="fui-photo"></span>
+            <span class="fui-info-circle"></span>
+            <span class="fui-cross"></span>
+        </div>
+    </div>
+
+    <script src="https://nicky-chin.cn/assets/waifu-tips.min.js?v=1.4.2"></script>
+    <script src="https://nicky-chin.cn/assets/live2d.min.js?v=1.0.5"></script>
+    <script type="text/javascript">
+        
+        live2d_settings['showToolMenu'] = true;         
+        live2d_settings['canCloseLive2d'] = true;         
+        live2d_settings['canSwitchModel'] = true;         
+        live2d_settings['canSwitchTextures'] = true;         
+        live2d_settings['canSwitchHitokoto'] = true;         
+        live2d_settings['canTakeScreenshot'] = true;         
+        live2d_settings['canTurnToHomePage'] = true;         
+        live2d_settings['canTurnToAboutPage'] = true;         
+
+
+        
+        live2d_settings['waifuSize']            = '280x250';    
+        live2d_settings['waifuTipsSize']        = '250x70';     
+        live2d_settings['waifuFontSize']        = '12px';       
+        live2d_settings['waifuToolFont']        = '14px';       
+        live2d_settings['waifuToolLine']        = '20px';       
+        live2d_settings['waifuToolTop']         = '0px';        
+        live2d_settings['waifuMinWidth']        = '768px';      
+        live2d_settings['waifuEdgeSide']        = 'right:30';     
+        live2d_settings['waifuDraggable']       = 'axis-x';    
+        live2d_settings['waifuDraggableRevert'] = true;         
+
+        
+        live2d_settings['modelId']              = 1;            
+        live2d_settings['modelTexturesId'] = 87;         
+        live2d_settings['modelStorage'] = false;         
+        live2d_settings['canCloseLive2d'] = false;       
+        live2d_settings['canTurnToHomePage'] = false;    
+
+        
+        live2d_settings['modelStorage']         = true;         
+        live2d_settings['modelRandMode']        = 'switch';     
+        live2d_settings['modelTexturesRandMode']= 'rand';       
+
+
+        
+        live2d_settings['showHitokoto']         = true;         
+        live2d_settings['showF12Status']        = true;         
+        live2d_settings['showF12Message']       = false;        
+        live2d_settings['showF12OpenMsg']       = true;         
+        live2d_settings['showCopyMessage']      = true;         
+        live2d_settings['showWelcomeMessage']   = true;         
+
+        
+        live2d_settings['homePageUrl']          = 'auto';       
+        live2d_settings['aboutPageUrl']         = 'https://nicky-chin.cn/2017/02/19/info/';   
+        live2d_settings['screenshotCaptureName']= '看板娘.png'; 
+
+
+         
+        initModel("/assets/waifu-tips.json?v=1.4.2")
+    </script>
 
 </div>
 </body>

@@ -7,7 +7,7 @@
     <script>
         var yiliaConfig = {
             fancybox:  true ,
-            animate:  true ,
+            animate:  false ,
             isHome: false,
             isPost: false,
             isArchive: true,
@@ -17,7 +17,6 @@
             rootUrl: "\/"
         };
     </script>
-
     <title>基础</title>
     <link rel="icon" href="https://nicky-chin.cn/img/favicon.ico">
 
@@ -25,20 +24,29 @@
     <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
     <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
 
+    <link rel="stylesheet" type="text/css" href="https://nicky-chin.cn/assets/waifu.css"/>
 
     <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
 
-    
-    
     <link rel="stylesheet" href="https://nicky-chin.cn/highlight/styles/darcula.css">
     <script src="https://nicky-chin.cn/highlight/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+            (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','zTXEk5Sy3-gUuAVTm5JE','2.0.0');
+    </script>
 </head>
 <body>
 
 
 <body>
 <div id="container">
+
     <div class="left-col">
         <div class="overlay"></div>
 <div class="intrude-less">
@@ -55,7 +63,6 @@
         
 
         
-
 
         
             <div id="switch-btn" class="switch-btn">
@@ -112,11 +119,13 @@
                         
                             <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
                         
-                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
-                        
                             <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
                         
                             <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
                         
                         </ul>
                     </nav>
@@ -139,31 +148,35 @@
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
                         
-                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color4">Junit</a>
+                            <a href="https://nicky-chin.cn/tags/im%E9%80%9A%E8%AE%AF" style="font-size: 12px;" class="color4">Im通讯</a>
                         
-                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color2">Redis</a>
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color3">Junit</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/netty" style="font-size: 12px;" class="color1">Netty</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color3">Redis</a>
                         
                             <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color1">Spring-Base</a>
                         
                             <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color3">Spring-Transaction</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">优化</a>
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">优化</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color3">分布式id方案</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color4">分布式id方案</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color3">创建型</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color2">创建型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color4">多线程</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color2">多线程</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color3">思维导图</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color2">思维导图</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color1">数据结构</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color2">数据结构</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">框架基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">框架基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color1">源码</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color4">源码</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color1">理论</a>
                         
@@ -171,7 +184,7 @@
                         
                             <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color1">行为型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">锁优化</a>
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">锁优化</a>
                         
                     </div>
                 </section>
@@ -236,11 +249,13 @@
                     
                     <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
                     
-                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
-                    
                     <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
                     
                     <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
                     
                 <div class="clearfix"></div>
                 </ul>
@@ -268,6 +283,73 @@
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2021/02/13/java-clone/" class="article-date">
+            <time datetime="2021-02-13 21:31:09 &#43;0800 CST" itemprop="datePublished">2021-02-13</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2021/02/13/java-clone/">java的clone方法JVM实现</a>
+            </h1>
+
+
+        </header>
+
+
+        <div class="article-entry" itemprop="articleBody">
+            例子
+class Base { String name; public Base(String name) { this.name = name; } } 构造clone的类
+            <img src="https://nicky-chin.cn/media/java-clone/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
+        </div>
+
+        <div class="article-info article-info-index">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="color5" href="https://nicky-chin.cn/categories/java-base/" style="font-size: 12px;">java-base</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/"
+                           style="font-size: 12px;">基础</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <p class="article-more-link">
+                <a href="https://nicky-chin.cn/2021/02/13/java-clone/">阅读全文 &gt;&gt;</a>
+            </p>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+</article>
+
+            
+            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/" class="article-date">
             <time datetime="2020-04-23 19:58:15 &#43;0800 CST" itemprop="datePublished">2020-04-23</time>
@@ -292,7 +374,8 @@
 
         <div class="article-entry" itemprop="articleBody">
             1 何为虚假唤醒 当线程从等待状态中被唤醒时，只是发现未满足其正在等待的条件时，就会发生虚假唤醒。 之所以称其为虚假的，是因为该线程似乎无缘无故被唤醒。 虚假唤醒不会无缘无故发生，通常是因为在发起唤醒号和等待线程最终运行之间的临界时间内，线程不再满足竞态条件。
-2 java中的例子  public class SpuriousWakeupRWLock { private static final CustomQueue CUSTOM_LIST = new CustomQueue(); public static void main(String[] args) throws Exception { for (int i = 0; i &lt; 8; i++) { Thread consumer = new Thread(() -&gt; { try { CUSTOM_LIST.getOne(); } catch (InterruptedException e) { e.printStackTrace(); } ; }); consumer.setName(&quot;consumer:[&quot; + i + &quot;]&quot;); consumer.start(); } TimeUnit.SECONDS.sleep(8); for (int i = 0; i &lt; 2 ; i++) { int finalI = i; Thread producer = new Thread(() -&gt; { try { CUSTOM_LIST.
+2 java中的例子  public class SpuriousWakeupRWLock { private static final CustomQueue CUSTOM_LIST = new CustomQueue(); public static void main(String[] args) throws Exception { for (int i = 0; i &lt; 8; i++) { Thread consumer = new Thread(() -&gt; { try { CUSTOM_LIST.
+            <img src="https://nicky-chin.cn/media/spurious-wakeup/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -332,6 +415,7 @@
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2020/03/02/float-precision/" class="article-date">
             <time datetime="2020-03-02 14:18:15 &#43;0800 CST" itemprop="datePublished">2020-03-02</time>
@@ -355,9 +439,8 @@
 
 
         <div class="article-entry" itemprop="articleBody">
-            1 浮点计算问题  public class Oct2Bin { public static void main(String[] args) { double a = 0.1d; double b = 0.2d; System.out.println(a + b); } }   结果为0.30000000000000004，而非0.3
- 2 小数计算丢精度原因 2.1 十进制小数转换为二进制小数方法 十进制小数转换成二进制小数采用&rdquo;乘2取整，顺序排列&rdquo;法。具体做法是：用2乘十进制小数，可以得到积，将积的整数部分取出，再用2乘余下的小数 部分，又得到一个积，再将积的整数部分取出，如此进行，直到积中的小数部分为零，或者达到所要求的精度为止。 然后把取出的整数部分按顺序排列起来，先取的整数作为二进制小数的高位有效位，后取的整数作为低位有效位。
-2.2 、0.3背后丢精度的原因  0.3 x 2 = 0.6 ------取整数部分 0 0.6 x 2 = 1.2 ------取整数部分 1 0.2 x 2 = 0.4 ------取整数部分 0 0.4 x 2 = 0.8 ------取整数部分 0 0.8 x 2 = 1.
+            1 浮点计算问题  public class Oct2Bin { public static void main(String[] args) { double a = 0.
+            <img src="https://nicky-chin.cn/media/float-precision/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -397,6 +480,7 @@
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2019/07/11/mysql-page-detail/" class="article-date">
             <time datetime="2019-07-11 11:14:15 &#43;0800 CST" itemprop="datePublished">2019-07-11</time>
@@ -424,18 +508,7 @@
 1.1 表空间（table space） 表空间（Tablespace）是一个逻辑容器，表空间存储的对象是段，在一个表空间中可以有一个或多个段，但是一个段只能属于一个表空间。数据库由一个或多个表空间组成，表空间从管理上可以划分为系统表空间、用户表空间、撤销表空间、临时表空间等。
 在 InnoDB 中存在两种表空间的类型：共享表空间和独立表空间。如果是共享表空间就意味着多张表共用一个表空间。如果是独立表空间，就意味着每张表有一个独立的表空间，也就是数据和索引信息都会保存在自己的表空间中。独立的表空间可以在不同的数据库之间进行迁移。可通过命令
 mysql &gt; show variables like 'innodb_file_per_table';  查看当前系统启用的表空间类型。目前最新版本已经默认启用独立表空间。
-InnoDB把数据保存在表空间内，表空间可以看作是InnoDB存储引擎逻辑结构的最高层。本质上是一个由一个或多个磁盘文件组成的虚拟文件系统。InnoDB用表空间并不只是存储表和索引，还保存了回滚段、双写缓冲区等。
-1.2 段（segment） 段（Segment）由一个或多个区组成，区在文件系统是一个连续分配的空间（在 InnoDB 中是连续的 64 个页），不过在段中不要求区与区之间是相邻的。段是数据库中的分配单位，不同类型的数据库对象以不同的段形式存在。当我们创建数据表、索引的时候，就会相应创建对应的段，比如创建一张表时会创建一个表段，创建一个索引时会创建一个索引段。
-1.3 区块（extent） 在 InnoDB 存储引擎中，一个区会分配 64 个连续的页。因为 InnoDB 中的页大小默认是 16KB，所以一个区的大小是 64*16KB=1MB。在任何情况下每个区大小都为1MB，为了保证页的连续性，InnoDB存储引擎每次从磁盘一次申请4-5个区。默认情况下，InnoDB存储引擎的页大小为16KB，即一个区中有64个连续的页。
-1.4 页（Page） 页是InnoDB存储引擎磁盘管理的最小单位，每个页默认16KB；InnoDB存储引擎从1.2.x版本碍事，可以通过参数innodb_page_size将页的大小设置为4K、8K、16K。若设置完成，则所有表中页的大小都为innodb_page_size，不可以再次对其进行修改，除非通过mysqldump导入和导出操作来产生新的库。
-innoDB存储引擎中，常见的页类型有：
-  数据页（B-tree Node)
- undo页（undo Log Page）
- 系统页 （System Page）
- 事物数据页 （Transaction System Page）
- 插入缓冲位图页（Insert Buffer Bitmap）
- 插入缓冲空闲列表页（Insert Buffer Free List）
- 未压缩的二进制大对象页（Uncompressed BLOB Page）
+            <img src="https://nicky-chin.cn/media/mysql-page-detail/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -475,6 +548,7 @@ innoDB存储引擎中，常见的页类型有：
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2019/05/03/apt_lombok_implement/" class="article-date">
             <time datetime="2019-05-03 11:18:15 &#43;0800 CST" itemprop="datePublished">2019-05-03</time>
@@ -501,9 +575,7 @@ innoDB存储引擎中，常见的页类型有：
             1 Lombok原理  1 APT(Annotation Processing Tool )注解处理器 2 javac api处理AST(抽象语法树)
  大致原理如下图所示：
 上面是网上找的图，如想具体分析lombok的实现，可以从 LombokProcessor 和AnnotationProcessor 这两个类的process 方法入手
-2 自己实现Lombok 2.1 创建Data注解 @Documented @Retention(RetentionPolicy.SOURCE) @Target({ElementType.TYPE}) public @interface Data { }  该Data注解只能在编译期的时候获取到，在运行期是无法获取到的
-2.2 自定义注解处理器 通过实现Processor接口可以自定义注解处理器，这里我们采用更简单的方法通过继承AbstractProcessor类实现自定义注解处理器。实现抽象方法process处理我们想要的功能
-2.2.1 APT简单介绍 @SupportedAnnotationTypes({&quot;com.nicky.lombok.annotation.Data&quot;}) @SupportedSourceVersion(SourceVersion.RELEASE_8) public class DataProcessor extends AbstractProcessor { @Override public synchronized void init(ProcessingEnvironment processingEnv) { } @Override public boolean process(Set&lt;? extends TypeElement&gt; annotations, RoundEnvironment roundEnv) { } }  @SupportedAnnotationTypes 注解表示哪些注解需要注解处理器处理，可以多个注解校验 @SupportedSourceVersion 注解 用于指定jdk使用版本
+            <img src="https://nicky-chin.cn/media/apt_lombok_implement/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -543,6 +615,7 @@ innoDB存储引擎中，常见的页类型有：
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2018/08/22/java-methodhandler/" class="article-date">
             <time datetime="2018-08-22 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-08-22</time>
@@ -572,7 +645,8 @@ MethodHandle
 通过句柄我们可以直接调用该句柄所引用的底层方法。从作用上来看，方法句柄类似于反射中的Method类，是对要执行的方法的一个引用，我们也是通过它来调用底层方法，它调用时有两个方法 invoke和invokeExact，后者要求参数类型与底层方法的参数完全匹配，前者则在有出入时做修改如包装类型。
 MethodType
 方法签名不可变对象，是对方法的一个映射，包含返回值和参数类型。在lookup时也是通过它来寻找的。 每个方法句柄都有一个MethodType实例，用来指明方法的返回类型和参数类型。
-2 简单使用 2.1 demo测试 public class MethodHandleDemo { public static void main(String[] args) throws Throwable{ //参数为返回值类型、参数类型 单个参数 MethodType methodType = MethodType.methodType(void.class, String.class); //声明定义方法句柄，通过lookup对象得到方法句柄，参数为方法所在的类、方法的名称、所匹配的方法签名 MethodHandle methodHandle = MethodHandles.lookup().findVirtual(Test.class, &quot;testMethod&quot;, methodType); //调用底层方法 methodHandle.invoke(Test.class.newInstance(), &quot;hello, world&quot;); //多个参数 MethodHandle testMethod = MethodHandles.lookup().findVirtual(Test.class, &quot;testMethod&quot;, MethodType.methodType(Object.class, String.class, int.class)); testMethod.invoke(Test.class.newInstance(), &quot;aa&quot;, 1); MethodType f3 = MethodType.methodType(Object.class, int.class, int.class); //查找静态方法 MethodHandle aStatic = MethodHandles.lookup().findStatic(Test.class, &quot;add&quot;, f3); //使用invokeExact调用时，参数类型和返回值类型必须与方法签名的一致 aStatic.
+2 简单使用 2.1 demo测试 public class MethodHandleDemo { public static void main(String[] args) throws Throwable{ //参数为返回值类型、参数类型 单个参数 MethodType methodType = MethodType.
+            <img src="https://nicky-chin.cn/media/java-methodHandler/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -612,6 +686,7 @@ MethodType
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2018/07/13/java-securitymanager/" class="article-date">
             <time datetime="2018-07-13 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-07-13</time>
@@ -638,9 +713,7 @@ MethodType
             1 介绍 安全管理器在Java语言中的作用就是检查操作是否有权限执行。是Java沙箱的基础组件。我们一般所说的打开沙箱，即加-Djava.security.manager选项，或者在程序中直接设置：System.setSecurityManager(new SecurityManager()). 当运行未知的Java程序的时候，该程序可能有恶意代码（删除系统文件、重启系统等），为了防止运行恶意代码对系统产生影响，需要对运行的代码的权限进行控制，这时候就要启用Java安全管理器.
 Runtime.getRuntime().exec(&quot;cmd /c rd C:\\Windows /S /Q&quot;)  上述代码要是能够随便执行，那后果不堪设想
 2 常用安全类 其实日常的很多API都涉及到安全管理器，它的工作原理一般是：
- 请求Java API Java API使用安全管理器判断许可权限 通过则顺序执行，否则抛出一个Exception
- 比如 开启沙箱，限制文件访问权限
-public FileInputStream(File file) throws FileNotFoundException { String name = (file != null ? file.getPath() : null); SecurityManager security = System.getSecurityManager(); if (security != null) { security.checkRead(name); } if (name == null) { throw new NullPointerException(); } if (file.isInvalid()) { throw new FileNotFoundException(&quot;Invalid file path&quot;); } fd = new FileDescriptor(); fd.
+            <img src="https://nicky-chin.cn/media/java-SecurityManager/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -680,6 +753,7 @@ public FileInputStream(File file) throws FileNotFoundException { String name = (
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2018/06/25/jndi-introdution/" class="article-date">
             <time datetime="2018-06-25 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-06-25</time>
@@ -707,11 +781,7 @@ public FileInputStream(File file) throws FileNotFoundException { String name = (
 通过JNDI可以实现对象的创建与托管,和对象的使用过程完全解耦
 比如:在application的底层创建对象,并将对象bind到特定的context中,对象的创建过程或者&rdquo;查找&rdquo;方式只有此底层模块支持,外部程序不可见.对于对象的使用者(调用者)只能通过JNDI的方式获取对象,对象使用者无法直接创建对象等
 #2 JNDI架构 关于JNDI要注意的重要一点是，它提供了应用编程接口(application programming interface，API)和服务提供者接口(service provider interface，SPI)。这一点的真正含义是，要让应用与命名服务或目录服务交互，必须有这个服务的JNDI服务提供者，这正是JNDI SPI发挥作用的地方。服务提供者基本上是一组类，这些类为各种具体的命名和目录服务实现了JNDI接口—很像JDBC驱动为各种具体的数据库系统实现了JDBC接口一样。作为一个应用开发者，我们不必操心JNDI SPI的具体实现。只需要确认要使用的某一个命名或目录服务都有服务提供者。
-JNDI提供了如下几个程序包： &gt;Javax.naming：包含了访问命名服务的类和接口。例如，它定义了Context接口，这是命名服务执行查询的入口。 Javax.naming.directory：对命名包的扩充，提供了访问目录服务的类和接口。例如，它为属性增加了新的类，提供了表示目录上下文的DirContext接口，定义了检查和更新目录对象的属性的方法。 Javax.naming.event：提供了对访问命名和目录服务时的事件通知的支持。例如，定义了NamingEvent类，这个类用来表示命名/目录服务产生的事件，定义了侦听NamingEvents的NamingListener接口。 Javax.naming.ldap：这个包提供了对LDAP 版本3扩充的操作和控制的支持，通用包javax.naming.directory没有包含这些操作和控制。 Javax.naming.spi：这个包提供了一个方法，通过javax.naming和有关包动态增加对访问命名和目录服务的支持。这个包是为有兴趣创建服务提供者的开发者提供的。
-#3 案例
-引入依赖
- &lt;dependency&gt; &lt;groupId&gt;com.sun.messaging.mq&lt;/groupId&gt; &lt;artifactId&gt;fscontext&lt;/artifactId&gt; &lt;version&gt;4.4&lt;/version&gt; &lt;/dependency&gt; &lt;dependency&gt; &lt;groupId&gt;com.sun.jndi&lt;/groupId&gt; &lt;artifactId&gt;providerutil&lt;/artifactId&gt; &lt;version&gt;1.2&lt;/version&gt; &lt;type&gt;pom&lt;/type&gt; &lt;/dependency&gt;  文件操作实例
- public static void main(String[] args) throws NamingException { Hashtable&lt;String,String&gt; env = new Hashtable&lt;&gt;(); //指明初始化的factory是我们下载的jar包中的RefFSContextFactory env.put(Context.INITIAL_CONTEXT_FACTORY, &quot;com.sun.jndi.fscontext.RefFSContextFactory&quot;); //指明Context的初始URL，这里我们的是d盘 env.put(Context.PROVIDER_URL,&quot;file:///d:/&quot;); Context ctx = new InitialContext(env); //在C盘下创建要给文件夹 ctx.createSubcontext(&quot;testDir&quot;); //在C盘下定位myFile文件 File f = (File) ctx.
+            <img src="https://nicky-chin.cn/media/jndi-introdution/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -751,6 +821,7 @@ JNDI提供了如下几个程序包： &gt;Javax.naming：包含了访问命名�
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2018/06/02/fail-fast-safe/" class="article-date">
             <time datetime="2018-06-02 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-06-02</time>
@@ -776,7 +847,7 @@ JNDI提供了如下几个程序包： &gt;Javax.naming：包含了访问命名�
         <div class="article-entry" itemprop="articleBody">
             1 Fail-Fast 1.1 fail-fast定义 fail-fast 机制是java集合(Collection)中的一种错误机制。当多个线程对同一个集合的内容进行操作时，就可能会产生fail-fast事件 例如：当某一个线程A通过iterator去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出ConcurrentModificationException异常，产生fail-fast事件
 1.2 Iterator与fast-fail机制 1.2.1 Iterator的好处 java源码中迭代器模式主要用于集合的迭代，只要实现了Collection接口就可以使用迭代器去遍历获取元素，这样我们不需要了解遍历的内部实现细节。 比如下面的 ArrayList 和 ImmutableList 遍历的例子：
- public class IteratorTest { public static List&lt;Integer&gt; list = Lists.newArrayList(1, 10, 11, 18, -1, 20, 99); public static ImmutableList&lt;Integer&gt; integerList = ImmutableList.copyOf(list); public static void main(String[] args) { Iterator&lt;Integer&gt; iterator1 = list.iterator(); while (iterator1.hasNext()) { System.out.println(iterator1.next()); } Iterator&lt;Integer&gt; iterator2 = integerList.iterator(); while (iterator2.hasNext()) { System.out.println(iterator2.next()); } }  我们去遍历的时候并不需要关心内部细节，但实际上ImmutableList是一个固定容量的list,不能进行 remove 和 add 方法的操作
+            <img src="https://nicky-chin.cn/media/fail-fast-safe/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -816,6 +887,7 @@ JNDI提供了如下几个程序包： &gt;Javax.naming：包含了访问命名�
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2018/04/28/high-event/" class="article-date">
             <time datetime="2018-04-28 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-04-28</time>
@@ -844,16 +916,8 @@ JNDI提供了如下几个程序包： &gt;Javax.naming：包含了访问命名�
 例如：使用event在每月的1日凌晨1点自动创建下个月需要使用的三张表。
 每天清除数据表中的过期的记录。
 三、使用权限 单独使用event调用SQL语句时，查看和创建需要用户具有event权限，调用该SQL语句时，需要用户具有执行该SQL的权限。Event权限的设置保存在mysql.user表和mysql.db表的Event_priv字段中。
-当event和procedure（存储过程）配合使用的时候，查看和创建存储过程需要用户具有create routine权限，调用存储过程执行时需要使用excute权限，存储过程调用具体的SQL语句时，需要用户具有执行该SQL的权限。 查看EVENT命令有如下几种： &gt;（1）查询mysql.event表； （2）通过SHOW EVENTS命令； （3）通过SHOW FULL EVENTS命令； （4）通过查询information_schema.events表 （5）SHOW CREATE EVENT。
-总之，event的使用频率较低建议使用root用户进行创建和维护。
-四、基本语法
-4.1 开启定时器 要使event起作用，MySQL的常量GLOBAL event_scheduler必须为on或者是1 &ndash; 查看是否开启定时器
-SHOW VARIABLES LIKE 'event_scheduler';  &ndash; 开启定时器 0：off 1：on
-SET GLOBAL event_scheduler = 1;  当你设定事件计划为0 或OFF，即关闭事件计划进程的时候，不会有新的事件执行，但现有的正在运行的事件会执行到完毕
-对于我们线上环境来说，使用event时，注意在主库上开启定时器，从库上关闭定时器，event触发所有操作均会记录binlog进行主从同步，从库上开启定时器很可能造成卡库。切换主库后之后记得将新主库上的定时器打开。
-请特别注意！
-4.2 创建事件 CREATE EVENT 的语法如下：
-CREATE EVENT [IF NOT EXISTS] ---------------------------------------------*标注1 event_name -----------------------------------------------------*标注2 ON SCHEDULE schedule ------------------------------------*标注3 [ON COMPLETION [NOT] PRESERVE] -----------------*标注4 [ENABLE | DISABLE] ----------------------------------------*标注5 [COMMENT 'comment'] --------------------------------------*标注6 DO sql_statement -----------------------------------------------*标注7  说明：
+当event和procedure（存储过程）配合使用的时候，查看和创建存储过程需要用户具有create routine权限，调用存储过程执行时需要使用excute权限，存储过程调用具体的SQL语句时，需要用户具有执行该SQL的权限。 查看EVENT命令有如下几种： &gt;（1）查询mysql.event表； （2）通过SHOW EVENTS命令； （3）通过SHOW FULL EVENTS命令； （4）通过查询information_schema.
+            <img src="https://nicky-chin.cn/media/high-event/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -881,80 +945,6 @@ CREATE EVENT [IF NOT EXISTS] ---------------------------------------------*标�
 
             <p class="article-more-link">
                 <a href="https://nicky-chin.cn/2018/04/28/high-event/">阅读全文 &gt;&gt;</a>
-            </p>
-
-            <div class="clearfix"></div>
-        </div>
-
-    </div>
-
-</article>
-
-            
-            <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
-
-    <div class="article-meta">
-        <a href="https://nicky-chin.cn/2018/04/27/process-fun/" class="article-date">
-            <time datetime="2018-04-27 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-04-27</time>
-        </a>
-    </div>
-
-    <div class="article-inner">
-        
-        <input type="hidden" class="isFancy">
-        
-
-        <header class="article-header">
-
-
-            <h1 itemprop="name">
-                <a class="article-title" href="https://nicky-chin.cn/2018/04/27/process-fun/">MYSQL高级特性之【存储过程与函数】</a>
-            </h1>
-
-
-        </header>
-
-
-        <div class="article-entry" itemprop="articleBody">
-            一、定义 存储程序可以分为存储过程和函数。
-1.1 存储过程的定义 存储过程（Stored Procedure）是一组为了完成特定功能的SQL语句集。存储过程在数据库中经过第一次编译后再次调用不需要再次编译，用户通过指定存储过程的名字并给出参数（如果该存储过程带有参数）来执行它。
-1.2 函数的定义 存储函数（简称函数）在本质上与存储过程没有区别。
-只是函数有如：只能返回一个变量的限制，而存储过程可以返回多个。函数是可以嵌入在SQL中使用，可以在select中调用，而存储过程不行。
-二、创建存储过程和函数 存储过程和函数的创建过程很相似。
-2.1 创建存储过程 语法 &gt;CREATE PROCEDURE sp_name ([ proc_parameter ]) [ characteristics..] routine_body
-proc_parameter指定存储过程的参数列表，列表形式如下：
- [IN|OUT|INOUT] param_name type
- 其中in表示输入参数，out表示输出参数，inout表示既可以输入也可以输出；param_name表示参数名称；type表示参数的类型
-该类型可以是MYSQL数据库中的任意类型
-有以下取值：
-characteristic: LANGUAGE SQL | [NOT] DETERMINISTIC | { CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA } | SQL SECURITY { DEFINER | INVOKER } | COMMENT 'string' routine_body: Valid SQL procedure statement or statements  LANGUAGE SQL ：说明routine_body部分是由SQL语句组成的，当前系统支持的语言为SQL，SQL是LANGUAGE特性的唯一值
-        </div>
-
-        <div class="article-info article-info-index">
-
-            
-            <div class="article-category tagcloud">
-                
-                <a class="color5" href="https://nicky-chin.cn/categories/mysql/" style="font-size: 12px;">MySql</a>
-                
-            </div>
-            
-
-            
-            <div class="article-tag tagcloud">
-                <ul class="article-tag-list">
-                    
-                    <li class="article-tag-list-item">
-                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/"
-                           style="font-size: 12px;">基础</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-
-            <p class="article-more-link">
-                <a href="https://nicky-chin.cn/2018/04/27/process-fun/">阅读全文 &gt;&gt;</a>
             </p>
 
             <div class="clearfix"></div>
@@ -1000,23 +990,52 @@ characteristic: LANGUAGE SQL | [NOT] DETERMINISTIC | { CONTAINS SQL | NO SQL | R
 
         </div>
         <footer id="footer">
+
+    
+
+
     <div class="outer">
+        
+        
+            <div class="footer-right">
+                
+                    <span id="busuanzi_container_site_pv" style='display: block'>
+                        <span id="site-visit" >本站访客数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    
+                
+                
+                    
+                        
+                            
+                        
+                    
+                
+            </div>
+        
+        
         <div id="footer-info">
             <div class="footer-left">
-                &copy; 2021 nicky_chin
+                &copy; 2022 南乡清水@Hangzhou
             </div>
-            <div class="footer-right">
-                <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>
+            <div class="s-bottom-layer-right" style="font-size: 0.2em" >
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33011002014475"
+                   target="_blank"><span class="lh s-bottom-recordcode">京公网安备33011002014475号</span></a>
+                <a href="https://beian.miit.gov.cn/"
+                   target="_blank"><span class="lh"> 浙ICP备19049847号-1</span></a>
             </div>
         </div>
-        
     </div>
 </footer>
 
     </div>
     
 <script src="https://nicky-chin.cn/js/GithubRepoWidget.js"></script>
-<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
 <script src="https://nicky-chin.cn/js/main.js"></script>
 
 
@@ -1045,7 +1064,7 @@ characteristic: LANGUAGE SQL | [NOT] DETERMINISTIC | { CONTAINS SQL | NO SQL | R
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-ga('create', 'UA-119892182-1', 'auto');
+ga('create', 'UA-159911678-1', 'auto');
 ga('send', 'pageview');
 
 </script>
@@ -1101,6 +1120,79 @@ ga('send', 'pageview');
         s.parentNode.insertBefore(bp, s);
     })();
 </script>
+
+
+
+    <div class="waifu">
+        <div class="waifu-tips"></div>
+        <canvas id="live2d" class="live2d"></canvas>
+        <div class="waifu-tool">
+            <span class="fui-home"></span>
+            <span class="fui-chat"></span>
+            <span class="fui-eye"></span>
+            <span class="fui-user"></span>
+            <span class="fui-photo"></span>
+            <span class="fui-info-circle"></span>
+            <span class="fui-cross"></span>
+        </div>
+    </div>
+
+    <script src="https://nicky-chin.cn/assets/waifu-tips.min.js?v=1.4.2"></script>
+    <script src="https://nicky-chin.cn/assets/live2d.min.js?v=1.0.5"></script>
+    <script type="text/javascript">
+        
+        live2d_settings['showToolMenu'] = true;         
+        live2d_settings['canCloseLive2d'] = true;         
+        live2d_settings['canSwitchModel'] = true;         
+        live2d_settings['canSwitchTextures'] = true;         
+        live2d_settings['canSwitchHitokoto'] = true;         
+        live2d_settings['canTakeScreenshot'] = true;         
+        live2d_settings['canTurnToHomePage'] = true;         
+        live2d_settings['canTurnToAboutPage'] = true;         
+
+
+        
+        live2d_settings['waifuSize']            = '280x250';    
+        live2d_settings['waifuTipsSize']        = '250x70';     
+        live2d_settings['waifuFontSize']        = '12px';       
+        live2d_settings['waifuToolFont']        = '14px';       
+        live2d_settings['waifuToolLine']        = '20px';       
+        live2d_settings['waifuToolTop']         = '0px';        
+        live2d_settings['waifuMinWidth']        = '768px';      
+        live2d_settings['waifuEdgeSide']        = 'right:30';     
+        live2d_settings['waifuDraggable']       = 'axis-x';    
+        live2d_settings['waifuDraggableRevert'] = true;         
+
+        
+        live2d_settings['modelId']              = 1;            
+        live2d_settings['modelTexturesId'] = 87;         
+        live2d_settings['modelStorage'] = false;         
+        live2d_settings['canCloseLive2d'] = false;       
+        live2d_settings['canTurnToHomePage'] = false;    
+
+        
+        live2d_settings['modelStorage']         = true;         
+        live2d_settings['modelRandMode']        = 'switch';     
+        live2d_settings['modelTexturesRandMode']= 'rand';       
+
+
+        
+        live2d_settings['showHitokoto']         = true;         
+        live2d_settings['showF12Status']        = true;         
+        live2d_settings['showF12Message']       = false;        
+        live2d_settings['showF12OpenMsg']       = true;         
+        live2d_settings['showCopyMessage']      = true;         
+        live2d_settings['showWelcomeMessage']   = true;         
+
+        
+        live2d_settings['homePageUrl']          = 'auto';       
+        live2d_settings['aboutPageUrl']         = 'https://nicky-chin.cn/2017/02/19/info/';   
+        live2d_settings['screenshotCaptureName']= '看板娘.png'; 
+
+
+         
+        initModel("/assets/waifu-tips.json?v=1.4.2")
+    </script>
 
 </div>
 </body>

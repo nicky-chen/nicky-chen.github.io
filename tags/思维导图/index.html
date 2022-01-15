@@ -7,7 +7,7 @@
     <script>
         var yiliaConfig = {
             fancybox:  true ,
-            animate:  true ,
+            animate:  false ,
             isHome: false,
             isPost: false,
             isArchive: true,
@@ -17,7 +17,6 @@
             rootUrl: "\/"
         };
     </script>
-
     <title>思维导图</title>
     <link rel="icon" href="https://nicky-chin.cn/img/favicon.ico">
 
@@ -25,20 +24,29 @@
     <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
     <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
 
+    <link rel="stylesheet" type="text/css" href="https://nicky-chin.cn/assets/waifu.css"/>
 
     <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
 
-    
-    
     <link rel="stylesheet" href="https://nicky-chin.cn/highlight/styles/darcula.css">
     <script src="https://nicky-chin.cn/highlight/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+            (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','zTXEk5Sy3-gUuAVTm5JE','2.0.0');
+    </script>
 </head>
 <body>
 
 
 <body>
 <div id="container">
+
     <div class="left-col">
         <div class="overlay"></div>
 <div class="intrude-less">
@@ -55,7 +63,6 @@
         
 
         
-
 
         
             <div id="switch-btn" class="switch-btn">
@@ -112,11 +119,13 @@
                         
                             <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
                         
-                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
-                        
                             <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
                         
                             <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
                         
                         </ul>
                     </nav>
@@ -139,39 +148,43 @@
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
                         
-                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color3">Junit</a>
+                            <a href="https://nicky-chin.cn/tags/im%E9%80%9A%E8%AE%AF" style="font-size: 12px;" class="color3">Im通讯</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color4">Junit</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/netty" style="font-size: 12px;" class="color2">Netty</a>
                         
                             <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color4">Redis</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color1">Spring-Base</a>
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color2">Spring-Base</a>
                         
                             <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color2">Spring-Transaction</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">优化</a>
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color1">优化</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color2">分布式id方案</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color3">分布式id方案</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color2">创建型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color4">多线程</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color1">多线程</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color4">思维导图</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color1">思维导图</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color1">数据结构</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color4">数据结构</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">框架基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">框架基础</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color3">源码</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color4">理论</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color2">理论</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color4">结构型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color3">行为型</a>
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color4">行为型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">锁优化</a>
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">锁优化</a>
                         
                     </div>
                 </section>
@@ -236,11 +249,13 @@
                     
                     <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
                     
-                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
-                    
                     <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
                     
                     <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
                     
                 <div class="clearfix"></div>
                 </ul>
@@ -268,6 +283,7 @@
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2018/06/13/distribution-knowledge/" class="article-date">
             <time datetime="2018-06-13 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-06-13</time>
@@ -292,6 +308,7 @@
 
         <div class="article-entry" itemprop="articleBody">
             
+            <img src="https://nicky-chin.cn/media/distribution-knowledge/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -331,6 +348,7 @@
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2018/05/13/juc-tree-info/" class="article-date">
             <time datetime="2018-05-13 11:18:15 &#43;0800 CST" itemprop="datePublished">2018-05-13</time>
@@ -356,6 +374,7 @@
         <div class="article-entry" itemprop="articleBody">
             作为并发的基础，我们需要熟悉掌握JUC相关的知识，才能更好的在实际项目中运用， 下面是整理出来的juc思维导图：
 #系列文章 java内存模型之[JMM][重排序][happens-before] volatile关键字原理实现及应用 synchronized实现原理及锁优化 =============不定期更新============================
+            <img src="https://nicky-chin.cn/media/juc-tree-info/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -395,6 +414,7 @@
             
             <article id="post-Recycler-pbl" class="article article-type-post" itemscope="" itemprop="blogPost">
 
+
     <div class="article-meta">
         <a href="https://nicky-chin.cn/2017/06/13/optimize-picture/" class="article-date">
             <time datetime="2017-06-13 11:18:15 &#43;0800 CST" itemprop="datePublished">2017-06-13</time>
@@ -420,6 +440,7 @@
         <div class="article-entry" itemprop="articleBody">
             #优化思维导图 #参数优化注意事项 参数优化分为 动态参数配置 和 配置文件的配置，建议在启动mysql之前配置好优化参数，这样将会全局有效，如使用动态参数配置可能会不生效或出现问题,并且如果数据库重启那么之前的优化参数都会失效
 SHOW VARIABLES LIKE 'sort%' 修改会话级变量 set SESSION sort_buffer_size=720000 退出重新连接后，此参数恢复原值 修改全局变量 set GLOBAL sort_buffer_size = 720000  #优化系列 库级优化之SHOW GLOBAL STATUS
+            <img src="https://nicky-chin.cn/media/optimize-picture/preview.jpg" width="720px" height="320px" onerror="this.remove()" title="图片预览">
         </div>
 
         <div class="article-info article-info-index">
@@ -462,23 +483,52 @@ SHOW VARIABLES LIKE 'sort%' 修改会话级变量 set SESSION sort_buffer_size=7
 
         </div>
         <footer id="footer">
+
+    
+
+
     <div class="outer">
+        
+        
+            <div class="footer-right">
+                
+                    <span id="busuanzi_container_site_pv" style='display: block'>
+                        <span id="site-visit" >本站访客数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    
+                
+                
+                    
+                        
+                            
+                        
+                    
+                
+            </div>
+        
+        
         <div id="footer-info">
             <div class="footer-left">
-                &copy; 2021 nicky_chin
+                &copy; 2022 南乡清水@Hangzhou
             </div>
-            <div class="footer-right">
-                <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>
+            <div class="s-bottom-layer-right" style="font-size: 0.2em" >
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33011002014475"
+                   target="_blank"><span class="lh s-bottom-recordcode">京公网安备33011002014475号</span></a>
+                <a href="https://beian.miit.gov.cn/"
+                   target="_blank"><span class="lh"> 浙ICP备19049847号-1</span></a>
             </div>
         </div>
-        
     </div>
 </footer>
 
     </div>
     
 <script src="https://nicky-chin.cn/js/GithubRepoWidget.js"></script>
-<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
 <script src="https://nicky-chin.cn/js/main.js"></script>
 
 
@@ -507,7 +557,7 @@ SHOW VARIABLES LIKE 'sort%' 修改会话级变量 set SESSION sort_buffer_size=7
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-ga('create', 'UA-119892182-1', 'auto');
+ga('create', 'UA-159911678-1', 'auto');
 ga('send', 'pageview');
 
 </script>
@@ -563,6 +613,79 @@ ga('send', 'pageview');
         s.parentNode.insertBefore(bp, s);
     })();
 </script>
+
+
+
+    <div class="waifu">
+        <div class="waifu-tips"></div>
+        <canvas id="live2d" class="live2d"></canvas>
+        <div class="waifu-tool">
+            <span class="fui-home"></span>
+            <span class="fui-chat"></span>
+            <span class="fui-eye"></span>
+            <span class="fui-user"></span>
+            <span class="fui-photo"></span>
+            <span class="fui-info-circle"></span>
+            <span class="fui-cross"></span>
+        </div>
+    </div>
+
+    <script src="https://nicky-chin.cn/assets/waifu-tips.min.js?v=1.4.2"></script>
+    <script src="https://nicky-chin.cn/assets/live2d.min.js?v=1.0.5"></script>
+    <script type="text/javascript">
+        
+        live2d_settings['showToolMenu'] = true;         
+        live2d_settings['canCloseLive2d'] = true;         
+        live2d_settings['canSwitchModel'] = true;         
+        live2d_settings['canSwitchTextures'] = true;         
+        live2d_settings['canSwitchHitokoto'] = true;         
+        live2d_settings['canTakeScreenshot'] = true;         
+        live2d_settings['canTurnToHomePage'] = true;         
+        live2d_settings['canTurnToAboutPage'] = true;         
+
+
+        
+        live2d_settings['waifuSize']            = '280x250';    
+        live2d_settings['waifuTipsSize']        = '250x70';     
+        live2d_settings['waifuFontSize']        = '12px';       
+        live2d_settings['waifuToolFont']        = '14px';       
+        live2d_settings['waifuToolLine']        = '20px';       
+        live2d_settings['waifuToolTop']         = '0px';        
+        live2d_settings['waifuMinWidth']        = '768px';      
+        live2d_settings['waifuEdgeSide']        = 'right:30';     
+        live2d_settings['waifuDraggable']       = 'axis-x';    
+        live2d_settings['waifuDraggableRevert'] = true;         
+
+        
+        live2d_settings['modelId']              = 1;            
+        live2d_settings['modelTexturesId'] = 87;         
+        live2d_settings['modelStorage'] = false;         
+        live2d_settings['canCloseLive2d'] = false;       
+        live2d_settings['canTurnToHomePage'] = false;    
+
+        
+        live2d_settings['modelStorage']         = true;         
+        live2d_settings['modelRandMode']        = 'switch';     
+        live2d_settings['modelTexturesRandMode']= 'rand';       
+
+
+        
+        live2d_settings['showHitokoto']         = true;         
+        live2d_settings['showF12Status']        = true;         
+        live2d_settings['showF12Message']       = false;        
+        live2d_settings['showF12OpenMsg']       = true;         
+        live2d_settings['showCopyMessage']      = true;         
+        live2d_settings['showWelcomeMessage']   = true;         
+
+        
+        live2d_settings['homePageUrl']          = 'auto';       
+        live2d_settings['aboutPageUrl']         = 'https://nicky-chin.cn/2017/02/19/info/';   
+        live2d_settings['screenshotCaptureName']= '看板娘.png'; 
+
+
+         
+        initModel("/assets/waifu-tips.json?v=1.4.2")
+    </script>
 
 </div>
 </body>

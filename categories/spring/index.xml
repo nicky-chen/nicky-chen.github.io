@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Spring on 南乡清水</title>
+    <title>spring on 南乡清水的技术积累</title>
     <link>https://nicky-chin.cn/categories/spring/</link>
-    <description>Recent content in Spring on 南乡清水</description>
+    <description>Recent content in spring on 南乡清水的技术积累</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
@@ -14,12 +14,33 @@
     
     <item>
       <title>Transaction源码解析之事务提交与回滚</title>
+      <link>https://nicky-chin.cn/post-2/spring-transaction-commit/</link>
+      <pubDate>Tue, 19 May 2020 13:39:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/spring-transaction-commit/</guid>
+      <description>1 事务还原 1.1 调试demo 我们使用常用的业务代码来做调试：
+@Service(&amp;#34;personService&amp;#34;) public class PersonServiceImpl implements IPersonService { @Override @Transactional(propagation = Propagation.</description>
+    </item>
+    
+    <item>
+      <title>Transaction源码解析之事务提交与回滚</title>
       <link>https://nicky-chin.cn/2020/05/19/spring-transaction-commit/</link>
       <pubDate>Tue, 19 May 2020 13:39:15 +0800</pubDate>
       
       <guid>https://nicky-chin.cn/2020/05/19/spring-transaction-commit/</guid>
       <description>1 事务还原 1.1 调试demo 我们使用常用的业务代码来做调试：
-@Service(&amp;quot;personService&amp;quot;) public class PersonServiceImpl implements IPersonService { @Override @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class) public void removeUserById(Integer id) { personRepository.removeById(id); User user = new User(); user.setId(0); user.setName(&amp;quot;aaa&amp;quot;); user.setSumScore(&amp;quot;222&amp;quot;); user.setAvgScore(&amp;quot;111&amp;quot;); user.setAge(20); user.setIsSuccess(false); user.setScore(UnsignedInteger.valueOf(1)); user.setStatus(UnsignedLong.valueOf(2)); userService.insertOne(user); } } @Repository public interface PersonRepository extends JpaRepository&amp;lt;Person, Integer&amp;gt;, JpaSpecificationExecutor { Person findByName(String name); @Query(&amp;quot;select p from Person p where p.id = ?1&amp;quot;) Person findObjectById(Integer id); //@CacheEvict(value = &amp;quot;person&amp;quot;) @Transactional(propagation = Propagation.</description>
+@Service(&amp;#34;personService&amp;#34;) public class PersonServiceImpl implements IPersonService { @Override @Transactional(propagation = Propagation.</description>
+    </item>
+    
+    <item>
+      <title>Transaction源码解析之事务预处理</title>
+      <link>https://nicky-chin.cn/post-2/spring-transaction-prepare/</link>
+      <pubDate>Mon, 11 May 2020 12:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/spring-transaction-prepare/</guid>
+      <description>1 调试源码 接上篇Transaction源码解析之事务的配置解析
+我们调用相应的service类,来调试具体的事务处理流程，测试代码如下:
+public void testInvokeTransactional() throws Exception { TransactionalTestBean testBean = getTestBean(); CallCountingTransactionManager ptm = (CallCountingTransactionManager) context.</description>
     </item>
     
     <item>
@@ -30,7 +51,18 @@
       <guid>https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/</guid>
       <description>1 调试源码 接上篇Transaction源码解析之事务的配置解析
 我们调用相应的service类,来调试具体的事务处理流程，测试代码如下:
-public void testInvokeTransactional() throws Exception { TransactionalTestBean testBean = getTestBean(); CallCountingTransactionManager ptm = (CallCountingTransactionManager) context.getBean(&amp;quot;transactionManager&amp;quot;); // try with transactional assertEquals(&amp;quot;Should not have any started transactions&amp;quot;, 0, ptm.begun); testBean.findAllFoos(); assertEquals(&amp;quot;Should have 1 started transaction&amp;quot;, 1, ptm.begun); assertEquals(&amp;quot;Should have 1 committed transaction&amp;quot;, 1, ptm.commits); // try with non-transaction testBean.doSomething(); assertEquals(&amp;quot;Should not have started another transaction&amp;quot;, 1, ptm.begun); // try with exceptional try { testBean.exceptional(new IllegalArgumentException(&amp;quot;foo&amp;quot;)); fail(&amp;quot;Should NEVER get here&amp;quot;); } catch (Throwable throwable) { assertEquals(&amp;quot;Should have another started transaction&amp;quot;, 2, ptm.</description>
+public void testInvokeTransactional() throws Exception { TransactionalTestBean testBean = getTestBean(); CallCountingTransactionManager ptm = (CallCountingTransactionManager) context.</description>
+    </item>
+    
+    <item>
+      <title>Transaction源码解析之事务配置解析</title>
+      <link>https://nicky-chin.cn/post-2/spring-transaction-config/</link>
+      <pubDate>Sun, 03 May 2020 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/spring-transaction-config/</guid>
+      <description>1 事务配置 关于Spring的事务，大家每天都会遇见或者用到，为了更好的理解Transaction的原理机制，我们从源码角度来解析，本文的调试源码基于Spring-3.2.x版本进行调试。
+1.1 配置 配置XML文件annotationTransactionNamespaceHandlerTests.xml
+&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt; &amp;lt;beans xmlns=&amp;quot;http://www.springframework.org/schema/beans&amp;quot; xmlns:xsi=&amp;quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot; xmlns:aop=&amp;quot;http://www.springframework.org/schema/aop&amp;quot; xmlns:context=&amp;quot;http://www.springframework.org/schema/context&amp;quot; xmlns:tx=&amp;quot;http://www.</description>
     </item>
     
     <item>
@@ -41,8 +73,18 @@ public void testInvokeTransactional() throws Exception { TransactionalTestBean t
       <guid>https://nicky-chin.cn/2020/05/03/spring-transaction-config/</guid>
       <description>1 事务配置 关于Spring的事务，大家每天都会遇见或者用到，为了更好的理解Transaction的原理机制，我们从源码角度来解析，本文的调试源码基于Spring-3.2.x版本进行调试。
 1.1 配置 配置XML文件annotationTransactionNamespaceHandlerTests.xml
-&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt; &amp;lt;beans xmlns=&amp;quot;http://www.springframework.org/schema/beans&amp;quot; xmlns:xsi=&amp;quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot; xmlns:aop=&amp;quot;http://www.springframework.org/schema/aop&amp;quot; xmlns:context=&amp;quot;http://www.springframework.org/schema/context&amp;quot; xmlns:tx=&amp;quot;http://www.springframework.org/schema/tx&amp;quot; xsi:schemaLocation=&amp;quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd&amp;quot;&amp;gt; &amp;lt;tx:annotation-driven/&amp;gt; &amp;lt;bean id=&amp;quot;transactionManager&amp;quot; class=&amp;quot;org.springframework.tests.transaction.CallCountingTransactionManager&amp;quot;/&amp;gt; &amp;lt;bean id=&amp;quot;testBean&amp;quot; class=&amp;quot;org.springframework.transaction.annotation.AnnotationTransactionNamespaceHandlerTests$TransactionalTestBean&amp;quot;/&amp;gt; &amp;lt;context:mbean-export/&amp;gt;  TransactionalTestBean类
-	@Service @ManagedResource(&amp;quot;test:type=TestBean&amp;quot;) public static class TransactionalTestBean { @Transactional(readOnly = true) public Collection&amp;lt;?&amp;gt; findAllFoos() { return null; } public void saveFoo() { } @Transactional(&amp;quot;qualifiedTransactionManager&amp;quot;) public void saveQualifiedFoo() { } @Transactional public void exceptional(Throwable t) throws Throwable { throw t; } @ManagedOperation public String doSomething() { return &amp;quot;done&amp;quot;; } @Transactional protected void annotationsOnProtectedAreIgnored() { } }  上面XML配置主要是开启事务驱动，然后配置事务管理器和带有@Transaction注解的Bean对象</description>
+&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt; &amp;lt;beans xmlns=&amp;quot;http://www.springframework.org/schema/beans&amp;quot; xmlns:xsi=&amp;quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot; xmlns:aop=&amp;quot;http://www.springframework.org/schema/aop&amp;quot; xmlns:context=&amp;quot;http://www.springframework.org/schema/context&amp;quot; xmlns:tx=&amp;quot;http://www.</description>
+    </item>
+    
+    <item>
+      <title>Spring实例化bean之源码分析</title>
+      <link>https://nicky-chin.cn/post-2/spring-bean-instantiation/</link>
+      <pubDate>Wed, 15 Apr 2020 13:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/spring-bean-instantiation/</guid>
+      <description>1 实例化bean的主流程 这张图是整体的bean的实例化的流程，我之前关于Spring的生命周期的加载bean和实例化bean的整体过程已有博文，可以 查看文章：Spring之Bean加载-解析-生命周期
+调试入口 本文中的Spring源码基于3.2.x版本，为最精简的Spring源码，选取Spring自带的测试用例进行debug调试, 本文只关注单例对象的实例化bean中各组件的源码分析, 入口如下：
+ @Test public void testConfigLocationPattern() { ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(CONTEXT_WILDCARD); assertTrue(ctx.</description>
     </item>
     
     <item>
@@ -53,8 +95,20 @@ public void testInvokeTransactional() throws Exception { TransactionalTestBean t
       <guid>https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/</guid>
       <description>1 实例化bean的主流程 这张图是整体的bean的实例化的流程，我之前关于Spring的生命周期的加载bean和实例化bean的整体过程已有博文，可以 查看文章：Spring之Bean加载-解析-生命周期
 调试入口 本文中的Spring源码基于3.2.x版本，为最精简的Spring源码，选取Spring自带的测试用例进行debug调试, 本文只关注单例对象的实例化bean中各组件的源码分析, 入口如下：
- @Test public void testConfigLocationPattern() { ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(CONTEXT_WILDCARD); assertTrue(ctx.containsBean(&amp;quot;service&amp;quot;)); assertTrue(ctx.containsBean(&amp;quot;logicOne&amp;quot;)); assertTrue(ctx.containsBean(&amp;quot;logicTwo&amp;quot;)); Service service = (Service) ctx.getBean(&amp;quot;service&amp;quot;); ctx.close(); assertTrue(service.isProperlyDestroyed()); }  2 各组件流程 实例化bean的流程主要关注AbstractAutowireCapableBeanFactory的doCreateBean方法，源码如下：
-2.1 整体流程解析  protected Object doCreateBean(final String beanName, final RootBeanDefinition mbd, final Object[] args) { // BeanWrapper是对Bean的包装，其接口中所定义的功能很简单包括设置获取被包装的对象，获取被包装bean的属性描述器 BeanWrapper instanceWrapper = null; if (mbd.isSingleton()) { // 单例模型，则从未完成的 FactoryBean 缓存中删除 instanceWrapper = this.factoryBeanInstanceCache.remove(beanName); } // 使用合适的实例化策略来创建新的实例：工厂方法、构造函数自动注入、简单初始化 if (instanceWrapper == null) { instanceWrapper = createBeanInstance(beanName, mbd, args); } // 包装的实例对象 final Object bean = (instanceWrapper !</description>
+ @Test public void testConfigLocationPattern() { ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(CONTEXT_WILDCARD); assertTrue(ctx.</description>
+    </item>
+    
+    <item>
+      <title>Spring之动手实现SpringMVC功能</title>
+      <link>https://nicky-chin.cn/post-2/spring-springmvc/</link>
+      <pubDate>Sat, 25 Aug 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/spring-springmvc/</guid>
+      <description>1 简介 SpringMVC大家应该耳熟能详，只要是做Java网站开发的小伙伴，都会使用的框架。SpringMVC以 DispatcherServlet 为核心，负责协调和组织不同组件以完成请求处理并返回响应的工作，实现了MVC模式。接下来我们从 该框架的流程 来整理设计思路，最后自己实现一个mvc框架.
+2 SpringMVC运行流程 springmvc的流程如下：
+API说明
+_DispatcherServlet_：
+ Spring提供的前端控制器，所有的请求都有经过它来统一分发。在DispatcherServlet将请求分发给Controller之前，需要借助于Spring提供的HandlerMapping定位到具体的Controller。</description>
     </item>
     
     <item>
@@ -67,17 +121,17 @@ public void testInvokeTransactional() throws Exception { TransactionalTestBean t
 2 SpringMVC运行流程 springmvc的流程如下：
 API说明
 _DispatcherServlet_：
- Spring提供的前端控制器，所有的请求都有经过它来统一分发。在DispatcherServlet将请求分发给Controller之前，需要借助于Spring提供的HandlerMapping定位到具体的Controller。
- HandlerMapping ：
- 完成客户请求到Controller映射，包括拦截器部分内容
- Controller ：
- Controller将处理用户请求，调用业务层接口分析，并返回ModelAndView对象给DispatcherServlet前端控制器，ModelAndView中包含了模型（Model）和视图（View）
- ViewResolver ：
- Spring提供的视图解析器（ViewResolver）在Web应用中查找View对象，会根据当前的视图渲染引擎（JSP FreeMarker Thymeleaf）来渲染视图，返回给前端
- 流程概述
-  1 用户发送请求至前端控制器DispatcherServlet 2 DispatcherServlet收到请求调用HandlerMapping处理器映射器 3 处理器映射器根据请求url找到具体的处理器，生成处理器对象及处理器拦截器(如果有则生成)一并返回给DispatcherServlet。 4 DispatcherServlet通过HandlerAdapter处理器适配器调用处理器 5 执行处理器(Controller，也叫后端控制器)。 6 Controller执行完成返回ModelAndView 7 HandlerAdapter将controller执行结果ModelAndView返回给DispatcherServlet 8 DispatcherServlet将ModelAndView传给ViewReslover视图解析器 9 ViewReslover解析后返回具体View 10 DispatcherServlet对View进行渲染视图（即将模型数据填充至视图中） 11 DispatcherServlet响应用户   3 MVC之九大组件 SpringMVC中的Servlet一共有三个层次，分别是HttpServletBean、FrameworkServlet和 DispatcherServlet。 HttpServletBean直接继承自java的HttpServlet，其作用是将Servlet中配置的参数设置到相应的属性； FrameworkServlet初始化了WebApplicationContext，DispatcherServlet初始化了自身的9个组件。
-DispatcherServlet初始化方法
-protected void onRefresh(ApplicationContext context) { initStrategies(context); } protected void initStrategies(ApplicationContext context) { initMultipartResolver(context); initLocaleResolver(context); initThemeResolver(context); initHandlerMappings(context); initHandlerAdapters(context); initHandlerExceptionResolvers(context); initRequestToViewNameTranslator(context); initViewResolvers(context); initFlashMapManager(context); }  具体9个组件介绍如下：</description>
+ Spring提供的前端控制器，所有的请求都有经过它来统一分发。在DispatcherServlet将请求分发给Controller之前，需要借助于Spring提供的HandlerMapping定位到具体的Controller。</description>
+    </item>
+    
+    <item>
+      <title>Spring之动手实现IOC功能</title>
+      <link>https://nicky-chin.cn/post-2/spring-bean-ioc/</link>
+      <pubDate>Thu, 16 Aug 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/spring-bean-ioc/</guid>
+      <description>1 背景 我们经常在使用Spring生态中的组件，我们在潜移默化的DI和IOC的思想下，来创建和使用Bean对象，使用过 @Component @ComponentScan @Autowired @Bean @Configuration 等等的注解，所以了解Spring容器是如何创建和管理Bean,是我们必需掌握的技能。 下面我们通过手写DI和IOC的方式来加深对Spring的理解。
+#2 依赖注入 DI，Dependency Injection，即依赖注入。具体含义表示组件之间的依赖关系由容器在应用系统运行期来决定，也就是由容器动态地将某种依赖关系的目标对象实例注入到应用系统中的各个关联的组件之中。对象只提供普通的方法让容器去决定依赖关系。</description>
     </item>
     
     <item>
@@ -87,13 +141,18 @@ protected void onRefresh(ApplicationContext context) { initStrategies(context); 
       
       <guid>https://nicky-chin.cn/2018/08/16/spring-bean-ioc/</guid>
       <description>1 背景 我们经常在使用Spring生态中的组件，我们在潜移默化的DI和IOC的思想下，来创建和使用Bean对象，使用过 @Component @ComponentScan @Autowired @Bean @Configuration 等等的注解，所以了解Spring容器是如何创建和管理Bean,是我们必需掌握的技能。 下面我们通过手写DI和IOC的方式来加深对Spring的理解。
-#2 依赖注入 DI，Dependency Injection，即依赖注入。具体含义表示组件之间的依赖关系由容器在应用系统运行期来决定，也就是由容器动态地将某种依赖关系的目标对象实例注入到应用系统中的各个关联的组件之中。对象只提供普通的方法让容器去决定依赖关系。
-Spring中创建Bean的方式有三种：
- 通过XML显式配置 通过Java显式配置 (利用 @Configuration @Bean) 隐式进行bean搜索并自动装配 （利用基于@Component 元注解的方式）
- 通过上面叙述我们知道，创建bean其实大致可以分为两种，一种是基于XML,另一种是基于注解的方式。
-2.1 XML方式 user.xml
-&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt; &amp;lt;beans&amp;gt; &amp;lt;bean id=&amp;quot;studentA&amp;quot; class=&amp;quot;iockids.xml.Student&amp;quot; scope=&amp;quot;singleton&amp;quot;&amp;gt; &amp;lt;property name=&amp;quot;age&amp;quot; value=&amp;quot;20&amp;quot;/&amp;gt; &amp;lt;property name=&amp;quot;name&amp;quot; value=&amp;quot;nana&amp;quot;/&amp;gt; &amp;lt;property name=&amp;quot;address&amp;quot; value=&amp;quot;hangzhou&amp;quot;/&amp;gt; &amp;lt;/bean&amp;gt; &amp;lt;bean id=&amp;quot;studentB&amp;quot; class=&amp;quot;iockids.xml.Student&amp;quot; scope=&amp;quot;prototype&amp;quot;&amp;gt; &amp;lt;property name=&amp;quot;name&amp;quot; value=&amp;quot;nicky&amp;quot;/&amp;gt; &amp;lt;property name=&amp;quot;age&amp;quot; value=&amp;quot;22&amp;quot;/&amp;gt; &amp;lt;property name=&amp;quot;address&amp;quot; value=&amp;quot;ningbo&amp;quot;/&amp;gt; &amp;lt;/bean&amp;gt; &amp;lt;/beans&amp;gt;  Student对象
-@Data public class Student { private String name; private Integer age; private String address; }   /** * 单例对象容器 */ private Map&amp;lt;String, Object&amp;gt; singletonBeanFactory = new ConcurrentHashMap&amp;lt;&amp;gt;(); /** * bean对象的容器 */ private Map&amp;lt;String, Class&amp;lt;?</description>
+#2 依赖注入 DI，Dependency Injection，即依赖注入。具体含义表示组件之间的依赖关系由容器在应用系统运行期来决定，也就是由容器动态地将某种依赖关系的目标对象实例注入到应用系统中的各个关联的组件之中。对象只提供普通的方法让容器去决定依赖关系。</description>
+    </item>
+    
+    <item>
+      <title>Spring之Bean加载-解析-生命周期</title>
+      <link>https://nicky-chin.cn/post-2/spring-bean-lifecycle/</link>
+      <pubDate>Sun, 12 Aug 2018 11:18:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/post-2/spring-bean-lifecycle/</guid>
+      <description>1 概要 使用Spring框架，我们需要了解Bean的创建加载过程，需要熟悉Bean是如何获取和使用的。 下面我们通过分析下Spring加载XML文件的过程来分析Bean的数据流。 当前调试的Spring 版本是最新的 4.1.0 release 版本
+调试代码主入口
+ ApplicationContext context = new ClassPathXmlApplicationContext(&amp;quot;consumer.</description>
     </item>
     
     <item>
@@ -104,8 +163,7 @@ Spring中创建Bean的方式有三种：
       <guid>https://nicky-chin.cn/2018/08/12/spring-bean-lifecycle/</guid>
       <description>1 概要 使用Spring框架，我们需要了解Bean的创建加载过程，需要熟悉Bean是如何获取和使用的。 下面我们通过分析下Spring加载XML文件的过程来分析Bean的数据流。 当前调试的Spring 版本是最新的 4.1.0 release 版本
 调试代码主入口
- ApplicationContext context = new ClassPathXmlApplicationContext(&amp;quot;consumer.xml&amp;quot;); System.out.println(&amp;quot;Consumer Started&amp;quot;); ConsumerBean bean = context.getBean(ConsumerBean.class); String secretKey = bean.getProperties().getProperty(&amp;quot;SecretKey&amp;quot;); System.out.println(secretKey);  2 解析过程 创建 ClassPathXmlApplicationContext对象，会调用refresh()方法
- public void refresh() throws BeansException, IllegalStateException { synchronized (this.startupShutdownMonitor) { // Prepare this context for refreshing. prepareRefresh(); // 获取xml文件的信息，存储在beanFactory对象中 ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory(); .................省略中间代码 // 注册bean信息 invokeBeanFactoryPostProcessors(beanFactory); // 实例化bean finishBeanFactoryInitialization(beanFactory); // Last step: publish corresponding event. finishRefresh(); }  之后会进入AbstractApplicationContext对象，处理如下方法：</description>
+ ApplicationContext context = new ClassPathXmlApplicationContext(&amp;quot;consumer.</description>
     </item>
     
   </channel>

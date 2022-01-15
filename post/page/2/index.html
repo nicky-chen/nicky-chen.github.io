@@ -7,7 +7,7 @@
     <script>
         var yiliaConfig = {
             fancybox:  true ,
-            animate:  true ,
+            animate:  false ,
             isHome: false,
             isPost: false,
             isArchive: true,
@@ -17,7 +17,6 @@
             rootUrl: "\/"
         };
     </script>
-
     <title>Posts</title>
     <link rel="icon" href="https://nicky-chin.cn/img/favicon.ico">
 
@@ -25,14 +24,22 @@
     <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
     <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
 
+    <link rel="stylesheet" type="text/css" href="https://nicky-chin.cn/assets/waifu.css"/>
 
     <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
 
-    
-    
     <link rel="stylesheet" href="https://nicky-chin.cn/highlight/styles/darcula.css">
     <script src="https://nicky-chin.cn/highlight/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+            (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','zTXEk5Sy3-gUuAVTm5JE','2.0.0');
+    </script>
 </head>
 <body>
 
@@ -55,7 +62,6 @@
         
 
         
-
 
         
             <div id="switch-btn" class="switch-btn">
@@ -112,11 +118,13 @@
                         
                             <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
                         
-                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
-                        
                             <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
                         
                             <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
                         
                         </ul>
                     </nav>
@@ -139,27 +147,31 @@
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
                         
+                            <a href="https://nicky-chin.cn/tags/im%E9%80%9A%E8%AE%AF" style="font-size: 12px;" class="color1">Im通讯</a>
+                        
                             <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color1">Junit</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/netty" style="font-size: 12px;" class="color1">Netty</a>
                         
                             <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color2">Redis</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color4">Spring-Base</a>
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color2">Spring-Base</a>
                         
                             <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color3">Spring-Transaction</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">优化</a>
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">优化</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color1">分布式id方案</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color2">分布式id方案</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color1">创建型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color4">多线程</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color1">多线程</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color3">思维导图</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color2">思维导图</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color3">数据结构</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color1">数据结构</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">框架基础</a>
                         
@@ -167,11 +179,11 @@
                         
                             <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color1">理论</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color4">结构型</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color3">结构型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color1">行为型</a>
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color3">行为型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color1">锁优化</a>
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">锁优化</a>
                         
                     </div>
                 </section>
@@ -236,11 +248,13 @@
                     
                     <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
                     
-                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
-                    
                     <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
                     
                     <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
                     
                 <div class="clearfix"></div>
                 </ul>
@@ -267,10 +281,250 @@
             
             <section class="archives-wrap">
                 <div class="archive-year-wrap">
+                    <a href="https://nicky-chin.cn/archives/2018" class="archive-year">2020</a>
+                </div>
+
+                <div class="archives">
+                
+
+                    <article class="archive-article archive-type-post">
+                        <div class="archive-article-inner">
+                            <header class="archive-article-header">
+                                <div class="article-meta">
+                                    <a href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/" class="archive-article-date">
+                                        <time datetime="2020-04-23 19:58:15 &#43;0800 CST" itemprop="datePublished">04-23
+                                        </time>
+                                    </a>
+                                </div>
+
+
+                                <h1 itemprop="name">
+                                    <a class="archive-article-title" href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/"
+                                       target="_blank">生产-消费模型之虚假唤醒</a>
+                                </h1>
+
+
+                                <div class="article-info info-on-archive">
+
+                                    
+                                    <div class="article-category tagcloud">
+                                        
+                                        <a class="article-category-link" href="https://nicky-chin.cn/categories/concurrent/">concurrent</a>
+                                        
+                                    </div>
+                                    
+
+                                    
+                                    <div class="article-tag tagcloud">
+                                        <ul class="article-tag-list">
+                                            
+                                            <li class="article-tag-list-item">
+                                                <a class="article-tag-list-link" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/">基础</a>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                    
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </header>
+                        </div>
+                    </article>
+                
+
+                    <article class="archive-article archive-type-post">
+                        <div class="archive-article-inner">
+                            <header class="archive-article-header">
+                                <div class="article-meta">
+                                    <a href="https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/" class="archive-article-date">
+                                        <time datetime="2020-04-15 13:18:15 &#43;0800 CST" itemprop="datePublished">04-15
+                                        </time>
+                                    </a>
+                                </div>
+
+
+                                <h1 itemprop="name">
+                                    <a class="archive-article-title" href="https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/"
+                                       target="_blank">Spring实例化bean之源码分析</a>
+                                </h1>
+
+
+                                <div class="article-info info-on-archive">
+
+                                    
+                                    <div class="article-category tagcloud">
+                                        
+                                        <a class="article-category-link" href="https://nicky-chin.cn/categories/spring/">spring</a>
+                                        
+                                    </div>
+                                    
+
+                                    
+                                    <div class="article-tag tagcloud">
+                                        <ul class="article-tag-list">
+                                            
+                                            <li class="article-tag-list-item">
+                                                <a class="article-tag-list-link" href="https://nicky-chin.cn/tags/spring-base/">spring-base</a>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                    
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </header>
+                        </div>
+                    </article>
+                
+
+                    <article class="archive-article archive-type-post">
+                        <div class="archive-article-inner">
+                            <header class="archive-article-header">
+                                <div class="article-meta">
+                                    <a href="https://nicky-chin.cn/2020/03/02/float-precision/" class="archive-article-date">
+                                        <time datetime="2020-03-02 14:18:15 &#43;0800 CST" itemprop="datePublished">03-02
+                                        </time>
+                                    </a>
+                                </div>
+
+
+                                <h1 itemprop="name">
+                                    <a class="archive-article-title" href="https://nicky-chin.cn/2020/03/02/float-precision/"
+                                       target="_blank">float浮点小数的设计及精度问题</a>
+                                </h1>
+
+
+                                <div class="article-info info-on-archive">
+
+                                    
+                                    <div class="article-category tagcloud">
+                                        
+                                        <a class="article-category-link" href="https://nicky-chin.cn/categories/java-base/">java-base</a>
+                                        
+                                    </div>
+                                    
+
+                                    
+                                    <div class="article-tag tagcloud">
+                                        <ul class="article-tag-list">
+                                            
+                                            <li class="article-tag-list-item">
+                                                <a class="article-tag-list-link" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/">基础</a>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                    
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </header>
+                        </div>
+                    </article>
+                
+                </div>
+            </section>
+            
+            <section class="archives-wrap">
+                <div class="archive-year-wrap">
                     <a href="https://nicky-chin.cn/archives/2018" class="archive-year">2019</a>
                 </div>
 
                 <div class="archives">
+                
+
+                    <article class="archive-article archive-type-post">
+                        <div class="archive-article-inner">
+                            <header class="archive-article-header">
+                                <div class="article-meta">
+                                    <a href="https://nicky-chin.cn/2019/07/11/mysql-page-detail/" class="archive-article-date">
+                                        <time datetime="2019-07-11 11:14:15 &#43;0800 CST" itemprop="datePublished">07-11
+                                        </time>
+                                    </a>
+                                </div>
+
+
+                                <h1 itemprop="name">
+                                    <a class="archive-article-title" href="https://nicky-chin.cn/2019/07/11/mysql-page-detail/"
+                                       target="_blank">MySQL中的page页详解</a>
+                                </h1>
+
+
+                                <div class="article-info info-on-archive">
+
+                                    
+                                    <div class="article-category tagcloud">
+                                        
+                                        <a class="article-category-link" href="https://nicky-chin.cn/categories/mysql/">MySql</a>
+                                        
+                                    </div>
+                                    
+
+                                    
+                                    <div class="article-tag tagcloud">
+                                        <ul class="article-tag-list">
+                                            
+                                            <li class="article-tag-list-item">
+                                                <a class="article-tag-list-link" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/">基础</a>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                    
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </header>
+                        </div>
+                    </article>
+                
+
+                    <article class="archive-article archive-type-post">
+                        <div class="archive-article-inner">
+                            <header class="archive-article-header">
+                                <div class="article-meta">
+                                    <a href="https://nicky-chin.cn/2019/05/03/apt_lombok_implement/" class="archive-article-date">
+                                        <time datetime="2019-05-03 11:18:15 &#43;0800 CST" itemprop="datePublished">05-03
+                                        </time>
+                                    </a>
+                                </div>
+
+
+                                <h1 itemprop="name">
+                                    <a class="archive-article-title" href="https://nicky-chin.cn/2019/05/03/apt_lombok_implement/"
+                                       target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a>
+                                </h1>
+
+
+                                <div class="article-info info-on-archive">
+
+                                    
+                                    <div class="article-category tagcloud">
+                                        
+                                        <a class="article-category-link" href="https://nicky-chin.cn/categories/java-base/">java-base</a>
+                                        
+                                    </div>
+                                    
+
+                                    
+                                    <div class="article-tag tagcloud">
+                                        <ul class="article-tag-list">
+                                            
+                                            <li class="article-tag-list-item">
+                                                <a class="article-tag-list-link" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/">基础</a>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                    
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </header>
+                        </div>
+                    </article>
                 
 
                     <article class="archive-article archive-type-post">
@@ -420,236 +674,6 @@
                         </div>
                     </article>
                 
-
-                    <article class="archive-article archive-type-post">
-                        <div class="archive-article-inner">
-                            <header class="archive-article-header">
-                                <div class="article-meta">
-                                    <a href="https://nicky-chin.cn/2018/10/15/id-redis/" class="archive-article-date">
-                                        <time datetime="2018-10-15 11:18:15 &#43;0800 CST" itemprop="datePublished">10-15
-                                        </time>
-                                    </a>
-                                </div>
-
-
-                                <h1 itemprop="name">
-                                    <a class="archive-article-title" href="https://nicky-chin.cn/2018/10/15/id-redis/"
-                                       target="_blank">分布式全局序列ID方案之Redis优化方案</a>
-                                </h1>
-
-
-                                <div class="article-info info-on-archive">
-
-                                    
-                                    <div class="article-category tagcloud">
-                                        
-                                        <a class="article-category-link" href="https://nicky-chin.cn/categories/distribution/">distribution</a>
-                                        
-                                    </div>
-                                    
-
-                                    
-                                    <div class="article-tag tagcloud">
-                                        <ul class="article-tag-list">
-                                            
-                                            <li class="article-tag-list-item">
-                                                <a class="article-tag-list-link" href="https://nicky-chin.cn/tags/%e5%88%86%e5%b8%83%e5%bc%8fid%e6%96%b9%e6%a1%88/">分布式ID方案</a>
-                                            </li>
-                                            
-                                        </ul>
-                                    </div>
-                                    
-
-                                </div>
-                                <div class="clearfix"></div>
-                            </header>
-                        </div>
-                    </article>
-                
-
-                    <article class="archive-article archive-type-post">
-                        <div class="archive-article-inner">
-                            <header class="archive-article-header">
-                                <div class="article-meta">
-                                    <a href="https://nicky-chin.cn/2018/09/25/id-flicker/" class="archive-article-date">
-                                        <time datetime="2018-09-25 11:18:15 &#43;0800 CST" itemprop="datePublished">09-25
-                                        </time>
-                                    </a>
-                                </div>
-
-
-                                <h1 itemprop="name">
-                                    <a class="archive-article-title" href="https://nicky-chin.cn/2018/09/25/id-flicker/"
-                                       target="_blank">分布式全局序列ID方案之Flicker优化方案</a>
-                                </h1>
-
-
-                                <div class="article-info info-on-archive">
-
-                                    
-                                    <div class="article-category tagcloud">
-                                        
-                                        <a class="article-category-link" href="https://nicky-chin.cn/categories/distribution/">distribution</a>
-                                        
-                                    </div>
-                                    
-
-                                    
-                                    <div class="article-tag tagcloud">
-                                        <ul class="article-tag-list">
-                                            
-                                            <li class="article-tag-list-item">
-                                                <a class="article-tag-list-link" href="https://nicky-chin.cn/tags/%e5%88%86%e5%b8%83%e5%bc%8fid%e6%96%b9%e6%a1%88/">分布式ID方案</a>
-                                            </li>
-                                            
-                                        </ul>
-                                    </div>
-                                    
-
-                                </div>
-                                <div class="clearfix"></div>
-                            </header>
-                        </div>
-                    </article>
-                
-
-                    <article class="archive-article archive-type-post">
-                        <div class="archive-article-inner">
-                            <header class="archive-article-header">
-                                <div class="article-meta">
-                                    <a href="https://nicky-chin.cn/2018/09/19/id-snowflake/" class="archive-article-date">
-                                        <time datetime="2018-09-19 11:18:15 &#43;0800 CST" itemprop="datePublished">09-19
-                                        </time>
-                                    </a>
-                                </div>
-
-
-                                <h1 itemprop="name">
-                                    <a class="archive-article-title" href="https://nicky-chin.cn/2018/09/19/id-snowflake/"
-                                       target="_blank">分布式全局序列ID方案之Snowflake算法</a>
-                                </h1>
-
-
-                                <div class="article-info info-on-archive">
-
-                                    
-                                    <div class="article-category tagcloud">
-                                        
-                                        <a class="article-category-link" href="https://nicky-chin.cn/categories/distribution/">distribution</a>
-                                        
-                                    </div>
-                                    
-
-                                    
-                                    <div class="article-tag tagcloud">
-                                        <ul class="article-tag-list">
-                                            
-                                            <li class="article-tag-list-item">
-                                                <a class="article-tag-list-link" href="https://nicky-chin.cn/tags/%e5%88%86%e5%b8%83%e5%bc%8fid%e6%96%b9%e6%a1%88/">分布式ID方案</a>
-                                            </li>
-                                            
-                                        </ul>
-                                    </div>
-                                    
-
-                                </div>
-                                <div class="clearfix"></div>
-                            </header>
-                        </div>
-                    </article>
-                
-
-                    <article class="archive-article archive-type-post">
-                        <div class="archive-article-inner">
-                            <header class="archive-article-header">
-                                <div class="article-meta">
-                                    <a href="https://nicky-chin.cn/2018/08/25/spring-springmvc/" class="archive-article-date">
-                                        <time datetime="2018-08-25 11:18:15 &#43;0800 CST" itemprop="datePublished">08-25
-                                        </time>
-                                    </a>
-                                </div>
-
-
-                                <h1 itemprop="name">
-                                    <a class="archive-article-title" href="https://nicky-chin.cn/2018/08/25/spring-springmvc/"
-                                       target="_blank">Spring之动手实现SpringMVC功能</a>
-                                </h1>
-
-
-                                <div class="article-info info-on-archive">
-
-                                    
-                                    <div class="article-category tagcloud">
-                                        
-                                        <a class="article-category-link" href="https://nicky-chin.cn/categories/spring/">spring</a>
-                                        
-                                    </div>
-                                    
-
-                                    
-                                    <div class="article-tag tagcloud">
-                                        <ul class="article-tag-list">
-                                            
-                                            <li class="article-tag-list-item">
-                                                <a class="article-tag-list-link" href="https://nicky-chin.cn/tags/spring-base/">spring-base</a>
-                                            </li>
-                                            
-                                        </ul>
-                                    </div>
-                                    
-
-                                </div>
-                                <div class="clearfix"></div>
-                            </header>
-                        </div>
-                    </article>
-                
-
-                    <article class="archive-article archive-type-post">
-                        <div class="archive-article-inner">
-                            <header class="archive-article-header">
-                                <div class="article-meta">
-                                    <a href="https://nicky-chin.cn/2018/08/22/java-methodhandler/" class="archive-article-date">
-                                        <time datetime="2018-08-22 11:18:15 &#43;0800 CST" itemprop="datePublished">08-22
-                                        </time>
-                                    </a>
-                                </div>
-
-
-                                <h1 itemprop="name">
-                                    <a class="archive-article-title" href="https://nicky-chin.cn/2018/08/22/java-methodhandler/"
-                                       target="_blank">Java反射优化之方法句柄</a>
-                                </h1>
-
-
-                                <div class="article-info info-on-archive">
-
-                                    
-                                    <div class="article-category tagcloud">
-                                        
-                                        <a class="article-category-link" href="https://nicky-chin.cn/categories/java-base/">java-base</a>
-                                        
-                                    </div>
-                                    
-
-                                    
-                                    <div class="article-tag tagcloud">
-                                        <ul class="article-tag-list">
-                                            
-                                            <li class="article-tag-list-item">
-                                                <a class="article-tag-list-link" href="https://nicky-chin.cn/tags/%e5%9f%ba%e7%a1%80/">基础</a>
-                                            </li>
-                                            
-                                        </ul>
-                                    </div>
-                                    
-
-                                </div>
-                                <div class="clearfix"></div>
-                            </header>
-                        </div>
-                    </article>
-                
                 </div>
             </section>
             
@@ -702,6 +726,11 @@
             <a class="page-number" href="https://nicky-chin.cn/post/page/8/">8</a>
         
     
+        
+        
+            <a class="page-number" href="https://nicky-chin.cn/post/page/9/">9</a>
+        
+    
     
     
     
@@ -720,7 +749,7 @@
 
 
             <button class="hide-labels">TAG 开关</button>
-<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js">
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js">
 </script>
 <script>
     $(document).ready(function () {
@@ -733,23 +762,52 @@
 
         </div>
         <footer id="footer">
+
+    
+
+
     <div class="outer">
+        
+        
+            <div class="footer-right">
+                
+                    <span id="busuanzi_container_site_pv" style='display: block'>
+                        <span id="site-visit" >本站访客数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    
+                
+                
+                    
+                        
+                            
+                        
+                    
+                
+            </div>
+        
+        
         <div id="footer-info">
             <div class="footer-left">
-                &copy; 2021 nicky_chin
+                &copy; 2022 南乡清水@Hangzhou
             </div>
-            <div class="footer-right">
-                <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>
+            <div class="s-bottom-layer-right" style="font-size: 0.2em" >
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33011002014475"
+                   target="_blank"><span class="lh s-bottom-recordcode">京公网安备33011002014475号</span></a>
+                <a href="https://beian.miit.gov.cn/"
+                   target="_blank"><span class="lh"> 浙ICP备19049847号-1</span></a>
             </div>
         </div>
-        
     </div>
 </footer>
 
     </div>
     
 <script src="https://nicky-chin.cn/js/GithubRepoWidget.js"></script>
-<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
 <script src="https://nicky-chin.cn/js/main.js"></script>
 
 
@@ -778,7 +836,7 @@
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-ga('create', 'UA-119892182-1', 'auto');
+ga('create', 'UA-159911678-1', 'auto');
 ga('send', 'pageview');
 
 </script>

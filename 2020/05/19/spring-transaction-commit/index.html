@@ -7,7 +7,7 @@
     <script>
         var yiliaConfig = {
             fancybox:  true ,
-            animate:  true ,
+            animate:  false ,
             isHome: false,
             isPost: false,
             isArchive: true,
@@ -17,7 +17,6 @@
             rootUrl: "\/"
         };
     </script>
-
     <title>Transaction源码解析之事务提交与回滚</title>
     <link rel="icon" href="https://nicky-chin.cn/img/favicon.ico">
 
@@ -25,14 +24,22 @@
     <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
     <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
 
+    <link rel="stylesheet" type="text/css" href="https://nicky-chin.cn/assets/waifu.css"/>
 
     <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
 
-    
-    
     <link rel="stylesheet" href="https://nicky-chin.cn/highlight/styles/darcula.css">
     <script src="https://nicky-chin.cn/highlight/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+            (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','zTXEk5Sy3-gUuAVTm5JE','2.0.0');
+    </script>
 </head>
 <body>
 
@@ -55,7 +62,6 @@
         
 
         
-
 
         
             <div id="switch-btn" class="switch-btn">
@@ -112,11 +118,13 @@
                         
                             <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
                         
-                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
-                        
                             <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
                         
                             <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
                         
                         </ul>
                     </nav>
@@ -139,39 +147,43 @@
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
                         
+                            <a href="https://nicky-chin.cn/tags/im%E9%80%9A%E8%AE%AF" style="font-size: 12px;" class="color2">Im通讯</a>
+                        
                             <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color4">Junit</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/netty" style="font-size: 12px;" class="color3">Netty</a>
                         
                             <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color3">Redis</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color1">Spring-Base</a>
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color2">Spring-Base</a>
                         
-                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color2">Spring-Transaction</a>
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color3">Spring-Transaction</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">优化</a>
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">优化</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color4">分布式id方案</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color1">分布式id方案</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color3">创建型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color4">基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color4">多线程</a>
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color2">多线程</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color2">思维导图</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color1">思维导图</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color2">数据结构</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color4">数据结构</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color1">框架基础</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color3">框架基础</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color1">源码</a>
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color2">源码</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color2">理论</a>
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color4">理论</a>
                         
                             <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color4">结构型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color1">行为型</a>
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color2">行为型</a>
                         
-                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color4">锁优化</a>
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color2">锁优化</a>
                         
                     </div>
                 </section>
@@ -236,11 +248,13 @@
                     
                     <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
                     
-                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
-                    
                     <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
                     
                     <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
                     
                 <div class="clearfix"></div>
                 </ul>
@@ -309,6 +323,12 @@
             </div>
             
 
+            
+            <div class="article-category tagcloud">
+                <a class="article-category-link" style="font-size: 12px;"> posted by nicky_chin</a>
+            </div>
+            
+
             <div class="clearfix"></div>
         </div>
 
@@ -322,108 +342,92 @@
 <h2 id="1-1-调试demo">1.1 调试demo</h2>
 
 <p>我们使用常用的业务代码来做调试：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Service</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;personService&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PersonServiceImpl</span> <span style="color:#66d9ef">implements</span> IPersonService <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">
-@Service(&quot;personService&quot;)
-public class PersonServiceImpl implements IPersonService {
-
-   @Override
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT,
-        rollbackFor = Exception.class)
-    public void removeUserById(Integer id) {
+   <span style="color:#a6e22e">@Override</span>
+    <span style="color:#a6e22e">@Transactional</span><span style="color:#f92672">(</span>propagation <span style="color:#f92672">=</span> Propagation<span style="color:#f92672">.</span><span style="color:#a6e22e">REQUIRED</span><span style="color:#f92672">,</span> isolation <span style="color:#f92672">=</span> Isolation<span style="color:#f92672">.</span><span style="color:#a6e22e">DEFAULT</span><span style="color:#f92672">,</span>
+        rollbackFor <span style="color:#f92672">=</span> Exception<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">removeUserById</span><span style="color:#f92672">(</span>Integer id<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
       
-        personRepository.removeById(id);
-        User user = new User();
-        user.setId(0);
-        user.setName(&quot;aaa&quot;);
-        user.setSumScore(&quot;222&quot;);
-        user.setAvgScore(&quot;111&quot;);
-        user.setAge(20);
-        user.setIsSuccess(false);
-        user.setScore(UnsignedInteger.valueOf(1));
-        user.setStatus(UnsignedLong.valueOf(2));
-        userService.insertOne(user);
+        personRepository<span style="color:#f92672">.</span><span style="color:#a6e22e">removeById</span><span style="color:#f92672">(</span>id<span style="color:#f92672">);</span>
+        User user <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> User<span style="color:#f92672">();</span>
+        user<span style="color:#f92672">.</span><span style="color:#a6e22e">setId</span><span style="color:#f92672">(</span>0<span style="color:#f92672">);</span>
+        user<span style="color:#f92672">.</span><span style="color:#a6e22e">setName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;aaa&#34;</span><span style="color:#f92672">);</span>
+        user<span style="color:#f92672">.</span><span style="color:#a6e22e">setSumScore</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;222&#34;</span><span style="color:#f92672">);</span>
+        user<span style="color:#f92672">.</span><span style="color:#a6e22e">setAvgScore</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;111&#34;</span><span style="color:#f92672">);</span>
+        user<span style="color:#f92672">.</span><span style="color:#a6e22e">setAge</span><span style="color:#f92672">(</span>20<span style="color:#f92672">);</span>
+        user<span style="color:#f92672">.</span><span style="color:#a6e22e">setIsSuccess</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+        user<span style="color:#f92672">.</span><span style="color:#a6e22e">setScore</span><span style="color:#f92672">(</span>UnsignedInteger<span style="color:#f92672">.</span><span style="color:#a6e22e">valueOf</span><span style="color:#f92672">(</span>1<span style="color:#f92672">));</span>
+        user<span style="color:#f92672">.</span><span style="color:#a6e22e">setStatus</span><span style="color:#f92672">(</span>UnsignedLong<span style="color:#f92672">.</span><span style="color:#a6e22e">valueOf</span><span style="color:#f92672">(</span>2<span style="color:#f92672">));</span>
+        userService<span style="color:#f92672">.</span><span style="color:#a6e22e">insertOne</span><span style="color:#f92672">(</span>user<span style="color:#f92672">);</span>
 
-    }
-}
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
 
-@Repository
-public interface PersonRepository extends JpaRepository&lt;Person, Integer&gt;, JpaSpecificationExecutor {
+<span style="color:#a6e22e">@Repository</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">PersonRepository</span> <span style="color:#66d9ef">extends</span> JpaRepository<span style="color:#f92672">&lt;</span>Person<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;,</span> JpaSpecificationExecutor <span style="color:#f92672">{</span>
 
-    Person findByName(String name);
+    Person <span style="color:#a6e22e">findByName</span><span style="color:#f92672">(</span>String name<span style="color:#f92672">);</span>
 
-    @Query(&quot;select p from Person p where p.id = ?1&quot;)
-    Person findObjectById(Integer id);
+    <span style="color:#a6e22e">@Query</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;select p from Person p where p.id = ?1&#34;</span><span style="color:#f92672">)</span>
+    Person <span style="color:#a6e22e">findObjectById</span><span style="color:#f92672">(</span>Integer id<span style="color:#f92672">);</span>
 
-    //@CacheEvict(value = &quot;person&quot;)
-    @Transactional(propagation = Propagation.REQUIRED,timeout = 3)
-    void removeById(Integer id);
+    <span style="color:#75715e">//@CacheEvict(value = &#34;person&#34;)
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">@Transactional</span><span style="color:#f92672">(</span>propagation <span style="color:#f92672">=</span> Propagation<span style="color:#f92672">.</span><span style="color:#a6e22e">REQUIRED</span><span style="color:#f92672">,</span>timeout <span style="color:#f92672">=</span> 3<span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">removeById</span><span style="color:#f92672">(</span>Integer id<span style="color:#f92672">);</span>
 
-}
+<span style="color:#f92672">}</span>
 
-@Service(&quot;userService&quot;)
-public class UserServiceImpl implements UserService {
+<span style="color:#a6e22e">@Service</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;userService&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UserServiceImpl</span> <span style="color:#66d9ef">implements</span> UserService <span style="color:#f92672">{</span>
 
-    @Autowired
-    private UserDao userDao;
+    <span style="color:#a6e22e">@Autowired</span>
+    <span style="color:#66d9ef">private</span> UserDao userDao<span style="color:#f92672">;</span>
 
-  @Override
-    @Transactional
-    public void insertOne(User user) {
-        userDao.insert(user);
-    }
+  <span style="color:#a6e22e">@Override</span>
+    <span style="color:#a6e22e">@Transactional</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">insertOne</span><span style="color:#f92672">(</span>User user<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        userDao<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>user<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
 
-}
-</code></pre>
-
+<span style="color:#f92672">}</span></code></pre></div>
 <p>我们通过以下测试用例，来调试事务相关信息：</p>
-
-<pre><code class="language-java"> @Test
-    public void doNothing() {
-        iPersonService.removeUserById(1);
-    }
-
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"> <span style="color:#a6e22e">@Test</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">doNothing</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        iPersonService<span style="color:#f92672">.</span><span style="color:#a6e22e">removeUserById</span><span style="color:#f92672">(</span>1<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span></code></pre></div>
 <h2 id="1-2-解析入口">1.2 解析入口</h2>
-
-<pre><code class="language-java">       // 事务开启
-			TransactionInfo txInfo = createTransactionIfNecessary(tm, txAttr, joinpointIdentification);
-			Object retVal = null;
-			try {
-       // 继续执行剩下的advice调用链，最终执行本身方法
-				retVal = invocation.proceedWithInvocation();
-			}
-			catch (Throwable ex) {
-				// 异常下提交或者回滚处理
-				completeTransactionAfterThrowing(txInfo, ex);
-				throw ex;
-			}
-			finally {
-			   // 还原前一个事务的信息到本地线程
-				cleanupTransactionInfo(txInfo);
-			}
-			// 提交事务
-			commitTransactionAfterReturning(txInfo);
-			return retVal;
-		
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">       <span style="color:#75715e">// 事务开启
+</span><span style="color:#75715e"></span>			TransactionInfo txInfo <span style="color:#f92672">=</span> createTransactionIfNecessary<span style="color:#f92672">(</span>tm<span style="color:#f92672">,</span> txAttr<span style="color:#f92672">,</span> joinpointIdentification<span style="color:#f92672">);</span>
+			Object retVal <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+			<span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+       <span style="color:#75715e">// 继续执行剩下的advice调用链，最终执行本身方法
+</span><span style="color:#75715e"></span>				retVal <span style="color:#f92672">=</span> invocation<span style="color:#f92672">.</span><span style="color:#a6e22e">proceedWithInvocation</span><span style="color:#f92672">();</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable ex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				<span style="color:#75715e">// 异常下提交或者回滚处理
+</span><span style="color:#75715e"></span>				completeTransactionAfterThrowing<span style="color:#f92672">(</span>txInfo<span style="color:#f92672">,</span> ex<span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">throw</span> ex<span style="color:#f92672">;</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+			   <span style="color:#75715e">// 还原前一个事务的信息到本地线程
+</span><span style="color:#75715e"></span>				cleanupTransactionInfo<span style="color:#f92672">(</span>txInfo<span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#75715e">// 提交事务
+</span><span style="color:#75715e"></span>			commitTransactionAfterReturning<span style="color:#f92672">(</span>txInfo<span style="color:#f92672">);</span>
+			<span style="color:#66d9ef">return</span> retVal<span style="color:#f92672">;</span>
+		</code></pre></div>
 <p>这是一个事务的完整执行流程，事务预处理在上篇<a href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/">Transaction源码解析之事务预处理</a>中已经详细解析过，现在我们来分析提交和回滚</p>
 
 <h2 id="1-3-还原上层事务">1.3 还原上层事务</h2>
 
 <p>还原上层事务主要通过<code>cleanupTransactionInfo</code>方法处理：</p>
-
-<pre><code class="language-java">
-	private void restoreThreadLocalStatus() {
-			// Use stack to restore old transaction TransactionInfo.
-			// Will be null if none was set.
-			transactionInfoHolder.set(this.oldTransactionInfo);
-		}
-
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">restoreThreadLocalStatus</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+			<span style="color:#75715e">// Use stack to restore old transaction TransactionInfo.
+</span><span style="color:#75715e"></span>			<span style="color:#75715e">// Will be null if none was set.
+</span><span style="color:#75715e"></span>			transactionInfoHolder<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">oldTransactionInfo</span><span style="color:#f92672">);</span>
+		<span style="color:#f92672">}</span></code></pre></div>
 <p>主要是将当前线程绑定为上一层的事务，比如在上述的测试代码中
 <code>personRepository.removeById(id)</code>和<code>userService.insertOne(user)</code>是同一层事务，他们的上一层事务都是<code>iPersonService.removeUserById</code>方法的事务，这样做的目的是保证同一层事务提交完成之后，保证上一层的事务也得到处理，最终提交整个完整的事务</p>
 
@@ -432,92 +436,81 @@ public class UserServiceImpl implements UserService {
 <p>事务提交主要关注<code>commitTransactionAfterReturning</code>这个方法，它最终会调用<code>AbstractPlatformTransactionManager.commit</code>的方法：</p>
 
 <h2 id="2-1-正常提交">2.1 正常提交</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">commit</span><span style="color:#f92672">(</span>TransactionStatus status<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> TransactionException <span style="color:#f92672">{</span>
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">isCompleted</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalTransactionStateException<span style="color:#f92672">(</span>
+					<span style="color:#e6db74">&#34;Transaction is already completed - do not call commit or rollback more than once per transaction&#34;</span><span style="color:#f92672">);</span>
+		<span style="color:#f92672">}</span>
 
-<pre><code class="language-java">	public final void commit(TransactionStatus status) throws TransactionException {
-		if (status.isCompleted()) {
-			throw new IllegalTransactionStateException(
-					&quot;Transaction is already completed - do not call commit or rollback more than once per transaction&quot;);
-		}
-
-		DefaultTransactionStatus defStatus = (DefaultTransactionStatus) status;
-		if (defStatus.isLocalRollbackOnly()) {
-			if (defStatus.isDebug()) {
-				logger.debug(&quot;Transactional code has requested rollback&quot;);
-			}
-			processRollback(defStatus);
-			return;
-		}
-		// 全局回滚的时候不commit并且当前事务需要回滚
-		if (!shouldCommitOnGlobalRollbackOnly() &amp;&amp; defStatus.isGlobalRollbackOnly()) {
-			if (defStatus.isDebug()) {
-				logger.debug(&quot;Global transaction is marked as rollback-only but transactional code requested commit&quot;);
-			}
-			processRollback(defStatus);
-			// Throw UnexpectedRollbackException only at outermost transaction boundary
-			// or if explicitly asked to.
-			if (status.isNewTransaction() || isFailEarlyOnGlobalRollbackOnly()) {
-				throw new UnexpectedRollbackException(
-						&quot;Transaction rolled back because it has been marked as rollback-only&quot;);
-			}
-			return;
-		}
-		// 处理提交
-		processCommit(defStatus);
-	}
-
-
-</code></pre>
-
+		DefaultTransactionStatus defStatus <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>DefaultTransactionStatus<span style="color:#f92672">)</span> status<span style="color:#f92672">;</span>
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>defStatus<span style="color:#f92672">.</span><span style="color:#a6e22e">isLocalRollbackOnly</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>defStatus<span style="color:#f92672">.</span><span style="color:#a6e22e">isDebug</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+				logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Transactional code has requested rollback&#34;</span><span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			processRollback<span style="color:#f92672">(</span>defStatus<span style="color:#f92672">);</span>
+			<span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+		<span style="color:#f92672">}</span>
+		<span style="color:#75715e">// 全局回滚的时候不commit并且当前事务需要回滚
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>shouldCommitOnGlobalRollbackOnly<span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> defStatus<span style="color:#f92672">.</span><span style="color:#a6e22e">isGlobalRollbackOnly</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>defStatus<span style="color:#f92672">.</span><span style="color:#a6e22e">isDebug</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+				logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Global transaction is marked as rollback-only but transactional code requested commit&#34;</span><span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			processRollback<span style="color:#f92672">(</span>defStatus<span style="color:#f92672">);</span>
+			<span style="color:#75715e">// Throw UnexpectedRollbackException only at outermost transaction boundary
+</span><span style="color:#75715e"></span>			<span style="color:#75715e">// or if explicitly asked to.
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">isNewTransaction</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> isFailEarlyOnGlobalRollbackOnly<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+				<span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> UnexpectedRollbackException<span style="color:#f92672">(</span>
+						<span style="color:#e6db74">&#34;Transaction rolled back because it has been marked as rollback-only&#34;</span><span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+		<span style="color:#f92672">}</span>
+		<span style="color:#75715e">// 处理提交
+</span><span style="color:#75715e"></span>		processCommit<span style="color:#f92672">(</span>defStatus<span style="color:#f92672">);</span>
+	<span style="color:#f92672">}</span></code></pre></div>
 <p>只要事务没有回滚，正常都会走<code>processCommit(defStatus)</code>的逻辑</p>
-
-<pre><code class="language-java">
-private void processCommit(DefaultTransactionStatus status) throws TransactionException {
-		try {
-			boolean beforeCompletionInvoked = false;
-			try {
-			    // 准备提交
-				prepareForCommit(status);
-				// 触发提交前的同步器回调
-				triggerBeforeCommit(status);
-                // 触发完成前的同步器回调
-                triggerBeforeCompletion(status);
-				beforeCompletionInvoked = true;
-				boolean globalRollbackOnly = false;
-				if (status.isNewTransaction() || isFailEarlyOnGlobalRollbackOnly()) {
-					globalRollbackOnly = status.isGlobalRollbackOnly();
-				}
-				if (status.hasSavepoint()) {
-					if (status.isDebug()) {
-						logger.debug(&quot;Releasing transaction savepoint&quot;);
-					}
-					// 释放安全点
-					status.releaseHeldSavepoint();
-				}
-				// 是否是新事务（最外层事务或者传播特性需要新建的事务）
-				else if (status.isNewTransaction()) {
-					if (status.isDebug()) {
-						logger.debug(&quot;Initiating transaction commit&quot;);
-					}
-					// 提交
-					doCommit(status);
-				}
-				// Throw UnexpectedRollbackException if we have a global rollback-only
-				// marker but still didn't get a corresponding exception from commit.
-				if (globalRollbackOnly) {
-					throw new UnexpectedRollbackException(
-							&quot;Transaction silently rolled back because it has been marked as rollback-only&quot;);
-				}
-			}
-			}catch (Error err) {
-			  // 提交异常回滚
-				doRollbackOnCommitException(status, err);
-				throw err;
-			}
-			
-
-
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">processCommit</span><span style="color:#f92672">(</span>DefaultTransactionStatus status<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> TransactionException <span style="color:#f92672">{</span>
+		<span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">boolean</span> beforeCompletionInvoked <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+			<span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+			    <span style="color:#75715e">// 准备提交
+</span><span style="color:#75715e"></span>				prepareForCommit<span style="color:#f92672">(</span>status<span style="color:#f92672">);</span>
+				<span style="color:#75715e">// 触发提交前的同步器回调
+</span><span style="color:#75715e"></span>				triggerBeforeCommit<span style="color:#f92672">(</span>status<span style="color:#f92672">);</span>
+                <span style="color:#75715e">// 触发完成前的同步器回调
+</span><span style="color:#75715e"></span>                triggerBeforeCompletion<span style="color:#f92672">(</span>status<span style="color:#f92672">);</span>
+				beforeCompletionInvoked <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+				<span style="color:#66d9ef">boolean</span> globalRollbackOnly <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">isNewTransaction</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> isFailEarlyOnGlobalRollbackOnly<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+					globalRollbackOnly <span style="color:#f92672">=</span> status<span style="color:#f92672">.</span><span style="color:#a6e22e">isGlobalRollbackOnly</span><span style="color:#f92672">();</span>
+				<span style="color:#f92672">}</span>
+				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">hasSavepoint</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+					<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">isDebug</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+						logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Releasing transaction savepoint&#34;</span><span style="color:#f92672">);</span>
+					<span style="color:#f92672">}</span>
+					<span style="color:#75715e">// 释放安全点
+</span><span style="color:#75715e"></span>					status<span style="color:#f92672">.</span><span style="color:#a6e22e">releaseHeldSavepoint</span><span style="color:#f92672">();</span>
+				<span style="color:#f92672">}</span>
+				<span style="color:#75715e">// 是否是新事务（最外层事务或者传播特性需要新建的事务）
+</span><span style="color:#75715e"></span>				<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">isNewTransaction</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+					<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">isDebug</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+						logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Initiating transaction commit&#34;</span><span style="color:#f92672">);</span>
+					<span style="color:#f92672">}</span>
+					<span style="color:#75715e">// 提交
+</span><span style="color:#75715e"></span>					doCommit<span style="color:#f92672">(</span>status<span style="color:#f92672">);</span>
+				<span style="color:#f92672">}</span>
+				<span style="color:#75715e">// Throw UnexpectedRollbackException if we have a global rollback-only
+</span><span style="color:#75715e"></span>				<span style="color:#75715e">// marker but still didn&#39;t get a corresponding exception from commit.
+</span><span style="color:#75715e"></span>				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>globalRollbackOnly<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+					<span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> UnexpectedRollbackException<span style="color:#f92672">(</span>
+							<span style="color:#e6db74">&#34;Transaction silently rolled back because it has been marked as rollback-only&#34;</span><span style="color:#f92672">);</span>
+				<span style="color:#f92672">}</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#f92672">}</span><span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Error err<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			  <span style="color:#75715e">// 提交异常回滚
+</span><span style="color:#75715e"></span>				doRollbackOnCommitException<span style="color:#f92672">(</span>status<span style="color:#f92672">,</span> err<span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">throw</span> err<span style="color:#f92672">;</span>
+			<span style="color:#f92672">}</span>
+			</code></pre></div>
 <p>上述的代码主流程</p>
 
 <blockquote>
@@ -535,27 +528,23 @@ private void processCommit(DefaultTransactionStatus status) throws TransactionEx
 <h2 id="2-2-提交异常回滚">2.2 提交异常回滚</h2>
 
 <p>如果提交事务异常则会回滚：</p>
-
-<pre><code class="language-java">private void doRollbackOnCommitException(DefaultTransactionStatus status, Throwable ex) throws TransactionException {
-		try {
-			if (status.isNewTransaction()) {
-				if (status.isDebug()) {
-					logger.debug(&quot;Initiating transaction rollback after commit exception&quot;, ex);
-				}
-				doRollback(status);
-			}
-			else if (status.hasTransaction() &amp;&amp; isGlobalRollbackOnParticipationFailure()) {
-				if (status.isDebug()) {
-					logger.debug(&quot;Marking existing transaction as rollback-only after commit exception&quot;, ex);
-				}
-				doSetRollbackOnly(status);
-			}
-		}
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">doRollbackOnCommitException</span><span style="color:#f92672">(</span>DefaultTransactionStatus status<span style="color:#f92672">,</span> Throwable ex<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> TransactionException <span style="color:#f92672">{</span>
+		<span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">isNewTransaction</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">isDebug</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+					logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Initiating transaction rollback after commit exception&#34;</span><span style="color:#f92672">,</span> ex<span style="color:#f92672">);</span>
+				<span style="color:#f92672">}</span>
+				doRollback<span style="color:#f92672">(</span>status<span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">hasTransaction</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> isGlobalRollbackOnParticipationFailure<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">isDebug</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+					logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Marking existing transaction as rollback-only after commit exception&#34;</span><span style="color:#f92672">,</span> ex<span style="color:#f92672">);</span>
+				<span style="color:#f92672">}</span>
+				doSetRollbackOnly<span style="color:#f92672">(</span>status<span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+		<span style="color:#f92672">}</span>
 		
-		}
-
-</code></pre>
-
+		<span style="color:#f92672">}</span></code></pre></div>
 <p>如果当前事务是一个新事务则直接回滚事务，如果当前事务存在则会将当前事务标记为<strong>rollbackOnly</strong></p>
 
 <h1 id="3-事务回滚">3 事务回滚</h1>
@@ -563,62 +552,54 @@ private void processCommit(DefaultTransactionStatus status) throws TransactionEx
 <h2 id="3-1-回滚处理">3.1 回滚处理</h2>
 
 <p>事务出现异常则会根据策略进行回滚，方法在<code>completeTransactionAfterThrowing</code>中</p>
-
-<pre><code class="language-java">
-protected void completeTransactionAfterThrowing(TransactionInfo txInfo, Throwable ex) {
-		// 是有存在事务
-	    if (txInfo != null &amp;&amp; txInfo.hasTransaction()) {
-			if (logger.isTraceEnabled()) {
-				logger.trace(&quot;Completing transaction for [&quot; + txInfo.getJoinpointIdentification() +
-						&quot;] after exception: &quot; + ex);
-			}
-			// 是否需要回滚异常
-			if (txInfo.transactionAttribute.rollbackOn(ex)) {
-				try {
-					txInfo.getTransactionManager().rollback(txInfo.getTransactionStatus());
-				}
-				catch (TransactionSystemException ex2) {
-					logger.error(&quot;Application exception overridden by rollback exception&quot;, ex);
-					ex2.initApplicationException(ex);
-					throw ex2;
-				}
-				catch (RuntimeException ex2) {
-					logger.error(&quot;Application exception overridden by rollback exception&quot;, ex);
-					throw ex2;
-				}
-				catch (Error err) {
-					logger.error(&quot;Application exception overridden by rollback error&quot;, ex);
-					throw err;
-				}
-			}
-			else {
-			    // 不回滚
-				// We don't roll back on this exception.
-				// Will still roll back if TransactionStatus.isRollbackOnly() is true.
-				try {
-					txInfo.getTransactionManager().commit(txInfo.getTransactionStatus());
-				}
-				catch (TransactionSystemException ex2) {
-					logger.error(&quot;Application exception overridden by commit exception&quot;, ex);
-					ex2.initApplicationException(ex);
-					throw ex2;
-				}
-				catch (RuntimeException ex2) {
-					logger.error(&quot;Application exception overridden by commit exception&quot;, ex);
-					throw ex2;
-				}
-				catch (Error err) {
-					logger.error(&quot;Application exception overridden by commit error&quot;, ex);
-					throw err;
-				}
-			}
-		}
-
-
-
-
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">completeTransactionAfterThrowing</span><span style="color:#f92672">(</span>TransactionInfo txInfo<span style="color:#f92672">,</span> Throwable ex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		<span style="color:#75715e">// 是有存在事务
+</span><span style="color:#75715e"></span>	    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>txInfo <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> txInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">hasTransaction</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>logger<span style="color:#f92672">.</span><span style="color:#a6e22e">isTraceEnabled</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+				logger<span style="color:#f92672">.</span><span style="color:#a6e22e">trace</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Completing transaction for [&#34;</span> <span style="color:#f92672">+</span> txInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">getJoinpointIdentification</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span>
+						<span style="color:#e6db74">&#34;] after exception: &#34;</span> <span style="color:#f92672">+</span> ex<span style="color:#f92672">);</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#75715e">// 是否需要回滚异常
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>txInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">transactionAttribute</span><span style="color:#f92672">.</span><span style="color:#a6e22e">rollbackOn</span><span style="color:#f92672">(</span>ex<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+				<span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+					txInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">getTransactionManager</span><span style="color:#f92672">().</span><span style="color:#a6e22e">rollback</span><span style="color:#f92672">(</span>txInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">getTransactionStatus</span><span style="color:#f92672">());</span>
+				<span style="color:#f92672">}</span>
+				<span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>TransactionSystemException ex2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+					logger<span style="color:#f92672">.</span><span style="color:#a6e22e">error</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Application exception overridden by rollback exception&#34;</span><span style="color:#f92672">,</span> ex<span style="color:#f92672">);</span>
+					ex2<span style="color:#f92672">.</span><span style="color:#a6e22e">initApplicationException</span><span style="color:#f92672">(</span>ex<span style="color:#f92672">);</span>
+					<span style="color:#66d9ef">throw</span> ex2<span style="color:#f92672">;</span>
+				<span style="color:#f92672">}</span>
+				<span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>RuntimeException ex2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+					logger<span style="color:#f92672">.</span><span style="color:#a6e22e">error</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Application exception overridden by rollback exception&#34;</span><span style="color:#f92672">,</span> ex<span style="color:#f92672">);</span>
+					<span style="color:#66d9ef">throw</span> ex2<span style="color:#f92672">;</span>
+				<span style="color:#f92672">}</span>
+				<span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Error err<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+					logger<span style="color:#f92672">.</span><span style="color:#a6e22e">error</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Application exception overridden by rollback error&#34;</span><span style="color:#f92672">,</span> ex<span style="color:#f92672">);</span>
+					<span style="color:#66d9ef">throw</span> err<span style="color:#f92672">;</span>
+				<span style="color:#f92672">}</span>
+			<span style="color:#f92672">}</span>
+			<span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+			    <span style="color:#75715e">// 不回滚
+</span><span style="color:#75715e"></span>				<span style="color:#75715e">// We don&#39;t roll back on this exception.
+</span><span style="color:#75715e"></span>				<span style="color:#75715e">// Will still roll back if TransactionStatus.isRollbackOnly() is true.
+</span><span style="color:#75715e"></span>				<span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+					txInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">getTransactionManager</span><span style="color:#f92672">().</span><span style="color:#a6e22e">commit</span><span style="color:#f92672">(</span>txInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">getTransactionStatus</span><span style="color:#f92672">());</span>
+				<span style="color:#f92672">}</span>
+				<span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>TransactionSystemException ex2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+					logger<span style="color:#f92672">.</span><span style="color:#a6e22e">error</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Application exception overridden by commit exception&#34;</span><span style="color:#f92672">,</span> ex<span style="color:#f92672">);</span>
+					ex2<span style="color:#f92672">.</span><span style="color:#a6e22e">initApplicationException</span><span style="color:#f92672">(</span>ex<span style="color:#f92672">);</span>
+					<span style="color:#66d9ef">throw</span> ex2<span style="color:#f92672">;</span>
+				<span style="color:#f92672">}</span>
+				<span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>RuntimeException ex2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+					logger<span style="color:#f92672">.</span><span style="color:#a6e22e">error</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Application exception overridden by commit exception&#34;</span><span style="color:#f92672">,</span> ex<span style="color:#f92672">);</span>
+					<span style="color:#66d9ef">throw</span> ex2<span style="color:#f92672">;</span>
+				<span style="color:#f92672">}</span>
+				<span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Error err<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+					logger<span style="color:#f92672">.</span><span style="color:#a6e22e">error</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Application exception overridden by commit error&#34;</span><span style="color:#f92672">,</span> ex<span style="color:#f92672">);</span>
+					<span style="color:#66d9ef">throw</span> err<span style="color:#f92672">;</span>
+				<span style="color:#f92672">}</span>
+			<span style="color:#f92672">}</span>
+		<span style="color:#f92672">}</span></code></pre></div>
 <p>回滚的逻辑也很清晰：</p>
 
 <blockquote>
@@ -630,49 +611,45 @@ protected void completeTransactionAfterThrowing(TransactionInfo txInfo, Throwabl
 </blockquote>
 
 <p>如果需要回滚，最终进入<code>processRollback</code>方法：</p>
-
-<pre><code class="language-java">private void processRollback(DefaultTransactionStatus status) {
-		try {
-			try {
-				triggerBeforeCompletion(status);
-				// 如果有安全点
-				if (status.hasSavepoint()) {
-					if (status.isDebug()) {
-						logger.debug(&quot;Rolling back transaction to savepoint&quot;);
-					}
-					// 回滚删除夯住的savepoint
-					status.rollbackToHeldSavepoint();
-				}
-				// 是否是新事务（最外层事务或者传播特性需要新建的事务）
-				else if (status.isNewTransaction()) {
-					if (status.isDebug()) {
-						logger.debug(&quot;Initiating transaction rollback&quot;);
-					}
-					// 回滚
-					doRollback(status);
-				}
-				// 当前事务存在并且不是新事务
-				else if (status.hasTransaction()) {
-					if (status.isLocalRollbackOnly() || isGlobalRollbackOnParticipationFailure()) {
-						if (status.isDebug()) {
-							logger.debug(&quot;Participating transaction failed - marking existing transaction as rollback-only&quot;);
-						}
-						// 标记RollbackOnly
-						doSetRollbackOnly(status);
-					}
-					else {
-						if (status.isDebug()) {
-							logger.debug(&quot;Participating transaction failed - letting transaction originator decide on rollback&quot;);
-						}
-					}
-				}
-				else {
-					logger.debug(&quot;Should roll back transaction but cannot - no transaction available&quot;);
-				}
-			}
-
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">processRollback</span><span style="color:#f92672">(</span>DefaultTransactionStatus status<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		<span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+				triggerBeforeCompletion<span style="color:#f92672">(</span>status<span style="color:#f92672">);</span>
+				<span style="color:#75715e">// 如果有安全点
+</span><span style="color:#75715e"></span>				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">hasSavepoint</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+					<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">isDebug</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+						logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Rolling back transaction to savepoint&#34;</span><span style="color:#f92672">);</span>
+					<span style="color:#f92672">}</span>
+					<span style="color:#75715e">// 回滚删除夯住的savepoint
+</span><span style="color:#75715e"></span>					status<span style="color:#f92672">.</span><span style="color:#a6e22e">rollbackToHeldSavepoint</span><span style="color:#f92672">();</span>
+				<span style="color:#f92672">}</span>
+				<span style="color:#75715e">// 是否是新事务（最外层事务或者传播特性需要新建的事务）
+</span><span style="color:#75715e"></span>				<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">isNewTransaction</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+					<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">isDebug</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+						logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Initiating transaction rollback&#34;</span><span style="color:#f92672">);</span>
+					<span style="color:#f92672">}</span>
+					<span style="color:#75715e">// 回滚
+</span><span style="color:#75715e"></span>					doRollback<span style="color:#f92672">(</span>status<span style="color:#f92672">);</span>
+				<span style="color:#f92672">}</span>
+				<span style="color:#75715e">// 当前事务存在并且不是新事务
+</span><span style="color:#75715e"></span>				<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">hasTransaction</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+					<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">isLocalRollbackOnly</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> isGlobalRollbackOnParticipationFailure<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+						<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">isDebug</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+							logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Participating transaction failed - marking existing transaction as rollback-only&#34;</span><span style="color:#f92672">);</span>
+						<span style="color:#f92672">}</span>
+						<span style="color:#75715e">// 标记RollbackOnly
+</span><span style="color:#75715e"></span>						doSetRollbackOnly<span style="color:#f92672">(</span>status<span style="color:#f92672">);</span>
+					<span style="color:#f92672">}</span>
+					<span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+						<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>status<span style="color:#f92672">.</span><span style="color:#a6e22e">isDebug</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+							logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Participating transaction failed - letting transaction originator decide on rollback&#34;</span><span style="color:#f92672">);</span>
+						<span style="color:#f92672">}</span>
+					<span style="color:#f92672">}</span>
+				<span style="color:#f92672">}</span>
+				<span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+					logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Should roll back transaction but cannot - no transaction available&#34;</span><span style="color:#f92672">);</span>
+				<span style="color:#f92672">}</span>
+			<span style="color:#f92672">}</span></code></pre></div>
 <p>上述逻辑主要分为三步</p>
 
 <blockquote>
@@ -686,49 +663,40 @@ protected void completeTransactionAfterThrowing(TransactionInfo txInfo, Throwabl
 <h2 id="3-2-回滚策略">3.2 回滚策略</h2>
 
 <p>主要关注<strong>RollbackRuleAttribute</strong>这个类，如果我们在使用注解<code>@transaction</code>的时候加入了<code>rollbackfor</code>属性指定了异常，则会生成对应的<strong>RuleBasedTransactionAttribute</strong>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">rollbackOn</span><span style="color:#f92672">(</span>Throwable ex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>logger<span style="color:#f92672">.</span><span style="color:#a6e22e">isTraceEnabled</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+			logger<span style="color:#f92672">.</span><span style="color:#a6e22e">trace</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Applying rules to determine whether transaction should rollback on &#34;</span> <span style="color:#f92672">+</span> ex<span style="color:#f92672">);</span>
+		<span style="color:#f92672">}</span>
 
-<pre><code class="language-java">
-	public boolean rollbackOn(Throwable ex) {
-		if (logger.isTraceEnabled()) {
-			logger.trace(&quot;Applying rules to determine whether transaction should rollback on &quot; + ex);
-		}
+		RollbackRuleAttribute winner <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+		<span style="color:#66d9ef">int</span> deepest <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">;</span>
 
-		RollbackRuleAttribute winner = null;
-		int deepest = Integer.MAX_VALUE;
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">rollbackRules</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			<span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>RollbackRuleAttribute rule <span style="color:#f92672">:</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">rollbackRules</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				<span style="color:#66d9ef">int</span> depth <span style="color:#f92672">=</span> rule<span style="color:#f92672">.</span><span style="color:#a6e22e">getDepth</span><span style="color:#f92672">(</span>ex<span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>depth <span style="color:#f92672">&gt;=</span> 0 <span style="color:#f92672">&amp;&amp;</span> depth <span style="color:#f92672">&lt;</span> deepest<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+					deepest <span style="color:#f92672">=</span> depth<span style="color:#f92672">;</span>
+					winner <span style="color:#f92672">=</span> rule<span style="color:#f92672">;</span>
+				<span style="color:#f92672">}</span>
+			<span style="color:#f92672">}</span>
+		<span style="color:#f92672">}</span>
 
-		if (this.rollbackRules != null) {
-			for (RollbackRuleAttribute rule : this.rollbackRules) {
-				int depth = rule.getDepth(ex);
-				if (depth &gt;= 0 &amp;&amp; depth &lt; deepest) {
-					deepest = depth;
-					winner = rule;
-				}
-			}
-		}
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>logger<span style="color:#f92672">.</span><span style="color:#a6e22e">isTraceEnabled</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+			logger<span style="color:#f92672">.</span><span style="color:#a6e22e">trace</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Winning rollback rule is: &#34;</span> <span style="color:#f92672">+</span> winner<span style="color:#f92672">);</span>
+		<span style="color:#f92672">}</span>
 
-		if (logger.isTraceEnabled()) {
-			logger.trace(&quot;Winning rollback rule is: &quot; + winner);
-		}
+		<span style="color:#75715e">// User superclass behavior (rollback on unchecked) if no rule matches.
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>winner <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+			logger<span style="color:#f92672">.</span><span style="color:#a6e22e">trace</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;No relevant rollback rule found: applying default rules&#34;</span><span style="color:#f92672">);</span>
+			<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">rollbackOn</span><span style="color:#f92672">(</span>ex<span style="color:#f92672">);</span>
+		<span style="color:#f92672">}</span>
 
-		// User superclass behavior (rollback on unchecked) if no rule matches.
-		if (winner == null) {
-			logger.trace(&quot;No relevant rollback rule found: applying default rules&quot;);
-			return super.rollbackOn(ex);
-		}
-
-		return !(winner instanceof NoRollbackRuleAttribute);
-	}
-
-</code></pre>
-
+		<span style="color:#66d9ef">return</span> <span style="color:#f92672">!(</span>winner <span style="color:#66d9ef">instanceof</span> NoRollbackRuleAttribute<span style="color:#f92672">);</span>
+	<span style="color:#f92672">}</span></code></pre></div>
 <p>回滚策略主要是匹配指定的异常，如果没有指定的异常则会走父类的匹配策略</p>
-
-<pre><code class="language-java">public boolean rollbackOn(Throwable ex) {
-		return (ex instanceof RuntimeException || ex instanceof Error);
-	}
-
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">rollbackOn</span><span style="color:#f92672">(</span>Throwable ex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		<span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>ex <span style="color:#66d9ef">instanceof</span> RuntimeException <span style="color:#f92672">||</span> ex <span style="color:#66d9ef">instanceof</span> Error<span style="color:#f92672">);</span>
+	<span style="color:#f92672">}</span></code></pre></div>
 <p>所以在默认情况下只有是运行异常或者Error错误才能回滚</p>
 
 <h1 id="4-事务执行完整流程">4 事务执行完整流程</h1>
@@ -750,6 +718,11 @@ protected void completeTransactionAfterThrowing(TransactionInfo txInfo, Throwabl
     <nav id="article-nav">
 
         
+        <div id="article-nav-newer" class="article-nav-title">
+            <a href="https://nicky-chin.cn/2020/06/11/net-nio-netty/">
+                浅析java-nio及netty的reactor模型
+            </a>
+        </div>
         
 
         
@@ -792,6 +765,11 @@ protected void completeTransactionAfterThrowing(TransactionInfo txInfo, Throwabl
 </ul>
 </nav>
     </ol>
+    <div style="text-align:center">-----------------------</div>
+    <strong class="toc-title">最新评论</strong>
+    <ol class="toc">
+        <div class="remark42__last-comments" data-max="10"></div>
+    </ol>
 </div>
 <style>
     
@@ -809,7 +787,7 @@ protected void completeTransactionAfterThrowing(TransactionInfo txInfo, Throwabl
 
 <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录" >
 
-<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
 <script>
     var valueHide = "隐藏目录";
     var valueShow = "显示目录";
@@ -871,16 +849,17 @@ protected void completeTransactionAfterThrowing(TransactionInfo txInfo, Throwabl
 
 <div style="margin-left: 30px;margin-right: 30px;background: white;padding-left: 30px;padding-right: 30px">
     <div class="comments">
-        <h3>COMMENTS</h3>
-        <script type="text/javascript">
-            (function() {
-                var dsq = document.createElement('script');
-                dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = 'https://nicky-chen.disqus.com/embed.js';
-                dsq.setAttribute('data-timestamp', +new Date());
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
+        <h3>[评论][COMMENTS]</h3>
+        
+            
+                
+                
+                
+                
+                
+            
+        
+        <div id="remark42"></div>
         <div id="disqus_thread"></div>
 
     </div>
@@ -895,7 +874,9 @@ protected void completeTransactionAfterThrowing(TransactionInfo txInfo, Throwabl
 <div class="scroll" id="post-nav-button">
 
     
-    <a href="https://nicky-chin.cn/" title="回到主页"><i class="fa fa-home"></i></a>
+    <a href="https://nicky-chin.cn/2020/06/11/net-nio-netty/" title="上一篇: 浅析java-nio及netty的reactor模型">
+        <i class="fa fa-angle-left"></i>
+    </a>
     
 
 
@@ -913,6 +894,16 @@ protected void completeTransactionAfterThrowing(TransactionInfo txInfo, Throwabl
 
 <ul class="post-list toc-article">
     
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2022/01/13/mysql-snapshot-read/" target="_blank">MySQL之Innodb之快照读原理实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2021/02/13/java-clone/" target="_blank">java的clone方法JVM实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/11/13/im-timeline/" target="_blank">基于TimeLine模型的消息同步机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/09/26/threadlocal-enchancer/" target="_blank">线程传递增强之TransmittableThreadLocal</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/06/11/net-nio-netty/" target="_blank">浅析java-nio及netty的reactor模型</a></li>
     
     <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/19/spring-transaction-commit/" target="_blank">Transaction源码解析之事务提交与回滚</a></li>
     
@@ -1040,7 +1031,27 @@ protected void completeTransactionAfterThrowing(TransactionInfo txInfo, Throwabl
     
 </ul>
 
-<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var remark_config = {
+        host: "https://nicky-chin.cn", 
+        site_id: 'nicky-blog',
+        components: ['embed', 'last-comments'], 
+        max_shown_comments: 20, 
+        theme: 'light', 
+        locale: 'zh'
+    };
+
+    (function(c) {
+        for(var i = 0; i < c.length; i++){
+            var d = document, s = d.createElement('script');
+            s.src = remark_config.host + '/web/' +c[i] +'.js';
+            s.defer = true;
+            (d.head || d.body).appendChild(s);
+        }
+    })(remark_config.components || ['embed']);
+</script>
+
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
 <script>
     $(".post-list").addClass("toc-article");
     $(".post-list-item a").attr("target", "_blank");
@@ -1061,6 +1072,18 @@ protected void completeTransactionAfterThrowing(TransactionInfo txInfo, Throwabl
     })
 </script>
 
+<script>
+    (function(d, w, c) {
+        w.ChatraID = 'jZh4grHz47JAjnsis';
+        var s = d.createElement('script');
+        w[c] = w[c] || function() {
+            (w[c].q = w[c].q || []).push(arguments);
+        };
+        s.async = true;
+        s.src = 'https://call.chatra.io/chatra.js';
+        if (d.head) d.head.appendChild(s);
+    })(document, window, 'Chatra');
+</script>
 
 <script>
 
@@ -1069,23 +1092,52 @@ protected void completeTransactionAfterThrowing(TransactionInfo txInfo, Throwabl
 
         </div>
         <footer id="footer">
+
+    
+
+
     <div class="outer">
+        
+        
+            <div class="footer-right">
+                
+                    <span id="busuanzi_container_site_pv" style='display: block'>
+                        <span id="site-visit" >本站访客数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    
+                
+                
+                    
+                        
+                            
+                        
+                    
+                
+            </div>
+        
+        
         <div id="footer-info">
             <div class="footer-left">
-                &copy; 2021 nicky_chin
+                &copy; 2022 南乡清水@Hangzhou
             </div>
-            <div class="footer-right">
-                <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Hugo Theme </a>
+            <div class="s-bottom-layer-right" style="font-size: 0.2em" >
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33011002014475"
+                   target="_blank"><span class="lh s-bottom-recordcode">京公网安备33011002014475号</span></a>
+                <a href="https://beian.miit.gov.cn/"
+                   target="_blank"><span class="lh"> 浙ICP备19049847号-1</span></a>
             </div>
         </div>
-        
     </div>
 </footer>
 
     </div>
     
 <script src="https://nicky-chin.cn/js/GithubRepoWidget.js"></script>
-<script src="//7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
 <script src="https://nicky-chin.cn/js/main.js"></script>
 
 
@@ -1114,7 +1166,7 @@ protected void completeTransactionAfterThrowing(TransactionInfo txInfo, Throwabl
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-ga('create', 'UA-119892182-1', 'auto');
+ga('create', 'UA-159911678-1', 'auto');
 ga('send', 'pageview');
 
 </script>
