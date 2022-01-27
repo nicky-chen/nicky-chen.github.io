@@ -13,7 +13,7 @@
     
     
     <item>
-      <title>MySQL之Innodb之快照读原理实现</title>
+      <title>mysql快照读原理实现</title>
       <link>https://nicky-chin.cn/2022/01/13/mysql-snapshot-read/</link>
       <pubDate>Thu, 13 Jan 2022 11:14:15 +0800</pubDate>
       
