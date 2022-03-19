@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
-    <lastBuildDate>Thu, 13 Jan 2022 11:14:15 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 17 Mar 2022 11:14:15 +0800</lastBuildDate>
     
 	<atom:link href="https://nicky-chin.cn/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>mysql之innodb锁系统源码分析</title>
+      <link>https://nicky-chin.cn/2022/03/17/mysql-lock-struct/</link>
+      <pubDate>Thu, 17 Mar 2022 11:14:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2022/03/17/mysql-lock-struct/</guid>
+      <description>mysql之innodb锁系统源码分析 1 锁系统 在 mysql 中 innodb 是常用的存储引擎，我们经常会遇到慢 sql 或者死锁，所以深入了解 DDL 和 DML 语句下锁机制是非常有必要的。</description>
+    </item>
     
     <item>
       <title>mysql快照读原理实现</title>
