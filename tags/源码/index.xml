@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>All rights reserved - 2018</copyright>
-    <lastBuildDate>Thu, 17 Mar 2022 11:14:15 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 11 May 2022 11:14:15 +0800</lastBuildDate>
     
 	<atom:link href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>mysql之innodb自增锁原理实现</title>
+      <link>https://nicky-chin.cn/2022/05/11/mysql-auto-inc/</link>
+      <pubDate>Wed, 11 May 2022 11:14:15 +0800</pubDate>
+      
+      <guid>https://nicky-chin.cn/2022/05/11/mysql-auto-inc/</guid>
+      <description>mysql之innodb自增锁原理实现 1 自增锁知识点 1.1 定义 自增锁是一种表级锁（table-level lock），专门针对插入 AUTO_INCREMENT 类型的列。同一表，假设事务 A 正在插入数据，则另一个事务 B 尝试 INSERT 语句，事务 B 会被阻塞住，直到事务 A 释放自增锁，以便事务A插入的行是连续的主键 ID</description>
+    </item>
     
     <item>
       <title>mysql之innodb锁系统源码分析</title>

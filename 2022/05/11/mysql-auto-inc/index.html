@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script>
+        var yiliaConfig = {
+            fancybox:  true ,
+            animate:  false ,
+            isHome: false,
+            isPost: false,
+            isArchive: true,
+            isTag: false,
+            isCategory: false,
+            open_in_new:  true ,
+            rootUrl: "\/"
+        };
+    </script>
+    <title>mysql之innodb自增锁原理实现</title>
+    <link rel="icon" href="https://nicky-chin.cn/img/favicon.ico">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/css/style.css">
+    <link rel="stylesheet" href="https://nicky-chin.cn/font-awesome/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" href="https://nicky-chin.cn/apple-touch-icon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://nicky-chin.cn/assets/waifu.css"/>
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/fancybox/jquery.fancybox.css">
+
+    <link rel="stylesheet" href="https://nicky-chin.cn/highlight/styles/darcula.css">
+    <script src="https://nicky-chin.cn/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+            (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','zTXEk5Sy3-gUuAVTm5JE','2.0.0');
+    </script>
+</head>
+<body>
+
+
+<body>
+<div id="container">
+    <div class="left-col">
+        <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="https://nicky-chin.cn/" class="profilepic">
+            <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn js-avatar">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="https://nicky-chin.cn/">nicky_chin</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+        
+
+        
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                        <li><a href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a> </li>
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                        
+                            <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                                <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                                <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                            <a href="https://nicky-chin.cn/tags/im%E9%80%9A%E8%AE%AF" style="font-size: 12px;" class="color1">Im通讯</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/junit" style="font-size: 12px;" class="color2">Junit</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/netty" style="font-size: 12px;" class="color1">Netty</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/redis" style="font-size: 12px;" class="color3">Redis</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-base" style="font-size: 12px;" class="color1">Spring-Base</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/spring-transaction" style="font-size: 12px;" class="color2">Spring-Transaction</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color3">优化</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88" style="font-size: 12px;" class="color3">分布式id方案</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B" style="font-size: 12px;" class="color4">创建型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color2">基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B" style="font-size: 12px;" class="color1">多线程</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE" style="font-size: 12px;" class="color4">思维导图</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" style="font-size: 12px;" class="color4">数据结构</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80" style="font-size: 12px;" class="color3">框架基础</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E6%BA%90%E7%A0%81" style="font-size: 12px;" class="color1">源码</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%90%86%E8%AE%BA" style="font-size: 12px;" class="color3">理论</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B" style="font-size: 12px;" class="color3">结构型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B" style="font-size: 12px;" class="color4">行为型</a>
+                        
+                            <a href="https://nicky-chin.cn/tags/%E9%94%81%E4%BC%98%E5%8C%96" style="font-size: 12px;" class="color1">锁优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/alibaba">alibaba开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/google">google开源项目</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://nicky-chin.cn/2017/02/19/tools/">在线工具</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://mysql.taobao.org/monthly/">数据库内核月报</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/donnemartin/system-design-primer/blob/master/README-zh-Hans.md">系统设计入门</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://tech.meituan.com/">美团技术团队</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://jm.taobao.org/">阿里中间件团队博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">大家好，我叫 陈星，来自杭州。平时喜欢打打球，看看书。 我的人生格言：机会是留给有准备的人的，厚积薄发总归会有收获，沉下心来做事情, 才能一往无前......</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+        <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="https://nicky-chin.cn/" class="profilepic">
+                <img src="https://nicky-chin.cn/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="https://nicky-chin.cn/" title="回到主页">nicky_chin</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">I can accept failure,but I can&#39;t accept not trying</p>
+            
+            <nav class="header-menu">
+                <ul>
+                    
+                    <li><a href="https://nicky-chin.cn/./">主页</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./tags/">专题分类</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/teach_pic.html">技术图谱</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/">归档日志</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/contact.html">联系建议</a></li>
+                    
+                    <li><a href="https://nicky-chin.cn/./post/external/open_source.html">开源项目</a></li>
+                    
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                            <li id="email"><a class="email" target="_blank" href="mailto:shuilianpiying@163.com" title="email"></a></li>
+                            
+                            <li id="github"><a class="github" target="_blank" href="https://github.com/nicky-chen" title="github"></a></li>
+                            
+                            <li id="stackoverflow"><a class="stackoverflow" target="_blank" href="https://stackoverflow.com/users/7444060/nicky-chen" title="stackoverflow"></a></li>
+                            
+                            <li id="wechat"><a class="wechat" target="_blank" href="https://nicky-chin.cn/wechat.jpeg" title="wechat"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>
+    </div>
+</nav>
+
+        <div class="body-wrap">
+            <article id="post-js-android" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+    <div class="article-meta">
+        <a href="https://nicky-chin.cn/2022/05/11/mysql-auto-inc/" class="article-date">
+            <time datetime="2022-05-11 11:14:15 &#43;0800 CST" itemprop="datePublished">2022-05-11</time>
+        </a>
+    </div>
+
+    <div class="article-inner">
+        
+        <input type="hidden" class="isFancy">
+        
+
+        <header class="article-header">
+
+
+            <h1 class="article-title" itemprop="name">
+                <a class="article-title" href="https://nicky-chin.cn/2022/05/11/mysql-auto-inc/">mysql之innodb自增锁原理实现</a>
+            </h1>
+
+
+        </header>
+
+        <div class="article-info article-info-post">
+
+            
+            <div class="article-category tagcloud">
+                
+                <a class="article-category-link" href="https://nicky-chin.cn/categories/mysql/" style="font-size: 12px;">MySql</a>
+                
+            </div>
+            
+
+            
+            <div class="article-tag tagcloud">
+                <ul class="article-tag-list">
+                    
+                    <li class="article-tag-list-item">
+                        <a class="article-tag-list-link color1" href="https://nicky-chin.cn/tags/%e6%ba%90%e7%a0%81/"
+                           style="font-size: 12px;">源码</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            
+            <div class="article-category tagcloud">
+                <a class="article-category-link" style="font-size: 12px;"> posted by nicky_chin</a>
+            </div>
+            
+
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="article-entry" itemprop="articleBody">
+
+            
+
+<h1 id="mysql之innodb自增锁原理实现">mysql之innodb自增锁原理实现</h1>
+
+<h1 id="1-自增锁知识点">1 自增锁知识点</h1>
+
+<h3 id="1-1-定义">1.1 定义</h3>
+
+<p>自增锁是一种表级锁（table-level lock），专门针对插入 AUTO_INCREMENT 类型的列。同一表，假设事务 A 正在插入数据，则另一个事务 B 尝试 INSERT 语句，事务 B 会被阻塞住，直到事务 A 释放自增锁，以便事务A插入的行是连续的主键 ID</p>
+
+<h3 id="1-2-插入方式">1.2 插入方式</h3>
+
+<table>
+<thead>
+<tr>
+<th align="center">插入方式</th>
+<th align="center">解释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center"><strong>Simple Inserts（简单插入）</strong></td>
+<td align="center">可以预估插入行数的语句（普通的 insert/replace into语句）<br />但不包含像 insert … on duplicate key update … 插入或者更新的语句</td>
+</tr>
+
+<tr>
+<td align="center"><strong>Bulk Inserts（批量插入）</strong></td>
+<td align="center">无法预估插入行数的语句（包括 insert &hellip; select, replace &hellip; select 和 load data 语句 ）</td>
+</tr>
+
+<tr>
+<td align="center"><strong>Mixed-mode insert  (混合插入)</strong></td>
+<td align="center">类似 insert into t1(id, age) values (1,&ldquo;zhang3&rdquo;),(null, &ldquo;li4&rdquo;),(5,&ldquo;wang5&rdquo;);<br />有些行指定了自增id，有些行未指定自增id</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="1-3-自增锁模式">1.3 自增锁模式</h3>
+
+<table>
+<thead>
+<tr>
+<th align="center">模式</th>
+<th align="center">解释</th>
+<th align="center">innodb_autoinc_lock_mode</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center"><strong>传统模式</strong></td>
+<td align="center">执行语句时加 AUTO-INC 表级锁，statement 语句执行完毕后释放</td>
+<td align="center">0</td>
+</tr>
+
+<tr>
+<td align="center"><strong>连续模式</strong></td>
+<td align="center">针对<em>批量插入</em> 时会采用 AUTO-INC 锁，针对*简单插入*时，采用轻量级的互斥锁</td>
+<td align="center">1</td>
+</tr>
+
+<tr>
+<td align="center"><strong>混合模式</strong></td>
+<td align="center">不使用 AUTO-INC 表级锁 ，采用轻量级的互斥锁</td>
+<td align="center">2</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>传统模式 :  在 innoDB 没有 引入了<strong>锁模式</strong>之前默认的方式，表锁，锁颗粒度大，比较重</p>
+
+<p>连续模式 ：8.0版本之前为默认设置，该模式下可以保证同一 insert 语句中新插入的自增 ID 都是连续</p>
+
+<p>混合模式 ：8.0版本默认设置，由于锁的粒度减少，多条语句在插入时进行锁竞争，自增长的值可能不连续。并且当 Binlog 模式为 statement（SBR）时， 直接导致主从之间同行的数据<strong>主键 ID 不同</strong></p>
+</blockquote>
+
+<h3 id="1-4-自增-id-分配问题">1.4 自增 ID 分配问题</h3>
+
+<h5 id="1-4-1-自增-id-的初始化">1.4.1 自增 ID 的初始化</h5>
+
+<p>8.0版本之前，自增 ID 的值存储在内存中，重启后丢弃，下一次将读取内存预分配最大自增 ID之后的 ID 值进行发号</p>
+
+<p>8.0版本之后，自增 ID 的值将会持久化到磁盘。每次发号时会写入 Redolog 日志，重启时通过 Redolog 恢复之前的值</p>
+
+<h5 id="1-4-2-自增-id-的连续性">1.4.2 自增 ID 的连续性</h5>
+
+<p>三种模式都无法保障自增id的连续性，除非设置隔离界别为  串行化（Serialiable）隔离级别</p>
+
+<p>i <strong>插入发生唯一索引冲突校验</strong></p>
+
+<ul>
+<li>如已存数据(2, 清水)，name 字段是唯一键，再次插入(null, 清水), 唯一索引冲突校验，但这是自增ID已经变化为3，如再次插入(null, 水哥)，会使用4的自增 ID</li>
+</ul>
+
+<p>ii <strong>事务回滚</strong></p>
+
+<ul>
+<li>因为 id 是在内存中不持久化，如在同一事务中插入不提交事务，再回滚，会丢弃ID发号段，当再次执行插入语句，提交的的 id 不会连续，类似于产生幻读
+<br />
+<br /></li>
+</ul>
+
+<h5 id="1-4-3-自增-id-上限问题">1.4.3 自增 ID 上限问题</h5>
+
+<p>如果表未设置主键，默认使用隐式的 ROW_ID 作为主键， 它的取值范围为 <strong>[0, 2^32 -1]</strong></p>
+
+<p>如果自增主键达到上限，则发放的下一个 ID 为最大 id 也就是4294967295 ，然后就会提示主键冲突。</p>
+
+<blockquote>
+<p>Duplicate entry &lsquo;4294967295&rsquo; for key &lsquo;PRIMARY&rsquo;</p>
+</blockquote>
+
+<p>当然我们可以使用 bigint 类型，基本不会有这种问题</p>
+
+<p>如果表设置主键，但主键类型是字符串，那么隐式的 ROW_ID 如果超过 4294967295 这个最大值，那么</p>
+
+<p>新产生的数据行对应的 row_id 又会从 0 开始发放，此时新插入的数据行会覆盖 row_id=0 的数据记录</p>
+
+<h1 id="2-连续模式实践">2 连续模式实践</h1>
+
+<h3 id="2-1-简单插入">2.1 简单插入</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#a6e22e">user_test</span>(
+    id <span style="color:#66d9ef">BIGINT</span>(<span style="color:#ae81ff">20</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">AUTO_INCREMENT</span>,
+	name <span style="color:#66d9ef">VARCHAR</span>(<span style="color:#ae81ff">50</span>) <span style="color:#66d9ef">UNIQUE</span>,
+	age <span style="color:#66d9ef">tinyint</span>(<span style="color:#ae81ff">3</span>) <span style="color:#66d9ef">DEFAULT</span> <span style="color:#ae81ff">18</span>,
+	<span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span>(id),
+	<span style="color:#66d9ef">INDEX</span>(name)
+) <span style="color:#66d9ef">ENGINE</span> <span style="color:#f92672">=</span> INNODB <span style="color:#66d9ef">AUTO_INCREMENT</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#66d9ef">CHARSET</span> <span style="color:#f92672">=</span> utf8mb4</code></pre></div>
+<ul>
+<li><span id='jump'>唯一索引不冲突情况</span>
+<code>sql
+insert into user_test(name) values(&quot;qinqshui&quot;),(&quot;yunyan&quot;),(&quot;heitie&quot;);
+select * from user_test;
+</code></li>
+</ul>
+
+<p>结果如下</p>
+
+<p><img src="https://nicky-chin.cn/media/mysql-auto-inc/sample-insert.png" alt="sample-insert" /></p>
+
+<p>简单插入情况下，插入的语句，可以提前预估插入的行数，所以连续的自增，是 1 2 3</p>
+
+<ul>
+<li>唯一索引冲突情况</li>
+</ul>
+
+<blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql">  <span style="color:#75715e"># 插入冲突冲突
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">insert</span> <span style="color:#66d9ef">into</span> <span style="color:#a6e22e">user_test</span>(name) <span style="color:#66d9ef">values</span>(<span style="color:#e6db74">&#34;qinqshui&#34;</span>);
+  <span style="color:#75715e"># 插入不冲突记录
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">insert</span> <span style="color:#66d9ef">into</span> <span style="color:#a6e22e">user_test</span>(name) <span style="color:#66d9ef">values</span>(<span style="color:#e6db74">&#34;hanlin&#34;</span>);
+  <span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> user_test;</code></pre></div></blockquote>
+
+<p>结果如下</p>
+
+<p><img src="https://nicky-chin.cn/media/mysql-auto-inc/unique-excp.png" alt="unique-excp" /></p>
+
+<p>有唯一性索引校验，但是后续的插入不是预期的 4 而是变成了 5 ，主键ID的连续性遭到破坏</p>
+
+<h3 id="2-2-批量插入">2.2 批量插入</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">DROP</span> <span style="color:#66d9ef">TABLE</span> user_test;
+<span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> user_test(
+    id BIGINT(<span style="color:#ae81ff">20</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> AUTO_INCREMENT,
+	name VARCHAR(<span style="color:#ae81ff">50</span>) <span style="color:#66d9ef">UNIQUE</span>,
+	age tinyint(<span style="color:#ae81ff">3</span>) <span style="color:#66d9ef">DEFAULT</span> <span style="color:#ae81ff">18</span>,
+	<span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span>(id),
+	<span style="color:#66d9ef">INDEX</span>(name)
+) ENGINE <span style="color:#f92672">=</span> INNODB AUTO_INCREMENT <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">DEFAULT</span> CHARSET <span style="color:#f92672">=</span> utf8mb4
+
+
+<span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> student(
+    name VARCHAR(<span style="color:#ae81ff">40</span>) <span style="color:#66d9ef">UNIQUE</span>
+) ENGINE <span style="color:#f92672">=</span> INNODB; 
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> student(name) <span style="color:#66d9ef">VALUES</span> (<span style="color:#e6db74">&#34;zhang3&#34;</span>),(<span style="color:#e6db74">&#34;li4&#34;</span>), (<span style="color:#e6db74">&#34;wang5&#34;</span>); 
+<span style="color:#f92672">#</span> <span style="color:#960050;background-color:#1e0010">批量插入</span> <span style="color:#66d9ef">insert</span> ... <span style="color:#66d9ef">select</span>
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> user_test(name) <span style="color:#66d9ef">SELECT</span> name <span style="color:#66d9ef">FROM</span> student;
+
+<span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> user_test;</code></pre></div>
+<p>批量插入结果如下</p>
+
+<p><img src="https://nicky-chin.cn/media/mysql-auto-inc/batch-insert.png" alt="batch-insert" /></p>
+
+<p>在不能提前预估插入行数情况下，每插入一行，会获取一个自增 ID，无法提前发号段，导致在多个事务并发情况下，会出现同一事务自增ID不连续情况。</p>
+
+<h3 id="2-3-混合插入">2.3 混合插入</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">DROP</span> <span style="color:#66d9ef">TABLE</span> user_test;
+<span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> user_test(
+    id BIGINT(<span style="color:#ae81ff">20</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> AUTO_INCREMENT,
+	name VARCHAR(<span style="color:#ae81ff">50</span>) <span style="color:#66d9ef">UNIQUE</span>,
+	age tinyint(<span style="color:#ae81ff">3</span>) <span style="color:#66d9ef">DEFAULT</span> <span style="color:#ae81ff">18</span>,
+	<span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span>(id),
+	<span style="color:#66d9ef">INDEX</span>(name)
+) ENGINE <span style="color:#f92672">=</span> INNODB AUTO_INCREMENT <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">DEFAULT</span> CHARSET <span style="color:#f92672">=</span> utf8mb4</code></pre></div>
+<ul>
+<li>ID 依次插入</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">insert</span> <span style="color:#66d9ef">into</span> user_test(id, name) <span style="color:#66d9ef">values</span>(<span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#34;qingshui&#34;</span>);
+<span style="color:#f92672">#</span> <span style="color:#960050;background-color:#1e0010">混合插入</span>
+<span style="color:#66d9ef">insert</span> <span style="color:#66d9ef">into</span> user_test(id, name) <span style="color:#66d9ef">values</span> (<span style="color:#ae81ff">50</span>, <span style="color:#e6db74">&#34;yunyan&#34;</span>),(<span style="color:#66d9ef">NULL</span>, <span style="color:#e6db74">&#34;heitie&#34;</span>),(<span style="color:#ae81ff">100</span>, <span style="color:#e6db74">&#34;hanlin&#34;</span>),(<span style="color:#66d9ef">NULL</span>,<span style="color:#e6db74">&#34;tianqi&#34;</span>);
+
+<span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> user_test;</code></pre></div>
+<p>结果如下</p>
+
+<p><img src="https://nicky-chin.cn/media/mysql-auto-inc/mix-insert.png" alt="mix-insert" /></p>
+
+<ul>
+<li>插入小于最大自增ID的情况</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#f92672">#</span> <span style="color:#960050;background-color:#1e0010">插入小于</span><span style="color:#ae81ff">101</span><span style="color:#960050;background-color:#1e0010">的值</span>
+<span style="color:#66d9ef">insert</span> <span style="color:#66d9ef">into</span> user_test(id, name) <span style="color:#66d9ef">values</span>(<span style="color:#ae81ff">2</span>, <span style="color:#e6db74">&#34;wushang&#34;</span>);
+<span style="color:#f92672">#</span> <span style="color:#960050;background-color:#1e0010">再次使用主键</span>
+<span style="color:#66d9ef">insert</span> <span style="color:#66d9ef">into</span> user_test(id, name) <span style="color:#66d9ef">values</span>(<span style="color:#66d9ef">null</span>, <span style="color:#e6db74">&#34;xiaojian&#34;</span>);
+<span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> user_test;</code></pre></div>
+<p>结果如下</p>
+
+<p><img src="https://nicky-chin.cn/media/mysql-auto-inc/lt-insert.png" alt="lt-insert" /></p>
+
+<p><strong>混合插入</strong>情况下，如果行指定了自增 ID，则不使用数据库生成新的 ID，但对应的最大自增 ID 会更新覆盖，如果未指定自增 ID，即 (NULL) 的情况下，数据库才会生成 ID，所以插入小于主键 ID 的情况，虽然插入的 ID 是2，但最大的自增 ID 更新至了102，后续插入变成 103</p>
+
+<h3 id="2-4-insert-on-duplicate-key-update">2.4 insert … on duplicate key update</h3>
+
+<p>接着上面的情况，继续执行以下语句：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#f92672">#</span> <span style="color:#960050;background-color:#1e0010">一条更新，两条插入</span>
+<span style="color:#66d9ef">insert</span> <span style="color:#66d9ef">into</span> user_test(name)<span style="color:#66d9ef">values</span>(<span style="color:#e6db74">&#34;qingshui&#34;</span>),(<span style="color:#e6db74">&#34;longgu&#34;</span>),(<span style="color:#e6db74">&#34;renjie&#34;</span>) <span style="color:#66d9ef">on</span> duplicate <span style="color:#66d9ef">key</span> <span style="color:#66d9ef">update</span> age<span style="color:#f92672">=</span><span style="color:#ae81ff">28</span>;
+<span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> user_test;</code></pre></div>
+<p>结果如下</p>
+
+<p><img src="https://nicky-chin.cn/media/mysql-auto-inc/on-dulicaptie.png" alt="on-dulicaptie" /></p>
+
+<p>一条更新的情况下，自增 ID 会+1但不使用，Id = 104 被占用，其他插入的情况会新增 ID 并使用，所以变成了 105 106</p>
+
+<h1 id="3-源码解析">3 源码解析</h1>
+
+<p>阅读这部分源码前，需要了解Innodb锁系统的相关知识 <a href="https://nicky-chin.cn/2022/03/17/mysql-lock-struct/">mysql 之 innodb 锁系统源码分析</a></p>
+
+<h3 id="3-1-相关数据结构">3.1 相关数据结构</h3>
+
+<ul>
+<li>表结构 <strong>dict_table_t</strong></li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">struct</span> dict_table_t{
+  <span style="color:#75715e">// 表id
+</span><span style="color:#75715e"></span>  table_id_t	id;	
+  <span style="color:#75715e">// 表名
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>		name;
+  <span style="color:#75715e">// tablespace
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span>	space:<span style="color:#ae81ff">32</span>;
+  <span style="color:#75715e">// 表字段数组
+</span><span style="color:#75715e"></span>  dict_col_t<span style="color:#f92672">*</span>	cols;
+  <span style="color:#75715e">// 表名称
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>	col_names;
+  <span style="color:#75715e">// 自增锁对象结构
+</span><span style="color:#75715e"></span>  lock_t<span style="color:#f92672">*</span>		autoinc_lock;
+  <span style="color:#75715e">// 信号量互斥锁
+</span><span style="color:#75715e"></span>  ib_mutex_t		autoinc_mutex;
+  <span style="color:#75715e">// 自增计数器
+</span><span style="color:#75715e"></span>  ib_uint64_t	autoinc;d
+  <span style="color:#75715e">// 等待自增锁的事务
+</span><span style="color:#75715e"></span>  ulong		n_waiting_or_granted_auto_inc_locks;
+  <span style="color:#75715e">// 当前持有自增表锁的事务
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">const</span> trx_t<span style="color:#f92672">*</span>	autoinc_trx;
+  <span style="color:#75715e">// 记录锁的数据 
+</span><span style="color:#75715e"></span>  ulint		n_rec_locks;
+};
+</code></pre></div>
+<ul>
+<li>事务结构体</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">struct</span> trx_t{
+  <span style="color:#75715e">// 事务锁信息和事务状态
+</span><span style="color:#75715e"></span>  trx_lock_t	lock;
+  <span style="color:#75715e">// 隔离级别
+</span><span style="color:#75715e"></span>  ulint	isolation_level;
+  <span style="color:#75715e">// 事务id
+</span><span style="color:#75715e"></span>  trx_id_t	id;
+  <span style="color:#75715e">// readview
+</span><span style="color:#75715e"></span>  read_view_t<span style="color:#f92672">*</span>	read_view;
+  <span style="color:#75715e">// 当前statement语句插入的行数
+</span><span style="color:#75715e"></span>  ulint		n_autoinc_rows;
+  <span style="color:#75715e">// 持有的自增lock
+</span><span style="color:#75715e"></span>  ib_vector_t<span style="color:#f92672">*</span>    autoinc_locks; 
+}
+</code></pre></div>
+<ul>
+<li>号段缓存 <strong>Discrete_interval</strong></li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span><span style="color:#960050;background-color:#1e0010"> </span><span style="color:#a6e22e">Discrete_interval</span> {
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+  <span style="color:#75715e">// 区间最小值（包含边界值）
+</span><span style="color:#75715e"></span>  ulonglong interval_min;
+  <span style="color:#75715e">// 区间内可用自增id个数
+</span><span style="color:#75715e"></span>  ulonglong interval_values;
+  <span style="color:#75715e">// 区间的最大值(不包含边界值)
+</span><span style="color:#75715e"></span>  ulonglong  interval_max; 
+  
+  <span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+  <span style="color:#75715e">// 下一分配号段
+</span><span style="color:#75715e"></span>  Discrete_interval <span style="color:#f92672">*</span>next; 
+}
+</code></pre></div>
+<ul>
+<li>表句柄 <strong>handler 和 ha_innobase</strong></li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">// 默认表句柄
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span><span style="color:#960050;background-color:#1e0010"> </span><span style="color:#a6e22e">handler</span> <span style="color:#f92672">:</span><span style="color:#66d9ef">public</span> Sql_alloc
+{ <span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+ 
+    <span style="color:#75715e">// 下次插入的id
+</span><span style="color:#75715e"></span>    ulonglong next_insert_id;
+    <span style="color:#75715e">// 当前插入的id
+</span><span style="color:#75715e"></span>    ulonglong insert_id_for_cur_row;
+    <span style="color:#75715e">// 通过get_auto_increment()方法获取的预分配的发号段，缓存在server层，减少对innodb层的调用
+</span><span style="color:#75715e"></span>    Discrete_interval auto_inc_interval_for_cur_row;
+    <span style="color:#75715e">// innodb预分配申请的发号段的步幅。按照[1, 2, 4, 8]指数递增，最大不能超过1&lt;&lt;16 -1
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 可以通过handler::ha_release_auto_increment()方法重置
+</span><span style="color:#75715e"></span>    uint auto_inc_intervals_count;
+
+}
+
+<span style="color:#75715e">// innodb实现的表句柄
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span><span style="color:#960050;background-color:#1e0010"> </span><span style="color:#a6e22e">ha_innobase</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> handler
+{
+  <span style="color:#75715e">// 预创建内存
+</span><span style="color:#75715e"></span>  row_prebuilt_t<span style="color:#f92672">*</span>	prebuilt;
+ 
+  <span style="color:#75715e">// 主键id
+</span><span style="color:#75715e"></span>    uint		primary_key;
+  
+}
+<span style="color:#75715e">// 预创建内存数据 cache
+</span><span style="color:#75715e"></span>struc t row_prebuilt_t {
+  <span style="color:#75715e">// 表结构
+</span><span style="color:#75715e"></span>  dict_table_t<span style="color:#f92672">*</span>	table;
+  <span style="color:#75715e">// 当前自增分配ID之后的下一待分配的ID
+</span><span style="color:#75715e"></span>  ulonglong	autoinc_last_value;
+  <span style="color:#75715e">// id步幅，必须大于等于1			
+</span><span style="color:#75715e"></span>  ulonglong	autoinc_increment;
+  ulonglong	autoinc_offset;
+  <span style="color:#75715e">// 自增锁获取的错误信息，如获取成功为DB_SUCCESS
+</span><span style="color:#75715e"></span>  dberr_t		autoinc_error;
+}
+</code></pre></div>
+<p>handler 中使用的变量为 statement 语句级别，语句执行完毕，内存就释放清理，不会等待事务提交才进行释放</p>
+
+<h3 id="3-2-执行流程">3.2 执行流程</h3>
+
+<h5 id="3-2-1-整体流程时序图">3.2.1 整体流程时序图</h5>
+
+<p><img src="https://nicky-chin.cn/media/mysql-auto-inc/mermaid-diagram-20220516102252.png" alt="mermaid-diagram-20220516102252" /></p>
+
+<ul>
+<li>mutex 锁与自增锁</li>
+</ul>
+
+<blockquote>
+<p>mutex锁 通过 dict_table_t 中的 ib_mutex_t 结构体实现，通过类似 <em>cas 比较并交换</em> 的方式实现加锁解锁，性能好</p>
+
+<p>自增锁 依赖于锁系统的实现，属于表锁，性能差</p>
+</blockquote>
+
+<h5 id="3-3-2-表自增-id-的初始化">3.3.2 表自增 ID 的初始化</h5>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">  <span style="color:#75715e">// 如果包含自增主键则加mutex锁
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> (prebuilt<span style="color:#f92672">-&gt;</span>table <span style="color:#f92672">!=</span> NULL
+      <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>prebuilt<span style="color:#f92672">-&gt;</span>table<span style="color:#f92672">-&gt;</span>ibd_file_missing
+        <span style="color:#f92672">&amp;&amp;</span> table<span style="color:#f92672">-&gt;</span>found_next_number_field <span style="color:#f92672">!=</span> NULL) {
+    dict_table_autoinc_lock(prebuilt<span style="color:#f92672">-&gt;</span>table);
+    <span style="color:#75715e">// 如果table未初始化自增值，则进行初始化
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (dict_table_autoinc_read(prebuilt<span style="color:#f92672">-&gt;</span>table) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+        <span style="color:#75715e">// 首次加载表获取自增ID初始值
+</span><span style="color:#75715e"></span>      innobase_initialize_autoinc();
+    }
+    <span style="color:#75715e">// 释放锁
+</span><span style="color:#75715e"></span>    dict_table_autoinc_unlock(prebuilt<span style="color:#f92672">-&gt;</span>table);
+  }
+
+<span style="color:#75715e">// 初始化自增ID
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> ha_innobase<span style="color:#f92672">::</span>innobase_initialize_autoinc()
+{
+    ulonglong	auto_inc;
+    <span style="color:#66d9ef">const</span> Field<span style="color:#f92672">*</span>	field <span style="color:#f92672">=</span> table<span style="color:#f92672">-&gt;</span>found_next_number_field;
+    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>	col_name;
+    col_name <span style="color:#f92672">=</span> field<span style="color:#f92672">-&gt;</span>field_name;
+    index <span style="color:#f92672">=</span> innobase_get_index(table<span style="color:#f92672">-&gt;</span>s<span style="color:#f92672">-&gt;</span>next_number_index);
+    <span style="color:#75715e">// 获取当前表的最大值
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">/* Execute SELECT MAX(col_name) FROM TABLE; */</span>
+    err <span style="color:#f92672">=</span> row_search_max_autoinc(index, col_name, <span style="color:#f92672">&amp;</span>read_auto_inc);
+    <span style="color:#66d9ef">switch</span> (err) {
+    <span style="color:#66d9ef">case</span> DB_SUCCESS: {
+       ulonglong	col_max_value;
+      <span style="color:#75715e">// 如果表包含了自增列,获取自增列允许的最大值
+</span><span style="color:#75715e"></span>      col_max_value <span style="color:#f92672">=</span> innobase_get_int_col_max_value(field);
+      <span style="color:#75715e">// 获取当前表的id最大值，步幅默认为1
+</span><span style="color:#75715e"></span>      auto_inc <span style="color:#f92672">=</span> innobase_next_autoinc(
+        read_auto_inc, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, col_max_value);
+      <span style="color:#66d9ef">break</span>;
+     }
+  dict_table_autoinc_initialize(prebuilt<span style="color:#f92672">-&gt;</span>table, auto_inc);
+}
+</code></pre></div>
+<p>在执行插入语句的时候，对于同一张表，首次获取到 <strong>mutex 锁</strong>的语句会通过当前表执行 <code>SELECT MAX(col_name) FROM TABLE</code>获取最大自增 ID。加载到 <code>dict_table_t:: autoinc</code> 的属性中</p>
+
+<h5 id="3-2-3简单插入和批量插入流程">3.2.3简单插入和批量插入流程</h5>
+
+<ul>
+<li>测试语句 → <a href="#jump"> 使用上述简单插入和批量插入的 SQL</a></li>
+</ul>
+
+<p>插入流程如下</p>
+
+<p><img src="https://nicky-chin.cn/media/mysql-auto-inc/insert-process.png" alt="insert-process" /></p>
+
+<ul>
+<li>简单插入</li>
+</ul>
+
+<blockquote>
+<p>预估插入行数量 → 获取 mutex 锁 → 获取自增 ID 的号段 → 分配号段 → 释放 mutex</p>
+</blockquote>
+
+<ul>
+<li>批量插入</li>
+</ul>
+
+<blockquote>
+<p>由于不确定插入行数，在语句执行期间，每插入一条数据都要重新获取一次自增锁</p>
+</blockquote>
+
+<ul>
+<li>混合插入</li>
+</ul>
+
+<pre><code>例如上面实验的语句  insert into user_test(id, name) values (null, &quot;yunyan&quot;),(50, &quot;heitie&quot;),(null, &quot;hanlin&quot;),(100,&quot;tianqi&quot;)
+  
+假设当前的自增值为20
+  第一次调用 update_auto_increment，数据行是4条
+  prebuilt-&gt;trx-&gt;n_autoinc_rows=4, Discrete_interval 号段如下
+  {interval_min = 20, interval_values = 4, interval_max = 24, *next = NULL}
+  
+  发现第二行插入的50大于当前最大的号段值24，且 next 指针没有下一个预分配号段，则
+  第二次调用 update_auto_increment，赋值成50
+  prebuilt-&gt;trx-&gt;n_autoinc_rows=3
+  
+  第三次调用 update_auto_increment，数据行是2条
+  prebuilt-&gt;trx-&gt;n_autoinc_rows=2
+  {interval_min = 51, interval_values = 2, interval_max = 53, next = null}
+  
+  发现第四行插入的100大于当前最大的号段值53，且 next 指针没有下一个预分配号段，则
+  第四次调用 update_auto_increment时，使用100
+  prebuilt-&gt;trx-&gt;n_autoinc_rows=1
+
+上述这种实验 SQL，最多可以加四次 mutex 锁，具体要看预分配号段的策略
+</code></pre>
+
+<ul>
+<li><strong>update_auto_increment</strong> 流程</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">int</span> handler<span style="color:#f92672">::</span>update_auto_increment()
+{
+   <span style="color:#75715e">// 判断自增列是否已经赋值，或者 是否不为NULL并且sql_mode为MODE_NO_AUTO_VALUE_ON_ZERO时，不做处理
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> ((nr<span style="color:#f92672">=</span> table<span style="color:#f92672">-&gt;</span>next_number_field<span style="color:#f92672">-&gt;</span>val_int()) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span>
+      (table<span style="color:#f92672">-&gt;</span>auto_increment_field_not_null <span style="color:#f92672">&amp;&amp;</span>
+      thd<span style="color:#f92672">-&gt;</span>variables.sql_mode <span style="color:#f92672">&amp;</span> MODE_NO_AUTO_VALUE_ON_ZERO))
+  {
+    <span style="color:#75715e">// 根据nr和offset设置下一个自增值next_insert_id
+</span><span style="color:#75715e"></span>    adjust_next_insert_id_after_explicit_value(nr);
+    insert_id_for_cur_row<span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; 
+    DBUG_RETURN(<span style="color:#ae81ff">0</span>);
+  }
+  <span style="color:#75715e">// 当预分配的自增ID区间用完时，需要取更多的insert id。
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> ((nr<span style="color:#f92672">=</span> next_insert_id) <span style="color:#f92672">&gt;=</span> auto_inc_interval_for_cur_row.maximum())
+  {
+    <span style="color:#66d9ef">const</span> Discrete_interval <span style="color:#f92672">*</span>forced<span style="color:#f92672">=</span>
+      thd<span style="color:#f92672">-&gt;</span>auto_inc_intervals_forced.get_next();
+    <span style="color:#75715e">// 如果预分配了下一区间，则使用下一个区间的数据
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (forced <span style="color:#f92672">!=</span> NULL)
+    {
+      nr<span style="color:#f92672">=</span> forced<span style="color:#f92672">-&gt;</span>minimum();
+      nb_reserved_values<span style="color:#f92672">=</span> forced<span style="color:#f92672">-&gt;</span>values();
+    }
+     <span style="color:#75715e">// 获取自增id
+</span><span style="color:#75715e"></span>     get_auto_increment(variables<span style="color:#f92672">-&gt;</span>auto_increment_offset,
+                         variables<span style="color:#f92672">-&gt;</span>auto_increment_increment,
+                         nb_desired_values, <span style="color:#f92672">&amp;</span>nr,
+                         <span style="color:#f92672">&amp;</span>nb_reserved_values);
+  <span style="color:#66d9ef">if</span> (append)
+   { <span style="color:#75715e">// 更新 Discrete_interval
+</span><span style="color:#75715e"></span>    auto_inc_interval_for_cur_row.replace();
+  <span style="color:#75715e">// 设置当前事务中下一个要处理的行的自增列的值至handler中
+</span><span style="color:#75715e"></span>  set_next_insert_id(compute_next_insert_id(nr, variables));
+   }
+</code></pre></div>
+<ul>
+<li>设置自增 ID <strong>get_auto_increment</strong></li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">void</span> ha_innobase<span style="color:#f92672">::</span>get_auto_increment()
+{
+  trx_t<span style="color:#f92672">*</span>		trx;
+  dberr_t		error;
+  ulonglong	autoinc <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+
+  <span style="color:#75715e">// 获取锁
+</span><span style="color:#75715e"></span>  error <span style="color:#f92672">=</span> innobase_get_autoinc(<span style="color:#f92672">&amp;</span>autoinc);
+  <span style="color:#66d9ef">if</span> (error <span style="color:#f92672">!=</span> DB_SUCCESS) {
+    <span style="color:#f92672">*</span>first_value <span style="color:#f92672">=</span> (<span style="color:#f92672">~</span>(ulonglong) <span style="color:#ae81ff">0</span>);
+    <span style="color:#66d9ef">return</span>;
+  }
+  <span style="color:#75715e">// 是否是还计算插入行数的语句
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> (trx<span style="color:#f92672">-&gt;</span>n_autoinc_rows <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+    trx<span style="color:#f92672">-&gt;</span>n_autoinc_rows <span style="color:#f92672">=</span> (ulint) nb_desired_values;
+    set_if_bigger(<span style="color:#f92672">*</span>first_value, autoinc);
+  } 
+  <span style="color:#f92672">*</span>nb_reserved_values <span style="color:#f92672">=</span> trx<span style="color:#f92672">-&gt;</span>n_autoinc_rows;
+  <span style="color:#75715e">// 非传统模式处理
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> (innobase_autoinc_lock_mode <span style="color:#f92672">!=</span> AUTOINC_OLD_STYLE_LOCKING) {
+    ulonglong	current;
+    ulonglong	next_value;
+    <span style="color:#75715e">// 自增id不能超过自增字段长度最大值
+</span><span style="color:#75715e"></span>    current <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>first_value <span style="color:#f92672">&gt;</span> col_max_value <span style="color:#f92672">?</span> autoinc : <span style="color:#f92672">*</span>first_value;
+    <span style="color:#75715e">// 计算下一次分配的自增ID值
+</span><span style="color:#75715e"></span>    next_value <span style="color:#f92672">=</span> innobase_next_autoinc(
+      current, <span style="color:#f92672">*</span>nb_reserved_values, increment, offset,
+      col_max_value);
+    prebuilt<span style="color:#f92672">-&gt;</span>autoinc_last_value <span style="color:#f92672">=</span> next_value;
+    <span style="color:#66d9ef">if</span> (prebuilt<span style="color:#f92672">-&gt;</span>autoinc_last_value <span style="color:#f92672">&lt;</span> <span style="color:#f92672">*</span>first_value) {
+      <span style="color:#f92672">*</span>first_value <span style="color:#f92672">=</span> (<span style="color:#f92672">~</span>(ulonglong) <span style="color:#ae81ff">0</span>);
+    } <span style="color:#66d9ef">else</span> {
+      <span style="color:#75715e">// 更新dict_table_t的下一个分配id
+</span><span style="color:#75715e"></span>      dict_table_autoinc_update_if_greater(
+        prebuilt<span style="color:#f92672">-&gt;</span>table, prebuilt<span style="color:#f92672">-&gt;</span>autoinc_last_value);
+    }
+  prebuilt<span style="color:#f92672">-&gt;</span>autoinc_increment <span style="color:#f92672">=</span> increment;
+  <span style="color:#75715e">// 释放mutex锁
+</span><span style="color:#75715e"></span>  dict_table_autoinc_unlock(prebuilt<span style="color:#f92672">-&gt;</span>table);
+}
+</code></pre></div>
+<p>主要流程是先获取锁，然后校验分配的 id 也就是对应的<code>first_value</code>值是否小于字段最大值，并更新到当前语句中的 prebuilt 内存中和全局的 dict_table_t 表中</p>
+
+<ul>
+<li>获取锁流程 <strong>innobase_get_autoinc</strong></li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">ha_innobase<span style="color:#f92672">::</span>innobase_lock_autoinc(<span style="color:#66d9ef">void</span>){
+  dberr_t		error <span style="color:#f92672">=</span> DB_SUCCESS;
+  <span style="color:#75715e">// 判断自增锁模式
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">switch</span> (innobase_autoinc_lock_mode) {
+   <span style="color:#75715e">// 交叉模式使用mutex锁   
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">case</span> AUTOINC_NO_LOCKING: 
+    dict_table_autoinc_lock(prebuilt<span style="color:#f92672">-&gt;</span>table);
+    <span style="color:#66d9ef">break</span>;
+  <span style="color:#75715e">// 连续模式
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">case</span> AUTOINC_NEW_STYLE_LOCKING:
+    <span style="color:#75715e">// 单条确定insert影响的条数的时候，使用mutex。
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (thd_sql_command(user_thd) <span style="color:#f92672">==</span> SQLCOM_INSERT
+        <span style="color:#f92672">||</span> thd_sql_command(user_thd) <span style="color:#f92672">==</span> SQLCOM_REPLACE) {
+      dict_table_t<span style="color:#f92672">*</span>	ib_table <span style="color:#f92672">=</span> prebuilt<span style="color:#f92672">-&gt;</span>table;
+      <span style="color:#75715e">/* Acquire the AUTOINC mutex. */</span>
+      dict_table_autoinc_lock(ib_table);
+      <span style="color:#75715e">// 判断是否有其他事务已获取或在等待autoinc Lock，
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">// 如果存在，解除Mutex并回退到AUTOINC_OLD_STYLE_LOCKING，否则break
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">if</span> (ib_table<span style="color:#f92672">-&gt;</span>n_waiting_or_granted_auto_inc_locks) {
+        <span style="color:#75715e">/* Release the mutex to avoid deadlocks. */</span>
+        dict_table_autoinc_unlock(ib_table);
+      } <span style="color:#66d9ef">else</span> {
+        <span style="color:#66d9ef">break</span>;
+      }
+    }
+  <span style="color:#75715e">// 如果是insert select，load data这样的语句，则升级为传统模式
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">case</span> AUTOINC_OLD_STYLE_LOCKING:
+    <span style="color:#75715e">// 尝试加排他的自增锁
+</span><span style="color:#75715e"></span>    error <span style="color:#f92672">=</span> row_lock_table_autoinc_for_mysql(prebuilt);
+    <span style="color:#66d9ef">if</span> (error <span style="color:#f92672">==</span> DB_SUCCESS) {
+      <span style="color:#75715e">/* Acquire the AUTOINC mutex. */</span>
+      <span style="color:#75715e">//再次拿到mutex 
+</span><span style="color:#75715e"></span>      dict_table_autoinc_lock(prebuilt<span style="color:#f92672">-&gt;</span>table);
+    }
+    <span style="color:#66d9ef">break</span>;
+  <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+    ut_error;
+  }
+  <span style="color:#66d9ef">return</span>(error);
+}
+</code></pre></div>
+<p>除了锁模式设置为*传统模式或者是无法语句行数的批量插入使用表锁外*，其余都是用轻量级的 mutex 锁</p>
+
+<ul>
+<li><strong>insert … on duplicate key update</strong></li>
+</ul>
+
+<p>会调用 <code>ha_innobase::update_row</code>方法</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">  <span style="color:#75715e">// 获取自增ID成功&amp;是插入语句 &amp; duplicates的情况下
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> (error <span style="color:#f92672">==</span> DB_SUCCESS
+      <span style="color:#f92672">&amp;&amp;</span> table<span style="color:#f92672">-&gt;</span>next_number_field
+      <span style="color:#f92672">&amp;&amp;</span> new_row <span style="color:#f92672">==</span> table<span style="color:#f92672">-&gt;</span>record[<span style="color:#ae81ff">0</span>]
+      <span style="color:#f92672">&amp;&amp;</span> thd_sql_command(user_thd) <span style="color:#f92672">==</span> SQLCOM_INSERT
+      <span style="color:#f92672">&amp;&amp;</span> trx<span style="color:#f92672">-&gt;</span>duplicates)  {
+    ulonglong	auto_inc;
+    ulonglong	col_max_value;
+
+    auto_inc <span style="color:#f92672">=</span> table<span style="color:#f92672">-&gt;</span>next_number_field<span style="color:#f92672">-&gt;</span>val_int();
+    <span style="color:#75715e">// 获取最大值
+</span><span style="color:#75715e"></span>    col_max_value <span style="color:#f92672">=</span> innobase_get_int_col_max_value(
+      table<span style="color:#f92672">-&gt;</span>next_number_field);
+    <span style="color:#75715e">// 如果自增ID小于最大值
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (auto_inc <span style="color:#f92672">&lt;=</span> col_max_value <span style="color:#f92672">&amp;&amp;</span> auto_inc <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) {
+      ulonglong	offset;
+      ulonglong	increment;
+      offset <span style="color:#f92672">=</span> prebuilt<span style="color:#f92672">-&gt;</span>autoinc_offset;
+      increment <span style="color:#f92672">=</span> prebuilt<span style="color:#f92672">-&gt;</span>autoinc_increment;
+      <span style="color:#75715e">// 设置下一个自增ID
+</span><span style="color:#75715e"></span>      auto_inc <span style="color:#f92672">=</span> innobase_next_autoinc(auto_inc, <span style="color:#ae81ff">1</span>, increment, offset, col_max_value);
+      <span style="color:#75715e">// 更新dict_table_t的自增ID值
+</span><span style="color:#75715e"></span>      error <span style="color:#f92672">=</span> innobase_set_max_autoinc(auto_inc);
+      }
+	}
+</code></pre></div>
+<p>对于<code>INSERT INTO t (c1,c2) VALUES(x,y) ON DUPLICATE KEY UPDATE</code>语句，无论唯一索引列所指向的行是否存在，都会更新表的 auto increment 值</p>
+
+<h1 id="4-自增-id-产生的问题">4 自增 ID 产生的问题</h1>
+
+<p>实际业务中，会使用 ID 返回给客户端，或者通过类似 teacher_info?id=? 的 API 接口获取信息，这样不仅会暴露数据量，同时也会更加容易遭遇爬虫的情况，所以可以参考下面方式优化</p>
+
+<ul>
+<li>ID 混淆</li>
+</ul>
+
+<p>原始数据 xor 随机数 + 校验位，校验位使用 luhn 算法，占用1位数字，仅用于安全级别不高的整型数据混淆，优点是处理速度快，处理结果依然是整型</p>
+
+<ul>
+<li><a href="https://nicky-chin.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8Fid%E6%96%B9%E6%A1%88/">雪花算法</a></li>
+</ul>
+
+<p>基于时间戳生成，趋势递增，满足范围查询和时间排序，但需保证发号器服务高可用，同时需考虑时钟回拨与时钟同步问题</p>
+
+<ul>
+<li>映射法</li>
+</ul>
+
+<p>维护 ID 与 hash 的映射关系，可以基于 Redis 组件实现，常见的实现方式比如: 短链接服务</p>
+
+<h1 id="5-reference">5 reference</h1>
+
+<p><a href="https://dev.mysql.com/doc/refman/5.6/en/innodb-auto-increment-handling.html#innodb-auto-increment-lock-modes">官方文档-innodb-auto-increment-lock-modes</a></p>
+
+<p><a href="https://blog.csdn.net/yuanrxdu/article/details/41170381">innodb之mutex的实现</a></p>
+
+<p><a href="https://mp.weixin.qq.com/s/7HKNkpBuPotJ9bcAOCSA6w">关于 MySQL 自增 ID 的事儿</a></p>
+
+
+        </div>
+
+    </div>
+
+    
+    <nav id="article-nav">
+
+        
+        
+
+        
+        <div id="article-nav-older" class="article-nav-title">
+            <a href="https://nicky-chin.cn/2022/03/17/mysql-lock-struct/">
+                mysql之innodb锁系统源码分析
+            </a>
+        </div>
+        
+
+    </nav>
+    
+
+
+</article>
+
+<div id="toc" class="toc-article" >
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc">
+        <nav id="TableOfContents">
+<ul>
+<li><a href="#mysql之innodb自增锁原理实现">mysql之innodb自增锁原理实现</a></li>
+<li><a href="#1-自增锁知识点">1 自增锁知识点</a>
+<ul>
+<li>
+<ul>
+<li><a href="#1-1-定义">1.1 定义</a></li>
+<li><a href="#1-2-插入方式">1.2 插入方式</a></li>
+<li><a href="#1-3-自增锁模式">1.3 自增锁模式</a></li>
+<li><a href="#1-4-自增-id-分配问题">1.4 自增 ID 分配问题</a>
+<ul>
+<li>
+<ul>
+<li><a href="#1-4-1-自增-id-的初始化">1.4.1 自增 ID 的初始化</a></li>
+<li><a href="#1-4-2-自增-id-的连续性">1.4.2 自增 ID 的连续性</a></li>
+<li><a href="#1-4-3-自增-id-上限问题">1.4.3 自增 ID 上限问题</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#2-连续模式实践">2 连续模式实践</a>
+<ul>
+<li>
+<ul>
+<li><a href="#2-1-简单插入">2.1 简单插入</a></li>
+<li><a href="#2-2-批量插入">2.2 批量插入</a></li>
+<li><a href="#2-3-混合插入">2.3 混合插入</a></li>
+<li><a href="#2-4-insert-on-duplicate-key-update">2.4 insert … on duplicate key update</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#3-源码解析">3 源码解析</a>
+<ul>
+<li>
+<ul>
+<li><a href="#3-1-相关数据结构">3.1 相关数据结构</a></li>
+<li><a href="#3-2-执行流程">3.2 执行流程</a>
+<ul>
+<li>
+<ul>
+<li><a href="#3-2-1-整体流程时序图">3.2.1 整体流程时序图</a></li>
+<li><a href="#3-3-2-表自增-id-的初始化">3.3.2 表自增 ID 的初始化</a></li>
+<li><a href="#3-2-3简单插入和批量插入流程">3.2.3简单插入和批量插入流程</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#4-自增-id-产生的问题">4 自增 ID 产生的问题</a></li>
+<li><a href="#5-reference">5 reference</a></li>
+</ul>
+</nav>
+    </ol>
+    <div style="text-align:center">-----------------------</div>
+    <strong class="toc-title">最新评论</strong>
+    <ol class="toc">
+        <div class="remark42__last-comments" data-max="10"></div>
+    </ol>
+</div>
+<style>
+    
+    .left-col .switch-btn {
+        display: none;
+    }
+
+    .left-col .switch-area {
+        display: none;
+    }
+    
+
+
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录" >
+
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function () {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    
+    
+    
+        
+    
+</script>
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a class="bds_qzone" data-cmd="qzone" href="#" title="分享到 QQ 空间"></a>
+        <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+        <a class="bds_count" data-cmd="count"></a>
+        <a class="bds_more" data-cmd="more"></a>
+
+    </div>
+    <script>
+        window._bd_share_config = {
+            "common": {
+                "bdSnsKey": {},
+                "bdText": "",
+                "bdMini": "2",
+                "bdMiniList": false,
+                "bdPic": "",
+                "bdStyle": "0",
+                "bdSize": "24"
+            }, "share": {}
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+</div>
+
+
+
+
+<div style="margin-left: 30px;margin-right: 30px;background: white;padding-left: 30px;padding-right: 30px">
+    <div class="comments">
+        <h3>[评论][COMMENTS]</h3>
+        
+            
+                
+                
+                
+                
+                
+            
+        
+        <div id="remark42"></div>
+        <div id="disqus_thread"></div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="scroll" id="post-nav-button">
+
+    
+    <a href="https://nicky-chin.cn/" title="回到主页"><i class="fa fa-home"></i></a>
+    
+
+
+    <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+
+    
+    <a href="https://nicky-chin.cn/2022/03/17/mysql-lock-struct/" title="下一篇: mysql之innodb锁系统源码分析">
+        <i class="fa fa-angle-right"></i>
+    </a>
+    
+
+</div>
+
+
+<ul class="post-list toc-article">
+    
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2022/05/11/mysql-auto-inc/" target="_blank">mysql之innodb自增锁原理实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2022/03/17/mysql-lock-struct/" target="_blank">mysql之innodb锁系统源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2022/01/13/mysql-snapshot-read/" target="_blank">mysql快照读原理实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2021/02/13/java-clone/" target="_blank">java的clone方法JVM实现</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/11/13/im-timeline/" target="_blank">基于TimeLine模型的消息同步机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/09/26/threadlocal-enchancer/" target="_blank">线程传递增强之TransmittableThreadLocal</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/06/11/net-nio-netty/" target="_blank">浅析java-nio及netty的reactor模型</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/19/spring-transaction-commit/" target="_blank">Transaction源码解析之事务提交与回滚</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/11/spring-transaction-prepare/" target="_blank">Transaction源码解析之事务预处理</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/05/03/spring-transaction-config/" target="_blank">Transaction源码解析之事务配置解析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/23/spurious-wakeup/" target="_blank">生产-消费模型之虚假唤醒</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/04/15/spring-bean-instantiation/" target="_blank">Spring实例化bean之源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2020/03/02/float-precision/" target="_blank">float浮点小数的设计及精度问题</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/07/11/mysql-page-detail/" target="_blank">MySQL中的page页详解</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/05/03/apt_lombok_implement/" target="_blank">基于APT(注解处理器)实现Lombok的@getter @setter @toString功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2019/02/15/filter/" target="_blank">实际项目运用之Filter模式（过滤器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/12/19/state-machine/" target="_blank">实际项目运用之State模式（状态模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/11/17/btree-info/" target="_blank">数据结构之BTree和B&#43;Tree(多路平衡查找树 )</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/10/15/id-redis/" target="_blank">分布式全局序列ID方案之Redis优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/25/id-flicker/" target="_blank">分布式全局序列ID方案之Flicker优化方案</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/09/19/id-snowflake/" target="_blank">分布式全局序列ID方案之Snowflake算法</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/25/spring-springmvc/" target="_blank">Spring之动手实现SpringMVC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/22/java-methodhandler/" target="_blank">Java反射优化之方法句柄</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/16/spring-bean-ioc/" target="_blank">Spring之动手实现IOC功能</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/12/spring-bean-lifecycle/" target="_blank">Spring之Bean加载-解析-生命周期</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/09/aqs-condition/" target="_blank">并发基础之Condition(等待队列)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/07/cache-redis-optimize/" target="_blank">Redis注意事项及常见优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/04/aqs_chapter02/" target="_blank">并发基础之AQS同步器（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/08/01/cache-redis-slowlog/" target="_blank">Redis之慢查询日志</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/31/aqs_chapter01/" target="_blank">并发基础之AQS同步器（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/16/junit-codeanalysis/" target="_blank">初窥门径之JUnit源码分析</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/13/java-securitymanager/" target="_blank">Java安全之SecurityManager</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/07/05/spi-introduction/" target="_blank">框架基础之SPI机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/29/responsibility-chain/" target="_blank">实际项目运用之Responsibility-Chain模式（责任链模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/25/jndi-introdution/" target="_blank">JNDI知识摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/17/architect/" target="_blank">技术图谱</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/13/distribution-knowledge/" target="_blank">分布式项目知识要点</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/07/singletion/" target="_blank">设计模式之单例模式终极版【克隆-序列化-反射】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/06/02/fail-fast-safe/" target="_blank">Fail-Fast和Fail-Safe机制</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/27/adapter/" target="_blank">实际项目运用之Adapter模式（适配器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/18/template/" target="_blank">设计模式之Template模式（模版模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/14/synchronized-principle/" target="_blank">synchronized实现原理及锁优化</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/13/juc-tree-info/" target="_blank">JUC知识点总结</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/06/strategy/" target="_blank">实际项目运用之Strategy模式（策略模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/05/04/volatile-feature/" target="_blank">volatile关键字原理实现及应用</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/28/high-event/" target="_blank">MYSQL高级特性之【Event事件】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/27/process-fun/" target="_blank">MYSQL高级特性之【存储过程与函数】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/25/cap-base-flp/" target="_blank">分布式之【CAP理论、BASE理论 、FLP不可能定理】</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/21/string-builder-question/" target="_blank">字符串拼接的疑惑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/17/exception-introduce/" target="_blank">Java异常处理-原理及优化建议</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/04/03/thread-jmm-happens-before/" target="_blank">java内存模型之[JMM][重排序][happens-before]</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/28/decorator/" target="_blank">实际项目运用之Decorator模式（装饰器模式）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/26/interface-idempotency/" target="_blank">接口设计的幂等性考虑</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/21/binary-operation/" target="_blank">java中位运算技巧</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/20/classloader-chapter02/" target="_blank">ClassLoader类加载分析（二）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/13/introspector/" target="_blank">Java 内省(Introspector)</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2018/03/08/classloader-chapter01/" target="_blank">ClassLoader类加载分析（一）</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/19/builder/" target="_blank">设计模式之builder模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/12/07/builder-factory/" target="_blank">设计模式之factory模式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/11/03/recursive-lock/" target="_blank">可重入锁</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/09/12/show-global-status/" target="_blank">库级优化之SHOW GLOBAL STATUS</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/06/13/optimize-picture/" target="_blank">后端开发需要了解的mysql优化方向</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/16/thread-communication/" target="_blank">多线程之线程通信摘要</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/05/07/design-rule/" target="_blank">数据库设计三范式和反范式</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/03/17/book_list/" target="_blank">阅读书单</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/info/" target="_blank">联系&amp;留言</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/open_source/" target="_blank">开源项目</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/02/19/tools/" target="_blank">在线工具</a></li>
+    
+    <li class="post-list-item"><a class="post-list-link" href="https://nicky-chin.cn/2017/01/23/externalizable-interface/" target="_blank">自定义序列化之Externalizable接口</a></li>
+    
+</ul>
+
+<script>
+    var remark_config = {
+        host: "https://nicky-chin.cn", 
+        site_id: 'nicky-blog',
+        components: ['embed', 'last-comments'], 
+        max_shown_comments: 20, 
+        theme: 'light', 
+        locale: 'zh'
+    };
+
+    (function(c) {
+        for(var i = 0; i < c.length; i++){
+            var d = document, s = d.createElement('script');
+            s.src = remark_config.host + '/web/' +c[i] +'.js';
+            s.defer = true;
+            (d.head || d.body).appendChild(s);
+        }
+    })(remark_config.components || ['embed']);
+</script>
+
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    $(".post-list").addClass("toc-article");
+    $(".post-list-item a").attr("target", "_blank");
+    $("#post-nav-button > a:nth-child(2)").click(function () {
+        $(".fa-bars, .fa-times").toggle();
+        $(".post-list").toggle(300);
+        if ($(".toc").length > 0) {
+            $("#toc, #tocButton").toggle(200, function () {
+                if ($(".switch-area").is(":visible")) {
+                    $("#toc, .switch-btn, .switch-area").toggle();
+                    $("#tocButton").attr("value", valueHide);
+                }
+            })
+        }
+        else {
+            $(".switch-btn, .switch-area").fadeToggle(300);
+        }
+    })
+</script>
+
+<script>
+    (function(d, w, c) {
+        w.ChatraID = 'jZh4grHz47JAjnsis';
+        var s = d.createElement('script');
+        w[c] = w[c] || function() {
+            (w[c].q = w[c].q || []).push(arguments);
+        };
+        s.async = true;
+        s.src = 'https://call.chatra.io/chatra.js';
+        if (d.head) d.head.appendChild(s);
+    })(document, window, 'Chatra');
+</script>
+
+<script>
+
+</script>
+
+
+        </div>
+        <footer id="footer">
+
+    
+
+
+    <div class="outer">
+        
+        
+            <div class="footer-right">
+                
+                    <span id="busuanzi_container_site_pv" style='display: block'>
+                        <span id="site-visit" >本站访客数:
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    
+                
+                
+                    
+                        
+                            
+                        
+                    
+                
+            </div>
+        
+        
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2022 南乡清水@Hangzhou
+            </div>
+            <div class="s-bottom-layer-right" style="font-size: 0.2em" >
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33011002014475"
+                   target="_blank"><span class="lh s-bottom-recordcode">京公网安备33011002014475号</span></a>
+                <a href="https://beian.miit.gov.cn/"
+                   target="_blank"><span class="lh"> 浙ICP备19049847号-1</span></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://nicky-chin.cn/js/GithubRepoWidget.js"></script>
+<script src="https://nicky-chin.cn/js/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="https://nicky-chin.cn/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum =  10 ;
+                var backgroundimg = "url(\/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-159911678-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+</div>
+</body>
+</html>
